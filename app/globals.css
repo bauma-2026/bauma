@@ -1,0 +1,129 @@
+/* app/globals.css (Tailwind v4) */
+@import "tailwindcss";
+
+/* ---------- Base ---------- */
+html,
+body {
+  height: 100%;
+}
+
+:root {
+  --blueprint-primary: #589bff;
+  --blueprint-accent: #00ffd0;
+}
+
+html {
+  text-rendering: geometricPrecision;
+}
+
+body {
+  margin: 0;
+  background: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+
+
+
+
+/* ---------- Typography utilities ---------- */
+
+
+@layer utilities {
+  .text-copy-14 {
+    font-size: 14px;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
+  }
+
+  .text-copy-16 {
+    font-size: 16px;
+    line-height: 1.65;
+    letter-spacing: -0.01em;
+  }
+
+  .text-copy-18 {
+    font-size: 18px;
+    line-height: 1.6;
+    letter-spacing: -0.015em;
+  }
+}
+
+/* ---------- Rail ---------- */
+@media (min-width: 1280px) {
+  .bauma-rail {
+    position: fixed;
+    left: 28px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgba(0, 0, 0, 0.06);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .bauma-rail::before {
+    content: "";
+    position: absolute;
+    top: 180px;
+    left: -3px;
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(59, 130, 246, 0.9);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.08);
+  }
+}
+
+@media (max-width: 1279px) {
+  .bauma-rail {
+    display: none;
+  }
+}
+
+/* ---------- Selection ---------- */
+::selection {
+  background: rgba(59, 130, 246, 0.18);
+}
+
+/* ---------- Chip ---------- */
+.bauma-chip {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(10px);
+  border-radius: 999px;
+  transition: all 0.2s ease;
+}
+
+.bauma-chip:hover {
+  border-color: rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.75);
+}
+
+@layer utilities {
+  .text-display {
+    @apply text-5xl font-semibold leading-[0.95] tracking-[-0.04em] sm:text-6xl lg:text-[72px];
+  }
+
+  .text-h1 {
+    @apply text-3xl font-semibold leading-[1.05] tracking-tight sm:text-4xl;
+  }
+
+  .text-h2 {
+    @apply text-2xl font-semibold leading-tight tracking-tight sm:text-[28px];
+  }
+
+  .text-body {
+    @apply text-[16px] leading-7 text-neutral-600;
+  }
+
+  .text-body-lg {
+    @apply text-[17px] leading-8 text-neutral-800;
+  }
+
+  .text-meta {
+    @apply text-[11px] uppercase tracking-[0.16em] text-neutral-500;
+  }
+}
