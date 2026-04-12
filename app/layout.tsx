@@ -9,33 +9,33 @@ const inter = Inter({ subsets: ["latin"] });
 const isProduction = process.env.VERCEL_ENV === "production";
 
 export const metadata: Metadata = {
-  title: "Bauma — Digital Studio",
+  title: "Bauma — Digitalni studio",
   description:
-    "Bauma is a small digital studio building structured, calm and fast Next.js experiences — from blueprint to build.",
+    "Strukturiram in postavim digitalne produkte, ki so jasni, hitri in pripravljeni za rast.",
   metadataBase: new URL("https://bauma.si"),
 
   icons: {
-    icon: "/favicon.svg",
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
 
+  manifest: "/site.webmanifest",
+
   openGraph: {
-    title: "Bauma — Digital Studio",
+    title: "Bauma — Digitalni studio",
     description:
-      "Structured, calm and fast digital experiences. Blueprint → Design → Build.",
+      "Strukturirani, hitri in jasni digitalni produkti. Zasnova → Dizajn → Izvedba.",
     url: "https://bauma.si",
     siteName: "Bauma",
     type: "website",
   },
 
   robots: isProduction
-    ? {
-        index: true,
-        follow: true,
-      }
-    : {
-        index: false,
-        follow: false,
-      },
+    ? { index: true, follow: true }
+    : { index: false, follow: false },
 };
 
 export default function RootLayout({
