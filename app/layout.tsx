@@ -6,6 +6,8 @@ import Footer from "./components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
+const isProduction = process.env.VERCEL_ENV === "production";
+
 export const metadata: Metadata = {
   title: "Bauma — Digital Studio",
   description:
@@ -25,10 +27,15 @@ export const metadata: Metadata = {
     type: "website",
   },
 
-  robots: {
-    index: true,
-    follow: true,
-  },
+  robots: isProduction
+    ? {
+        index: true,
+        follow: true,
+      }
+    : {
+        index: false,
+        follow: false,
+      },
 };
 
 export default function RootLayout({
@@ -39,8 +46,7 @@ export default function RootLayout({
   return (
     <html lang="sl">
       <body className={`${inter.className} min-h-screen text-neutral-900`}>
-      
-
+        
         {/* background vignette */}
         <div className="pointer-events-none fixed inset-0 -z-10">
           <div className="absolute inset-0" />
