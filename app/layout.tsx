@@ -23,6 +23,9 @@ export const metadata: Metadata = {
     "Strukturiram in postavim digitalne produkte, ki so jasni, hitri in pripravljeni za rast.",
   metadataBase: new URL("https://bauma.si"),
 
+  applicationName: "Bauma",
+  creator: "Bauma — built with structure in mind",
+
   icons: {
     icon: [
       { url: "/favicon.ico" },
@@ -46,7 +49,6 @@ export const metadata: Metadata = {
     ? { index: true, follow: true }
     : { index: false, follow: false },
 };
-
 export default function RootLayout({
   children,
 }: {
