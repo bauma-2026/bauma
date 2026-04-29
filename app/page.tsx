@@ -3,6 +3,7 @@ import { work, news } from "@/lib/content";
 import Container from "./components/Container";
 import Section from "./components/Section";
 import HeroPanel from "./components/HeroPanel";
+import StructureSection from "./components/StructureSection";
 
 const cardBase =
   "group block border border-black/10 bg-white shadow-sm transition-all duration-300 ease-out hover:-translate-y-[2px] hover:border-black/20 hover:shadow-md";
@@ -19,7 +20,7 @@ export default function Home() {
   return (
     <>
       <HeroPanel />
-
+ <StructureSection />
       <Container className="pb-16 sm:pb-20 lg:pb-24">
         {/* WORK */}
         <Section withDivider={false}>

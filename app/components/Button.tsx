@@ -3,7 +3,7 @@ import Link from "next/link";
 type ButtonProps = {
   href: string;
   children: React.ReactNode;
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "primary-dark";
   className?: string;
 };
 
@@ -19,6 +19,9 @@ export default function Button({
   const primary =
     "border border-black bg-black text-white hover:bg-white hover:text-black";
 
+    const primaryDark =
+  "border border-white bg-white text-black hover:bg-white/90 active:bg-white/80";
+
   const secondary =
     "border border-black/20 bg-white/70 text-black hover:bg-black hover:text-white hover:border-black";
 
@@ -26,8 +29,12 @@ export default function Button({
     <Link
       href={href}
       className={`${base} ${
-        variant === "primary" ? primary : secondary
-      } hover:-translate-y-[1px] active:translate-y-0 ${className}`}
+  variant === "primary"
+    ? primary
+    : variant === "primary-dark"
+    ? primaryDark
+    : secondary
+} hover:-translate-y-[1px] active:translate-y-0 ${className}`}
     >
       {children}
     </Link>

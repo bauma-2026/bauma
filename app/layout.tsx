@@ -1,10 +1,19 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, DM_Serif_Display } from "next/font/google";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+const dmSerif = DM_Serif_Display({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-serif",
+});
 
 const isProduction = process.env.VERCEL_ENV === "production";
 
@@ -44,9 +53,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="sl">
-      <body className={`${inter.className} min-h-screen text-neutral-900`}>
-        
+    <html lang="sl" className={`${inter.variable} ${dmSerif.variable}`}>
+      <body className="min-h-screen font-sans text-neutral-900">
         {/* background vignette */}
         <div className="pointer-events-none fixed inset-0 -z-10">
           <div className="absolute inset-0" />
