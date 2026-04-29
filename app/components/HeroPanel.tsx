@@ -7,14 +7,16 @@ export default function HeroPanel() {
         <div className="max-w-[680px]">
 
           {/* EYEBROW */}
-          <a
-            href="/approach"
-            className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[11px] font-medium tracking-[0.02em] text-white/70 transition hover:border-white/40 hover:text-white"
-          >
-            <span>Jasen prodajni potek</span>
-            <span className="text-white/40">→</span>
-          </a>
-
+ 
+<a
+  href="/approach"
+  className="group inline-flex rounded-full bg-white/10 p-[1px] transition hover:bg-white/20"
+>
+  <span className="inline-flex items-center gap-2 rounded-full bg-neutral-950 px-3 py-1 text-[11px] font-medium tracking-[0.02em] text-white/60 transition group-hover:text-white">
+    <span>Jasen prodajni potek</span>
+    <span className="text-white/30">→</span>
+  </span>
+</a>
           {/* H1 */}
           <h1 className="mt-6 max-w-[15ch] font-serif text-5xl font-normal leading-[0.98] tracking-[-0.02em] text-white sm:text-6xl lg:text-[64px]">
             Jasna struktura.
