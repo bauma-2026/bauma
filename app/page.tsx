@@ -4,6 +4,8 @@ import Container from "./components/Container";
 import Section from "./components/Section";
 import HeroPanel from "./components/HeroPanel";
 import StructureSection from "./components/StructureSection";
+import DecisionLayer from "./components/blocks/DecisionLayer";
+import DecisionLayerCase from "./components/blocks/home/DecisionLayerCase";
 
 const cardBase =
   "group block border border-black/10 bg-white shadow-sm transition-all duration-300 ease-out hover:-translate-y-[2px] hover:border-black/20 hover:shadow-md";
@@ -20,7 +22,11 @@ export default function Home() {
   return (
     <>
       <HeroPanel />
+           {/* APPROACH */}
+        <DecisionLayer />
+             <DecisionLayerCase />
  <StructureSection />
+ 
       <Container className="pb-16 sm:pb-20 lg:pb-24">
         {/* WORK */}
         <Section withDivider={false}>
@@ -170,48 +176,8 @@ export default function Home() {
           </div>
         </Section>
 
-        {/* APPROACH */}
-        <Section className="border-t border-neutral-200 py-10 sm:py-12 lg:py-14">
-          <div className="max-w-[640px]">
-            <p className="text-meta">Approach</p>
-
-            <h2 className="mt-3 text-xl font-semibold tracking-tight text-neutral-950 sm:text-2xl">
-              Struktura pred UI.
-            </h2>
-
-            <p className="mt-3 max-w-[56ch] text-sm leading-relaxed text-neutral-600">
-              Večina strani izgleda dobro, ampak ne pove dovolj jasno, kaj ponudba
-              pomeni in kaj naj uporabnik naredi.
-            </p>
-          </div>
-
-          <div className="mt-6 grid gap-4 sm:grid-cols-3 sm:gap-5">
-            <div className="rounded-[24px] border border-black/10 bg-white/60 p-5 sm:p-6">
-              <div className="text-meta">01</div>
-              <div className="mt-3 text-sm font-medium text-neutral-900">Context</div>
-              <p className="mt-3 text-sm leading-relaxed text-neutral-600">
-                Kaj uporabnik išče, v kakšni situaciji je in kje nastane dvom.
-              </p>
-            </div>
-
-            <div className="rounded-[24px] border border-black/10 bg-white/60 p-5 sm:p-6">
-              <div className="text-meta">02</div>
-              <div className="mt-3 text-sm font-medium text-neutral-900">Flow</div>
-              <p className="mt-3 text-sm leading-relaxed text-neutral-600">
-                Informacije razporedimo tako, da ponudbo razume brez zmede.
-              </p>
-            </div>
-
-            <div className="rounded-[24px] border border-black/10 bg-white/60 p-5 sm:p-6">
-              <div className="text-meta">03</div>
-              <div className="mt-3 text-sm font-medium text-neutral-900">Action</div>
-              <p className="mt-3 text-sm leading-relaxed text-neutral-600">
-                Naslednji korak mora biti jasen — kaj narediti in zakaj.
-              </p>
-            </div>
-          </div>
-        </Section>
-
+   
+      
         {/* STUDIO */}
         <Section className="border-t border-neutral-200 py-10 sm:py-12 lg:py-14">
           <div className="grid gap-6 sm:grid-cols-[1.1fr_0.9fr]">
