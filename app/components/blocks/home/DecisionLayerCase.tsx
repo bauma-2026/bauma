@@ -58,7 +58,7 @@ export default function DecisionLayerCase() {
           <div className="grid gap-6 lg:grid-cols-2 lg:items-center">
             <div className="order-2 lg:order-1 relative aspect-[4/3] overflow-hidden rounded-xl border border-neutral-200">
               <Image
-                src="/case/odstrani/flow.jpg"
+                src="/case/odstrani/flow-800x600.jpg"
                 alt="Odstrani Tattoo — proces"
                 width={800}
                 height={600}
@@ -105,7 +105,7 @@ export default function DecisionLayerCase() {
 
             <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-neutral-200">
               <Image
-                src="/case/odstrani/action.jpg"
+                src="/case/odstrani/action-800x600.jpg"
                 alt="Odstrani Tattoo — CTA"
                 width={800}
                 height={600}
