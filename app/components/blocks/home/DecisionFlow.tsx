@@ -42,16 +42,19 @@ export default function DecisionFlow() {
 
       <div className="relative mx-auto max-w-6xl px-6">
         {/* HEADER */}
-        <div className="max-w-2xl">
-          <h2 className="mt-4 max-w-xl text-4xl font-medium leading-[0.95] tracking-[-0.04em] text-white sm:text-5xl lg:text-6xl">
-            Kje izgubljaš uporabnika?
-          </h2>
+        <div className="max-w-1xl">
+  <h2 className="mt-4 max-w-[18ch] text-4xl font-medium leading-[0.95] tracking-[-0.04em] text-white sm:text-5xl lg:max-w-[20ch] lg:text-6xl">
+    Vsak layer uporabnika
+    <span className="block">
+      premakne bližje odločitvi.
+    </span>
+  </h2>
 
-          <p className="mt-5 max-w-xl text-base leading-7 text-white/55 sm:text-lg">
-            Izberi situacijo. Razlika ni v dizajnu — ampak v tem, ali uporabnik
-            ve, kaj narediti naprej.
-          </p>
-        </div>
+  <p className="mt-5 max-w-xl text-base leading-7 text-white/55 sm:text-lg">
+    Izberi situacijo. Razlika ni v dizajnu — ampak v tem, ali uporabnik
+    ve, kaj narediti naprej.
+  </p>
+</div>
 
         {/* INTENTS */}
         <div className="mt-10 flex flex-wrap gap-3">

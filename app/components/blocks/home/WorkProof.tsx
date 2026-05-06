@@ -9,13 +9,13 @@ type Case = {
 };
 
 const featured: Case = {
-  title: "Flexido",
+  title: "Kompleksno ponudbo smo spremenili v jasne poti odločanja",
   problem:
-    "Ponudba je bila razpršena in uporabnik ni hitro razumel, katera rešitev je prava zanj.",
+    "Ponudba je bila razpršena. Uporabnik ni hitro razumel, katera rešitev je prava zanj.",
   approach:
-    "Ponudbo smo razdelili v jasne use-case poti in odstranili odvečne informacije.",
+    "Ponudbo smo razdelili v jasne use-case poti. Odstranili smo odvečne informacije.",
   result:
-    "Stran hitreje pokaže, za koga je rešitev primerna in kaj je naslednji korak.",
+    "Stran hitreje pokaže pravo rešitev in jasen naslednji korak.",
   href: "/work/flexido",
 };
 
@@ -61,40 +61,46 @@ export default function WorkProof() {
 
         <a
           href={featured.href}
-          className="group mt-14 block rounded-2xl border border-white/10 bg-[#111214] p-6 transition hover:border-white/20 sm:p-8"
+          className="group mt-14 block rounded-2xl border border-white/10 bg-[#111214] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.35)] transition hover:border-white/20 sm:p-8"
         >
           <div className="grid gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-12">
             <div>
               <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/35">
-                Featured proof
+                Featured case
               </p>
 
-              <h3 className="mt-3 text-2xl font-semibold tracking-[-0.03em] text-white">
+              <h3 className="mt-3 max-w-[15ch] text-2xl font-semibold leading-[1.08] tracking-[-0.03em] text-white sm:text-3xl">
                 {featured.title}
               </h3>
 
-              <div className="mt-7 space-y-5">
-                <ProofLine label="Problem" text={featured.problem} />
-                <ProofLine label="Struktura" text={featured.approach} />
-                <ProofLine label="Rezultat" text={featured.result} />
+              <div className="mt-8 space-y-7">
+                <ProofLine label="Pred tem" text={featured.problem} />
+                <ProofLine label="Sprememba" text={featured.approach} />
+                <ProofLine label="Po tem" text={featured.result} />
               </div>
 
               <div className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-white">
-                Poglej primer
+                Poglej case
                 <span className="transition group-hover:translate-x-1">→</span>
               </div>
             </div>
 
-            <div className="relative aspect-[16/9] overflow-hidden rounded-xl border border-white/10 bg-[#141414]">
-              <Image
-                src="/images/work/flexido-preview-1.webp"
-                alt="Flexido primer"
-                fill
-                className="object-cover object-[30%_center] transition duration-500 group-hover:scale-[1.02]"
-                sizes="(min-width: 1024px) 560px, 100vw"
-              />
+            <div className="relative aspect-[16/9] overflow-hidden rounded-xl border border-white/10 bg-[#141414] p-1">
+              <div className="relative h-full w-full overflow-hidden rounded-lg">
+                <Image
+                  src="/images/work/flexido-preview-1.webp"
+                  alt="Flexido primer"
+                  fill
+                  className="object-cover object-[30%_center] transition duration-500 group-hover:scale-[1.02]"
+                  sizes="(min-width: 1024px) 560px, 100vw"
+                />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent opacity-90" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent opacity-90" />
+
+                <div className="absolute left-4 top-4 rounded-full border border-white/10 bg-black/45 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-white/65 backdrop-blur">
+                  Flexido case
+                </div>
+              </div>
             </div>
           </div>
         </a>
@@ -104,10 +110,10 @@ export default function WorkProof() {
             <a
               key={c.title}
               href={c.href}
-              className="group block rounded-2xl border border-white/10 bg-[#111214] p-6 transition hover:border-white/20"
+              className="group block rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-white/20 hover:bg-white/[0.045]"
             >
               <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/35">
-                Case proof
+                Case
               </p>
 
               <h3 className="mt-3 text-xl font-semibold tracking-[-0.03em] text-white">
@@ -119,6 +125,7 @@ export default function WorkProof() {
                   <span className="font-medium text-white/85">Problem — </span>
                   {c.problem}
                 </p>
+
                 <p>
                   <span className="font-medium text-white/85">Rezultat — </span>
                   {c.result}
@@ -129,6 +136,7 @@ export default function WorkProof() {
                 <span className="text-sm font-medium text-white">
                   Poglej primer
                 </span>
+
                 <span className="text-white/40 transition group-hover:translate-x-1 group-hover:text-white">
                   →
                 </span>
@@ -157,7 +165,10 @@ function ProofLine({ label, text }: { label: string; text: string }) {
       <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/35">
         {label}
       </p>
-      <p className="mt-1 text-sm leading-6 text-white/65">{text}</p>
+
+      <p className="mt-1 max-w-[42ch] text-sm leading-6 text-white/65">
+        {text}
+      </p>
     </div>
   );
 }
