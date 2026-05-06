@@ -1,83 +1,97 @@
 import Container from "../components/Container";
 import Section from "../components/Section";
-import ContactForm from "../components/ContactForm";
 
 export default function ContactPage() {
   return (
-    <Container className="pt-10 pb-16 sm:pt-12 sm:pb-20 lg:pt-14 lg:pb-24">
-      <Section className="!mt-0">
-    <div className="max-w-[720px]">
-      <p className="text-meta">Kontakt</p>
+ <section className="min-h-screen bg-[#080808] text-white">
+<Container className="pt-14 pb-20 sm:pt-16 sm:pb-24 lg:pt-20 lg:pb-28">
+    
+    {/* TOP LINE (aligned) */}
 
-      <h1 className="mt-3 text-h1 text-neutral-950">
-        Povej na kratko, kaj potrebuješ.
-      </h1>
 
-      <p className="mt-4 max-w-[56ch] text-body text-neutral-600">
-        Pošlji kratek opis in odgovorim s predlogom naslednjega koraka.
-      </p>
-    </div>
+<Section className="!mt-0" withDivider={false}>
+      <div className="max-w-[720px]">
+        <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/35">
+          Kontakt
+        </p>
 
-    <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,560px)_1fr]">
-      
-      {/* LEFT — FORM */}
-      <div>
+        <h1 className="mt-4 max-w-[13ch] text-5xl font-semibold leading-[0.98] tracking-[-0.04em] text-white sm:text-6xl">
+          Povej na kratko, kaj potrebuješ.
+        </h1>
+
+        <p className="mt-5 max-w-[56ch] text-base leading-7 text-white/60">
+          Pošlji kratek opis. Odgovorim hitro — z jasnim naslednjim
+          korakom.
+        </p>
+      </div>
+
+      <div className="mt-14 grid gap-12 lg:grid-cols-[minmax(0,620px)_1fr] lg:gap-16">
+        
+        {/* LEFT — FORM */}
         <form className="space-y-6">
-          
           <div className="grid gap-5 sm:grid-cols-2">
             <input
               type="text"
               placeholder="Ime"
-              className="w-full rounded-2xl border border-black/10 bg-white px-4 py-3.5 text-sm text-neutral-900 outline-none transition placeholder:text-neutral-400 focus:border-neutral-400"
+              className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-white/35 focus:border-white/30 focus:bg-white/[0.06]"
             />
 
             <input
               type="email"
               placeholder="Email"
-              className="w-full rounded-2xl border border-black/10 bg-white px-4 py-3.5 text-sm text-neutral-900 outline-none transition placeholder:text-neutral-400 focus:border-neutral-400"
+              className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-white/35 focus:border-white/30 focus:bg-white/[0.06]"
             />
           </div>
 
           <textarea
             rows={7}
             placeholder="Na kratko opiši, kaj ponujate, kaj trenutno ne deluje in kaj želite izboljšati..."
-            className="min-h-[180px] w-full rounded-2xl border border-black/10 bg-white px-4 py-3.5 text-sm text-neutral-900 outline-none transition placeholder:text-neutral-400 focus:border-neutral-400"
+            className="min-h-[190px] w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-sm text-white outline-none transition placeholder:text-white/35 focus:border-white/30 focus:bg-white/[0.06]"
           />
 
           <div className="pt-2">
             <button
               type="submit"
-              className="inline-flex items-center justify-center rounded-full bg-neutral-950 px-6 py-3.5 text-sm font-medium text-white transition hover:bg-neutral-800"
+              className="group inline-flex items-center justify-center rounded-full border border-white bg-white px-6 py-3.5 text-sm font-medium text-black transition duration-300 hover:-translate-y-[1px] hover:bg-white/90"
             >
-              Pošlji povpraševanje
+              <span className="inline-flex items-center gap-2">
+                Pošlji povpraševanje
+                <span className="transition duration-300 group-hover:translate-x-0.5">
+                  →
+                </span>
+              </span>
             </button>
           </div>
 
-          <p className="text-xs text-neutral-500">
+          <p className="text-xs text-white/40">
             Ni treba, da je opis popoln — dovolj je kratek kontekst.
           </p>
         </form>
+
+        {/* RIGHT */}
+        <div className="lg:pt-2">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 sm:p-8">
+            <p className="text-sm leading-6 text-white/55">
+              Če je lažje, lahko pišeš tudi direktno:
+            </p>
+
+            <a
+              href="mailto:gregor@bauma.si"
+              className="mt-4 inline-flex text-sm font-medium text-white underline decoration-white/25 underline-offset-4 transition hover:decoration-white"
+            >
+              gregor@bauma.si
+            </a>
+
+            <div className="mt-8 border-t border-white/10 pt-5">
+              <p className="text-sm leading-6 text-white/50">
+                Odgovorim hitro — z jasnim naslednjim korakom.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
-
-      <div className="flex flex-col gap-4 pt-2">
-  <p className="text-sm text-neutral-500">
-    Če je lažje, lahko pišeš tudi direktno:
-  </p>
-
-  <a
-    href="mailto:gregor@bauma.si"
-    className="text-sm font-medium text-neutral-900 underline underline-offset-4 decoration-neutral-300 transition hover:decoration-neutral-900"
-  >
-    gregor@bauma.si
-  </a>
-
-  <p className="text-xs text-neutral-500">
-    Odgovorim v kratkem z naslednjim korakom.
-  </p>
-</div>
-      
-    </div>
-  </Section>
-</Container>
+    </Section>
+  </Container>
+</section>
   );
 }

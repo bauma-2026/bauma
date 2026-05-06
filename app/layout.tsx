@@ -18,13 +18,13 @@ const dmSerif = DM_Serif_Display({
 const isProduction = process.env.VERCEL_ENV === "production";
 
 export const metadata: Metadata = {
-  title: "Bauma — Digitalni studio",
+  title: "Bauma — Jasna struktura. Več odločitev.",
   description:
-    "Strukturiram in postavim digitalne produkte, ki so jasni, hitri in pripravljeni za rast.",
+    "Postavim strukturo, ki uporabnika vodi do jasne odločitve — brez odvečnega šuma.",
   metadataBase: new URL("https://bauma.si"),
 
   applicationName: "Bauma",
-  creator: "Bauma — built with structure in mind",
+  creator: "Bauma — structure-first digital products",
 
   icons: {
     icon: [
@@ -37,9 +37,9 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
 
   openGraph: {
-    title: "Bauma — Digitalni studio",
+    title: "Bauma — Jasna struktura. Več odločitev.",
     description:
-      "Strukturirani, hitri in jasni digitalni produkti. Zasnova → Dizajn → Izvedba.",
+      "Struktura, ki uporabnika vodi od razumevanja do odločitve.",
     url: "https://bauma.si",
     siteName: "Bauma",
     type: "website",
@@ -49,6 +49,7 @@ export const metadata: Metadata = {
     ? { index: true, follow: true }
     : { index: false, follow: false },
 };
+
 export default function RootLayout({
   children,
 }: {
@@ -56,10 +57,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="sl" className={`${inter.variable} ${dmSerif.variable}`}>
-      <body className="min-h-screen font-sans text-neutral-900">
-        {/* background vignette */}
+      <body className="min-h-screen font-sans bg-[#080808] text-white">
+        {/* subtle background layer */}
         <div className="pointer-events-none fixed inset-0 -z-10">
-          <div className="absolute inset-0" />
+          <div className="absolute inset-0 bg-[#080808]" />
         </div>
 
         <Header />

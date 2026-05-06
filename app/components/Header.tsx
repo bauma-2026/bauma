@@ -31,14 +31,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header
-      className={[
-        "fixed left-0 top-0 z-50 w-full transition-all duration-300",
-        scrolled
-          ? "bg-black/80 backdrop-blur-md border-b border-white/10"
-          : "bg-transparent border-transparent",
-      ].join(" ")}
-    >
+<header className="fixed left-0 top-0 z-50 w-full border-b border-[#1e1e1e] bg-[#080808]/80 backdrop-blur-md transition-all duration-300">
       <Container className="relative z-10 py-3 sm:py-3.5">
         <div className="flex items-center justify-between">
 
@@ -57,7 +50,7 @@ export default function Header() {
             </div>
 
             {/* CENTER — NAV */}
-            <nav className="flex items-center gap-6 text-sm">
+            <nav className="flex items-center gap-4 text-sm">
               {nav
                 .filter((item) => item.href !== "/contact")
                 .map((item) => {
@@ -66,27 +59,25 @@ export default function Header() {
                     pathname?.startsWith(item.href + "/");
 
                   return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={[
-                        "group relative py-1 transition-colors duration-200",
-                        active
-                          ? "text-white"
-                          : "text-white/70 hover:text-white",
-                      ].join(" ")}
-                    >
-                      {item.label}
+           <Link
+  key={item.href}
+  href={item.href}
+  className={[
+    "group relative py-1 transition duration-200",
+    active
+      ? "text-white opacity-100"
+      : "text-white opacity-60 hover:opacity-100",
+  ].join(" ")}
+>
+  {item.label}
 
-                      <span
-                        className={[
-                          "absolute left-0 -bottom-1 h-[2px] w-full origin-left rounded-full bg-white transition-all duration-200",
-                          active
-                            ? "scale-x-100 opacity-100"
-                            : "scale-x-90 opacity-0 group-hover:scale-x-100 group-hover:opacity-100",
-                        ].join(" ")}
-                      />
-                    </Link>
+  <span
+  className={[
+    "absolute left-0 -bottom-1 h-px w-full bg-white/80 transition duration-300",
+    active ? "opacity-100" : "opacity-0 group-hover:opacity-50",
+  ].join(" ")}
+/>
+</Link>
                   );
                 })}
             </nav>

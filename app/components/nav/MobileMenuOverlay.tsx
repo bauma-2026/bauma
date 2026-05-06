@@ -139,7 +139,7 @@ export default function MobileMenuOverlay({
                     </Link>
                   ))
                 ) : (
-                  <div className="rounded-xl bg-neutral-50 px-4 py-4 text-sm text-neutral-700">
+                  <div className="rounded-[6px] bg-neutral-50 px-4 py-4 text-sm text-neutral-700">
                     Ni linkov v meniju.
                   </div>
                 )}
@@ -157,7 +157,7 @@ export default function MobileMenuOverlay({
               }}
             >
               <div className="mx-auto w-full max-w-[1120px] px-5 pt-6 pb-6 sm:px-6 lg:px-8">
-                <div className="rounded-[24px] border border-neutral-200 bg-neutral-50 p-5">
+                <div className="rounded-[6px] border border-neutral-200 bg-neutral-50 p-5">
                   <p className="text-sm font-medium text-black">Quick brief</p>
 
                   <p className="mt-2 max-w-[24ch] text-sm leading-6 text-neutral-600">

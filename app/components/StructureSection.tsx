@@ -22,7 +22,7 @@ export default function StructureSection() {
 
           {/* RIGHT — CARD */}
           <div className="w-full max-w-[420px]">
-            <div className="rounded-[24px] border border-neutral-200/70 bg-neutral-50 p-6">
+            <div className="rounded-[6px] border border-neutral-200/70 bg-neutral-50 p-6">
 
               <div className="text-[11px] uppercase tracking-[0.16em] text-neutral-500">
                 Struktura

@@ -50,7 +50,7 @@ export default function DecisionLayer() {
           ].map((item) => (
             <div
               key={item.title}
-              className="rounded-2xl border border-neutral-200 bg-white p-6"
+              className="rounded-[6px] border border-neutral-200 bg-white p-6"
             >
               <p className="text-[10px] uppercase tracking-[0.18em] text-neutral-400">
                 {item.number}

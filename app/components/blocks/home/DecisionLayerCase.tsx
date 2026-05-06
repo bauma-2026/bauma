@@ -39,7 +39,7 @@ export default function DecisionLayerCase() {
               </p>
             </div>
 
-            <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-neutral-200">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-[6px] border border-neutral-200">
               <Image
                 src="/case/odstrani/context-800x600-1.jpg"
                 alt="Odstrani Tattoo — hero"
@@ -56,7 +56,7 @@ export default function DecisionLayerCase() {
 
           {/* FLOW */}
           <div className="grid gap-6 lg:grid-cols-2 lg:items-center">
-            <div className="order-2 lg:order-1 relative aspect-[4/3] overflow-hidden rounded-xl border border-neutral-200">
+            <div className="order-2 lg:order-1 relative aspect-[4/3] overflow-hidden rounded-[6px] border border-neutral-200">
               <Image
                 src="/case/odstrani/flow-800x600-2.jpg"
                 alt="Odstrani Tattoo — proces"
@@ -103,7 +103,7 @@ export default function DecisionLayerCase() {
               </p>
             </div>
 
-            <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-neutral-200">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-[6px] border border-neutral-200">
               <Image
                 src="/case/odstrani/action-800x600-1.jpg"
                 alt="Odstrani Tattoo — CTA"
