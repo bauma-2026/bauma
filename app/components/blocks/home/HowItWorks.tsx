@@ -58,37 +58,39 @@ export default function HowItWorks() {
             </div>
           </div>
 
-          <div className="flex items-center">
-            <div className="w-full rounded-2xl border border-white/10 bg-white/[0.04] p-8 sm:p-10">
-              <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr] items-center gap-3">
-                {["Problem", "Flow", "Odločitev"].map((item, index) => (
-                  <div key={item} className="contents">
-                    <div
-                      className={[
-                        "flex min-h-24 items-center justify-center rounded-xl border px-4 text-center text-base font-medium",
-                        item === "Flow"
-                          ? "border-white/25 bg-white/[0.08] text-white"
-                          : "border-white/10 bg-black/20 text-white/75",
-                      ].join(" ")}
-                    >
-                      {item}
-                    </div>
-
-                    {index < 2 && (
-                      <div className="text-white/35" aria-hidden="true">
-                        →
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              <p className="mt-8 border-t border-white/10 pt-6 text-sm leading-6 text-white/50">
-                Flow odstrani dvom. Uporabnik razume, zakaj je naslednji korak
-                smiseln.
-              </p>
-            </div>
+<div className="flex items-center">
+  <div className="w-full min-w-0 rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-8 lg:p-10">
+    <div className="grid gap-3 sm:grid-cols-[1fr_auto_1fr_auto_1fr] sm:items-center">
+      {["Problem", "Flow", "Odločitev"].map((item, index) => (
+        <div key={item} className="contents">
+          <div
+            className={[
+              "flex min-h-20 min-w-0 items-center justify-center rounded-xl border px-4 text-center text-sm font-medium sm:min-h-24 sm:text-base",
+              item === "Flow"
+                ? "border-white/25 bg-white/[0.08] text-white"
+                : "border-white/10 bg-black/20 text-white/75",
+            ].join(" ")}
+          >
+            {item}
           </div>
+
+          {index < 2 && (
+            <div
+              className="flex justify-center text-white/35 max-sm:rotate-90"
+              aria-hidden="true"
+            >
+              →
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+
+    <p className="mt-6 border-t border-white/10 pt-5 text-sm leading-6 text-white/50 sm:mt-8 sm:pt-6">
+      Flow odstrani dvom. Uporabnik razume, zakaj je naslednji korak smiseln.
+    </p>
+  </div>
+</div>
         </div>
       </div>
     </section>
