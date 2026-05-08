@@ -42,120 +42,123 @@ const cases: Case[] = [
 
 export default function WorkProof() {
   return (
-    <section className="border-t border-[#1d1d1e] bg-[#080808] py-20 text-white sm:py-24 lg:py-28">
-      <div className="mx-auto max-w-[1100px] px-6 lg:px-8">
-        <div className="max-w-[680px]">
-          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/40">
-            Work
-          </p>
+   <section className="border-t border-[#1d1d1e] bg-[#080808] py-20 text-white sm:py-24 lg:py-28">
+  <div className="mx-auto max-w-[1100px] px-6 lg:px-8">
+    <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+      {/* INTRO */}
+      <div>
+        <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/40">
+          Work
+        </p>
 
-          <h2 className="mt-4 max-w-[16ch] text-4xl font-semibold leading-[0.98] tracking-[-0.04em] text-white sm:text-5xl">
-            Primeri, kjer struktura vodi do odločitve
-          </h2>
+        <h2 className="mt-4 max-w-[13ch] text-4xl font-semibold leading-[0.98] tracking-[-0.04em] text-white sm:text-5xl">
+          Primeri, kjer struktura vodi do odločitve
+        </h2>
 
-          <p className="mt-5 max-w-[54ch] text-base leading-7 text-white/60">
-            Vsak projekt ima isti cilj: odstraniti zmedo, urediti pot in
-            uporabnika pripeljati do naslednjega koraka.
-          </p>
-        </div>
+        <p className="mt-5 max-w-[42ch] text-base leading-7 text-white/60">
+          Ne gre za lepši izgled. Gre za to, da uporabnik hitreje razume, kaj je
+          zanj relevantno in kaj je naslednji korak.
+        </p>
+      </div>
 
+      {/* PROOF LIST */}
+      <div className="space-y-4">
         <a
           href={featured.href}
-          className="group mt-14 block rounded-2xl border border-white/10 bg-[#111214] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.35)] transition hover:border-white/20 sm:p-8"
+          className="group block rounded-2xl border border-white/10 bg-white/[0.035] p-6 transition hover:border-white/20 hover:bg-white/[0.05] sm:p-7"
         >
-          <div className="grid gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:gap-12">
+          <div className="flex items-start justify-between gap-6">
             <div>
               <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/35">
                 Featured case
               </p>
 
-              <h3 className="mt-3 max-w-[15ch] text-2xl font-semibold leading-[1.08] tracking-[-0.03em] text-white sm:text-3xl">
+              <h3 className="mt-3 max-w-[20ch] text-2xl font-semibold leading-[1.08] tracking-[-0.03em] text-white">
                 {featured.title}
               </h3>
-
-              <div className="mt-8 space-y-7">
-                <ProofLine label="Pred tem" text={featured.problem} />
-                <ProofLine label="Sprememba" text={featured.approach} />
-                <ProofLine label="Po tem" text={featured.result} />
-              </div>
-
-              <div className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-white">
-                Poglej case
-                <span className="transition group-hover:translate-x-1">→</span>
-              </div>
             </div>
 
-            <div className="relative aspect-[16/9] overflow-hidden rounded-xl border border-white/10 bg-[#141414] p-1">
-              <div className="relative h-full w-full overflow-hidden rounded-lg">
-                <Image
-                  src="/images/work/flexido-preview-1.webp"
-                  alt="Flexido primer"
-                  fill
-                  className="object-cover object-[30%_center] transition duration-500 group-hover:scale-[1.02]"
-                  sizes="(min-width: 1024px) 560px, 100vw"
-                />
+            <span className="hidden text-sm text-white/35 transition group-hover:translate-x-1 group-hover:text-white sm:block">
+              →
+            </span>
+          </div>
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent opacity-90" />
-
-                <div className="absolute left-4 top-4 rounded-full border border-white/10 bg-black/45 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-white/65 backdrop-blur">
-                  Flexido case
-                </div>
-              </div>
+          <div className="mt-8 grid gap-4 border-t border-white/10 pt-6 sm:grid-cols-3">
+            <div>
+              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-white/30">
+                Pred tem
+              </p>
+              <p className="mt-2 text-sm leading-6 text-white/60">
+                Razpršena ponudba.
+              </p>
             </div>
+
+            <div>
+              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-white/30">
+                Sprememba
+              </p>
+              <p className="mt-2 text-sm leading-6 text-white/60">
+                Jasne poti odločanja.
+              </p>
+            </div>
+
+            <div>
+              <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-white/30">
+                Po tem
+              </p>
+              <p className="mt-2 text-sm leading-6 text-white/60">
+                Jasen naslednji korak.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-7 inline-flex items-center gap-2 text-sm font-medium text-white">
+            Kako smo poenostavili ponudbo
+            <span className="transition group-hover:translate-x-1">→</span>
           </div>
         </a>
 
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          {cases.map((c) => (
-            <a
-              key={c.title}
-              href={c.href}
-              className="group block rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-white/20 hover:bg-white/[0.045]"
-            >
-              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/35">
-                Case
-              </p>
-
-              <h3 className="mt-3 text-xl font-semibold tracking-[-0.03em] text-white">
-                {c.title}
-              </h3>
-
-              <div className="mt-5 space-y-3 text-sm leading-6 text-white/55">
-                <p>
-                  <span className="font-medium text-white/85">Problem — </span>
-                  {c.problem}
+        {cases.map((c) => (
+          <a
+            key={c.title}
+            href={c.href}
+            className="group block rounded-2xl border border-white/10 bg-white/[0.02] p-6 transition hover:border-white/20 hover:bg-white/[0.04]"
+          >
+            <div className="flex items-start justify-between gap-6">
+              <div>
+                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/30">
+                  Case
                 </p>
 
-                <p>
-                  <span className="font-medium text-white/85">Rezultat — </span>
+                <h3 className="mt-3 text-xl font-semibold tracking-[-0.03em] text-white">
+                  {c.title}
+                </h3>
+
+                <p className="mt-3 max-w-[52ch] text-sm leading-6 text-white/55">
                   {c.result}
                 </p>
               </div>
 
-              <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-4">
-                <span className="text-sm font-medium text-white">
-                  Poglej primer
-                </span>
+              <span className="text-white/35 transition group-hover:translate-x-1 group-hover:text-white">
+                →
+              </span>
+            </div>
+          </a>
+        ))}
 
-                <span className="text-white/40 transition group-hover:translate-x-1 group-hover:text-white">
-                  →
-                </span>
-              </div>
-            </a>
-          ))}
-        </div>
-
-        <div className="mt-10">
+        <div className="pt-4">
           <a
             href="/work"
-            className="inline-flex items-center gap-2 text-sm font-medium text-white/80 transition hover:text-white"
+            className="inline-flex items-center gap-2 text-sm font-medium text-white/70 transition hover:text-white"
           >
             Poglej vse projekte
             <span>→</span>
           </a>
         </div>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
   );
 }
 

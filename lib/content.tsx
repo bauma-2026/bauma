@@ -21,58 +21,79 @@ export const site = {
 };
 
 export const services = [
-  { title: "Strategy", desc: "Fokus, prioritete in jasen cilj. Brez šuma." },
   {
-    title: "Structure",
-    desc: "Struktura, flow in blueprint — preden karkoli poliramo.",
+    title: "Najprej odstranimo šum",
+    desc: "Poiščemo, kje uporabnik izgubi fokus, dvomi ali ne razume naslednjega koraka.",
   },
-  { title: "Design", desc: "Topel, čist UI. Uporaben in berljiv na telefonu." },
-  { title: "Build", desc: "Next.js izvedba: hitrost, SEO in stabilnost." },
-] as const;
+  {
+    title: "Pot postane jasna",
+    desc: "Vsebino, hierarchy in flow uredimo tako, da uporabnik hitreje razume, kaj je pomembno.",
+  },
+  {
+    title: "Stran začne voditi",
+    desc: "Vsak layer dobi svojo vlogo. Uporabnik se premika brez občutka zmede.",
+  },
+  {
+    title: "Šele potem poliramo",
+    desc: "Vizualni sloj okrepi jasno strukturo — ne skriva problemov pod efekti.",
+  },
+];
 
 export const work: WorkItem[] = [
   {
-    slug: "bauma-portfolio",
-    title: "Bauma Portfolio (Next.js)",
+    slug: "flexido",
+    title: "Kompleksno ponudbo smo spremenili v jasne poti odločanja.",
     summary:
-      "Portfolio za studio, zgrajen okoli jasne strukture, mirnega UI-ja in hitre izvedbe v Next.js.",
-    tags: ["Next.js", "UI", "Systems"],
+      "Industrijsko ponudbo smo strukturirali po realnih proizvodnih procesih, da uporabnik hitreje razume pravo rešitev in naslednji korak.",
+    tags: ["Structure", "Decision Flow", "Industrial"],
     challenge: [
-      "Placeholder splash zamenjati z resno predstavitvijo studia.",
-      "Postaviti jasen flow: hero → dokaz (work) → način dela → kontakt.",
-      "Mobile-first hierarhija in miren, arhitekturni ritem.",
+      "Ponudba je bila razpršena.",
+      "Uporabnik ni hitro razumel, katera rešitev je prava zanj.",
+      "Ni bilo jasnega naslednjega koraka.",
     ],
     approach: [
-      "Blueprint: sekcije + copy hierarchy.",
-      "UI sistem: spacing, radius, kartice, subtilen hover.",
-      "Build: Next.js App Router + content-driven struktura.",
+      "Ponudbo smo razdelili po realnih use-case procesih.",
+      "Odstranili smo odvečne informacije.",
+      "Vsaka rešitev vodi skozi isti decision flow.",
     ],
     outcome: [
-      "Stran, ki takoj razloži pristop in pokaže delo.",
-      "Osnova za iteracije (dodajanje projektov brez kaosa).",
-      "Hitro, čisto, SEO-ready.",
+      "Uporabnik hitreje razume ponudbo.",
+      "Lažje prepozna svojo situacijo.",
+      "Naslednji korak postane očiten.",
     ],
   },
+
   {
-    slug: "focused-kit",
-    title: "Focused Kit",
+    slug: "odstrani-tattoo",
+    title: "Odstrani Tattoo",
     summary:
-      "Produktni koncept, postavljen tako, da hitro razloži idejo, poudari fokus in ohrani miren, berljiv flow.",
-    tags: ["Next.js", "Product", "Curation"],
+      "Stran vodi uporabnika od vprašanj in dvomov do jasnega razumevanja postopka.",
+    tags: ["Flow", "Trust", "Clarity"],
     challenge: [
-      "Zgraditi kurirano platformo brez ‘big store’ kaosa.",
-      "Jasen segment, jasni kriteriji, jasna navigacija.",
-      "Prikazati mnenje in kontekst — ne samo katalog.",
+      "Uporabnik ni vedel, ali je odstranitev sploh možna.",
     ],
     approach: [
-      "Information architecture: kategorije in filtri brez preobremenitve.",
-      "Card sistem + product detail page kot ‘case’ pristop.",
-      "Iterativna gradnja: najprej 10 produktov, potem širitev.",
+      "Flow vodi od problema do realnih pričakovanj.",
     ],
     outcome: [
-      "Mirna, fokusirana izkušnja z jasnim stališčem.",
-      "Osnova za rast in dodajanje CMS kasneje (če bo treba).",
-      "Sistem, ki ostane clean tudi ob več vsebine.",
+      "Uporabnik v nekaj minutah razume, ali je to zanj.",
+    ],
+  },
+
+  {
+    slug: "dema-plus",
+    title: "Dema Plus",
+    summary:
+      "Reference in ponudba so postale bolj jasne, direktne in lažje razumljive.",
+    tags: ["Structure", "References", "Presentation"],
+    challenge: [
+      "Podjetje ni bilo jasno predstavljeno.",
+    ],
+    approach: [
+      "Struktura z jasnim poudarkom na projektih in vrednosti.",
+    ],
+    outcome: [
+      "Uporabnik hitreje razume reference in pridobi zaupanje.",
     ],
   },
 ];

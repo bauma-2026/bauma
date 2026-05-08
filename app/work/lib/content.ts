@@ -24,13 +24,22 @@ export type ServiceItem = {
 };
 
 export const services: ServiceItem[] = [
-  { title: "Strategy", desc: "Fokus, prioritete in jasen cilj. Brez šuma." },
   {
-    title: "Structure",
-    desc: "Struktura, flow in blueprint – preden karkoli poliramo.",
+    title: "Najprej odstranimo šum",
+    desc: "Poiščemo, kje uporabnik izgubi fokus, dvomi ali ne razume naslednjega koraka.",
   },
-  { title: "Design", desc: "Topel, čist UI. Uporaben in berljiv na telefonu." },
-  { title: "Build", desc: "Next.js izvedba: hitrost, SEO in stabilnost." },
+  {
+    title: "Pot postane jasna",
+    desc: "Vsebino, hierarchy in flow uredimo tako, da uporabnik hitreje razume, kaj je pomembno.",
+  },
+  {
+    title: "Stran začne voditi",
+    desc: "Vsak layer dobi svojo vlogo. Uporabnik se premika brez občutka zmede.",
+  },
+  {
+    title: "Šele potem poliramo",
+    desc: "Vizualni sloj okrepi jasno strukturo — ne skriva problemov pod efekti.",
+  },
 ];
 
 /* =========================

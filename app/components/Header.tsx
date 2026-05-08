@@ -9,7 +9,7 @@ import MobileMenuOverlay from "./nav/MobileMenuOverlay";
 
 const nav = [
   { href: "/work", label: "Work" },
-  { href: "/approach", label: "Approach" },
+  { href: "/approach", label: "Pristop" },
   { href: "/novice", label: "Novice" },
   { href: "/contact", label: "Contact" },
 ];

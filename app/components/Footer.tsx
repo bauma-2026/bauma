@@ -28,7 +28,7 @@ export default function Footer() {
                 Work
               </Link>
               <Link href="/approach" className="text-white/55 transition hover:text-white">
-                Approach
+                Pristop
               </Link>
               <Link href="/novice" className="text-white/55 transition hover:text-white">
                 News

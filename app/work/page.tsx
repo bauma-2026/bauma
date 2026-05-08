@@ -23,72 +23,82 @@ export default function WorkPage() {
             </p>
           </div>
 
-          <div className="mt-12 grid gap-6">
-            {work.map((p, i) => (
-              <Link
-                key={p.slug}
-                href={`/work/${p.slug}`}
-                className={[
-                  "group block border border-white/10 bg-white/[0.04] transition hover:border-white/20",
-                  i === 0
-                    ? "rounded-2xl p-7 sm:p-10"
-                    : "rounded-xl p-6 sm:p-8",
-                ].join(" ")}
-              >
-                <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
-                  <div className={i === 0 ? "max-w-[68ch]" : "max-w-[64ch]"}>
-                    {i === 0 && (
-                      <div className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/35">
-                        Featured case
-                      </div>
-                    )}
+         <div className="mt-12 space-y-6">
+  {/* FEATURED */}
+  <Link
+    href={`/work/${work[0].slug}`}
+    className="group block rounded-[28px] border border-white/10 bg-white/[0.04] p-7 transition hover:border-white/20 sm:p-10"
+  >
+    <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+      <div className="max-w-[72ch]">
+        <div className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/35">
+          Featured case
+        </div>
 
-                    <h2
-                      className={[
-                        "font-semibold tracking-[-0.03em] text-white",
-                        i === 0
-                          ? "mt-4 text-3xl leading-tight sm:text-4xl"
-                          : "text-xl",
-                      ].join(" ")}
-                    >
-                      {p.title}
-                    </h2>
+        <h2 className="mt-5 max-w-[18ch] text-4xl font-semibold leading-[0.98] tracking-[-0.04em] text-white sm:text-5xl">
+          {work[0].title}
+        </h2>
 
-                    <p
-                      className={[
-                        "text-white/60",
-                        i === 0
-                          ? "mt-4 text-base leading-7"
-                          : "mt-3 text-sm leading-6",
-                      ].join(" ")}
-                    >
-                      {p.summary}
-                    </p>
-                  </div>
+        <p className="mt-6 max-w-[58ch] text-base leading-7 text-white/60">
+          {work[0].summary}
+        </p>
+      </div>
 
-                  <div className="shrink-0 text-sm text-white/40 transition group-hover:translate-x-1 group-hover:text-white">
-                    Case →
-                  </div>
-                </div>
+      <div className="shrink-0 text-sm text-white/35 transition group-hover:translate-x-1 group-hover:text-white">
+        Case →
+      </div>
+    </div>
 
-                <div
-                  className={[
-                    "flex flex-wrap gap-2",
-                    i === 0 ? "mt-8 border-t border-white/10 pt-6" : "mt-6",
-                  ].join(" ")}
-                >
-                  {p.tags.map((t) => (
-                    <span
-                      key={t}
-                      className="inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-white/55 transition group-hover:border-white/20 group-hover:text-white/70"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </Link>
-            ))}
+    <div className="mt-8 flex flex-wrap gap-2 border-t border-white/10 pt-6">
+      {work[0].tags.map((t) => (
+        <span
+          key={t}
+          className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-white/50"
+        >
+          {t}
+        </span>
+      ))}
+    </div>
+  </Link>
+
+  {/* SUPPORTING CASES */}
+  <div className="grid gap-6 md:grid-cols-2">
+    {work.slice(1).map((p) => (
+      <Link
+        key={p.slug}
+        href={`/work/${p.slug}`}
+        className="group block rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-white/20"
+      >
+        <div className="flex items-start justify-between gap-5">
+          <div>
+            <h3 className="text-2xl font-semibold tracking-[-0.03em] text-white">
+              {p.title}
+            </h3>
+
+            <p className="mt-4 text-sm leading-6 text-white/55">
+              {p.summary}
+            </p>
           </div>
+
+          <span className="text-white/30 transition group-hover:translate-x-1 group-hover:text-white">
+            →
+          </span>
+        </div>
+
+        <div className="mt-6 flex flex-wrap gap-2">
+          {p.tags.map((t) => (
+            <span
+              key={t}
+              className="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-white/50"
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+      </Link>
+    ))}
+  </div>
+</div>
         </Section>
       </Container>
     </div>
