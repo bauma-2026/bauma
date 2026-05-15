@@ -1,18 +1,23 @@
-export default function FinalCTA() {
+export default function MiniFinalCTA() {
   return (
-    <section className="border-t border-white/10 bg-[#080808] py-20 text-white sm:py-24 lg:py-24">
+    <section className="border-t border-white/10 bg-[#080808] py-16 text-white sm:py-20 lg:py-24">
       <div className="mx-auto max-w-[720px] px-6 text-center lg:px-8">
-        <h2 className="text-3xl font-semibold leading-[1.05] tracking-[-0.025em] text-white sm:text-4xl">
+        <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/35">
+          Naslednji korak
+        </p>
+
+        <h2 className="mt-4 text-3xl font-semibold leading-[1.05] tracking-[-0.025em] text-white sm:text-4xl">
           Kje se uporabnik ustavi?
         </h2>
-<p className="mx-auto mt-4 max-w-[40ch] text-base leading-[1.65] text-white/58">
-  V nekaj minutah postane jasno, kje nastane zmeda — in zakaj uporabnik
-  ne naredi naslednjega koraka.
-</p>
 
-        <div className="mt-9 flex flex-col items-center gap-4">
+        <p className="mx-auto mt-5 max-w-[42ch] text-sm leading-6 text-white/58 sm:text-base sm:leading-[1.65]">
+          Če stran izgleda dobro, uporabnik pa ne naredi naslednjega koraka,
+          lahko začnemo pri strukturi.
+        </p>
+
+        <div className="mt-8 flex flex-col items-center gap-4 sm:mt-9">
           <a
-            href="/contact"
+            href="mailto:hello@bauma.si"
             className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border border-white bg-white px-6 py-3 text-sm font-medium text-black transition duration-300 hover:-translate-y-[1px] hover:bg-white/90 active:translate-y-0"
           >
             <span className="relative z-10 inline-flex items-center gap-2">
@@ -27,8 +32,8 @@ export default function FinalCTA() {
             </span>
           </a>
 
-          <p className="text-xs leading-5 text-white/38">
-            Brez pritiska · samo jasen naslednji korak
+          <p className="text-xs leading-5 text-white/45">
+            Brez pritiska · samo jasen prvi korak
           </p>
         </div>
       </div>

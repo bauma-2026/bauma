@@ -26,15 +26,16 @@ export const metadata: Metadata = {
   applicationName: "Bauma",
   creator: "Bauma — structure-first digital products",
 
-  icons: {
-    icon: [
-      { url: "/favicon.ico" },
-      { url: "/favicon.svg", type: "image/svg+xml" },
-    ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
-  },
-
-  manifest: "/site.webmanifest",
+icons: {
+  icon: [
+    { url: "/favicon.ico?v=2" },
+    { url: "/favicon.svg?v=2", type: "image/svg+xml" },
+    { url: "/favicon-32x32.png?v=2", sizes: "32x32", type: "image/png" },
+    { url: "/favicon-16x16.png?v=2", sizes: "16x16", type: "image/png" },
+  ],
+  apple: [{ url: "/apple-touch-icon.png?v=2", sizes: "180x180" }],
+},
+manifest: "/site.webmanifest?v=2",
 
   openGraph: {
     title: "Bauma — Jasna struktura. Več odločitev.",
@@ -63,9 +64,7 @@ export default function RootLayout({
           <div className="absolute inset-0 bg-[#080808]" />
         </div>
 
-        <Header />
-        <main>{children}</main>
-        <Footer />
+       {children}
       </body>
     </html>
   );

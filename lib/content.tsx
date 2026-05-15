@@ -12,22 +12,22 @@ export type WorkItem = {
 
 export const site = {
   name: "BAUMA",
-  tagline: "Digital Studio + Product Architecture",
-  heroTitle: "Product systems.\nDesigned to\nscale.",
+  tagline: "Structure-first Websites",
+  heroTitle: "Jasna struktura.\nVeč odločitev.",
   heroLead:
-    "Strukturiramo kompleksne digitalne produkte v jasne, stabilne in skalabilne sisteme — od prvega blueprinta do izvedbe.",
-  ctaPrimary: "Poglej projekte",
+    "Kompleksne ponudbe spremenim v jasne poti odločanja.",
+  ctaPrimary: "Poglej pristop",
   ctaSecondary: "Kontakt",
 };
 
 export const services = [
   {
-    title: "Najprej odstranimo šum",
-    desc: "Poiščemo, kje uporabnik izgubi fokus, dvomi ali ne razume naslednjega koraka.",
+    title: "Najprej odstraniva šum",
+    desc: "Poiščeva, kje uporabnik izgubi fokus, dvomi ali ne razume naslednjega koraka.",
   },
   {
     title: "Pot postane jasna",
-    desc: "Vsebino, hierarchy in flow uredimo tako, da uporabnik hitreje razume, kaj je pomembno.",
+    desc: "Vsebino, hierarchy in flow uredim tako, da uporabnik hitreje razume, kaj je pomembno.",
   },
   {
     title: "Stran začne voditi",
@@ -62,7 +62,6 @@ export const work: WorkItem[] = [
       "Naslednji korak postane očiten.",
     ],
   },
-
   {
     slug: "odstrani-tattoo",
     title: "Odstrani Tattoo",
@@ -71,15 +70,20 @@ export const work: WorkItem[] = [
     tags: ["Flow", "Trust", "Clarity"],
     challenge: [
       "Uporabnik ni vedel, ali je odstranitev sploh možna.",
+      "Postopek je lahko hitro deloval nejasno ali preveč obljubljajoče.",
+      "Naslednji korak ni smel biti agresiven, ampak razumljiv.",
     ],
     approach: [
-      "Flow vodi od problema do realnih pričakovanj.",
+      "Flow vodi od vprašanja do realnih pričakovanj.",
+      "Vsebina najprej razloži postopek, šele nato vodi v kontakt.",
+      "Trust layer temelji na jasnosti, dokazih in mirnem tonu.",
     ],
     outcome: [
       "Uporabnik v nekaj minutah razume, ali je to zanj.",
+      "Manj je dvoma okoli postopka in pričakovanj.",
+      "Kontakt postane naraven naslednji korak.",
     ],
   },
-
   {
     slug: "dema-plus",
     title: "Dema Plus",
@@ -87,13 +91,19 @@ export const work: WorkItem[] = [
       "Reference in ponudba so postale bolj jasne, direktne in lažje razumljive.",
     tags: ["Structure", "References", "Presentation"],
     challenge: [
-      "Podjetje ni bilo jasno predstavljeno.",
+      "Podjetje ni bilo dovolj jasno predstavljeno.",
+      "Reference niso dovolj hitro gradile zaupanja.",
+      "Uporabnik je moral sam sestavljati kontekst.",
     ],
     approach: [
-      "Struktura z jasnim poudarkom na projektih in vrednosti.",
+      "Struktura strani jasneje predstavi podjetje, ponudbo in reference.",
+      "Vsaka sekcija dobi jasno vlogo v razumevanju podjetja.",
+      "Vizualni sloj ostane miren in podpira zaupanje.",
     ],
     outcome: [
-      "Uporabnik hitreje razume reference in pridobi zaupanje.",
+      "Uporabnik hitreje razume, s čim se podjetje ukvarja.",
+      "Reference dobijo večjo težo.",
+      "Stran deluje bolj resno, jasno in uporabno.",
     ],
   },
 ];
@@ -114,27 +124,28 @@ export const news: NewsItem[] = [
     content: (
       <>
         <p>
-          Večina strani začne pri vizualnem sloju. Tukaj smo šli obratno —
-          najprej struktura, potem UI.
+          Večina strani začne pri vizualnem sloju. Pri tem projektu je bil
+          vrstni red drugačen: najprej struktura, potem UI.
         </p>
 
         <p>
-          Cilj je bil jasen: uporabnik mora razumeti, kako postopek deluje, kaj
-          lahko pričakuje in kaj je naslednji korak.
+          Cilj ni bil narediti samo lepše strani. Cilj je bil, da uporabnik hitro
+          razume, kako postopek deluje, kaj lahko pričakuje in kateri naslednji
+          korak je smiseln.
         </p>
 
         <h3>Kako je bil postavljen flow</h3>
 
         <ul>
-          <li>Hero — kaj je to in za koga je</li>
-          <li>Process — kako deluje</li>
-          <li>Objections — kaj lahko pričakuješ</li>
-          <li>Results — dokaz</li>
-          <li>CTA — jasen naslednji korak</li>
+          <li>Hero — kaj je storitev in za koga je primerna</li>
+          <li>Postopek — kako odstranjevanje poteka</li>
+          <li>Pričakovanja — kaj je realno in kaj ni</li>
+          <li>Dokazi — vizualni in vsebinski trust layer</li>
+          <li>CTA — jasen naslednji korak brez pritiska</li>
         </ul>
 
         <p>
-          Rezultat je stran, ki ne poskuša impresionirati, ampak vodi uporabnika
+          Rezultat je stran, ki ne poskuša samo impresionirati. Uporabnika vodi
           skozi odločitev.
         </p>
       </>
@@ -148,25 +159,28 @@ export const news: NewsItem[] = [
     content: (
       <>
         <p>
-          Glavni problem stare strani ni bil vizualen — bil je v strukturi.
+          Glavni problem stare predstavitve ni bil samo vizualen. Večji problem
+          je bil v strukturi: uporabnik ni dovolj hitro razumel, s čim se
+          podjetje ukvarja in zakaj mu lahko zaupa.
         </p>
 
         <p>
-          Ni bilo jasno, s čim se podjetje ukvarja in kako naprej.
+          Zato je bila stran zastavljena bolj direktno. Najprej jasna ponudba,
+          potem reference, potem razlog za kontakt.
         </p>
 
         <h3>Kaj smo spremenili</h3>
 
         <ul>
-          <li>Hero — jasna ponudba</li>
-          <li>Reference — v ospredju</li>
-          <li>Struktura — logičen flow</li>
-          <li>Navigacija — brez zmede</li>
+          <li>Hero — jasnejša predstavitev podjetja</li>
+          <li>Reference — večja vloga pri gradnji zaupanja</li>
+          <li>Struktura — bolj logičen flow skozi stran</li>
+          <li>Navigacija — manj šuma, več jasnosti</li>
         </ul>
 
         <p>
-          Stran zdaj deluje kot resna predstavitev podjetja, ne samo kot “lep
-          dizajn”.
+          Stran zdaj deluje kot bolj resna predstavitev podjetja, ne samo kot
+          vizualna prenova.
         </p>
       </>
     ),

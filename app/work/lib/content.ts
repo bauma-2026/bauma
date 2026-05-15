@@ -1,16 +1,13 @@
-import type { ReactNode } from "react";
-
 /* =========================
    SITE
 ========================= */
 
 export const site = {
   name: "BAUMA",
-  tagline: "Digital Studio + Product Architecture",
-  heroTitle: "Product systems.\nDesigned to\nscale.",
-  heroLead:
-    "Strukturiramo kompleksne digitalne produkte v jasne, stabilne in skalabilne sisteme — od prvega blueprinta do izvedbe.",
-  ctaPrimary: "Poglej projekte",
+  tagline: "Structure-first Websites",
+  heroTitle: "Jasna struktura.\nVeč odločitev.",
+  heroLead: "Kompleksne ponudbe spremenim v jasne poti odločanja.",
+  ctaPrimary: "Poglej pristop",
   ctaSecondary: "Kontakt",
 } as const;
 
@@ -25,12 +22,12 @@ export type ServiceItem = {
 
 export const services: ServiceItem[] = [
   {
-    title: "Najprej odstranimo šum",
-    desc: "Poiščemo, kje uporabnik izgubi fokus, dvomi ali ne razume naslednjega koraka.",
+    title: "Najprej odstraniva šum",
+    desc: "Poiščeva, kje uporabnik izgubi fokus, dvomi ali ne razume naslednjega koraka.",
   },
   {
     title: "Pot postane jasna",
-    desc: "Vsebino, hierarchy in flow uredimo tako, da uporabnik hitreje razume, kaj je pomembno.",
+    desc: "Vsebino, hierarchy in flow uredim tako, da uporabnik hitreje razume, kaj je pomembno.",
   },
   {
     title: "Stran začne voditi",
@@ -58,47 +55,69 @@ export type WorkItem = {
 
 export const work: WorkItem[] = [
   {
-    slug: "bauma-portfolio",
-    title: "Bauma Portfolio (Next.js)",
+    slug: "flexido",
+    title: "Kompleksno ponudbo smo spremenili v jasne poti odločanja.",
     summary:
-      "Mobile-first studio site. Clear structure → clean UI → fast build.",
-    tags: ["Next.js", "UI", "Architecture"],
+      "Industrijsko ponudbo smo strukturirali po realnih proizvodnih procesih, da uporabnik hitreje razume pravo rešitev in naslednji korak.",
+    tags: ["Structure", "Decision Flow", "Industrial"],
     challenge: [
-      "Placeholder splash zamenjati z resno predstavitvijo studia.",
-      "Postaviti jasen flow: hero → dokaz (work) → način dela → kontakt.",
-      "Mobile-first hierarhija in miren, arhitekturni ritem.",
+      "Ponudba je bila razpršena.",
+      "Uporabnik ni hitro razumel, katera rešitev je prava zanj.",
+      "Ni bilo jasnega naslednjega koraka.",
     ],
     approach: [
-      "Blueprint: sekcije + copy hierarchy.",
-      "UI sistem: spacing, radius, kartice, subtilen hover.",
-      "Build: Next.js App Router + content-driven struktura.",
+      "Ponudbo smo razdelili po realnih use-case procesih.",
+      "Odstranili smo odvečne informacije.",
+      "Vsaka rešitev vodi skozi isti decision flow.",
     ],
     outcome: [
-      "Stran, ki takoj razloži pristop in pokaže delo.",
-      "Osnova za iteracije (dodajanje projektov brez kaosa).",
-      "Hitro, čisto, SEO-ready.",
+      "Uporabnik hitreje razume ponudbo.",
+      "Lažje prepozna svojo situacijo.",
+      "Naslednji korak postane očiten.",
     ],
   },
   {
-    slug: "focused-kit",
-    title: "Focused Kit",
+    slug: "odstrani-tattoo",
+    title: "Odstrani Tattoo",
     summary:
-      "Curated tech products with opinionated structure and calm UX.",
-    tags: ["Next.js", "Product", "Curation"],
+      "Stran vodi uporabnika od vprašanj in dvomov do jasnega razumevanja postopka.",
+    tags: ["Flow", "Trust", "Clarity"],
     challenge: [
-      "Zgraditi kurirano platformo brez ‘big store’ kaosa.",
-      "Jasen segment, jasni kriteriji, jasna navigacija.",
-      "Prikazati mnenje in kontekst — ne samo katalog.",
+      "Uporabnik ni vedel, ali je odstranitev sploh možna.",
+      "Postopek je lahko hitro deloval nejasno ali preveč obljubljajoče.",
+      "Naslednji korak ni smel biti agresiven, ampak razumljiv.",
     ],
     approach: [
-      "Information architecture: kategorije in filtri brez preobremenitve.",
-      "Card sistem + product detail page kot ‘case’ pristop.",
-      "Iterativna gradnja: najprej 10 produktov, potem širitev.",
+      "Flow vodi od vprašanja do realnih pričakovanj.",
+      "Vsebina najprej razloži postopek, šele nato vodi v kontakt.",
+      "Trust layer temelji na jasnosti, dokazih in mirnem tonu.",
     ],
     outcome: [
-      "Mirna, fokusirana izkušnja z jasnim stališčem.",
-      "Osnova za rast in dodajanje CMS kasneje (če bo treba).",
-      "Sistem, ki ostane clean tudi ob več vsebine.",
+      "Uporabnik v nekaj minutah razume, ali je to zanj.",
+      "Manj je dvoma okoli postopka in pričakovanj.",
+      "Kontakt postane naraven naslednji korak.",
+    ],
+  },
+  {
+    slug: "dema-plus",
+    title: "Dema Plus",
+    summary:
+      "Reference in ponudba so postale bolj jasne, direktne in lažje razumljive.",
+    tags: ["Structure", "References", "Presentation"],
+    challenge: [
+      "Podjetje ni bilo dovolj jasno predstavljeno.",
+      "Reference niso dovolj hitro gradile zaupanja.",
+      "Uporabnik je moral sam sestavljati kontekst.",
+    ],
+    approach: [
+      "Struktura strani jasneje predstavi podjetje, ponudbo in reference.",
+      "Vsaka sekcija dobi jasno vlogo v razumevanju podjetja.",
+      "Vizualni sloj ostane miren in podpira zaupanje.",
+    ],
+    outcome: [
+      "Uporabnik hitreje razume, s čim se podjetje ukvarja.",
+      "Reference dobijo večjo težo.",
+      "Stran deluje bolj resno, jasno in uporabno.",
     ],
   },
 ];
