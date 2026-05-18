@@ -53,7 +53,7 @@ export default function FlexidoCasePage() {
       <section className="border-b border-white/10">
         <div className="mx-auto w-full max-w-[1120px] px-5 pb-16 pt-24 sm:px-6 sm:pb-20 sm:pt-28 lg:px-8 lg:pb-24 lg:pt-32">
           <div className="max-w-[820px]">
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/35">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
               Case / Flexido
             </p>
 
@@ -84,7 +84,7 @@ export default function FlexidoCasePage() {
                 key={label}
                 className="rounded-2xl border border-white/10 bg-white/[0.04] p-6"
               >
-                <p className="text-[11px] uppercase tracking-[0.18em] text-white/35">
+                <p className="text-[11px] uppercase tracking-[0.18em] text-white/60">
                   {label}
                 </p>
 
@@ -108,7 +108,7 @@ export default function FlexidoCasePage() {
               >
                 <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
                   <div>
-                    <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/35">
+                    <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
                       {section.eyebrow}
                     </p>
 
@@ -147,7 +147,7 @@ export default function FlexidoCasePage() {
       <section className="border-y border-white/10 bg-[#111214]">
         <div className="mx-auto w-full max-w-[1120px] px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
           <div className="max-w-[760px]">
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/35">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
               Ključna sprememba
             </p>
 
@@ -195,7 +195,7 @@ function ScreenshotProof() {
     <section className="border-y border-white/10 bg-[#080808]">
       <div className="mx-auto w-full max-w-[1120px] px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
         <div className="max-w-[720px]">
-          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/35">
+          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
             Vizualni dokaz
           </p>
 

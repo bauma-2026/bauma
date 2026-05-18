@@ -33,7 +33,7 @@ export default function NextLayerInPractice() {
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
           {/* LEFT */}
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/40">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
               Next Layer v praksi
             </p>
 
@@ -49,7 +49,7 @@ export default function NextLayerInPractice() {
             <div className="mt-10 space-y-6">
               {steps.map((step) => (
                 <div key={step.number} className="flex gap-4">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/15 text-[11px] font-medium text-white/50">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/15 text-[11px] font-medium text-white/60">
                     {step.number}
                   </div>
 
@@ -92,7 +92,7 @@ export default function NextLayerInPractice() {
     </div>
 
     <div className="p-6 sm:p-7">
-      <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/40">
+      <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
         Primer
       </p>
 

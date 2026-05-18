@@ -9,7 +9,7 @@ export default function WorkPage() {
       <Container className="pb-20 pt-24 sm:pb-24 sm:pt-28 lg:pb-28 lg:pt-32">
         <Section className="!mt-0" withDivider={false}>
           <div className="max-w-[720px]">
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/35">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
               Work
             </p>
 
@@ -31,7 +31,7 @@ export default function WorkPage() {
             >
               <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
                 <div className="max-w-[72ch]">
-                  <div className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/35">
+                  <div className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
                     Featured case
                   </div>
 
@@ -44,7 +44,7 @@ export default function WorkPage() {
                   </p>
                 </div>
 
-                <div className="shrink-0 text-sm text-white/35 transition duration-200 group-hover:translate-x-1 group-hover:text-white">
+                <div className="shrink-0 text-sm text-white/50 transition duration-200 group-hover:translate-x-1 group-hover:text-white">
                   Case →
                 </div>
               </div>
@@ -80,7 +80,7 @@ export default function WorkPage() {
                       </p>
                     </div>
 
-                    <span className="text-white/30 transition duration-200 group-hover:translate-x-1 group-hover:text-white">
+                    <span className="text-white/50 transition duration-200 group-hover:translate-x-1 group-hover:text-white">
                       →
                     </span>
                   </div>

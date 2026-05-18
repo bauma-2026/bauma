@@ -1,5 +1,8 @@
 "use client";
 
+/* eslint-disable react-hooks/set-state-in-effect */
+
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -112,27 +115,27 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Mobile */}
-          <div className="flex w-full items-center justify-between md:hidden">
-            <Link
-              href="/"
-              aria-label="Bauma home"
-              className="inline-flex items-center transition-opacity duration-200 hover:opacity-80"
-            >
-              <img
-                src="/logo/bauma-logo.svg"
-                alt="Bauma"
-                className="h-auto w-[91px] invert"
-              />
-            </Link>
+         {/* Mobile */}
+<div className="flex w-full items-center justify-between md:hidden">
+  <Link
+    href="/"
+    aria-label="Bauma home"
+    className="inline-flex items-center transition-opacity duration-200 hover:opacity-80"
+  >
+    <img
+      src="/logo/bauma-logo.svg"
+      alt="Bauma"
+      className="h-auto w-[68px] invert sm:w-[78px]"
+    />
+  </Link>
 
-            <div className="relative z-[10001] flex items-center">
-              <MobileMenuToggle
-                open={menuOpen}
-                onToggle={() => setMenuOpen((v) => !v)}
-              />
-            </div>
-          </div>
+  <div className="relative z-[10001] flex items-center">
+    <MobileMenuToggle
+      open={menuOpen}
+      onToggle={() => setMenuOpen((v) => !v)}
+    />
+  </div>
+</div>
         </div>
       </Container>
 

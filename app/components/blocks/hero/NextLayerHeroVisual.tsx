@@ -58,7 +58,7 @@ export default function NextLayerHeroVisual() {
               className="flex gap-4"
             >
               {/* number */}
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/10 text-[11px] text-white/40">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/10 text-[11px] text-white/60">
                 {layer.number}
               </div>
 

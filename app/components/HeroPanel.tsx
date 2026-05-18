@@ -15,7 +15,7 @@ export default function HeroPanel() {
             >
               <span className="inline-flex items-center gap-2 rounded-full bg-neutral-950 px-3 py-1 text-[11px] font-medium tracking-[0.02em] text-white/60 transition duration-200 group-hover:text-white">
                 <span>Structure-first approach</span>
-                <span className="text-white/30 transition duration-200 group-hover:text-white/60">
+                <span className="text-white/50 transition duration-200 group-hover:text-white/60">
                   →
                 </span>
               </span>

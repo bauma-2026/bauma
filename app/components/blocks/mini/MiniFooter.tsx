@@ -8,7 +8,7 @@ export default function MiniFooter() {
           <Link
             href="/mini"
             aria-label="Bauma home"
-            className="inline-flex items-center transition-opacity duration-200 hover:opacity-80"
+            className="inline-flex items-center opacity-70 transition-opacity duration-200 hover:opacity-100"
           >
             <img
               src="/logo/bauma-logo.svg"
@@ -17,30 +17,54 @@ export default function MiniFooter() {
             />
           </Link>
 
-          <p className="mt-5 max-w-[34ch] text-sm leading-6 text-white/45 sm:mt-6">
-            Postavim strukturo, ki uporabnika vodi od razumevanja do odločitve.
+          <p className="mt-3 max-w-[38ch] text-sm leading-6 text-white/50 sm:mt-4">
+            Struktura za strani, kjer mora uporabnik hitro razumeti, zaupati in
+            narediti naslednji korak.
           </p>
         </div>
 
         <div className="lg:justify-self-end">
-          <p className="max-w-[40ch] text-sm leading-6 text-white/45">
-            Bauma začne pri strukturi: kaj mora uporabnik razumeti, čemu mora
-            zaupati in kateri korak mora biti očiten.
-          </p>
+  <h4 className="text-sm font-semibold tracking-[-0.015em] text-white">
+    Začniva z jasnim vprašanjem
+  </h4>
 
-          <Link
-            href="mailto:hello@bauma.si"
-            className="mt-5 inline-flex text-sm font-medium text-white transition hover:text-white/70 sm:mt-6"
-          >
-            Poglejva, kje se flow ustavi →
-          </Link>
-        </div>
+  <p className="mt-3 max-w-[42ch] text-sm leading-6 text-white/50">
+    Pošljite link, idejo ali kratek opis problema. Pogledava, kje je največ
+    nejasnosti in kateri korak ima največ smisla najprej urediti.
+  </p>
+
+  <Link
+    href="mailto:hello@bauma.si?subject=Povpra%C5%A1evanje%20%E2%80%94%20Bauma"
+    className="mt-5 inline-flex text-sm font-medium text-white transition hover:text-white/70 sm:mt-6"
+  >
+    hello@bauma.si
+  </Link>
+</div>
       </div>
 
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-[1100px] flex-col gap-3 px-6 py-5 text-xs text-white/30 sm:flex-row sm:items-center sm:justify-between lg:px-8">
+        <div className="mx-auto flex max-w-[1100px] flex-col gap-4 px-6 py-5 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between lg:px-8">
           <p>© 2026 Bauma</p>
-          <p>Built with structure in mind</p>
+
+          <nav
+            aria-label="Legal links"
+            className="flex flex-wrap items-center gap-x-4 gap-y-2"
+          >
+            <Link
+              href="/pogoji-uporabe"
+              className="transition hover:text-white"
+            >
+              Pogoji uporabe
+            </Link>
+
+            <Link href="/zasebnost" className="transition hover:text-white">
+              Zasebnost
+            </Link>
+
+            <Link href="/piskotki" className="transition hover:text-white">
+              Piškotki
+            </Link>
+          </nav>
         </div>
       </div>
     </footer>

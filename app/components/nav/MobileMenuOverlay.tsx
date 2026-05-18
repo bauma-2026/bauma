@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+
 "use client";
 
 import Link from "next/link";
@@ -16,11 +18,7 @@ type Props = {
   nav: NavItem[];
 };
 
-export default function MobileMenuOverlay({
-  open,
-  onClose,
-  nav,
-}: Props) {
+export default function MobileMenuOverlay({ open, onClose, nav }: Props) {
   const [mounted, setMounted] = useState(false);
   const [rendered, setRendered] = useState(false);
   const [closing, setClosing] = useState(false);
@@ -32,6 +30,7 @@ export default function MobileMenuOverlay({
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
+
     return () => {
       document.body.style.overflow = "";
     };
@@ -47,6 +46,7 @@ export default function MobileMenuOverlay({
         const raf2 = window.requestAnimationFrame(() => {
           setNavEntered(true);
         });
+
         return () => window.cancelAnimationFrame(raf2);
       });
 
@@ -81,26 +81,26 @@ export default function MobileMenuOverlay({
         role="dialog"
         aria-modal="true"
         className={[
-          "fixed inset-0 pointer-events-auto bg-white pt-[env(safe-area-inset-top)]",
+          "fixed inset-0 pointer-events-auto bg-[#080808] pt-[env(safe-area-inset-top)] text-white",
           "transition-opacity duration-[220ms] ease-[cubic-bezier(.16,1,.3,1)]",
           isOpenVisual ? "opacity-100" : "opacity-0",
         ].join(" ")}
       >
-        <div className="flex min-h-screen flex-col bg-white">
+        <div className="flex min-h-screen flex-col bg-[#080808]">
           {/* Header row */}
-          <div className="border-b border-black/10 bg-white/70 backdrop-blur">
+          <div className="border-b border-white/10 bg-[#080808]/90 backdrop-blur">
             <div className="mx-auto w-full max-w-[1120px] px-5 sm:px-6 lg:px-8">
-              <div className="flex items-center justify-between py-3 sm:py-3.5">
+              <div className="flex h-[72px] items-center justify-between">
                 <Link
                   href="/"
                   onClick={onClose}
-                  className="inline-flex items-center"
+                  className="inline-flex items-center transition-opacity hover:opacity-80"
                   aria-label="Bauma"
                 >
                   <img
                     src="/logo/bauma-logo.svg"
                     alt="Bauma"
-                    className="h-auto w-[91px]"
+                    className="h-auto w-[68px] invert sm:w-[78px]"
                   />
                 </Link>
 
@@ -112,7 +112,7 @@ export default function MobileMenuOverlay({
           </div>
 
           {/* Nav */}
-          <div className="flex min-h-0 flex-1 flex-col bg-white">
+          <div className="flex min-h-0 flex-1 flex-col bg-[#080808]">
             <div className="mx-auto w-full max-w-[1120px] px-5 pt-6 pb-6 sm:px-6 lg:px-8">
               <div className="flex flex-col">
                 {Array.isArray(nav) && nav.length > 0 ? (
@@ -122,9 +122,9 @@ export default function MobileMenuOverlay({
                       href={item.href}
                       onClick={onClose}
                       className={[
-                        "border-b border-neutral-200 py-4 text-[16px] leading-none tracking-[-0.01em]",
-                        "text-neutral-700 transition-[opacity,transform,color] duration-500 ease-[cubic-bezier(.16,1,.3,1)]",
-                        "active:text-neutral-900",
+                       "border-b border-white/10 py-4 text-[18px] font-normal leading-none tracking-[-0.01em]",
+                        "text-white transition-[opacity,transform,color] duration-500 ease-[cubic-bezier(.16,1,.3,1)]",
+                        "hover:text-white/70 active:text-white/80",
                         navEntered
                           ? "translate-y-0 opacity-100"
                           : "translate-y-2 opacity-0",
@@ -139,35 +139,35 @@ export default function MobileMenuOverlay({
                     </Link>
                   ))
                 ) : (
-                  <div className="rounded-[6px] bg-neutral-50 px-4 py-4 text-sm text-neutral-700">
+                  <div className="rounded-[6px] border border-white/10 bg-white/[0.03] px-4 py-4 text-sm text-white/60">
                     Ni linkov v meniju.
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Quick brief */}
+            {/* Simple CTA */}
             <div
               className={[
                 "mt-auto transition-[opacity,transform] duration-500 ease-[cubic-bezier(.16,1,.3,1)]",
-                navEntered ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0",
+                navEntered
+                  ? "translate-y-0 opacity-100"
+                  : "translate-y-2 opacity-0",
               ].join(" ")}
               style={{
                 transitionDelay: navEntered ? "220ms" : "0ms",
               }}
             >
-              <div className="mx-auto w-full max-w-[1120px] px-5 pt-6 pb-6 sm:px-6 lg:px-8">
-                <div className="rounded-[6px] border border-neutral-200 bg-neutral-50 p-5">
-                  <p className="text-sm font-medium text-black">Quick brief</p>
-
-                  <p className="mt-2 max-w-[24ch] text-sm leading-6 text-neutral-600">
-                    Pošlji 3 stvari: cilj, rok in link do obstoječega projekta.
+              <div className="mx-auto w-full max-w-[1120px] px-5 pt-6 pb-8 sm:px-6 lg:px-8">
+                <div className="border-t border-white/10 pt-6">
+                  <p className="max-w-[30ch] text-sm leading-6 text-white/45">
+                    Struktura, ki uporabnika vodi od razumevanja do odločitve.
                   </p>
 
                   <Link
-                    href="/contact"
+                    href="/#contact"
                     onClick={onClose}
-                    className="mt-5 inline-flex h-10 items-center justify-center rounded-full border border-black bg-black px-5 text-sm font-medium tracking-tight text-white transition-all duration-200 ease-out hover:-translate-y-[1px] hover:bg-white hover:text-black active:translate-y-0"
+                    className="mt-5 inline-flex h-10 items-center justify-center rounded-full bg-white px-5 text-sm font-medium tracking-tight text-black transition hover:bg-white/90"
                   >
                     Kontakt
                   </Link>

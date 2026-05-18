@@ -11,7 +11,7 @@ export default function NewsIndexPage() {
       <Container className="pb-20 pt-24 sm:pb-24 sm:pt-28 lg:pb-28 lg:pt-32">
         <Section className="!mt-0" withDivider={false}>
           <div className="max-w-[720px]">
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/35">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
               Notes
             </p>
 
@@ -31,7 +31,7 @@ export default function NewsIndexPage() {
                 className="group block rounded-[28px] border border-white/10 bg-white/[0.04] p-6 transition-all duration-200 hover:-translate-y-[1px] hover:border-white/20 hover:bg-white/[0.055] sm:p-8 lg:p-10"
               >
                 <div className="max-w-[72ch]">
-                  <div className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/35">
+                  <div className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
                   Structure note
                   </div>
 
@@ -45,11 +45,11 @@ export default function NewsIndexPage() {
                 </div>
 
                 <div className="mt-8 flex items-center justify-between gap-6 border-t border-white/10 pt-6">
-                  <div className="text-sm text-white/35">
+                  <div className="text-sm text-white/50">
                     Bauma notes
                   </div>
 
-                  <div className="text-sm text-white/40 transition duration-200 group-hover:translate-x-1 group-hover:text-white">
+                  <div className="text-sm text-white/50 transition duration-200 group-hover:translate-x-1 group-hover:text-white">
                     Preberi zapis →
                   </div>
                 </div>
@@ -67,7 +67,7 @@ export default function NewsIndexPage() {
                       href={`/novice/${item.slug}`}
                       className="group block rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition-all duration-200 hover:-translate-y-[1px] hover:border-white/20 hover:bg-white/[0.045] sm:p-8"
                     >
-                      <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/30">
+                      <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
                      Reference note
                       </p>
 
@@ -80,11 +80,11 @@ export default function NewsIndexPage() {
                       </p>
 
                       <div className="mt-8 flex items-center justify-between gap-6 border-t border-white/10 pt-5">
-                        <span className="text-sm text-white/35">
+                        <span className="text-sm text-white/50">
                           Note
                         </span>
 
-                        <span className="text-sm text-white/40 transition duration-200 group-hover:translate-x-1 group-hover:text-white">
+                        <span className="text-sm text-white/50 transition duration-200 group-hover:translate-x-1 group-hover:text-white">
                           Preberi →
                         </span>
                       </div>

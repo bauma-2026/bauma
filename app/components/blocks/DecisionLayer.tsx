@@ -1,5 +1,3 @@
-import Container from "../Container";
-
 export default function DecisionLayer() {
   return (
     <section

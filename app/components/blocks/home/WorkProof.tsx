@@ -52,7 +52,7 @@ export default function WorkProof() {
         <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
           {/* INTRO */}
           <div className="lg:pt-1">
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/40">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
               Work
             </p>
 
@@ -74,7 +74,7 @@ export default function WorkProof() {
             >
               <div className="flex items-start justify-between gap-6">
                 <div>
-                  <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/35">
+                  <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
                {featured.label}
                   </p>
 
@@ -83,14 +83,14 @@ export default function WorkProof() {
 </h3>
                 </div>
 
-                <span className="hidden text-sm text-white/35 transition duration-200 group-hover:translate-x-1 group-hover:text-white sm:block">
+                <span className="hidden text-sm text-white/50 transition duration-200 group-hover:translate-x-1 group-hover:text-white sm:block">
                   →
                 </span>
               </div>
 
               <div className="mt-8 grid gap-5 border-t border-white/10 pt-6 sm:grid-cols-3">
                 <div>
-                  <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-white/30">
+                  <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-white/60">
                     Pred tem
                   </p>
                   <p className="mt-2 text-sm leading-6 text-white/60">
@@ -99,7 +99,7 @@ export default function WorkProof() {
                 </div>
 
                 <div>
-                  <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-white/30">
+                  <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-white/60">
                     Sprememba
                   </p>
                   <p className="mt-2 text-sm leading-6 text-white/60">
@@ -108,7 +108,7 @@ export default function WorkProof() {
                 </div>
 
                 <div>
-                  <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-white/30">
+                  <p className="text-[11px] font-medium uppercase tracking-[0.16em]text-white/60">
                     Po tem
                   </p>
                   <p className="mt-2 text-sm leading-6 text-white/60">
@@ -133,7 +133,7 @@ export default function WorkProof() {
               >
                 <div className="flex items-start justify-between gap-6">
                   <div>
-                   <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/30">
+                   <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
   {c.label}
 </p>
 
@@ -146,7 +146,7 @@ export default function WorkProof() {
 </p>
                   </div>
 
-                  <span className="text-white/35 transition duration-200 group-hover:translate-x-1 group-hover:text-white">
+                  <span className="text-white/50 transition duration-200 group-hover:translate-x-1 group-hover:text-white">
                     →
                   </span>
                 </div>

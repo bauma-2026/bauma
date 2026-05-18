@@ -1,0 +1,104 @@
+const heroItems = [
+  {
+    number: "01",
+    title: "What it is",
+    text: "Clear, without technical noise.",
+  },
+  {
+    number: "02",
+    title: "Is it for me",
+    text: "The user quickly understands relevance.",
+  },
+  {
+    number: "03",
+    title: "How it works",
+    text: "The flow removes unnecessary thinking.",
+  },
+  {
+    number: "04",
+    title: "Why trust it",
+    text: "Structure reduces doubt before decision.",
+  },
+  {
+    number: "05",
+    title: "What to do next",
+    text: "The next step becomes obvious.",
+  },
+];
+
+export default function MiniHeroEn() {
+  return (
+    <section className="relative overflow-hidden border-b border-white/10 bg-[#080808] text-white">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_35%,rgba(255,255,255,0.07),transparent_34%)]" />
+
+      <div className="relative mx-auto grid max-w-[1100px] gap-10 px-6 pt-12 pb-16 sm:pt-20 sm:pb-24 lg:min-h-[calc(100vh-52px)] lg:grid-cols-[1fr_0.78fr] lg:items-center lg:gap-14 lg:px-8 lg:py-24">
+        <div>
+   <div className="inline-flex items-center rounded-full border border-sky-300/20 bg-white/[0.03] px-3 py-1 text-[11px] font-medium text-white/72 shadow-[0_0_24px_rgba(125,211,252,0.05)]">
+  Structure-first websites
+</div>
+
+<h1 className="mt-8 max-w-[14ch] font-serif text-5xl font-semibold leading-[0.96] tracking-[-0.025em] text-white sm:max-w-[15ch] sm:text-6xl lg:max-w-[16ch] lg:text-7xl">
+              Clear structure.
+            <br />
+            Better decisions.
+          </h1>
+
+          <p className="mt-8 max-w-[52ch] text-base leading-7 text-white/58 sm:text-lg">
+            I structure websites so users understand faster, trust more easily
+            and take the next step with less friction.
+          </p>
+
+          <div className="mt-9">
+            <a
+              href="#flow"
+              className="group inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition duration-300 hover:-translate-y-[1px] hover:bg-white/90 active:translate-y-0"
+            >
+              <span className="inline-flex items-center gap-2">
+                See how clarity is built
+                <span className="transition duration-300 group-hover:translate-x-0.5">
+                  →
+                </span>
+              </span>
+            </a>
+          </div>
+        </div>
+
+        {/* Desktop-only checklist */}
+        <div className="relative hidden lg:block lg:pl-8">
+          <div className="absolute -inset-10 rounded-full bg-white/[0.03] blur-3xl" />
+
+          <div className="relative">
+            <div className="space-y-5">
+              {heroItems.map((item) => (
+                <div
+                  key={item.number}
+                  className="grid grid-cols-[34px_1fr] gap-4"
+                >
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full border border-white/10 text-[11px] text-white/60">
+                    {item.number}
+                  </div>
+
+                  <div>
+                    <h2 className="text-sm font-semibold text-white/72">
+                      {item.title}
+                    </h2>
+
+                    <p className="mt-1 text-sm leading-5 text-white/42">
+                      {item.text}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8 border-t border-white/10 pt-6">
+              <p className="text-sm leading-6 text-white/50">
+                Every part of the page has a job.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

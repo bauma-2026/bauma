@@ -25,7 +25,7 @@ export default function HowItWorks() {
       <div className="mx-auto max-w-[1100px] px-6 lg:px-8">
         <div className="grid gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-24">
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/35">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
               Proces
             </p>
 
@@ -40,7 +40,7 @@ export default function HowItWorks() {
             <div className="mt-11 space-y-8">
               {steps.map((step) => (
                 <div key={step.number} className="flex gap-4">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/15 text-[11px] font-medium text-white/45">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/15 text-[11px] font-medium text-white/60">
                     {step.number}
                   </div>
 
@@ -76,7 +76,7 @@ export default function HowItWorks() {
 
                     {index < 2 && (
                       <div
-                        className="flex justify-center py-1 text-white/35 max-sm:rotate-90"
+                        className="flex justify-center py-1 text-white/50 max-sm:rotate-90"
                         aria-hidden="true"
                       >
                         →

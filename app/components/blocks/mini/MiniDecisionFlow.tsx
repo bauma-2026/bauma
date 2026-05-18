@@ -20,11 +20,11 @@ export default function MiniDecisionFlow() {
   return (
     <section
       id="flow"
-      className="overflow-hidden border-t border-white/10 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.08),transparent_34%),#080808] py-14 text-white sm:py-20 lg:py-24"
+      className="scroll-mt-13 overflow-hidden border-t border-white/10 bg-[#080808] py-14 text-white sm:py-20 lg:py-24"
     >
       <div className="mx-auto max-w-[1100px] px-6 lg:px-8">
         <div className="max-w-[680px]">
-          <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/35">
+          <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/60">
             Decision flow
           </p>
 
@@ -45,8 +45,8 @@ export default function MiniDecisionFlow() {
               className={[
                 "min-w-0 rounded-2xl border p-5 sm:p-6 lg:p-7",
                 flow.muted
-                  ? "border-white/10 bg-white/[0.025]"
-                  : "border-white/20 bg-white/[0.07]",
+                  ? "border-white/10 bg-[#0b0b0b]"
+                  : "border-white/20 bg-[#171717]",
               ].join(" ")}
             >
               <div className="flex min-w-0 items-start justify-between gap-4">
@@ -54,9 +54,14 @@ export default function MiniDecisionFlow() {
                   {flow.label}
                 </h3>
 
-                <p className="shrink-0 text-[10px] font-medium uppercase tracking-[0.22em] text-white/25">
-                  {flow.tag}
-                </p>
+  <p
+  className={[
+    "shrink-0 text-[10px] font-medium uppercase tracking-[0.22em]",
+    flow.muted ? "text-white/42" : "text-sky-300/75",
+  ].join(" ")}
+>
+  {flow.tag}
+</p>
               </div>
 
               {/* Desktop / large screens */}
@@ -67,15 +72,15 @@ export default function MiniDecisionFlow() {
                       className={[
                         "rounded-xl border px-4 py-3 text-sm",
                         flow.muted
-                          ? "border-white/10 bg-black/20 text-white/35"
-                          : "border-white/20 bg-white/10 text-white/85",
+                          ? "border-white/10 bg-[#101010] text-white/50"
+                          : "border-white/20 bg-[#2b2b2b] text-white/85",
                       ].join(" ")}
                     >
                       {step}
                     </div>
 
                     {index < flow.steps.length - 1 && (
-                      <span className="text-white/25">→</span>
+                      <span className="text-white/50">→</span>
                     )}
                   </div>
                 ))}
@@ -89,25 +94,25 @@ export default function MiniDecisionFlow() {
                       className={[
                         "w-full rounded-xl border px-4 py-2.5 text-center text-[13px]",
                         flow.muted
-                          ? "border-white/10 bg-black/20 text-white/35"
-                          : "border-white/20 bg-white/10 text-white/85",
+                          ? "border-white/10 bg-[#101010] text-white/50"
+                          : "border-white/20 bg-[#2b2b2b] text-white/85",
                       ].join(" ")}
                     >
                       {step}
                     </div>
 
                     {index < flow.steps.length - 1 && (
-                      <div className="py-0.5 text-center text-white/25">↓</div>
+                      <div className="py-0.5 text-center text-white/50">↓</div>
                     )}
                   </div>
                 ))}
               </div>
 
               <div className="mt-5 border-t border-white/10 pt-4 sm:mt-6 sm:pt-5">
-                <p className="text-sm leading-6 text-white/45">{flow.note}</p>
+                <p className="text-sm leading-6 text-white/50">{flow.note}</p>
 
                 {flow.emphasis && (
-                  <p className="mt-2 text-sm font-medium text-white">
+                  <p className="mt-2 text-sm font-medium text-sky-300/80">
                     {flow.emphasis}
                   </p>
                 )}

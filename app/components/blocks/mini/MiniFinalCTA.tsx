@@ -1,9 +1,9 @@
 export default function MiniFinalCTA() {
   return (
-    <section className="border-t border-white/10 bg-[#080808] py-16 text-white sm:py-20 lg:py-24">
+    <section id="contact" className="scroll-mt-13 border-t border-white/10 bg-[#080808] py-16 text-white sm:py-20 lg:py-24">
       <div className="mx-auto max-w-[720px] px-6 text-center lg:px-8">
-        <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/35">
-          Naslednji korak
+        <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/60">
+        Next Step
         </p>
 
         <h2 className="mt-4 text-3xl font-semibold leading-[1.05] tracking-[-0.025em] text-white sm:text-4xl">
@@ -17,7 +17,7 @@ export default function MiniFinalCTA() {
 
         <div className="mt-8 flex flex-col items-center gap-4 sm:mt-9">
           <a
-            href="mailto:hello@bauma.si"
+            href="mailto:hello@bauma.si?subject=Povpra%C5%A1evanje%20%E2%80%94%20Bauma"
             className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border border-white bg-white px-6 py-3 text-sm font-medium text-black transition duration-300 hover:-translate-y-[1px] hover:bg-white/90 active:translate-y-0"
           >
             <span className="relative z-10 inline-flex items-center gap-2">
@@ -32,7 +32,7 @@ export default function MiniFinalCTA() {
             </span>
           </a>
 
-          <p className="text-xs leading-5 text-white/45">
+          <p className="text-xs leading-5 text-white/60">
             Brez pritiska · samo jasen prvi korak
           </p>
         </div>

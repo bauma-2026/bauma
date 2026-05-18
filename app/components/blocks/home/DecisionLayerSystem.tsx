@@ -34,7 +34,7 @@ export default function DecisionLayerSystem() {
     >
       <div className="mx-auto max-w-[1100px] px-6 lg:px-8">
         <div className="max-w-[680px]">
-          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/40">
+          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
             Next Layer sistem
           </p>
 
@@ -55,7 +55,7 @@ export default function DecisionLayerSystem() {
               key={layer.number}
               className="rounded-[6px] border border-white/10 bg-white/[0.04] p-5 transition hover:border-white/20 hover:bg-white/[0.06]"
             >
-              <div className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-[11px] font-medium text-white/50">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-[11px] font-medium text-white/60">
                 {layer.number}
               </div>
 

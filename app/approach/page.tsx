@@ -8,7 +8,7 @@ export default function ApproachPage() {
       <Container className="pb-20 pt-24 sm:pb-24 sm:pt-28 lg:pb-28 lg:pt-32">
         <Section className="!mt-0" withDivider={false}>
           <div className="max-w-[760px]">
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/35">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/50">
               Pristop
             </p>
 

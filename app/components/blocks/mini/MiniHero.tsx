@@ -33,12 +33,11 @@ export default function MiniHero() {
 
       <div className="relative mx-auto grid max-w-[1100px] gap-10 px-6 pt-12 pb-16 sm:pt-20 sm:pb-24 lg:min-h-[calc(100vh-52px)] lg:grid-cols-[1fr_0.78fr] lg:items-center lg:gap-14 lg:px-8 lg:py-24">
         <div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-1 text-[11px] font-medium text-white/45">
-            Structure-first websites
-            <span className="text-white/25">→</span>
-          </div>
+<div className="inline-flex items-center rounded-full border border-sky-300/20 bg-white/[0.03] px-3 py-1 text-[11px] font-medium text-white/72 shadow-[0_0_24px_rgba(125,211,252,0.05)]">
+  Structure-first websites
+</div>
 
-        <h1 className="mt-8 max-w-[14ch] font-serif text-5xl font-semibold leading-[0.94] tracking-[-0.04em] text-white sm:max-w-[15ch] sm:text-6xl lg:max-w-[14ch] lg:text-7xl">
+       <h1 className="mt-8 max-w-[14ch] font-serif text-5xl font-semibold leading-[0.96] tracking-[-0.025em] text-white sm:max-w-[15ch] sm:text-6xl lg:max-w-[16ch] lg:text-7xl">
   Jasna struktura.
   <br />
   Več odločitev.
@@ -75,7 +74,7 @@ export default function MiniHero() {
                   key={item.number}
                   className="grid grid-cols-[34px_1fr] gap-4"
                 >
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full border border-white/10 text-[11px] text-white/32">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full border border-white/10 text-[11px] text-white/60">
                     {item.number}
                   </div>
 
@@ -93,7 +92,7 @@ export default function MiniHero() {
             </div>
 
             <div className="mt-8 border-t border-white/10 pt-6">
-              <p className="text-sm leading-6 text-white/45">
+              <p className="text-sm leading-6 text-white/50">
                Vsak del strani ima svojo nalogo.
               </p>
             </div>

@@ -7,7 +7,7 @@ export default function ContactPage() {
       <Container className="pb-20 pt-24 sm:pb-24 sm:pt-28 lg:pb-28 lg:pt-32">
         <Section className="!mt-0" withDivider={false}>
           <div className="max-w-[720px]">
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/35">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
               Kontakt
             </p>
 
@@ -27,20 +27,20 @@ export default function ContactPage() {
                 <input
                   type="text"
                   placeholder="Ime"
-                  className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-sm text-white outline-none transition duration-200 placeholder:text-white/35 focus:border-white/30 focus:bg-white/[0.06]"
+                  className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-sm text-white outline-none transition duration-200 placeholder:text-white/50 focus:border-white/30 focus:bg-white/[0.06]"
                 />
 
                 <input
                   type="email"
                   placeholder="Email"
-                  className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-sm text-white outline-none transition duration-200 placeholder:text-white/35 focus:border-white/30 focus:bg-white/[0.06]"
+                  className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-sm text-white outline-none transition duration-200 placeholder:text-white/50 focus:border-white/30 focus:bg-white/[0.06]"
                 />
               </div>
 
               <textarea
                 rows={7}
                 placeholder="Na kratko opiši projekt, težavo ali naslednji korak..."
-                className="min-h-[190px] w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-sm text-white outline-none transition duration-200 placeholder:text-white/35 focus:border-white/30 focus:bg-white/[0.06]"
+                className="min-h-[190px] w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3.5 text-sm text-white outline-none transition duration-200 placeholder:text-white/50 focus:border-white/30 focus:bg-white/[0.06]"
               />
 
               <div className="pt-2">
@@ -70,7 +70,7 @@ export default function ContactPage() {
                 </p>
 
                 <a
-                  href="mailto:gregor@bauma.si"
+                  href="mailto:gregor@bauma.si?subject=Povpra%C5%A1evanje%20%E2%80%94%20Bauma"
                   className="mt-4 inline-flex text-sm font-medium text-white underline decoration-white/25 underline-offset-4 transition duration-200 hover:decoration-white"
                 >
                   gregor@bauma.si

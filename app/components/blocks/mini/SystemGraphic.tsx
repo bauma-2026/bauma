@@ -36,10 +36,10 @@ function highlightCode(code: string) {
         "decisionSystem",
         '<span class="text-white/70">decisionSystem</span>'
       )
-      .replace("problem:", '<span class="text-white/35">problem:</span>')
-      .replace("structure:", '<span class="text-white/35">structure:</span>')
-      .replace("trust:", '<span class="text-white/35">trust:</span>')
-      .replace("action:", '<span class="text-white/35">action:</span>')
+      .replace("problem:", '<span class="text-white/50">problem:</span>')
+      .replace("structure:", '<span class="text-white/50">structure:</span>')
+      .replace("trust:", '<span class="text-white/50">trust:</span>')
+      .replace("action:", '<span class="text-white/50">action:</span>')
       .replaceAll(
         '"unclear path"',
         '<span class="text-white/70">"unclear path"</span>'
@@ -114,13 +114,14 @@ export default function SystemGraphic() {
   }, [hasStarted]);
 
   return (
-    <section
-      ref={sectionRef}
-      className="overflow-hidden border-t border-white/10 bg-[#080808] py-20 text-white sm:py-24 lg:py-28"
-    >
+<section
+  id="system"
+  ref={sectionRef}
+  className="relative scroll-mt-13 overflow-hidden border-t border-white/10 bg-[#080808] py-20 text-white sm:py-24 lg:py-28"
+>
       <div className="mx-auto grid max-w-[1100px] min-w-0 gap-12 px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:px-8">
         <div className="min-w-0">
-          <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/35">
+          <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/60">
             System layer
           </p>
 
@@ -148,13 +149,13 @@ export default function SystemGraphic() {
                 <span className="h-2.5 w-2.5 rounded-full bg-white/8 transition duration-500 group-hover:bg-white/14" />
               </div>
 
-              <p className="text-[12px] font-medium tracking-[-0.01em] text-white/32 transition duration-500 group-hover:text-white/45">
+              <p className="text-[12px] font-medium tracking-[-0.01em] text-white/32 transition duration-500 group-hover:text-white/50">
                 Decision logic
               </p>
             </div>
 
             <div className="min-w-0 p-4 sm:p-7">
-              <div className="relative min-h-[168px] min-w-0 max-w-full overflow-hidden rounded-2xl border border-white/10 bg-black/20 p-4 font-mono text-[11px] leading-6 text-white/45 transition duration-500 group-hover:border-white/15 group-hover:bg-black/25 sm:min-h-[174px] sm:p-5 sm:text-[13px]">
+              <div className="relative min-h-[168px] min-w-0 max-w-full overflow-hidden rounded-2xl border border-white/10 bg-black/20 p-4 font-mono text-[11px] leading-6 text-white/50 transition duration-500 group-hover:border-white/15 group-hover:bg-black/25 sm:min-h-[174px] sm:p-5 sm:text-[13px]">
                 <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
 
                 {highlightCode(typedCode)}
@@ -171,7 +172,7 @@ export default function SystemGraphic() {
                     className="grid min-w-0 gap-3 border-b border-white/10 px-4 py-4 transition duration-300 last:border-b-0 hover:bg-white/[0.035] sm:grid-cols-[120px_1fr] sm:items-center sm:px-5"
                   >
                     <div className="flex min-w-0 items-center gap-3">
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/10 text-[11px] text-white/35 transition duration-300 group-hover:border-white/15">
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/10 text-[11px] text-white/60 transition duration-300 group-hover:border-white/15">
                         {String(index + 1).padStart(2, "0")}
                       </span>
 
@@ -180,7 +181,7 @@ export default function SystemGraphic() {
                       </p>
                     </div>
 
-                    <p className="min-w-0 text-sm leading-6 text-white/45">
+                    <p className="min-w-0 text-sm leading-6 text-white/50">
                       {step.value}
                     </p>
                   </div>
@@ -188,7 +189,7 @@ export default function SystemGraphic() {
               </div>
 
               <div className="mt-6 border-t border-white/10 pt-5">
-                <p className="min-w-0 break-words text-sm leading-6 text-white/45">
+                <p className="min-w-0 break-words text-sm leading-6 text-white/50">
                   Output:{" "}
                   <span className="text-white/75 transition duration-500 group-hover:text-white/90">
                     jasnejša pot od prvega pogleda do kontakta.
@@ -200,5 +201,6 @@ export default function SystemGraphic() {
         </div>
       </div>
     </section>
+    
   );
 }

@@ -28,7 +28,7 @@ export default async function NewsPostPage({ params }: Props) {
       <section className="border-b border-white/10">
         <div className="mx-auto w-full max-w-[1120px] px-5 pb-10 pt-24 sm:px-6 sm:pb-12 sm:pt-28 lg:px-8 lg:pb-14 lg:pt-32">
           <div className="max-w-[760px]">
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/35">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
               Zapis
             </p>
 

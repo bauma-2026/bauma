@@ -127,7 +127,7 @@ function FlowCard({
           {title}
         </h3>
 
-        <span className="pt-1 text-[11px] uppercase tracking-[0.22em] text-white/35">
+        <span className="pt-1 text-[11px] uppercase tracking-[0.22em] text-white/60">
           {isGood ? "Bauma" : "Običajno"}
         </span>
       </div>
@@ -218,7 +218,7 @@ function StepBox({
         "flex min-h-14 w-full items-center justify-center rounded-xl border px-4 text-base transition-all duration-500 md:min-h-16 md:w-auto md:text-sm",
         isGood
           ? "border-white/25 bg-white/[0.10] text-white"
-          : "border-white/10 bg-black/30 text-white/45",
+          : "border-white/10 bg-black/30 text-white/50",
         !isGood && index % 2 === 0 ? "md:translate-y-1" : "",
         !isGood && index % 3 === 0 ? "opacity-70" : "",
       ].join(" ")}
