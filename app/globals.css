@@ -127,3 +127,60 @@ body {
     @apply text-[11px] uppercase tracking-[0.16em] text-neutral-500;
   }
 }
+
+@media (prefers-reduced-motion: no-preference) {
+  .bauma-structure-motion {
+    animation: baumaStructureMotion 22s ease-in-out infinite;
+    transform-origin: center;
+    will-change: transform;
+  }
+
+  .bauma-clarity-motion {
+    animation: baumaClarityMotion 28s ease-in-out infinite;
+    transform-origin: center;
+    will-change: transform, opacity;
+  }
+
+  .bauma-direction-motion {
+    animation: baumaDirectionMotion 20s ease-in-out infinite;
+    transform-origin: center;
+    will-change: transform, opacity;
+  }
+}
+
+@keyframes baumaStructureMotion {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+
+  50% {
+    transform: translate3d(5px, -4px, 0) rotate(0.8deg);
+  }
+}
+
+@keyframes baumaClarityMotion {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translate3d(-4px, 3px, 0) scale(1.015);
+    opacity: 0.86;
+  }
+}
+
+@keyframes baumaDirectionMotion {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translate3d(7px, -5px, 0);
+    opacity: 0.88;
+  }
+}

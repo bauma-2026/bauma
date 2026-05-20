@@ -1,52 +1,78 @@
-const heroItems = [
-  {
-    number: "01",
-    title: "Kaj je to",
-    text: "Jasno, brez tehničnega šuma.",
-  },
-  {
-    number: "02",
-    title: "Ali je zame",
-    text: "Uporabnik hitro razume relevantnost.",
-  },
-  {
-    number: "03",
-    title: "Kako deluje",
-    text: "Flow odstrani nepotrebno razmišljanje.",
-  },
-  {
-    number: "04",
-    title: "Zakaj verjeti",
-    text: "Struktura zmanjša dvom pred odločitvijo.",
-  },
-  {
-    number: "05",
-    title: "Kaj naredim zdaj",
-    text: "Naslednji korak postane očiten.",
-  },
-];
+import MiniHeroSystemField from "./MiniHeroSystemField";
 
 export default function MiniHero() {
   return (
     <section className="relative overflow-hidden border-b border-white/10 bg-[#080808] text-white">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_70%_35%,rgba(255,255,255,0.07),transparent_34%)]" />
+      <MiniHeroSystemField />
+{/* Mobile system layer */}
+<div
+  aria-hidden="true"
+  className="pointer-events-none absolute inset-0 overflow-hidden lg:hidden"
+>
+  {/* Square */}
+  <svg
+    className="absolute right-[12%] top-[18%] h-[74px] w-[74px]"
+    viewBox="0 0 100 100"
+    fill="none"
+  >
+    <rect
+      x="20"
+      y="20"
+      width="60"
+      height="60"
+      transform="rotate(8 50 50)"
+      stroke="rgba(255,255,255,0.14)"
+      strokeWidth="1.2"
+    />
+  </svg>
 
+  {/* Circle */}
+  <svg
+    className="absolute right-[-10%] top-[24%] h-[138px] w-[138px]"
+    viewBox="0 0 100 100"
+    fill="none"
+  >
+    <circle
+      cx="50"
+      cy="50"
+      r="36"
+      stroke="rgba(255,255,255,0.16)"
+      strokeWidth="1.2"
+    />
+  </svg>
+
+
+ {/* Triangle */}
+<svg
+  className="absolute right-[8%] bottom-[10%] h-[88px] w-[88px]"
+  viewBox="0 0 100 100"
+  fill="none"
+>
+  <path
+    d="M50 14 L84 78 H16 Z"
+    stroke="rgba(255,255,255,0.11)"
+    strokeWidth="1.2"
+  />
+</svg>
+</div>
       <div className="relative mx-auto grid max-w-[1100px] gap-10 px-6 pt-12 pb-16 sm:pt-20 sm:pb-24 lg:min-h-[calc(100vh-52px)] lg:grid-cols-[1fr_0.78fr] lg:items-center lg:gap-14 lg:px-8 lg:py-24">
         <div>
-<div className="inline-flex items-center rounded-full border border-sky-300/20 bg-white/[0.03] px-3 py-1 text-[11px] font-medium text-white/72 shadow-[0_0_24px_rgba(125,211,252,0.05)]">
-  Structure-first websites
-</div>
+          <div className="inline-flex items-center rounded-full border border-sky-300/20 bg-white/[0.03] px-3 py-1 text-[11px] font-medium text-white/72 shadow-[0_0_24px_rgba(125,211,252,0.05)]">
+            Structure-first websites
+          </div>
 
-       <h1 className="mt-8 max-w-[14ch] font-serif text-5xl font-semibold leading-[0.96] tracking-[-0.025em] text-white sm:max-w-[15ch] sm:text-6xl lg:max-w-[16ch] lg:text-7xl">
-  Jasna struktura.
-  <br />
-  Več odločitev.
-</h1>
+          <h1 className="mt-8 max-w-[9ch] font-serif text-5xl font-semibold leading-[0.94] tracking-[-0.025em] text-white sm:max-w-[15ch] sm:text-6xl lg:max-w-[16ch] lg:text-7xl">
+            Jasna
+            <br />
+            struktura.
+            <br />
+            Več odločitev.
+          </h1>
 
-         <p className="mt-8 max-w-[52ch] text-base leading-7 text-white/58 sm:text-lg">
-  Spletne strani postavim tako, da uporabnik hitreje razume, zaupa in naredi
-  naslednji korak.
-</p>
+          <p className="mt-8 max-w-[52ch] text-base leading-7 text-white/55 sm:text-lg">
+            Spletne strani postavim tako, da uporabnik hitreje razume, zaupa in
+            naredi naslednji korak.
+          </p>
 
           <div className="mt-9">
             <a
@@ -60,42 +86,6 @@ export default function MiniHero() {
                 </span>
               </span>
             </a>
-          </div>
-        </div>
-
-        {/* Desktop-only checklist */}
-        <div className="relative hidden lg:block lg:pl-8">
-          <div className="absolute -inset-10 rounded-full bg-white/[0.03] blur-3xl" />
-
-          <div className="relative">
-            <div className="space-y-5">
-              {heroItems.map((item) => (
-                <div
-                  key={item.number}
-                  className="grid grid-cols-[34px_1fr] gap-4"
-                >
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full border border-white/10 text-[11px] text-white/60">
-                    {item.number}
-                  </div>
-
-                  <div>
-                    <h2 className="text-sm font-semibold text-white/72">
-                      {item.title}
-                    </h2>
-
-                    <p className="mt-1 text-sm leading-5 text-white/42">
-                      {item.text}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-8 border-t border-white/10 pt-6">
-              <p className="text-sm leading-6 text-white/50">
-               Vsak del strani ima svojo nalogo.
-              </p>
-            </div>
           </div>
         </div>
       </div>

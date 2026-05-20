@@ -1,149 +1,90 @@
-"use client";
-
-import { Canvas, useFrame } from "@react-three/fiber";
-import { useEffect, useRef } from "react";
-import * as THREE from "three";
-
-type SpatialShape = "cube" | "tetrahedron" | "icosahedron" | "sphere";
-
-type WireStructureProps = {
-  shape?: SpatialShape;
-  interactive?: boolean;
-};
-
-type MiniSpatialObjectProps = {
-  shape?: SpatialShape;
-  interactive?: boolean;
+type MiniSpatialSystemObjectProps = {
   className?: string;
 };
 
-function ShapeGeometry({ shape }: { shape: SpatialShape }) {
-  if (shape === "tetrahedron") {
-    return <tetrahedronGeometry args={[1.65, 0]} />;
-  }
-
-  if (shape === "icosahedron") {
-    return <icosahedronGeometry args={[1.55, 0]} />;
-  }
-
-  if (shape === "sphere") {
-    return <sphereGeometry args={[1.55, 24, 16]} />;
-  }
-
-  return <boxGeometry args={[1.8, 1.8, 1.8]} />;
-}
-
-function WireStructure({
-  shape = "cube",
-  interactive = true,
-}: WireStructureProps) {
-  const groupRef = useRef<THREE.Group | null>(null);
-  const mouseRef = useRef({ x: 0, y: 0 });
-  const targetRotation = useRef({ x: 0, y: 0 });
-
-  useEffect(() => {
-    if (!interactive) return;
-
-    function handlePointerMove(event: PointerEvent) {
-      mouseRef.current.x = (event.clientX / window.innerWidth) * 2 - 1;
-      mouseRef.current.y = -((event.clientY / window.innerHeight) * 2 - 1);
-    }
-
-    window.addEventListener("pointermove", handlePointerMove, {
-      passive: true,
-    });
-
-    return () => {
-      window.removeEventListener("pointermove", handlePointerMove);
-    };
-  }, [interactive]);
-
-  useFrame(({ clock }) => {
-    const t = clock.getElapsedTime();
-
-    if (!groupRef.current) return;
-
-    const softMouseX = interactive ? mouseRef.current.x * 0.28 : 0;
-    const softMouseY = interactive ? mouseRef.current.y * 0.2 : 0;
-
-    const driftX = Math.sin(t * 0.17) * 0.08;
-    const driftY = Math.sin(t * 0.11) * 0.1;
-    const driftZ = Math.sin(t * 0.09) * 0.05;
-
-    targetRotation.current.x = softMouseY + driftX;
-    targetRotation.current.y = softMouseX + t * 0.08 + driftY;
-
-    groupRef.current.rotation.x = THREE.MathUtils.lerp(
-      groupRef.current.rotation.x,
-      -0.22 + targetRotation.current.x,
-      0.045
-    );
-
-    groupRef.current.rotation.y = THREE.MathUtils.lerp(
-      groupRef.current.rotation.y,
-      targetRotation.current.y,
-      0.045
-    );
-
-    groupRef.current.rotation.z = THREE.MathUtils.lerp(
-      groupRef.current.rotation.z,
-      driftZ,
-      0.025
-    );
-  });
-
+export default function MiniSpatialSystemObject({
+  className = "",
+}: MiniSpatialSystemObjectProps) {
   return (
-    <group ref={groupRef}>
-      <mesh>
-        <ShapeGeometry shape={shape} />
-        <meshBasicMaterial
-          color="#ffffff"
-          wireframe
-          transparent
-          opacity={0.16}
+    <svg
+      viewBox="0 0 360 360"
+      fill="none"
+      className={className}
+      aria-hidden="true"
+    >
+   {/* Circle / clarity field */}
+<circle
+  cx="244"
+  cy="176"
+  r="84"
+  stroke="rgba(255,255,255,0.18)"
+  strokeWidth="1.2"
+/>
+<ellipse
+  cx="226"
+  cy="176"
+  rx="106"
+  ry="66"
+  transform="rotate(-12 226 176)"
+  stroke="rgba(255,255,255,0.12)"
+  strokeWidth="1"
+/>
+<circle
+  cx="266"
+  cy="164"
+  r="26"
+  stroke="rgba(255,255,255,0.09)"
+  strokeWidth="1"
+/>
+<circle cx="266" cy="164" r="2.2" fill="rgba(255,255,255,0.26)" />
+
+      {/* Square / structure */}
+      <g transform="rotate(8 150 126)">
+        <rect
+          x="116"
+          y="92"
+          width="82"
+          height="82"
+          stroke="rgba(255,255,255,0.18)"
+          strokeWidth="1.2"
         />
-      </mesh>
-
-      <mesh scale={1.42}>
-        <ShapeGeometry shape={shape} />
-        <meshBasicMaterial
-          color="#ffffff"
-          wireframe
-          transparent
-          opacity={0.06}
+        <path
+          d="M132 108 L182 108 L182 158 L132 158 Z"
+          stroke="rgba(255,255,255,0.08)"
+          strokeWidth="1"
         />
-      </mesh>
+      </g>
 
-      <mesh rotation={[0.45, 0.2, 0.1]} scale={0.58}>
-        <ShapeGeometry shape={shape} />
-        <meshBasicMaterial
-          color="#ffffff"
-          wireframe
-          transparent
-          opacity={0.12}
+      {/* Triangle / direction */}
+      <g transform="translate(128 206)">
+        <polygon
+          points="36,0 72,68 0,68"
+          stroke="rgba(255,255,255,0.17)"
+          strokeWidth="1.2"
         />
-      </mesh>
-    </group>
-  );
-}
+        <polygon
+          points="36,18 55,54 17,54"
+          stroke="rgba(255,255,255,0.07)"
+          strokeWidth="1"
+        />
+      </g>
 
-export default function MiniSpatialObject({
-  shape = "cube",
-  interactive = true,
-  className = "pointer-events-none absolute right-[40px] top-[55%] hidden h-[400px] w-[400px] -translate-y-1/2 opacity-55 lg:block xl:right-[120px]",
-}: MiniSpatialObjectProps) {
-  return (
-    <div aria-hidden="true" className={className}>
-      <div className="absolute inset-0 rounded-full bg-white/[0.035] blur-3xl" />
-
-      <Canvas
-        camera={{ position: [0, 0, 5], fov: 42 }}
-        dpr={[1, 1.5]}
-        gl={{ alpha: true, antialias: true }}
-        className="relative z-10"
-      >
-        <WireStructure shape={shape} interactive={interactive} />
-      </Canvas>
-    </div>
+      {/* System relations */}
+      <path
+        d="M168 132 C205 138 232 146 266 164"
+        stroke="rgba(255,255,255,0.09)"
+        strokeWidth="1"
+      />
+      <path
+        d="M266 164 C232 188 210 208 164 240"
+        stroke="rgba(255,255,255,0.075)"
+        strokeWidth="1"
+      />
+      <path
+        d="M150 128 C156 168 160 196 164 240"
+        stroke="rgba(255,255,255,0.06)"
+        strokeWidth="1"
+      />
+    </svg>
   );
 }

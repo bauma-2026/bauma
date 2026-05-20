@@ -37,13 +37,25 @@ export default function MiniHeroEn() {
   Structure-first websites
 </div>
 
-<h1 className="mt-8 max-w-[14ch] font-serif text-5xl font-semibold leading-[0.96] tracking-[-0.025em] text-white sm:max-w-[15ch] sm:text-6xl lg:max-w-[16ch] lg:text-7xl">
-              Clear structure.
-            <br />
-            Better decisions.
-          </h1>
+<h1 className="mt-8 font-serif text-5xl font-semibold leading-[0.96] tracking-[-0.025em] text-white sm:max-w-[15ch] sm:text-6xl lg:max-w-[16ch] lg:text-7xl">
+  <span className="block sm:hidden">
+    Clear
+    <br />
+    structure.
+    <br />
+    Better
+    <br />
+    decisions.
+  </span>
 
-          <p className="mt-8 max-w-[52ch] text-base leading-7 text-white/58 sm:text-lg">
+  <span className="hidden sm:block">
+    Clear structure.
+    <br />
+    Better decisions.
+  </span>
+</h1>
+
+          <p className="mt-8 max-w-[52ch] text-base leading-7 text-white/55 sm:text-lg">
             I structure websites so users understand faster, trust more easily
             and take the next step with less friction.
           </p>

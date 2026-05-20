@@ -54,7 +54,7 @@ export default function AboutPreviewPage() {
 
       <main className="bg-[#080808] text-white">
         {/* Hero */}
-        <section className="relative overflow-hidden border-b border-white/10 py-20 sm:py-24 lg:py-28">
+        <section className="relative overflow-hidden border-b border-white/10 pt-14 pb-20 sm:py-24 lg:py-28">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_72%_35%,rgba(125,211,252,0.055),transparent_32%)]" />
 
           <Container className="relative">
@@ -64,10 +64,22 @@ export default function AboutPreviewPage() {
 
             <div className="mt-10 grid gap-12 lg:grid-cols-[1fr_300px] lg:items-end lg:gap-24">
               <div className="max-w-[720px]">
-              <h1 className="max-w-[18ch] font-serif text-5xl font-semibold leading-[0.96] tracking-[-0.025em] text-white sm:text-6xl lg:text-7xl">
-  Structure brings
-  <br />
-  clarity to the whole.
+           <h1 className="max-w-[10ch] font-serif text-5xl font-semibold leading-[0.96] tracking-[-0.025em] text-white sm:max-w-[18ch] sm:text-6xl lg:text-7xl">
+  <span className="block sm:hidden">
+    Structure
+    <br />
+    brings
+    <br />
+    clarity to the
+    <br />
+    whole.
+  </span>
+
+  <span className="hidden sm:block">
+    Structure brings
+    <br />
+    clarity to the whole.
+  </span>
 </h1>
                 <div className="mt-8 max-w-[58ch]">
                   <p className="text-base leading-7 text-white/62 sm:text-lg sm:leading-8">
@@ -83,38 +95,53 @@ export default function AboutPreviewPage() {
                   </p>
                 </div>
 
-                {/* Mobile portrait */}
-                <div className="relative mr-auto mt-9 max-w-[200px] lg:hidden">
-                  <div className="pointer-events-none absolute -inset-8 rounded-full bg-white/[0.03] blur-3xl" />
+              {/* Mobile portrait */}
+<div className="relative mr-auto mt-9 max-w-[200px] lg:hidden">
+  <div className="pointer-events-none absolute -inset-8 rounded-full bg-white/[0.03] blur-3xl" />
 
-                  <div className="relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.015] opacity-90">
-                    <Image
-                      src="/images/gregor/gregor-baumgartner-portrait-bauma.jpg"
-                      alt="Gregor Baumgartner"
-                      width={900}
-                      height={1125}
-                      priority
-                      className="aspect-[4/5] w-full object-cover object-center grayscale opacity-85"
-                    />
-                  </div>
-                </div>
-              </div>
+  <div className="relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.015] opacity-90">
+    <Image
+      src="/images/gregor/gregor-baumgartner-bauma-portrait-v5.jpg"
+      alt="Gregor Baumgartner"
+      width={900}
+      height={1125}
+      priority
+      className="aspect-[4/5] w-full object-cover object-center grayscale opacity-85 contrast-[0.94]"
+    />
+  </div>
+</div>
+</div>
 
-              {/* Desktop portrait */}
-              <div className="relative hidden lg:block lg:w-[240px] lg:justify-self-end xl:w-[260px]">
-                <div className="pointer-events-none absolute -inset-10 rounded-full bg-white/[0.03] blur-3xl" />
+{/* Desktop portrait */}
+<div className="relative hidden lg:block lg:w-[240px] lg:justify-self-end xl:w-[260px]">
+  <div className="pointer-events-none absolute -inset-10 rounded-full bg-white/[0.03] blur-3xl" />
 
-                <div className="relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.015] opacity-90">
-                  <Image
-                    src="/images/gregor/gregor-baumgartner-portrait-bauma.jpg"
-                    alt="Gregor Baumgartner"
-                    width={900}
-                    height={1125}
-                    priority
-                    className="aspect-[4/5] w-full object-cover object-center grayscale opacity-85 contrast-[0.92]"
-                  />
-                </div>
-              </div>
+  <div className="relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.015] opacity-90">
+    <Image
+      src="/images/gregor/gregor-baumgartner-bauma-portrait-v5.jpg"
+      alt="Gregor Baumgartner"
+      width={900}
+      height={1125}
+      priority
+      className="aspect-[4/5] w-full object-cover object-center grayscale opacity-85 contrast-[0.94]"
+    />
+  </div>
+
+  {/*
+    LinkedIn avatar test frame — kept for future testing.
+    Not visible in current About hero.
+
+    <div className="absolute -bottom-5 -right-5 hidden h-16 w-16 overflow-hidden rounded-full border border-white/10 bg-black shadow-[0_0_30px_rgba(0,0,0,0.45)] xl:block">
+      <Image
+        src="/images/gregor/gregor-baumgartner-bauma-linkedin-v5.jpg"
+        alt="LinkedIn avatar crop test"
+        width={300}
+        height={300}
+        className="h-full w-full object-cover object-center grayscale opacity-90 contrast-[0.95]"
+      />
+    </div>
+  */}
+</div>
             </div>
           </Container>
         </section>

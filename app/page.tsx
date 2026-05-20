@@ -7,7 +7,6 @@ import MiniPerceptionLayer from "./components/blocks/mini/MiniPerceptionLayer";
 import MiniFinalCTA from "./components/blocks/mini/MiniFinalCTA";
 import MiniFooter from "./components/blocks/mini/MiniFooter";
 
-
 export default function Home() {
   return (
     <>
@@ -20,7 +19,6 @@ export default function Home() {
         <SystemGraphic />
         <MiniPerceptionLayer />
         <MiniFinalCTA />
-      
       </main>
 
       <MiniFooter />

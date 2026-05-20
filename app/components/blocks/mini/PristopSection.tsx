@@ -1,24 +1,30 @@
 const principles = [
   {
     number: "01",
-    title: "Kaj odstraniva",
-    text: "Šum, ponavljanje, nejasne CTA-je in sekcije brez jasne funkcije.",
+    title: "Odstranimo šum",
+    text: "Ponavljanje, nejasne CTA-je in sekcije, ki nimajo jasne naloge.",
+    result: "Manj trenja.",
   },
   {
     number: "02",
-    title: "Kaj postaviva",
-    text: "Jasno hierarhijo, zaporedje informacij in pot do naslednjega koraka.",
+    title: "Postavimo pot",
+    text: "Hierarhijo, zaporedje informacij in jasen prehod do naslednjega koraka.",
+    result: "Več orientacije.",
   },
   {
     number: "03",
-    title: "Kaj se spremeni",
-    text: "Stran začne delovati kot pot, ne kot zbirka ločenih sekcij.",
+    title: "Oblika dobi nalogo",
+    text: "Vizual, detajli in občutek strani podprejo razumevanje, zaupanje in odločitev.",
+    result: "Več zaupanja.",
   },
 ];
 
 export default function PristopSection() {
   return (
-    <section id="approach" className="border-t border-white/10 bg-[#080808] py-16 text-white sm:py-20 lg:py-24">
+    <section
+      id="approach"
+      className="border-t border-white/10 bg-[#080808] py-16 text-white sm:py-20 lg:py-24"
+    >
       <div className="mx-auto grid max-w-[1100px] gap-10 px-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-start lg:gap-12 lg:px-8">
         <div>
           <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/60">
@@ -37,30 +43,35 @@ export default function PristopSection() {
 
         <div className="border-y border-white/10">
           {principles.map((item) => (
-            <div
+            <article
               key={item.number}
-              className="grid gap-3 border-b border-white/10 py-5 last:border-b-0 sm:grid-cols-[64px_1fr] sm:gap-6 sm:py-6"
+              className="grid gap-4 border-b border-white/10 py-6 last:border-b-0 sm:grid-cols-[64px_1fr] sm:gap-6 lg:py-7"
             >
-              <p className="text-[11px] font-medium tracking-[0.18em] text-white/60">
+              <p className="text-[11px] font-medium tracking-[0.18em] text-white/45">
                 {item.number}
               </p>
 
               <div>
-                <h3 className="text-base font-semibold tracking-[-0.015em] text-white/90 sm:text-lg">
+                <h3 className="text-lg font-semibold tracking-[-0.02em] text-white/92">
                   {item.title}
                 </h3>
 
-                <p className="mt-2 max-w-[52ch] text-sm leading-6 text-white/50">
+                <p className="mt-3 max-w-[52ch] text-sm leading-6 text-white/50">
                   {item.text}
                 </p>
+
+                <p className="mt-4 text-sm font-medium tracking-[-0.01em] text-white/72">
+                  {item.result}
+                </p>
               </div>
-            </div>
+            </article>
           ))}
         </div>
 
         <div className="lg:col-start-2">
           <p className="max-w-[56ch] border-l border-white/10 pl-5 text-sm leading-6 text-white/50">
-           Najprej uredim pot. Šele potem imajo vizual, detajli in občutek strani pravo nalogo.
+            Najprej uredim pot. Šele potem imajo vizual, detajli in občutek
+            strani pravo nalogo.
           </p>
         </div>
       </div>
