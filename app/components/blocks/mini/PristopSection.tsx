@@ -2,20 +2,17 @@ const principles = [
   {
     number: "01",
     title: "Odstranimo šum",
-    text: "Ponavljanje, nejasne CTA-je in sekcije, ki nimajo jasne naloge.",
-    result: "Manj trenja.",
+    text: "Ponavljanje, nejasne CTA-je in sekcije brez jasne naloge.",
   },
   {
     number: "02",
     title: "Postavimo pot",
-    text: "Hierarhijo, zaporedje informacij in jasen prehod do naslednjega koraka.",
-    result: "Več orientacije.",
+    text: "Hierarhijo, vrstni red informacij in jasen prehod do naslednjega koraka.",
   },
   {
     number: "03",
     title: "Oblika dobi nalogo",
-    text: "Vizual, detajli in občutek strani podprejo razumevanje, zaupanje in odločitev.",
-    result: "Več zaupanja.",
+    text: "Vizual, detajli in občutek strani podprejo razumevanje in zaupanje.",
   },
 ];
 
@@ -35,44 +32,33 @@ export default function PristopSection() {
             Najprej jasna pot. Potem oblika.
           </h2>
 
-          <p className="mt-5 max-w-[48ch] text-sm leading-6 text-white/55 sm:text-base sm:leading-7">
-            Najprej uredim, kaj mora uporabnik razumeti. Šele potem pridejo
-            vizual, detajli in občutek strani.
+          <p className="mt-5 max-w-[52ch] text-sm leading-6 text-white/55 sm:text-base sm:leading-7">
+            Najprej uredim, kaj mora uporabnik razumeti: odstranimo šum,
+            postavimo pot in šele nato dodamo obliko, ki ima jasno nalogo.
           </p>
         </div>
 
         <div className="border-y border-white/10">
           {principles.map((item) => (
-            <article
-              key={item.number}
-              className="grid gap-4 border-b border-white/10 py-6 last:border-b-0 sm:grid-cols-[64px_1fr] sm:gap-6 lg:py-7"
-            >
-              <p className="text-[11px] font-medium tracking-[0.18em] text-white/45">
-                {item.number}
-              </p>
+          <article
+  key={item.number}
+  className="grid gap-3 border-b border-white/10 py-5 last:border-b-0 sm:grid-cols-[64px_1fr] sm:gap-6 sm:py-6 lg:py-7"
+>
+  <p className="text-[11px] font-medium tracking-[0.18em] text-white/42">
+    {item.number}
+  </p>
 
-              <div>
-                <h3 className="text-lg font-semibold tracking-[-0.02em] text-white/92">
-                  {item.title}
-                </h3>
+  <div>
+    <h3 className="text-[17px] font-semibold tracking-[-0.02em] text-white/90 sm:text-lg">
+      {item.title}
+    </h3>
 
-                <p className="mt-3 max-w-[52ch] text-sm leading-6 text-white/50">
-                  {item.text}
-                </p>
-
-                <p className="mt-4 text-sm font-medium tracking-[-0.01em] text-white/72">
-                  {item.result}
-                </p>
-              </div>
-            </article>
+    <p className="mt-2 max-w-[52ch] text-sm leading-6 text-white/50">
+      {item.text}
+    </p>
+  </div>
+</article>
           ))}
-        </div>
-
-        <div className="lg:col-start-2">
-          <p className="max-w-[56ch] border-l border-white/10 pl-5 text-sm leading-6 text-white/50">
-            Najprej uredim pot. Šele potem imajo vizual, detajli in občutek
-            strani pravo nalogo.
-          </p>
         </div>
       </div>
     </section>

@@ -98,14 +98,14 @@ export default function AboutPreviewPage() {
 <div className="relative mr-auto mt-9 max-w-[200px] lg:hidden">
   <div className="pointer-events-none absolute -inset-8 rounded-full bg-white/[0.03] blur-3xl" />
 
-  <div className="relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.015] opacity-90">
+  <div className="relative overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.015] shadow-[0_20px_60px_rgba(0,0,0,0.32)]">
     <Image
-      src="/images/gregor/gregor-baumgartner-bauma-portrait-v5.jpg"
+      src="/images/gregor/gb-bauma-portrait.webp"
       alt="Gregor Baumgartner"
       width={900}
       height={1125}
       priority
-      className="aspect-[4/5] w-full object-cover object-center grayscale opacity-85 contrast-[0.94]"
+      className="aspect-[4/5] w-full object-cover object-center opacity-95 contrast-[0.96] saturate-[0.85]"
     />
   </div>
 </div>
@@ -115,34 +115,31 @@ export default function AboutPreviewPage() {
 <div className="relative hidden lg:block lg:w-[240px] lg:justify-self-end xl:w-[260px]">
   <div className="pointer-events-none absolute -inset-10 rounded-full bg-white/[0.03] blur-3xl" />
 
-  <div className="relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.015] opacity-90">
+  <div className="relative overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.015] shadow-[0_24px_80px_rgba(0,0,0,0.35)]">
     <Image
-      src="/images/gregor/gregor-baumgartner-bauma-portrait-v5.jpg"
+      src="/images/gregor/gb-bauma-portrait.webp"
       alt="Gregor Baumgartner"
       width={900}
       height={1125}
       priority
-      className="aspect-[4/5] w-full object-cover object-center grayscale opacity-85 contrast-[0.94]"
+      className="aspect-[4/5] w-full object-cover object-center opacity-95 contrast-[0.96] saturate-[0.9]"
     />
   </div>
 
   {/*
     LinkedIn avatar test frame — kept for future testing.
     Not visible in current About hero.
-
-    <div className="absolute -bottom-5 -right-5 hidden h-16 w-16 overflow-hidden rounded-full border border-white/10 bg-black shadow-[0_0_30px_rgba(0,0,0,0.45)] xl:block">
-      <Image
-        src="/images/gregor/gregor-baumgartner-bauma-linkedin-v5.jpg"
-        alt="LinkedIn avatar crop test"
-        width={300}
-        height={300}
-        className="h-full w-full object-cover object-center grayscale opacity-90 contrast-[0.95]"
-      />
-    </div>
+<div className="absolute -bottom-5 -right-5 hidden h-16 w-16 overflow-hidden rounded-full border border-white/10 bg-black shadow-[0_0_30px_rgba(0,0,0,0.45)] xl:block">
+  <Image
+    src="/images/gregor/gb-bauma-linkedin.webp"
+    alt="LinkedIn avatar crop test"
+    width={300}
+    height={300}
+    className="h-full w-full object-cover object-center opacity-95 contrast-[0.96] saturate-[0.9]"
+  />
+</div>
   */}
-
-      </div>
-    </div>
+</div>    </div>
   </Container>
 </section>
 

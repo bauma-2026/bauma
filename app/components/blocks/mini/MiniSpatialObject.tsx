@@ -12,14 +12,15 @@ export default function MiniSpatialSystemObject({
       className={className}
       aria-hidden="true"
     >
-   {/* Circle / clarity field */}
+{/* Circle / clarity field */}
 <circle
   cx="244"
   cy="176"
   r="84"
-  stroke="rgba(255,255,255,0.18)"
+  stroke="rgba(255,255,255,0.27)"
   strokeWidth="1.2"
 />
+
 <ellipse
   cx="226"
   cy="176"
@@ -29,14 +30,16 @@ export default function MiniSpatialSystemObject({
   stroke="rgba(255,255,255,0.12)"
   strokeWidth="1"
 />
+
 <circle
   cx="266"
   cy="164"
   r="26"
-  stroke="rgba(255,255,255,0.09)"
+  stroke="rgba(255,255,255,0.15)"
   strokeWidth="1"
 />
-<circle cx="266" cy="164" r="2.2" fill="rgba(255,255,255,0.26)" />
+
+<circle cx="266" cy="164" r="2.2" fill="rgba(255,255,255,0.4)" />
 
       {/* Square / structure */}
       <g transform="rotate(8 150 126)">

@@ -1,12 +1,12 @@
 import Link from "next/link";
 
-export default function MiniFooter() {
+export default function MiniFooterEn() {
   return (
     <footer className="border-t border-white/10 bg-[#080808] text-white">
       <div className="mx-auto grid max-w-[1100px] gap-10 px-6 py-14 sm:py-16 lg:grid-cols-[1fr_1fr] lg:gap-12 lg:px-8">
         <div>
           <Link
-            href="/mini"
+            href="/en"
             aria-label="Bauma home"
             className="inline-flex items-center opacity-70 transition-opacity duration-200 hover:opacity-100"
           >
@@ -18,28 +18,29 @@ export default function MiniFooter() {
           </Link>
 
           <p className="mt-3 max-w-[38ch] text-sm leading-6 text-white/50 sm:mt-4">
-            Struktura za strani, kjer mora uporabnik hitro razumeti, zaupati in
-            narediti naslednji korak.
+            Structure for pages where users need to understand quickly, build
+            trust and take the next step.
           </p>
         </div>
 
         <div className="lg:justify-self-end">
-  <h4 className="text-sm font-semibold tracking-[-0.015em] text-white">
-    Začniva z jasnim vprašanjem
-  </h4>
+          <h4 className="text-sm font-semibold tracking-[-0.015em] text-white">
+            Start with one clear question
+          </h4>
 
-  <p className="mt-3 max-w-[42ch] text-sm leading-6 text-white/50">
-    Pošljite link, idejo ali kratek opis problema. Pogledava, kje je največ
-    nejasnosti in kateri korak ima največ smisla najprej urediti.
-  </p>
+          <p className="mt-3 max-w-[42ch] text-sm leading-6 text-white/50">
+            Send a link, an idea or a short description of the problem. We can
+            look at where the biggest uncertainty is and which step makes the
+            most sense to fix first.
+          </p>
 
-  <Link
-    href="mailto:hello@bauma.si?subject=Povpra%C5%A1evanje%20%E2%80%94%20Bauma"
-    className="mt-5 inline-flex text-sm font-medium text-white transition hover:text-white/70 sm:mt-6"
-  >
-    hello@bauma.si
-  </Link>
-</div>
+          <Link
+            href="mailto:hello@bauma.si?subject=Inquiry%20%E2%80%94%20Bauma"
+            className="mt-5 inline-flex text-sm font-medium text-white transition hover:text-white/70 sm:mt-6"
+          >
+            hello@bauma.si
+          </Link>
+        </div>
       </div>
 
       <div className="border-t border-white/10">
@@ -50,19 +51,16 @@ export default function MiniFooter() {
             aria-label="Legal links"
             className="flex flex-wrap items-center gap-x-4 gap-y-2"
           >
-            <Link
-              href="/pogoji-uporabe"
-              className="transition hover:text-white"
-            >
-              Pogoji uporabe
+            <Link href="/en/terms" className="transition hover:text-white">
+              Terms
             </Link>
 
-            <Link href="/zasebnost" className="transition hover:text-white">
-              Zasebnost
+            <Link href="/en/privacy" className="transition hover:text-white">
+              Privacy
             </Link>
 
-            <Link href="/piskotki" className="transition hover:text-white">
-              Piškotki
+            <Link href="/en/cookies" className="transition hover:text-white">
+              Cookies
             </Link>
           </nav>
         </div>

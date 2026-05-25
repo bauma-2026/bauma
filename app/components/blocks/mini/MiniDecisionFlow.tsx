@@ -74,7 +74,7 @@ export default function MiniDecisionFlow() {
   return (
     <section
       id="flow"
-      className="scroll-mt-13 overflow-hidden border-t border-white/10 bg-[#080808] py-14 text-white sm:py-20 lg:py-24"
+      className="scroll-mt-13 overflow-hidden border-t border-white/10 bg-[#0a0a0a] py-14 text-white sm:py-20 lg:py-24"
     >
       <div className="mx-auto max-w-[1100px] px-6 lg:px-8">
         {/* Intro */}
@@ -164,14 +164,14 @@ export default function MiniDecisionFlow() {
   {flow.label}
 </h4>
 
-                  <p
-                    className={[
-                      "shrink-0 pt-1 text-[10px] font-medium uppercase tracking-[0.22em]",
-                      flow.muted ? "text-white/32" : "text-white/42",
-                    ].join(" ")}
-                  >
-                    {flow.tag}
-                  </p>
+                <p
+  className={[
+    "shrink-0 pt-1 text-[10px] font-medium uppercase tracking-[0.14em]",
+    flow.muted ? "text-white/38" : "text-[#B68A4C]/80",
+  ].join(" ")}
+>
+  {flow.tag}
+</p>
                 </div>
 
                 <div className="mt-8">

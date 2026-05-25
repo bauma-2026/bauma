@@ -117,7 +117,7 @@ export default function SystemGraphic() {
 <section
   id="system"
   ref={sectionRef}
-  className="relative scroll-mt-13 overflow-hidden border-t border-white/10 bg-[#080808] py-20 text-white sm:py-24 lg:py-28"
+  className="relative scroll-mt-13 overflow-hidden border-t border-white/10 bg-[#0b0b0b] py-20 text-white sm:py-24 lg:py-28"
 >
       <div className="mx-auto grid max-w-[1100px] min-w-0 gap-12 px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:px-8">
         <div className="min-w-0">
@@ -136,69 +136,69 @@ export default function SystemGraphic() {
           </p>
         </div>
 
-        <div className="group relative min-w-0 max-w-full">
-          <div className="pointer-events-none absolute -inset-8 rounded-[36px] bg-white/[0.03] opacity-0 blur-3xl transition duration-700 group-hover:opacity-100" />
+     <div className="group relative min-w-0 max-w-full">
+  <div className="pointer-events-none absolute -inset-8 rounded-[40px] bg-white/[0.025] opacity-0 blur-3xl transition duration-700 group-hover:opacity-100" />
 
-          <div className="relative min-w-0 max-w-full overflow-hidden rounded-[28px] border border-white/10 bg-[#0d0d0d] shadow-2xl shadow-black/30 transition duration-500 group-hover:border-white/18 group-hover:bg-[#101010]">
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-70" />
+  <div className="relative min-w-0 max-w-full overflow-hidden rounded-[30px] border border-white/12 bg-[#0b0b0b] shadow-[0_24px_80px_rgba(0,0,0,0.35)] transition duration-500 group-hover:border-white/18 group-hover:bg-[#0e0e0e]">
+    <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/18 to-transparent opacity-70" />
 
-            <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
-              <div className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full bg-white/20 transition duration-500 group-hover:bg-white/35" />
-                <span className="h-2.5 w-2.5 rounded-full bg-white/12 transition duration-500 group-hover:bg-white/20" />
-                <span className="h-2.5 w-2.5 rounded-full bg-white/8 transition duration-500 group-hover:bg-white/14" />
-              </div>
+    <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+      <div className="flex items-center gap-2">
+        <span className="h-2.5 w-2.5 rounded-full bg-white/22 transition duration-500 group-hover:bg-white/35" />
+        <span className="h-2.5 w-2.5 rounded-full bg-white/12 transition duration-500 group-hover:bg-white/20" />
+        <span className="h-2.5 w-2.5 rounded-full bg-white/8 transition duration-500 group-hover:bg-white/14" />
+      </div>
 
-              <p className="text-[12px] font-medium tracking-[-0.01em] text-white/32 transition duration-500 group-hover:text-white/50">
-                Decision logic
+      <p className="text-[12px] font-medium tracking-[-0.01em] text-white/34 transition duration-500 group-hover:text-white/50">
+        Decision logic
+      </p>
+    </div>
+
+    <div className="min-w-0 p-4 sm:p-7">
+      <div className="relative min-h-[168px] min-w-0 max-w-full overflow-hidden rounded-[22px] border border-white/12 bg-white/[0.025] p-4 font-mono text-[11px] leading-6 text-white/50 transition duration-500 group-hover:border-white/16 group-hover:bg-white/[0.035] sm:min-h-[174px] sm:p-5 sm:text-[13px]">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent" />
+
+        {highlightCode(typedCode)}
+
+        {hasStarted && typedCode.length < codeString.length && (
+          <span className="inline-block h-4 w-2 translate-y-0.5 animate-pulse bg-white/55" />
+        )}
+      </div>
+
+      <div className="mt-6 min-w-0 max-w-full overflow-hidden rounded-[22px] border border-white/10 bg-black/[0.08] transition duration-500 group-hover:border-white/14">
+        {systemSteps.map((step, index) => (
+          <div
+            key={step.label}
+            className="grid min-w-0 gap-3 border-b border-white/10 px-4 py-4 transition duration-300 last:border-b-0 hover:bg-white/[0.025] sm:grid-cols-[128px_1fr] sm:items-center sm:px-5"
+          >
+            <div className="flex min-w-0 items-center gap-3">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/10 text-[11px] text-white/50 transition duration-300 group-hover:border-white/15">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+
+              <p className="min-w-0 text-sm font-medium text-white/78">
+                {step.label}
               </p>
             </div>
 
-            <div className="min-w-0 p-4 sm:p-7">
-              <div className="relative min-h-[168px] min-w-0 max-w-full overflow-hidden rounded-2xl border border-white/10 bg-black/20 p-4 font-mono text-[11px] leading-6 text-white/50 transition duration-500 group-hover:border-white/15 group-hover:bg-black/25 sm:min-h-[174px] sm:p-5 sm:text-[13px]">
-                <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
-
-                {highlightCode(typedCode)}
-
-                {hasStarted && typedCode.length < codeString.length && (
-                  <span className="inline-block h-4 w-2 translate-y-0.5 animate-pulse bg-white/60" />
-                )}
-              </div>
-
-              <div className="mt-6 min-w-0 max-w-full overflow-hidden rounded-2xl border border-white/10 transition duration-500 group-hover:border-white/15">
-                {systemSteps.map((step, index) => (
-                  <div
-                    key={step.label}
-                    className="grid min-w-0 gap-3 border-b border-white/10 px-4 py-4 transition duration-300 last:border-b-0 hover:bg-white/[0.035] sm:grid-cols-[120px_1fr] sm:items-center sm:px-5"
-                  >
-                    <div className="flex min-w-0 items-center gap-3">
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-white/10 text-[11px] text-white/60 transition duration-300 group-hover:border-white/15">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-
-                      <p className="min-w-0 text-sm font-medium text-white/80">
-                        {step.label}
-                      </p>
-                    </div>
-
-                    <p className="min-w-0 text-sm leading-6 text-white/50">
-                      {step.value}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-6 border-t border-white/10 pt-5">
-                <p className="min-w-0 break-words text-sm leading-6 text-white/50">
-                  Output:{" "}
-                  <span className="text-white/75 transition duration-500 group-hover:text-white/90">
-                    jasnejša pot od prvega pogleda do kontakta.
-                  </span>
-                </p>
-              </div>
-            </div>
+            <p className="min-w-0 text-sm leading-6 text-white/48">
+              {step.value}
+            </p>
           </div>
-        </div>
+        ))}
+      </div>
+
+      <div className="mt-6 border-t border-white/10 pt-5">
+        <p className="min-w-0 break-words text-sm leading-6 text-white/46">
+          Output:{" "}
+         <span className="text-[#B68A4C]/80">
+            jasnejša pot od prvega pogleda do kontakta.
+          </span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
       </div>
     </section>
     

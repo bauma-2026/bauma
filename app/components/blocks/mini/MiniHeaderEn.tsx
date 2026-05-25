@@ -4,8 +4,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const navItems = [
-  { href: "/en#approach", label: "Approach", id: "approach" },
-  { href: "/en#system", label: "System", id: "system" },
+  { href: "/en/#approach", label: "Approach", id: "approach" },
+  { href: "/en/#system", label: "System", id: "system" },
 ];
 
 const sectionIds = ["flow", "system", "contact"];
@@ -23,7 +23,7 @@ function HeaderInner({
     <div className="mx-auto flex h-[52px] max-w-[1100px] items-center justify-between px-5 sm:px-6 lg:px-8">
       <Link
         href="/en"
-        aria-label="Bauma English home"
+        aria-label="Bauma home"
         className="inline-flex items-center transition-opacity duration-200 hover:opacity-80"
         onClick={() => setIsMenuOpen(false)}
       >
@@ -66,7 +66,7 @@ function HeaderInner({
         </Link>
 
         <Link
-          href="/en#contact"
+          href="/en/#contact"
           aria-current={activeId === "contact" ? "page" : undefined}
           className={`hidden rounded-full px-3.5 py-1.5 text-[12px] font-medium transition sm:px-4 sm:py-1.5 sm:text-xs md:inline-flex ${
             activeId === "contact"
@@ -124,7 +124,7 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
           ))}
 
           <Link
-            href="/en#contact"
+            href="/en/#contact"
             onClick={onClose}
             className="flex border-b border-white/10 py-4 text-[18px] font-normal tracking-[-0.01em] text-white transition hover:text-white/70"
           >
@@ -136,7 +136,7 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
             onClick={onClose}
             className="flex border-b border-white/10 py-4 text-[14px] font-medium tracking-[0.04em] text-white/45 transition hover:text-white"
           >
-            Slovenščina
+            Slovenian
           </Link>
         </nav>
 
@@ -146,7 +146,7 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
           </p>
 
           <Link
-            href="/en#contact"
+            href="/en/#contact"
             onClick={onClose}
             className="mt-5 inline-flex h-10 items-center justify-center rounded-full bg-white px-5 text-sm font-medium text-black transition hover:bg-white/90"
           >

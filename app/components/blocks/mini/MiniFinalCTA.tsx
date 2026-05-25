@@ -1,42 +1,41 @@
 export default function MiniFinalCTA() {
   return (
-    <section id="contact" className="scroll-mt-13 border-t border-white/10 bg-[#080808] py-16 text-white sm:py-20 lg:py-24">
-      <div className="mx-auto max-w-[720px] px-6 text-center lg:px-8">
-        <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/60">
-        Next Step
-        </p>
+   <section className="border-t border-white/10 bg-[#0a0a0a] px-6 py-20 text-white shadow-[0_24px_80px_rgba(182,138,76,0.035)] sm:py-24 lg:px-8 lg:py-28">
+  <div className="mx-auto max-w-[1100px]">
+    <div className="mx-auto max-w-[720px] rounded-[32px] border border-white/10 bg-white/[0.025] px-6 py-12 text-center shadow-[0_24px_80px_rgba(0,0,0,0.28)] sm:px-10 sm:py-14 lg:px-14 lg:py-16">
+      <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#B68A4C]/75">
+        Next step
+      </p>
 
-        <h2 className="mt-4 text-3xl font-semibold leading-[1.05] tracking-[-0.025em] text-white sm:text-4xl">
-          Kje se uporabnik ustavi?
-        </h2>
+      <h2 className="mt-5 text-3xl font-semibold leading-[0.98] tracking-[-0.035em] text-white sm:text-5xl sm:leading-[0.95] sm:tracking-[-0.045em]">
+        Kontakt
+      </h2>
 
-        <p className="mx-auto mt-5 max-w-[42ch] text-sm leading-6 text-white/58 sm:text-base sm:leading-[1.65]">
-          Če stran izgleda dobro, uporabnik pa ne naredi naslednjega koraka,
-          lahko začnemo pri strukturi.
-        </p>
+      <p className="mx-auto mt-6 max-w-[56ch] text-sm leading-6 text-white/55 sm:text-base sm:leading-7">
+        Pošlji link, idejo ali kratek opis problema. Pogledava, kje je
+        največ nejasnosti in kateri korak ima največ smisla najprej
+        urediti.
+      </p>
 
-        <div className="mt-8 flex flex-col items-center gap-4 sm:mt-9">
-          <a
-            href="mailto:hello@bauma.si?subject=Povpra%C5%A1evanje%20%E2%80%94%20Bauma"
-            className="group relative inline-flex items-center justify-center overflow-hidden rounded-full border border-white bg-white px-6 py-3 text-sm font-medium text-black transition duration-300 hover:-translate-y-[1px] hover:bg-white/90 active:translate-y-0"
-          >
-            <span className="relative z-10 inline-flex items-center gap-2">
-              Poglejva, kje se flow ustavi
-              <span className="transition duration-300 group-hover:translate-x-0.5">
-                →
-              </span>
+      <div className="mt-8">
+        <a
+          href="mailto:hello@bauma.si"
+          className="group inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition duration-300 hover:-translate-y-[1px] hover:bg-white/90 active:translate-y-0"
+        >
+          <span className="inline-flex items-center gap-2">
+            Poglejva skupaj
+            <span className="transition duration-300 group-hover:translate-x-0.5">
+              →
             </span>
-
-            <span className="pointer-events-none absolute inset-0 opacity-0 transition duration-300 group-hover:opacity-100">
-              <span className="absolute inset-x-6 top-0 h-px bg-black/20" />
-            </span>
-          </a>
-
-          <p className="text-xs leading-5 text-white/60">
-            Brez pritiska · samo jasen prvi korak
-          </p>
-        </div>
+          </span>
+        </a>
       </div>
-    </section>
+
+      <p className="mt-5 text-sm leading-6 text-white/38">
+        Brez pritiska · samo jasen prvi korak
+      </p>
+    </div>
+  </div>
+</section>
   );
 }

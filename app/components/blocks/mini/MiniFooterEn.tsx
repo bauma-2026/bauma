@@ -18,24 +18,24 @@ export default function MiniFooterEn() {
           </Link>
 
           <p className="mt-3 max-w-[38ch] text-sm leading-6 text-white/50 sm:mt-4">
-            Structure for websites where users need to understand quickly,
-            build trust and take the next step.
+            Structure for pages where users need to understand quickly, build
+            trust and take the next step.
           </p>
         </div>
 
         <div className="lg:justify-self-end">
           <h4 className="text-sm font-semibold tracking-[-0.015em] text-white">
-            Let&apos;s start with a clear question
+            Start with one clear question
           </h4>
 
           <p className="mt-3 max-w-[42ch] text-sm leading-6 text-white/50">
             Send a link, an idea or a short description of the problem. We can
-            look at where the flow becomes unclear and which step makes the most
-            sense to structure first.
+            look at where the biggest uncertainty is and which step makes the
+            most sense to fix first.
           </p>
 
           <Link
-            href="mailto:hello@bauma.si?subject=Povpra%C5%A1evanje%20%E2%80%94%20Bauma"
+            href="mailto:hello@bauma.si?subject=Inquiry%20%E2%80%94%20Bauma"
             className="mt-5 inline-flex text-sm font-medium text-white transition hover:text-white/70 sm:mt-6"
           >
             hello@bauma.si
@@ -51,24 +51,15 @@ export default function MiniFooterEn() {
             aria-label="Legal links"
             className="flex flex-wrap items-center gap-x-4 gap-y-2"
           >
-            <Link
-              href="/en/terms"
-              className="transition hover:text-white"
-            >
+            <Link href="/en/terms" className="transition hover:text-white">
               Terms
             </Link>
 
-            <Link
-              href="/en/privacy"
-              className="transition hover:text-white"
-            >
+            <Link href="/en/privacy" className="transition hover:text-white">
               Privacy
             </Link>
 
-            <Link
-              href="/en/cookies"
-              className="transition hover:text-white"
-            >
+            <Link href="/en/cookies" className="transition hover:text-white">
               Cookies
             </Link>
           </nav>
