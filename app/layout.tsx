@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://bauma.si"),
 
   applicationName: "Bauma",
-  creator: "Bauma — structure-first digital products",
+  creator: "Bauma — Structure-first websites",
 
   alternates: {
     canonical: "/",
