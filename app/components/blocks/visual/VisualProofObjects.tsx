@@ -1,48 +1,27 @@
 "use client";
 
 /**
- * Visual proof object — three directions.
+ * VISUAL LAYER — proof object
+ * Direction C: Spatial Identity Surface. Three variations.
  *
- * Shared rules:
- * - outer tilted layered polygon silhouette is kept identical across A / B / C
- * - one quiet rear depth plane, one authored front plane
- * - restrained white/grey hairline system + a single warm amber accent
- * - no text, no icons, no gradients, no shadows, no rounded cards
+ * Shared, non-negotiable logic across all three:
+ * - one front spatial plane (identical silhouette)
+ * - one quieter rear depth plane
+ * - one strong internal identity decision (and only one)
+ * - one restrained amber role
+ * - one meaningful, secondary hover behaviour
+ *
+ * No text, icons, cards, browser chrome, gradients, glow, blur, shadows,
+ * rounded rectangles or images. White/grey hairlines + tonal fills only.
  */
 
 const FRONT = "M62 66 L470 100 L452 358 L48 322 Z";
 const REAR = "M104 38 L510 72 L492 330 L88 296 Z";
 
-/** maps local content space (0..409 x 0..255) onto the tilted front plane */
+/** maps local content space (~0..409 x 0..255) onto the tilted front plane */
 const PLANE = "translate(62 66) rotate(4.76) skewX(-3.4)";
 
 const AMBER = "#C79A5B";
-
-function Silhouette({ id }: { id: string }) {
-  return (
-    <>
-      {/* rear depth plane — quieter, slightly further back on hover */}
-      <path
-        d={REAR}
-        fill="none"
-        stroke="rgba(255,255,255,0.10)"
-        strokeWidth="1"
-        className="transition-all duration-700 ease-out group-hover:stroke-[rgba(255,255,255,0.16)]"
-      />
-      {/* front plane */}
-      <path
-        d={FRONT}
-        fill="rgba(255,255,255,0.012)"
-        stroke="rgba(255,255,255,0.22)"
-        strokeWidth="1"
-        className="transition-all duration-700 ease-out group-hover:stroke-[rgba(255,255,255,0.32)]"
-      />
-      <clipPath id={id}>
-        <path d={FRONT} />
-      </clipPath>
-    </>
-  );
-}
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
@@ -57,228 +36,266 @@ function Shell({ children }: { children: React.ReactNode }) {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/* A — Editorial Composition                                          */
-/* ------------------------------------------------------------------ */
-
-export function VisualProofA() {
+function Silhouette({ clipId }: { clipId: string }) {
   return (
-    <Shell>
-      <Silhouette id="clip-a" />
-
-      <g clipPath="url(#clip-a)">
-        <g transform={PLANE}>
-          {/* the whole composition re-crops slightly on hover */}
-          <g className="transition-transform duration-[900ms] ease-out group-hover:-translate-x-[14px]">
-            {/* masthead rule — the one long horizontal that sets the hierarchy */}
-            <line
-              x1="18"
-              y1="58"
-              x2="391"
-              y2="58"
-              stroke="rgba(255,255,255,0.20)"
-              strokeWidth="1"
-            />
-
-            {/* column division, asymmetric (not centred) */}
-            <line
-              x1="248"
-              y1="58"
-              x2="248"
-              y2="237"
-              stroke="rgba(255,255,255,0.10)"
-              strokeWidth="1"
-            />
-
-            {/* focal weight: one heavy short rule in the wide column */}
-            <rect
-              x="18"
-              y="104"
-              width="150"
-              height="3"
-              fill="rgba(255,255,255,0.72)"
-              className="transition-all duration-700 ease-out group-hover:w-[196px]"
-            />
-
-            {/* quiet tonal field anchoring the lower-left mass */}
-            <rect
-              x="18"
-              y="140"
-              width="196"
-              height="97"
-              fill="rgba(255,255,255,0.035)"
-              className="transition-opacity duration-700 ease-out group-hover:opacity-[0.6]"
-            />
-
-            {/* rhythm in the narrow column */}
-            {[0, 1, 2, 3, 4, 5, 6].map((i) => (
-              <line
-                key={i}
-                x1="272"
-                y1={86 + i * 22}
-                x2={i % 3 === 0 ? 372 : 340}
-                y2={86 + i * 22}
-                stroke="rgba(255,255,255,0.13)"
-                strokeWidth="1"
-                className="transition-all duration-700 ease-out group-hover:stroke-[rgba(255,255,255,0.22)]"
-              />
-            ))}
-
-            {/* single amber focal mark — snaps onto the heavy rule on hover */}
-            <rect
-              x="232"
-              y="46"
-              width="24"
-              height="24"
-              fill={AMBER}
-              opacity="0.9"
-              className="transition-transform duration-[900ms] ease-out group-hover:translate-x-[-64px] group-hover:translate-y-[46px]"
-            />
-          </g>
-        </g>
-      </g>
-    </Shell>
+    <>
+      <path
+        d={REAR}
+        fill="none"
+        stroke="rgba(255,255,255,0.10)"
+        strokeWidth="1"
+        className="transition-[stroke] duration-700 ease-out group-hover:stroke-[rgba(255,255,255,0.15)]"
+      />
+      <path
+        d={FRONT}
+        fill="rgba(255,255,255,0.012)"
+        stroke="rgba(255,255,255,0.24)"
+        strokeWidth="1"
+        className="transition-[stroke] duration-700 ease-out group-hover:stroke-[rgba(255,255,255,0.34)]"
+      />
+      <clipPath id={clipId}>
+        <path d={FRONT} />
+      </clipPath>
+    </>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* B — Structured Visual Field                                        */
+/* C1 — DIAGONAL IDENTITY                                             */
+/* one controlled diagonal cut; the internal register aligns to it     */
 /* ------------------------------------------------------------------ */
 
-const COLS = [18, 92, 166, 240, 314, 388];
-const ROWS = [22, 75, 128, 181, 234];
+/**
+ * The cut: a 1:2 proportion, deliberately NOT corner-to-corner. It enters the
+ * top edge at 1/3 and exits the left edge at 2/3, so the surface is divided
+ * into a small upper-left wedge and a large dominant lower-right region.
+ * Register lines below it step in parallel to the cut.
+ */
+const C1_REGISTER: Array<[number, number, number]> = [
+  // [y, x1, x2] — left ends step in along the cut's angle, keeping a
+  // constant inset from it so the register belongs to the cut
+  [150, 92, 268],
+  [186, 137, 322],
+  [222, 182, 376],
+];
 
-export function VisualProofB() {
+export function VisualProofC1() {
   return (
     <Shell>
-      <Silhouette id="clip-b" />
+      <Silhouette clipId="clip-c1" />
 
-      <g clipPath="url(#clip-b)">
+      <g clipPath="url(#clip-c1)">
         <g transform={PLANE}>
-          {/* the underlying module system — recedes on hover */}
-          <g className="transition-opacity duration-700 ease-out group-hover:opacity-40">
-            {COLS.map((x) => (
-              <line
-                key={`c${x}`}
-                x1={x}
-                y1={ROWS[0]}
-                x2={x}
-                y2={ROWS[ROWS.length - 1]}
-                stroke="rgba(255,255,255,0.09)"
-                strokeWidth="1"
-              />
-            ))}
-            {ROWS.map((y) => (
-              <line
-                key={`r${y}`}
-                x1={COLS[0]}
-                y1={y}
-                x2={COLS[COLS.length - 1]}
-                y2={y}
-                stroke="rgba(255,255,255,0.09)"
-                strokeWidth="1"
-              />
-            ))}
-          </g>
-
-          {/* occupied modules — proportional, asymmetric, aligned to the field */}
-          <rect
-            x={COLS[0]}
-            y={ROWS[0]}
-            width={COLS[2] - COLS[0]}
-            height={ROWS[1] - ROWS[0]}
-            fill="rgba(255,255,255,0.085)"
-            className="transition-transform duration-[900ms] ease-out group-hover:translate-y-[53px]"
-          />
-          <rect
-            x={COLS[1]}
-            y={ROWS[1]}
-            width={COLS[3] - COLS[1]}
-            height={ROWS[2] - ROWS[1]}
-            fill="rgba(255,255,255,0.05)"
-            className="transition-transform duration-[900ms] ease-out group-hover:-translate-x-[74px]"
-          />
-          <rect
-            x={COLS[3]}
-            y={ROWS[2]}
-            width={COLS[5] - COLS[3]}
-            height={ROWS[3] - ROWS[2]}
-            fill="rgba(255,255,255,0.035)"
-            className="transition-transform duration-[900ms] ease-out group-hover:-translate-y-[53px]"
-          />
-
-          {/* proportion measure — the one long span that explains the system */}
-          <line
-            x1={COLS[0]}
-            y1={ROWS[4]}
-            x2={COLS[3]}
-            y2={ROWS[4]}
-            stroke="rgba(255,255,255,0.55)"
-            strokeWidth="2"
-            className="transition-all duration-[900ms] ease-out group-hover:stroke-[rgba(255,255,255,0.8)]"
-          />
-
-          {/* single amber module, outlined — the focal alignment point */}
-          <rect
-            x={COLS[2]}
-            y={ROWS[3]}
-            width={COLS[3] - COLS[2]}
-            height={ROWS[4] - ROWS[3]}
-            fill="none"
-            stroke={AMBER}
-            strokeWidth="1.25"
-            opacity="0.85"
-            className="transition-transform duration-[900ms] ease-out group-hover:-translate-x-[74px]"
-          />
-        </g>
-      </g>
-    </Shell>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* C — Spatial Identity Surface                                       */
-/* ------------------------------------------------------------------ */
-
-export function VisualProofC() {
-  return (
-    <Shell>
-      <Silhouette id="clip-c" />
-
-      <g clipPath="url(#clip-c)">
-        <g transform={PLANE}>
-          {/* the cut: one diagonal that gives the surface its character.
-              on hover the cut sweeps, changing the proportion of the halves */}
-          <g className="transition-transform duration-[1000ms] ease-out group-hover:translate-x-[26px]">
-            <path d="M-40 262 L196 -20 L-40 -20 Z" fill="rgba(255,255,255,0.055)" />
+          {/* single identity move: one diagonal proportioning the plane.
+              hover slides the cut, re-proportioning the two regions only. */}
+          <g className="transition-transform duration-[1100ms] ease-out group-hover:translate-x-[22px]">
+            {/* upper-left region — the lighter of the two, roughly one third */}
             <path
-              d="M196 -20 L-40 262"
-              stroke="rgba(255,255,255,0.28)"
-              strokeWidth="1"
-              fill="none"
+              d="M-60 -60 L286 -60 L-60 384 Z"
+              fill="rgba(255,255,255,0.075)"
+              className="transition-opacity duration-[1100ms] ease-out group-hover:opacity-70"
             />
-            {/* amber follows the cut, but only part of its length */}
-            <path d="M150 33 L34 172" stroke={AMBER} strokeWidth="1.25" opacity="0.9" />
-          </g>
+            <path
+              d="M286 -60 L-60 384"
+              fill="none"
+              stroke="rgba(255,255,255,0.36)"
+              strokeWidth="1.25"
+            />
 
-          {/* internal plane, offset from the outer geometry — reads as a fold */}
+            {/* the dominant region carries a quiet register parallel to the cut */}
+            {C1_REGISTER.map(([y, x1, x2]) => (
+              <line
+                key={y}
+                x1={x1}
+                y1={y}
+                x2={x2}
+                y2={y}
+                stroke="rgba(255,255,255,0.19)"
+                strokeWidth="1"
+                className="transition-[stroke] duration-700 ease-out group-hover:stroke-[rgba(255,255,255,0.28)]"
+              />
+            ))}
+
+            {/* amber: one short active segment of the cut — the focal joint */}
+            <path
+              d="M182 74 L136 133"
+              fill="none"
+              stroke={AMBER}
+              strokeWidth="1.75"
+              opacity="0.95"
+            />
+          </g>
+        </g>
+      </g>
+    </Shell>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* C2 — FOLDED SURFACE                                                */
+/* the plane turns once; one secondary plane gains dimension           */
+/* ------------------------------------------------------------------ */
+
+export function VisualProofC2() {
+  return (
+    <Shell>
+      <Silhouette clipId="clip-c2" />
+
+      <g clipPath="url(#clip-c2)">
+        <g transform={PLANE}>
+          {/* the larger flat portion of the surface, held at one value */}
           <path
-            d="M92 74 L330 94 L318 208 L80 188 Z"
-            fill="rgba(255,255,255,0.02)"
-            stroke="rgba(255,255,255,0.16)"
-            strokeWidth="1"
-            className="transition-transform duration-[1000ms] ease-out group-hover:translate-x-[10px] group-hover:-translate-y-[6px]"
+            d="M-60 -60 L286 -60 L286 320 L-60 320 Z"
+            fill="rgba(255,255,255,0.028)"
           />
 
-          {/* single depth register at the far edge */}
+          {/* the turned portion — one secondary plane at a foreshortened
+              value, narrower than the flat side because it angles away.
+              hover lets it settle slightly toward the crease. */}
+          <g className="transition-transform duration-[1100ms] ease-out group-hover:-translate-x-[8px]">
+            <path
+              d="M286 -60 L474 -60 L474 320 L286 320 Z"
+              fill="rgba(255,255,255,0.085)"
+            />
+            {/* one narrow step at the far edge marks where the plane turns back */}
+            <path
+              d="M446 -60 L474 -60 L474 320 L446 320 Z"
+              fill="rgba(255,255,255,0.045)"
+            />
+            <line
+              x1="446"
+              y1="-60"
+              x2="446"
+              y2="320"
+              stroke="rgba(255,255,255,0.16)"
+              strokeWidth="1"
+            />
+          </g>
+
+          {/* the crease — the strongest edge in the object, off-centre */}
           <line
-            x1="364"
-            y1="46"
-            x2="364"
-            y2="228"
-            stroke="rgba(255,255,255,0.12)"
+            x1="286"
+            y1="-60"
+            x2="286"
+            y2="320"
+            stroke="rgba(255,255,255,0.44)"
+            strokeWidth="1.25"
+            className="transition-[stroke] duration-700 ease-out group-hover:stroke-[rgba(255,255,255,0.6)]"
+          />
+
+          {/* the flat side stays quiet: one long proportion register */}
+          <line
+            x1="18"
+            y1="206"
+            x2="254"
+            y2="206"
+            stroke="rgba(255,255,255,0.17)"
             strokeWidth="1"
-            className="transition-all duration-[1000ms] ease-out group-hover:stroke-[rgba(255,255,255,0.2)]"
+          />
+
+          {/* amber: the hinge segment where the surface turns */}
+          <line
+            x1="286"
+            y1="152"
+            x2="286"
+            y2="206"
+            stroke={AMBER}
+            strokeWidth="2"
+            opacity="0.95"
+          />
+        </g>
+      </g>
+    </Shell>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* C3 — IDENTITY PANEL                                                */
+/* one dominant internal panel with a subtracted corner (signature)    */
+/* ------------------------------------------------------------------ */
+
+export function VisualProofC3() {
+  return (
+    <Shell>
+      <Silhouette clipId="clip-c3" />
+
+      <g clipPath="url(#clip-c3)">
+        <g transform={PLANE}>
+          {/* two registers tying the subtraction back to the outer geometry */}
+          <line
+            x1="252"
+            y1="-60"
+            x2="252"
+            y2="44"
+            stroke="rgba(255,255,255,0.13)"
+            strokeWidth="1"
+          />
+          <line
+            x1="330"
+            y1="112"
+            x2="404"
+            y2="112"
+            stroke="rgba(255,255,255,0.11)"
+            strokeWidth="1"
+          />
+
+          {/* the dominant panel: one subtracted corner is the signature.
+              hover refines its alignment and focus only. */}
+          <g className="transition-transform duration-[1000ms] ease-out group-hover:translate-x-[8px] group-hover:-translate-y-[6px]">
+            <path
+              d="M-60 44 L252 44 L252 112 L330 112 L330 274 L-60 274 Z"
+              fill="rgba(255,255,255,0.085)"
+              stroke="rgba(255,255,255,0.26)"
+              strokeWidth="1"
+              className="transition-[fill] duration-700 ease-out group-hover:fill-[rgba(255,255,255,0.11)]"
+            />
+            {/* amber: the partial edge of the subtraction only */}
+            <path
+              d="M252 44 L252 112 L330 112"
+              fill="none"
+              stroke={AMBER}
+              strokeWidth="1.75"
+              opacity="0.95"
+            />
+          </g>
+          <line
+            x1="300"
+            y1="96"
+            x2="393"
+            y2="96"
+            stroke="rgba(255,255,255,0.10)"
+            strokeWidth="1"
+          />
+
+          {/* the dominant panel: one subtracted corner gives the signature.
+              hover refines its alignment and focus only. */}
+          <g className="transition-transform duration-[1000ms] ease-out group-hover:translate-x-[7px] group-hover:-translate-y-[5px]">
+            <path
+              d="M18 54 L240 54 L240 96 L300 96 L300 237 L18 237 Z"
+              fill="rgba(255,255,255,0.075)"
+              stroke="rgba(255,255,255,0.24)"
+              strokeWidth="1"
+              className="transition-[fill] duration-700 ease-out group-hover:fill-[rgba(255,255,255,0.1)]"
+            />
+            {/* amber: the partial edge of the subtraction */}
+            <path
+              d="M240 54 L240 96 L300 96"
+              fill="none"
+              stroke={AMBER}
+              strokeWidth="1.5"
+              opacity="0.92"
+            />
+          </g>
+
+          {/* supporting area stays deliberately empty except one depth edge */}
+          <line
+            x1="360"
+            y1="40"
+            x2="360"
+            y2="230"
+            stroke="rgba(255,255,255,0.13)"
+            strokeWidth="1"
+            className="transition-[stroke] duration-700 ease-out group-hover:stroke-[rgba(255,255,255,0.2)]"
           />
         </g>
       </g>
