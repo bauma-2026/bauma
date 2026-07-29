@@ -214,6 +214,48 @@ export function VisualProofC2() {
 /* one dominant internal panel with a subtracted corner (signature)    */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Proportions, decided against the homepage rather than in isolation.
+ *
+ * The Visual Layer sits directly after the System Layer, whose right column is
+ * a literal UI window: rounded corners, traffic lights, typing code, table
+ * rows. That is the densest, most representational artifact on the page, so
+ * this object is deliberately the lightest and most abstract one — it reads as
+ * the resolution of the argument, not as a second mockup.
+ *
+ * Panel: inset on all four sides so it reads as a contained mark rather than a
+ * cropped background shape. Occupies ~72% of the plane's width and ~68% of its
+ * height, which keeps it dominant while leaving the supporting area empty.
+ * Notch: a single subtraction of ~28% width by ~26% height off the top-right —
+ * large enough to survive being scaled down to a nav glyph, small enough that
+ * the panel still reads as one body rather than two.
+ */
+const C3_PANEL = {
+  left: 26,
+  top: 40,
+  right: 322,
+  bottom: 232,
+  notchX: 238,
+  notchY: 96,
+} as const;
+
+const C3_PATH = [
+  `M${C3_PANEL.left} ${C3_PANEL.top}`,
+  `L${C3_PANEL.notchX} ${C3_PANEL.top}`,
+  `L${C3_PANEL.notchX} ${C3_PANEL.notchY}`,
+  `L${C3_PANEL.right} ${C3_PANEL.notchY}`,
+  `L${C3_PANEL.right} ${C3_PANEL.bottom}`,
+  `L${C3_PANEL.left} ${C3_PANEL.bottom}`,
+  "Z",
+].join(" ");
+
+/** the subtraction edge only — never the full panel outline */
+const C3_NOTCH = [
+  `M${C3_PANEL.notchX} ${C3_PANEL.top}`,
+  `L${C3_PANEL.notchX} ${C3_PANEL.notchY}`,
+  `L${C3_PANEL.right} ${C3_PANEL.notchY}`,
+].join(" ");
+
 export function VisualProofC3() {
   return (
     <Shell>
@@ -221,82 +263,43 @@ export function VisualProofC3() {
 
       <g clipPath="url(#clip-c3)">
         <g transform={PLANE}>
-          {/* two registers tying the subtraction back to the outer geometry */}
+          {/* two hairline registers tie the subtraction back to the outer
+              geometry, so the notch reads as measured rather than arbitrary */}
           <line
-            x1="252"
+            x1={C3_PANEL.notchX}
             y1="-60"
-            x2="252"
-            y2="44"
-            stroke="rgba(255,255,255,0.13)"
+            x2={C3_PANEL.notchX}
+            y2={C3_PANEL.top}
+            stroke="rgba(255,255,255,0.12)"
             strokeWidth="1"
           />
           <line
-            x1="330"
-            y1="112"
-            x2="404"
-            y2="112"
-            stroke="rgba(255,255,255,0.11)"
+            x1={C3_PANEL.right}
+            y1={C3_PANEL.notchY}
+            x2="452"
+            y2={C3_PANEL.notchY}
+            stroke="rgba(255,255,255,0.10)"
             strokeWidth="1"
           />
 
-          {/* the dominant panel: one subtracted corner is the signature.
-              hover refines its alignment and focus only. */}
-          <g className="transition-transform duration-[1000ms] ease-out group-hover:translate-x-[8px] group-hover:-translate-y-[6px]">
+          {/* the dominant panel: one subtracted corner is the whole signature.
+              hover refines alignment and focus only — it adds nothing new. */}
+          <g className="transition-transform duration-[1000ms] ease-out group-hover:translate-x-[7px] group-hover:-translate-y-[5px]">
             <path
-              d="M-60 44 L252 44 L252 112 L330 112 L330 274 L-60 274 Z"
-              fill="rgba(255,255,255,0.085)"
+              d={C3_PATH}
+              fill="rgba(255,255,255,0.07)"
               stroke="rgba(255,255,255,0.26)"
               strokeWidth="1"
-              className="transition-[fill] duration-700 ease-out group-hover:fill-[rgba(255,255,255,0.11)]"
+              className="transition-[fill] duration-700 ease-out group-hover:fill-[rgba(255,255,255,0.095)]"
             />
-            {/* amber: the partial edge of the subtraction only */}
             <path
-              d="M252 44 L252 112 L330 112"
+              d={C3_NOTCH}
               fill="none"
               stroke={AMBER}
               strokeWidth="1.75"
               opacity="0.95"
             />
           </g>
-          <line
-            x1="300"
-            y1="96"
-            x2="393"
-            y2="96"
-            stroke="rgba(255,255,255,0.10)"
-            strokeWidth="1"
-          />
-
-          {/* the dominant panel: one subtracted corner gives the signature.
-              hover refines its alignment and focus only. */}
-          <g className="transition-transform duration-[1000ms] ease-out group-hover:translate-x-[7px] group-hover:-translate-y-[5px]">
-            <path
-              d="M18 54 L240 54 L240 96 L300 96 L300 237 L18 237 Z"
-              fill="rgba(255,255,255,0.075)"
-              stroke="rgba(255,255,255,0.24)"
-              strokeWidth="1"
-              className="transition-[fill] duration-700 ease-out group-hover:fill-[rgba(255,255,255,0.1)]"
-            />
-            {/* amber: the partial edge of the subtraction */}
-            <path
-              d="M240 54 L240 96 L300 96"
-              fill="none"
-              stroke={AMBER}
-              strokeWidth="1.5"
-              opacity="0.92"
-            />
-          </g>
-
-          {/* supporting area stays deliberately empty except one depth edge */}
-          <line
-            x1="360"
-            y1="40"
-            x2="360"
-            y2="230"
-            stroke="rgba(255,255,255,0.13)"
-            strokeWidth="1"
-            className="transition-[stroke] duration-700 ease-out group-hover:stroke-[rgba(255,255,255,0.2)]"
-          />
         </g>
       </g>
     </Shell>

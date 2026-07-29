@@ -5,6 +5,7 @@ import MiniHero from "./components/blocks/mini/MiniHero";
 import MiniDecisionFlow from "./components/blocks/mini/MiniDecisionFlow";
 import PristopSection from "./components/blocks/mini/PristopSection";
 import SystemGraphic from "./components/blocks/mini/SystemGraphic";
+import VisualLayerSection from "./components/blocks/mini/VisualLayerSection";
 import MiniFinalCTA from "./components/blocks/mini/MiniFinalCTA";
 import MiniFooter from "./components/blocks/mini/MiniFooter";
 
