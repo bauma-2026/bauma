@@ -1,4 +1,14 @@
 import Link from "next/link";
+import MiniHeader from "../../components/blocks/mini/MiniHeader";
+import MiniFooter from "../../components/blocks/mini/MiniFooter";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 const sections = [
   {
@@ -48,7 +58,8 @@ const sections = [
 export default function OdstraniTattooCasePage() {
   return (
     <div className="min-h-screen bg-[#080808] text-white">
-      {/* HERO */}
+      {/* HERO */}      
+       <MiniHeader /> 
       <section className="border-b border-white/10">
         <div className="mx-auto w-full max-w-[1120px] px-5 pb-16 pt-24 sm:px-6 sm:pb-20 sm:pt-28 lg:px-8 lg:pb-24 lg:pt-32">
           <div className="max-w-[820px]">
@@ -182,8 +193,8 @@ export default function OdstraniTattooCasePage() {
               Poglejva primer →
             </Link>
           </div>
-        </div>
-      </section>
+        </div> 
+      </section> <MiniFooter />
     </div>
   );
 }

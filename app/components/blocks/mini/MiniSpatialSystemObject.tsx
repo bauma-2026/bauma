@@ -1,120 +1,99 @@
 type MiniSpatialSystemObjectProps = {
   className?: string;
+  variant?: "desktop" | "mobile";
 };
 
-export default function MiniSpatialSystemObject({
-  className = "",
-}: MiniSpatialSystemObjectProps) {
+const strokes = {
+  circle: "rgba(255,255,255,0.16)",
+  square: "rgba(255,255,255,0.22)",
+  triangle: "rgba(255,255,255,0.18)",
+  depth: "rgba(255,255,255,0.10)",
+  secondary: "rgba(255,255,255,0.08)",
+  amber: "rgba(182,138,76,0.74)",
+};
+
+function DesktopComposition() {
   return (
-    <svg
-      viewBox="0 0 420 420"
-      fill="none"
-      className={className}
-      aria-hidden="true"
-    >
-      {/* Spatial field */}
-      <circle
-        cx="250"
-        cy="205"
-        r="128"
-        stroke="rgba(255,255,255,0.13)"
-        strokeWidth="1"
-      />
+    <>
+      <circle cx="250" cy="205" r="128" stroke={strokes.circle} />
 
-      <ellipse
-        cx="250"
-        cy="205"
-        rx="126"
-        ry="54"
-        stroke="rgba(255,255,255,0.075)"
-        strokeWidth="1"
+      <path
+        d="M128 235 A126 54 0 0 1 300 145"
         transform="rotate(-12 250 205)"
+        stroke={strokes.secondary}
       />
 
-      {/* Structure / square frame */}
       <g transform="rotate(8 160 145)">
         <rect
           x="95"
           y="80"
           width="130"
           height="130"
-          stroke="rgba(255,255,255,0.20)"
-          strokeWidth="1.2"
+          stroke={strokes.square}
         />
-
-        <rect
-          x="125"
-          y="110"
-          width="82"
-          height="82"
-          stroke="rgba(255,255,255,0.10)"
-          strokeWidth="1"
-        />
-
-        <path
-          d="M95 80L125 110M225 80L207 110M225 210L207 192M95 210L125 192"
-          stroke="rgba(255,255,255,0.085)"
-          strokeWidth="1"
-        />
+        <path d="M125 110 L207 110 L207 192" stroke={strokes.depth} />
+        <path d="M95 80 L125 110 M225 210 L207 192" stroke={strokes.secondary} />
+        <line x1="225" y1="145" x2="225" y2="171" stroke={strokes.amber} />
       </g>
 
-      {/* Direction / triangle volume */}
       <g transform="translate(130 228)">
-        <polygon
-          points="70,0 132,112 8,112"
-          stroke="rgba(255,255,255,0.20)"
-          strokeWidth="1.2"
-        />
+        <polygon points="70,0 132,112 8,112" stroke={strokes.triangle} />
+        <path d="M8 112 L70 30" stroke={strokes.secondary} />
+      </g>
+    </>
+  );
+}
 
-        <polygon
-          points="70,28 108,96 32,96"
-          stroke="rgba(255,255,255,0.09)"
-          strokeWidth="1"
-        />
+function MobileComposition() {
+  return (
+    <>
+      <circle cx="212" cy="178" r="106" stroke={strokes.circle} />
 
-        <path
-          d="M70 0V96M8 112L70 28M132 112L70 28"
-          stroke="rgba(255,255,255,0.085)"
-          strokeWidth="1"
+      <path
+        d="M110 204 A104 45 0 0 1 254 128"
+        transform="rotate(-12 212 178)"
+        stroke={strokes.secondary}
+      />
+
+      <g transform="rotate(8 129 114)">
+        <rect
+          x="70"
+          y="55"
+          width="118"
+          height="118"
+          stroke={strokes.square}
         />
+        <path d="M96 80 L171 80 L171 155" stroke={strokes.depth} />
+        <path d="M70 55 L96 80" stroke={strokes.secondary} />
+        <line x1="188" y1="112" x2="188" y2="134" stroke={strokes.amber} />
       </g>
 
-      {/* Clarity / circle focus */}
-      <g>
-        <circle
-          cx="300"
-          cy="178"
-          r="2"
-          fill="rgba(255,255,255,0.22)"
-        />
-
-        <circle
-          cx="300"
-          cy="178"
-          r="42"
-          stroke="rgba(255,255,255,0.09)"
-          strokeWidth="1"
-        />
+      <g transform="translate(98 198)">
+        <polygon points="60,0 114,96 6,96" stroke={strokes.triangle} />
       </g>
+    </>
+  );
+}
 
-      {/* System relations */}
-      <path
-        d="M150 145 C205 160 240 175 300 178"
-        stroke="rgba(255,255,255,0.085)"
-        strokeWidth="1"
-      />
+export default function MiniSpatialSystemObject({
+  className = "",
+  variant = "desktop",
+}: MiniSpatialSystemObjectProps) {
+  const mobile = variant === "mobile";
 
-      <path
-        d="M300 178 C255 215 230 250 200 286"
-        stroke="rgba(255,255,255,0.075)"
-        strokeWidth="1"
-      />
-
-      <path
-        d="M160 145 C178 208 188 250 200 286"
-        stroke="rgba(255,255,255,0.065)"
-        strokeWidth="1"
-      />
+  return (
+    <svg
+      viewBox={mobile ? "0 0 360 360" : "0 0 420 420"}
+      fill="none"
+      className={className}
+      aria-hidden="true"
+      shapeRendering="geometricPrecision"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="1"
+      vectorEffect="non-scaling-stroke"
+    >
+      {mobile ? <MobileComposition /> : <DesktopComposition />}
     </svg>
   );
 }

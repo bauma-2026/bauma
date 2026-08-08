@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import MiniHeader from "../components/blocks/mini/MiniHeader";
 import MiniFooter from "../components/blocks/mini/MiniFooter";
-import Container from "../components/layout/Container";
 
 
 export const metadata: Metadata = {
@@ -45,26 +44,93 @@ const principles = [
     text: "AI uporabljam kot pospeševalec razmišljanja, razvoja in iteracije — ne kot nadomestilo za presojo, ton in smer.",
   },
 ];
+    function AboutSystemShape({
+  type,
+  className = "",
+}: {
+  type: "square" | "circle" | "triangle";
+  className?: string;
+}) {
+  if (type === "square") {
+    return (
+      <svg
+        className={className}
+        viewBox="0 0 100 100"
+        fill="none"
+        aria-hidden="true"
+      >
+        <rect
+          x="24"
+          y="24"
+          width="52"
+          height="52"
+          transform="rotate(8 50 50)"
+          stroke="currentColor"
+          strokeWidth="1.2"
+        />
+      </svg>
+    );
+  }
 
+  if (type === "circle") {
+    return (
+      <svg
+        className={className}
+        viewBox="0 0 100 100"
+        fill="none"
+        aria-hidden="true"
+      >
+        <circle
+          cx="50"
+          cy="50"
+          r="34"
+          stroke="currentColor"
+          strokeWidth="1.2"
+        />
+        <circle cx="50" cy="50" r="2" fill="currentColor" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 100 100"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M50 16 L84 78 H16 Z"
+        stroke="currentColor"
+        strokeWidth="1.2"
+      />
+      <path
+        d="M50 30V70"
+        stroke="currentColor"
+        strokeWidth="1"
+        opacity="0.35"
+      />
+    </svg>
+  );
+}
 export default function AboutPreviewPage() {
   return (
     <>
       <MiniHeader />
 
       <main className="bg-[#080808] text-white">
-        {/* Hero */}
+     
 {/* Hero */}
-<section className="relative overflow-hidden border-b border-white/10 pt-14 pt-14 pb-20 sm:py-24 lg:py-28">
-  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_72%_35%,rgba(125,211,252,0.055),transparent_32%)]" />
-
-  <Container className="relative">
-    <div className="inline-flex items-center rounded-full border border-sky-300/20 bg-white/[0.03] px-3 py-1 text-[11px] font-medium text-white/72 shadow-[0_0_24px_rgba(125,211,252,0.05)]">
-      About preview
-    </div>
-
-    <div className="mt-10 grid gap-12 lg:grid-cols-[1fr_300px] lg:items-end lg:gap-24">
+<section className="relative overflow-hidden border-b border-white/10 pb-20 pt-14 sm:py-24 lg:py-28">
+  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_72%_35%,rgba(182,138,76,0.055),transparent_32%)]" />
+  <div className="bauma-page-rail relative">
+    <div className="grid w-full gap-12 lg:grid-cols-[1fr_300px] lg:items-end lg:gap-24">
       <div className="max-w-[720px]">
-      <h1 className="max-w-[10ch] font-serif text-5xl font-semibold leading-[0.96] tracking-[-0.025em] text-white sm:max-w-[16ch] sm:text-6xl lg:text-7xl">
+        <div className="inline-flex items-center rounded-full border border-[#B68A4C]/25 bg-[#B68A4C]/[0.04] px-3 py-1 text-[11px] font-medium text-white/72 shadow-[0_0_24px_rgba(182,138,76,0.07)]">
+          About preview
+        </div>
+
+      <h1 className="mt-10 max-w-[10ch] font-serif text-5xl font-semibold leading-[0.96] tracking-[-0.025em] text-white sm:max-w-[16ch] sm:text-6xl lg:text-7xl">
   <span className="block sm:hidden">
     Struktura
     <br />
@@ -82,25 +148,25 @@ export default function AboutPreviewPage() {
   </span>
 </h1>
 
-        <div className="mt-8 max-w-[58ch]">
-          <p className="text-base leading-7 text-white/62 sm:text-lg sm:leading-8">
-            Bauma je moj način dela s spletnimi stranmi in digitalnimi sistemi —
-            razpršene dele povezati v smiselno celoto.
-          </p>
+<div className="mt-8 max-w-[58ch]">
+  <p className="text-base leading-7 text-white/62 sm:text-lg sm:leading-8">
+    Bauma je moj način dela s spletnimi stranmi in digitalnimi sistemi:
+    razpršene dele povežem v smiselno celoto.
+  </p>
 
-          <p className="mt-5 text-base leading-7 text-white/50 sm:text-lg sm:leading-8">
-            Ko so vsebina, vizualni sloj in tehnologija povezani v isto smer,
-            stran postane jasnejša, mirnejša in lažja za odločitev.
-          </p>
-        </div>
+  <p className="mt-5 text-base leading-7 text-white/50 sm:text-lg sm:leading-8">
+    Ko so vsebina, vizualni sloj in tehnologija povezani v isto smer,
+    stran postane jasnejša, mirnejša in lažja za odločitev.
+  </p>
+</div>
 
 {/* Mobile portrait */}
-<div className="relative mr-auto mt-9 max-w-[200px] lg:hidden">
+<div className="relative mr-auto mt-7 max-w-[190px] lg:hidden">
   <div className="pointer-events-none absolute -inset-8 rounded-full bg-white/[0.03] blur-3xl" />
 
   <div className="relative overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.015] shadow-[0_20px_60px_rgba(0,0,0,0.32)]">
     <Image
-      src="/images/gregor/gb-bauma-portrait.webp"
+      src="/images/gregor/gb-bauma-portrait-v2.webp"
       alt="Gregor Baumgartner"
       width={900}
       height={1125}
@@ -117,7 +183,7 @@ export default function AboutPreviewPage() {
 
   <div className="relative overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.015] shadow-[0_24px_80px_rgba(0,0,0,0.35)]">
     <Image
-      src="/images/gregor/gb-bauma-portrait.webp"
+      src="/images/gregor/gb-bauma-portrait-v2.webp"
       alt="Gregor Baumgartner"
       width={900}
       height={1125}
@@ -126,7 +192,7 @@ export default function AboutPreviewPage() {
     />
   </div>
 
-  {/*
+ {/*
     LinkedIn avatar test frame — kept for future testing.
     Not visible in current About hero.
 <div className="absolute -bottom-5 -right-5 hidden h-16 w-16 overflow-hidden rounded-full border border-white/10 bg-black shadow-[0_0_30px_rgba(0,0,0,0.45)] xl:block">
@@ -140,12 +206,13 @@ export default function AboutPreviewPage() {
 </div>
   */}
 </div>    </div>
-  </Container>
+  </div>
 </section>
 
        {/* Origin */}
-<section className="border-b border-white/10 px-6 py-16 sm:py-20 lg:px-8 lg:py-24">
-  <div className="mx-auto grid max-w-[1100px] gap-10 lg:grid-cols-[1fr_1fr] lg:gap-14">
+<section className="border-b border-white/10 py-16 sm:py-20 lg:py-24">
+  <div className="bauma-page-rail">
+    <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:gap-14">
     <div>
       <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/55">
         Origin
@@ -162,9 +229,9 @@ export default function AboutPreviewPage() {
           key={item.title}
           className="grid gap-3 border-b border-white/10 py-6 last:border-b-0 sm:grid-cols-[120px_1fr] sm:gap-8"
         >
-          <p className="text-[11px] font-medium uppercase tracking-[0.11em] text-sky-300/60">
-            {item.eyebrow}
-          </p>
+   <p className="text-[11px] font-medium uppercase tracking-[0.11em] text-[#D1A45F]/75">
+  {item.eyebrow}
+</p>
 
           <div>
             <h3 className="text-base font-semibold tracking-[-0.015em] text-white/90 sm:text-lg">
@@ -178,12 +245,14 @@ export default function AboutPreviewPage() {
         </div>
       ))}
     </div>
+    </div>
   </div>
 </section>
 
-     {/* Shift */}
-<section className="border-b border-white/10 px-6 py-16 sm:py-20 lg:px-8 lg:py-24">
-  <div className="mx-auto grid max-w-[1100px] gap-10 lg:grid-cols-[1fr_1fr] lg:gap-14">
+    {/* Shift */}
+<section className="border-b border-white/10 py-16 sm:py-20 lg:py-24">
+  <div className="bauma-page-rail">
+    <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:gap-14">
     <div>
       <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/55">
         What changed
@@ -210,11 +279,12 @@ export default function AboutPreviewPage() {
         Bauma zato ne začne pri dekoraciji, ampak pri poti uporabnika.
       </p>
     </div>
+    </div>
   </div>
 </section>
-        {/* How I work */}
-<section className="border-b border-white/10 px-6 py-16 sm:py-20 lg:px-8 lg:py-24">
-  <div className="mx-auto max-w-[1100px]">
+ {/* How I work */}
+<section className="border-b border-white/10 py-16 sm:py-20 lg:py-24">
+  <div className="bauma-page-rail">
     <div className="max-w-[720px]">
       <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/55">
         How I work
@@ -226,43 +296,58 @@ export default function AboutPreviewPage() {
 
       <p className="mt-6 max-w-[58ch] text-base leading-7 text-white/55 sm:text-lg sm:leading-8">
         Najprej pogledam, kje se uporabnik izgubi: v ponudbi, vsebini,
-        zaporedju informacij, dokazih ali CTA-jih. Potem stran uredim
-        kot sistem.
+        zaporedju informacij, dokazih ali CTA-jih. Potem stran uredim kot
+        sistem.
       </p>
     </div>
 
     <div className="mt-10 grid gap-4 lg:grid-cols-3">
-      {principles.map((item) => (
-        <div
-          key={item.title}
-          className="rounded-2xl border border-white/10 bg-white/[0.025] p-5 sm:p-6"
-        >
-          <h3 className="text-base font-semibold tracking-[-0.015em] text-white/90">
-            {item.title}
-          </h3>
+      {principles.map((item, index) => {
+        const shape =
+          index === 0 ? "square" : index === 1 ? "circle" : "triangle";
 
-          <p className="mt-3 text-sm leading-6 text-white/50">
-            {item.text}
-          </p>
-        </div>
-      ))}
+        return (
+          <div
+            key={item.title}
+            className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025] p-5 transition duration-300 hover:border-white/16 hover:bg-white/[0.04] sm:p-6"
+          >
+           <AboutSystemShape
+  type={shape}
+  className="pointer-events-none absolute right-4 top-4 h-10 w-10 text-white/20"
+/>
+
+            <h3 className="relative max-w-[20ch] text-base font-semibold tracking-[-0.015em] text-white/90">
+              {item.title}
+            </h3>
+
+            <p className="relative mt-3 text-sm leading-6 text-white/50">
+              {item.text}
+            </p>
+          </div>
+        );
+      })}
     </div>
 
     <div className="mt-10 rounded-2xl border border-white/10 bg-[#0d0d0d] p-5 sm:p-6 lg:max-w-[720px]">
-      <p className="text-sm leading-6 text-white/52">
-        Core flow:
-      </p>
+      <p className="text-sm leading-6 text-white/52">Core flow:</p>
 
-      <p className="mt-2 text-base font-medium tracking-[-0.02em] text-white">
-        problem → jasna pot → dokaz → naslednji korak
+      <p className="mt-2 text-base font-medium leading-7 tracking-[-0.02em] text-white">
+        problem{" "}
+        <span className="text-[#B68A4C]/70">→</span>{" "}
+        <span className="text-white">jasna pot</span>{" "}
+        <span className="text-[#B68A4C]/70">→</span>{" "}
+        dokaz{" "}
+        <span className="text-[#B68A4C]/70">→</span>{" "}
+        naslednji korak
       </p>
     </div>
   </div>
 </section>
-        {/* Current working model */}
+      
        {/* Current working model */}
-<section className="border-b border-white/10 px-6 py-16 sm:py-20 lg:px-8 lg:py-24">
-  <div className="mx-auto grid max-w-[1100px] gap-10 lg:grid-cols-[1fr_1fr] lg:gap-14">
+<section className="border-b border-white/10 py-16 sm:py-20 lg:py-24">
+  <div className="bauma-page-rail">
+    <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:gap-14">
     <div>
       <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/55">
         Current model
@@ -277,10 +362,9 @@ export default function AboutPreviewPage() {
 
     <div className="max-w-[58ch] text-base leading-7 text-white/55 sm:text-lg sm:leading-8">
       <p>
-        Rojen sem v Ljubljani, kjer sem odraščal in večino profesionalne
-        poti oblikoval skozi vizualne komunikacije, oglaševanje in
-        digitalno delo.
-      </p>
+  Rojen sem v Ljubljani, kjer sem odraščal in večino profesionalne poti
+  gradil v vizualnih komunikacijah, oglaševanju in digitalnem delu.
+</p>
 
       <p className="mt-5">
         Danes delam iz mirnejše baze. Ta premik mi omogoča več fokusa,
@@ -288,19 +372,20 @@ export default function AboutPreviewPage() {
         komunikacijskega ozadja, iz katerega prihajam.
       </p>
 
-      <p className="mt-5">
-        AI ne vidim kot grožnjo, ampak kot multiplikator sposobnosti:
-        orodje za hitrejše razmišljanje, razvoj komponent, testiranje
-        struktur in iteracijo. Vrednost pa ostaja v izbiri, presoji,
-        tonu, hierarhiji in odločitvah.
-      </p>
+    <p className="mt-5">
+  AI uporabljam kot multiplikator sposobnosti: pomaga mi hitreje
+  razmišljati, razvijati komponente, testirati strukture in iterirati.
+  Vrednost pa ostaja v izbiri, presoji, tonu, hierarhiji in odločitvah.
+</p>
+    </div>
     </div>
   </div>
 </section>
 
       {/* Closing */}
-<section className="px-6 py-16 text-center sm:py-20 lg:px-8 lg:py-24">
-  <div className="mx-auto max-w-[720px]">
+<section className="py-16 text-center sm:py-20 lg:py-24">
+  <div className="bauma-page-rail">
+    <div className="mx-auto max-w-[720px]">
     <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/55">
       Next step
     </p>
@@ -322,6 +407,7 @@ export default function AboutPreviewPage() {
       >
         hello@bauma.si
       </Link>
+    </div>
     </div>
   </div>
 </section>

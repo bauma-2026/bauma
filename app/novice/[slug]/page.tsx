@@ -1,6 +1,17 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { news } from "@/lib/content";
+import MiniHeader from "../../components/blocks/mini/MiniHeader";
+import MiniFooter from "../../components/blocks/mini/MiniFooter";
+
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 type Props = {
   params: Promise<{
@@ -24,6 +35,10 @@ export default async function NewsPostPage({ params }: Props) {
 
   return (
     <div className="min-h-screen bg-[#080808] text-white">
+
+      <MiniHeader />
+
+
       {/* HERO */}
       <section className="border-b border-white/10">
         <div className="mx-auto w-full max-w-[1120px] px-5 pb-10 pt-24 sm:px-6 sm:pb-12 sm:pt-28 lg:px-8 lg:pb-14 lg:pt-32">
@@ -101,6 +116,8 @@ export default async function NewsPostPage({ params }: Props) {
           </Link>
         </div>
       </section>
+          <MiniFooter />
     </div>
+    
   );
 }

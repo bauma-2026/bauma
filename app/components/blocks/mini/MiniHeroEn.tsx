@@ -12,7 +12,7 @@ export default function MiniHeroEn() {
       >
         {/* Square */}
         <svg
-          className="absolute right-[12%] top-[20%] h-[74px] w-[74px]"
+          className="absolute right-[7%] top-[24%] h-[68px] w-[68px]"
           viewBox="0 0 100 100"
           fill="none"
         >
@@ -22,14 +22,14 @@ export default function MiniHeroEn() {
             width="60"
             height="60"
             transform="rotate(8 50 50)"
-            stroke="rgba(255,255,255,0.14)"
+            stroke="rgba(255,255,255,0.13)"
             strokeWidth="1.2"
           />
         </svg>
 
         {/* Circle */}
         <svg
-          className="absolute right-[-10%] top-[26%] h-[138px] w-[138px]"
+          className="absolute right-[-18%] top-[34%] h-[142px] w-[142px]"
           viewBox="0 0 100 100"
           fill="none"
         >
@@ -37,20 +37,20 @@ export default function MiniHeroEn() {
             cx="50"
             cy="50"
             r="36"
-            stroke="rgba(255,255,255,0.16)"
+            stroke="rgba(255,255,255,0.15)"
             strokeWidth="1.2"
           />
         </svg>
 
         {/* Triangle */}
         <svg
-          className="absolute right-[8%] bottom-[10%] h-[88px] w-[88px]"
+          className="absolute right-[9%] bottom-[12%] h-[82px] w-[82px]"
           viewBox="0 0 100 100"
           fill="none"
         >
           <path
             d="M50 14 L84 78 H16 Z"
-            stroke="rgba(255,255,255,0.11)"
+            stroke="rgba(255,255,255,0.105)"
             strokeWidth="1.2"
           />
         </svg>
@@ -62,28 +62,28 @@ export default function MiniHeroEn() {
             Structure-first websites
           </div>
 
-       <h1 className="mt-8 max-w-[9ch] font-serif text-[4rem] font-semibold leading-[0.9] tracking-[-0.035em] text-white sm:max-w-[15ch] sm:text-6xl sm:leading-[0.94] sm:tracking-[-0.025em] lg:max-w-[16ch] lg:text-7xl">
-            <span className="block sm:hidden">
-              Clear
-              <br />
-              structure.
-              <br />
-              Better
-              <br />
-              decisions.
-            </span>
+       <h1 className="mt-8 font-serif font-semibold leading-[0.9] tracking-[-0.035em] text-white sm:leading-[0.94] sm:tracking-[-0.025em]">
+  {/* Mobile */}
+  <span className="block max-w-[9ch] text-[3.75rem] sm:hidden">
+    Clear
+    <br />
+    structure.
+    <br />
+    Better
+    <br />
+    decisions.
+  </span>
 
-            <span className="hidden sm:block">
-              Clear
-              <br />
-              structure.
-              <br />
-              Better decisions.
-            </span>
-          </h1>
+  {/* Tablet / desktop */}
+  <span className="hidden text-6xl sm:block lg:text-7xl">
+    <span className="block whitespace-nowrap">Clear structure.</span>
+    <span className="block whitespace-nowrap">Better decisions.</span>
+  </span>
+</h1>
 
           <p className="mt-8 max-w-[52ch] text-base leading-7 text-white/55 sm:text-lg">
-           I structure websites so users understand faster, trust more easily, and take the next step with less friction.
+            I structure websites so users understand faster, trust more easily,
+            and take the next step with less friction.
           </p>
 
           <div className="mt-9">

@@ -1,11 +1,27 @@
-import Container from "../components/Container";
 import Section from "../components/Section";
+import MiniHeader from "../components/blocks/mini/MiniHeader";
+import MiniFooter from "../components/blocks/mini/MiniFooter";
+
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default function ContactPage() {
   return (
+
+     
     <section className="min-h-screen bg-[#080808] text-white">
-      <Container className="pb-20 pt-24 sm:pb-24 sm:pt-28 lg:pb-28 lg:pt-32">
-        <Section className="!mt-0" withDivider={false}>
+       <MiniHeader />
+
+   
+      <div className="bauma-page-rail pb-20 pt-24 sm:pb-24 sm:pt-28 lg:pb-28 lg:pt-32">
+        <div className="mx-auto w-full max-w-[1100px]">
+          <Section className="!mt-0" withDivider={false}>
           <div className="max-w-[720px]">
             <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
               Kontakt
@@ -84,8 +100,10 @@ export default function ContactPage() {
               </div>
             </div>
           </div>
-        </Section>
-      </Container>
+          </Section>
+        </div>
+      </div>
+       <MiniFooter />
     </section>
   );
 }

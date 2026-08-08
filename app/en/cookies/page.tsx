@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Cookies — Bauma",
   description:
     "Information about the use of cookies and similar technologies on the Bauma website.",
+  robots: { index: false, follow: false },
 };
 
 export default function CookiesPage() {

@@ -1,14 +1,27 @@
-import Container from "../components/Container";
 import Section from "../components/Section";
 import Link from "next/link";
 import { news } from "@/lib/content";
+import MiniHeader from "../components/blocks/mini/MiniHeader";
+import MiniFooter from "../components/blocks/mini/MiniFooter";
+
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Mini — Bauma",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export const runtime = "nodejs";
 
 export default function NewsIndexPage() {
   return (
     <div className="min-h-screen bg-[#080808] text-white">
-      <Container className="pb-20 pt-24 sm:pb-24 sm:pt-28 lg:pb-28 lg:pt-32">
+      
+      <MiniHeader />
+      <div className="bauma-page-rail pb-20 pt-24 sm:pb-24 sm:pt-28 lg:pb-28 lg:pt-32">
         <Section className="!mt-0" withDivider={false}>
           <div className="max-w-[720px]">
             <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
@@ -24,7 +37,7 @@ export default function NewsIndexPage() {
             </p>
           </div>
 
-          <div className="mt-12 space-y-6 lg:mt-14">
+          <div className="mt-12 max-w-[1100px] space-y-6 lg:mt-14">
             {news[0] && (
               <Link
                 href={`/novice/${news[0].slug}`}
@@ -95,7 +108,9 @@ export default function NewsIndexPage() {
             )}
           </div>
         </Section>
-      </Container>
+      </div>
+          <MiniFooter />
     </div>
+    
   );
 }

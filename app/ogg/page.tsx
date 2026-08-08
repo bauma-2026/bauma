@@ -1,3 +1,12 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
+
 export default function OgPreviewPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#080808] text-white">

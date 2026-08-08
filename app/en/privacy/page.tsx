@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Privacy — Bauma",
   description:
     "Basic information about the processing of personal data on the Bauma website.",
+  robots: { index: false, follow: false },
 };
 
 export default function PrivacyPage() {

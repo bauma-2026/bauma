@@ -3,18 +3,21 @@ import type { Metadata } from "next";
 import { Inter, DM_Serif_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 
+/** latin-ext covers Slovenian č/š/ž in the same next/font preload path as latin. */
 const inter = Inter({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   variable: "--font-sans",
+  display: "swap",
+  preload: true,
 });
 
 const dmSerif = DM_Serif_Display({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   weight: "400",
   variable: "--font-serif",
+  display: "swap",
+  preload: true,
 });
-
-const isProduction = process.env.VERCEL_ENV === "production";
 
 export const metadata: Metadata = {
   title: "Bauma — Jasna struktura. Več odločitev.",
@@ -25,21 +28,17 @@ export const metadata: Metadata = {
   applicationName: "Bauma",
   creator: "Bauma — Structure-first websites",
 
-  alternates: {
-    canonical: "/",
-  },
-
   icons: {
     icon: [
-      { url: "/favicon.ico?v=2" },
-      { url: "/favicon.svg?v=2", type: "image/svg+xml" },
-      { url: "/favicon-32x32.png?v=2", sizes: "32x32", type: "image/png" },
-      { url: "/favicon-16x16.png?v=2", sizes: "16x16", type: "image/png" },
+      { url: "/favicon.ico?v=3" },
+      { url: "/favicon.svg?v=3", type: "image/svg+xml" },
+      { url: "/favicon-32x32.png?v=3", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-16x16.png?v=3", sizes: "16x16", type: "image/png" },
     ],
-    apple: [{ url: "/apple-touch-icon.png?v=2", sizes: "180x180" }],
+    apple: [{ url: "/apple-touch-icon.png?v=3", sizes: "180x180" }],
   },
 
-  manifest: "/site.webmanifest?v=2",
+  manifest: "/site.webmanifest?v=3",
 
   openGraph: {
     title: "Bauma — Jasna struktura. Več odločitev.",
@@ -67,9 +66,8 @@ export const metadata: Metadata = {
     images: ["/og/bauma-og.png"],
   },
 
-  robots: isProduction
-    ? { index: true, follow: true }
-    : { index: false, follow: false },
+  // Default: non-indexable. Only `/` opts into index,follow in production.
+  robots: { index: false, follow: false },
 };
 export default function RootLayout({
   children,

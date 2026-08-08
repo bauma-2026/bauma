@@ -1,0 +1,62 @@
+{
+  "id": "HeroObjectBaselineV3",
+  "frozenAt": "2026-08-04",
+  "productionEntry": "components/home/hero-system/HomeHeroVisual.tsx",
+  "snapshotVisual": "components/home/hero-system/backups/HeroObjectBaselineV3.tsx",
+  "geometry": {
+    "rest": [
+      [
+        118,
+        160
+      ],
+      [
+        334,
+        120
+      ],
+      [
+        374,
+        290
+      ],
+      [
+        90,
+        276
+      ]
+    ],
+    "resolved": [
+      [
+        118,
+        160
+      ],
+      [
+        330,
+        118
+      ],
+      [
+        376,
+        288
+      ],
+      [
+        90,
+        276
+      ]
+    ],
+    "scale": 1.08,
+    "restTiltDeg": -1.0,
+    "canvas": [
+      520,
+      440
+    ]
+  },
+  "hierarchy": {
+    "primaryOpacityRest": 0.84,
+    "primaryOpacityActive": 0.8,
+    "primaryStroke": 1,
+    "depthOpacity": 0.36,
+    "depthStroke": 0.75
+  },
+  "motion": {
+    "heroScale": 0.65,
+    "timing": "clear-contact-lead"
+  },
+  "note": "Production continues on live HomeHeroVisual until explicit transfer."
+}

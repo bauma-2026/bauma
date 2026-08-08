@@ -8,7 +8,8 @@ const navItems = [
   { href: "/#system", label: "Sistem", id: "system" },
 ];
 
-const sectionIds = ["flow", "system", "contact"];
+/** Must match nav targets (Pristop / Sistem / Kontakt). */
+const sectionIds = ["approach", "system", "contact"];
 
 function HeaderInner({
   activeId,
@@ -20,7 +21,7 @@ function HeaderInner({
   setIsMenuOpen: (value: boolean) => void;
 }) {
   return (
-    <div className="mx-auto flex h-[52px] max-w-[1100px] items-center justify-between px-5 sm:px-6 lg:px-8">
+    <div className="mini-page-rail flex h-[52px] items-center justify-between">
       <Link
         href="/"
         aria-label="Bauma home"
@@ -30,6 +31,8 @@ function HeaderInner({
         <img
           src="/logo/bauma-logo.svg"
           alt="Bauma"
+          width={68}
+          height={13}
           className="h-auto w-[68px] invert sm:w-[78px]"
         />
       </Link>
@@ -48,7 +51,7 @@ function HeaderInner({
                 href={item.href}
                 aria-current={isActive ? "page" : undefined}
                 className={`text-[12px] font-medium transition ${
-                  isActive ? "text-white" : "text-white/50 hover:text-white"
+                  isActive ? "text-white" : "text-white/55 hover:text-white"
                 }`}
               >
                 {item.label}
@@ -60,7 +63,7 @@ function HeaderInner({
         <Link
           href="/en"
           aria-label="English version"
-          className="hidden border-l border-white/10 pl-5 text-[12px] font-medium text-white/45 transition hover:text-white md:inline-flex"
+          className="hidden border-l border-white/10 pl-5 text-[12px] font-medium text-white/[0.48] transition hover:text-white md:inline-flex"
         >
           EN
         </Link>
@@ -134,14 +137,14 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
           <Link
             href="/en"
             onClick={onClose}
-            className="flex border-b border-white/10 py-4 text-[14px] font-medium tracking-[0.04em] text-white/45 transition hover:text-white"
+            className="flex border-b border-white/10 py-4 text-[14px] font-medium tracking-[0.04em] text-white/40 transition hover:text-white"
           >
             English
           </Link>
         </nav>
 
         <div className="mt-auto border-t border-white/10 pt-6">
-          <p className="max-w-[30ch] text-sm leading-6 text-white/45">
+          <p className="max-w-[30ch] text-sm leading-6 text-white/55">
             Struktura, ki uporabnika vodi od razumevanja do odločitve.
           </p>
 
@@ -165,6 +168,7 @@ export default function MiniHeader() {
   useEffect(() => {
     function updateActiveSection() {
       let current = "";
+      const marker = 120;
 
       sectionIds.forEach((id) => {
         const section = document.getElementById(id);
@@ -173,22 +177,36 @@ export default function MiniHeader() {
 
         const rect = section.getBoundingClientRect();
 
-        if (rect.top <= 90) {
+        // Active while the section crosses the header marker line.
+        if (rect.top <= marker && rect.bottom > marker) {
           current = id;
         }
       });
+
+      // Near page end: prefer the last nav target (Kontakt).
+      const doc = document.documentElement;
+      const atBottom =
+        window.innerHeight + window.scrollY >= doc.scrollHeight - 12;
+      if (atBottom) {
+        current = "contact";
+      }
 
       setActiveId(current);
     }
 
     updateActiveSection();
+    // Deep-link / hash landing can settle after the first paint.
+    const raf = window.requestAnimationFrame(updateActiveSection);
 
     window.addEventListener("scroll", updateActiveSection, { passive: true });
     window.addEventListener("resize", updateActiveSection);
+    window.addEventListener("hashchange", updateActiveSection);
 
     return () => {
+      window.cancelAnimationFrame(raf);
       window.removeEventListener("scroll", updateActiveSection);
       window.removeEventListener("resize", updateActiveSection);
+      window.removeEventListener("hashchange", updateActiveSection);
     };
   }, []);
 

@@ -5,6 +5,7 @@ import MiniFooter from "../components/blocks/mini/MiniFooter";
 export const metadata: Metadata = {
   title: "Pogoji uporabe — Bauma",
   description: "Osnovni pogoji uporabe spletnega mesta Bauma.",
+  robots: { index: false, follow: false },
 };
 
 export default function TermsPage() {
@@ -16,7 +17,7 @@ export default function TermsPage() {
 <section className="mx-auto max-w-[860px] px-6 pt-16 pb-12 sm:pt-20 sm:pb-16 lg:px-8 lg:pt-24 lg:pb-20">
           <div>
             <p className="text-xs font-medium uppercase tracking-[0.18em] text-white/40">
-              Legal
+              Pravno
             </p>
 
             <h1 className="mt-4 max-w-[12ch] text-4xl font-semibold tracking-[-0.04em] text-white sm:text-5xl">
@@ -124,10 +125,10 @@ export default function TermsPage() {
               <p className="mt-3">
                 Za vprašanja v zvezi s pogoji uporabe lahko pišete na{" "}
                 <a
-                  href="mailto:hello@bauma.si?subject=Povpra%C5%A1evanje%20%E2%80%94%20Bauma"
+                  href="mailto:gregor@bauma.si?subject=Povpra%C5%A1evanje%20za%20projekt"
                   className="text-white underline decoration-white/30 underline-offset-4 transition hover:text-white/70"
                 >
-                  hello@bauma.si
+                  gregor@bauma.si
                 </a>
                 .
               </p>

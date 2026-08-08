@@ -7,13 +7,8 @@ export const metadata: Metadata = {
   description:
     "I structure websites so users understand faster, trust more easily, and take the next step with less friction.",
 
-  alternates: {
-    canonical: "/en",
-    languages: {
-      sl: "/",
-      en: "/en",
-    },
-  },
+  // Launch: EN is not a second public homepage yet.
+  robots: { index: false, follow: false },
 
   openGraph: {
     title: "Bauma — Clear structure. Better decisions.",

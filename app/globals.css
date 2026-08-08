@@ -51,6 +51,42 @@ body {
   }
 }
 
+/* Shared focus-visible for primary white pill CTAs (hero + contact).
+   White/50 ring with offset — keyboard only; no ring after pointer click.
+   CTAs must not transition outline/box-shadow (Tailwind `transition` fades them). */
+a.bauma-focus-pill:focus:not(:focus-visible) {
+  outline: none;
+}
+
+a.bauma-focus-pill:focus-visible {
+  outline: 1px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 4px;
+}
+
+.mini-page-rail {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+.bauma-page-rail {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .mini-page-rail {
+    padding-inline: 2rem;
+  }
+
+  .bauma-page-rail {
+    padding-inline: 2rem;
+  }
+}
+
 /* ---------- Rail ---------- */
 @media (min-width: 1280px) {
   .bauma-rail {
@@ -126,6 +162,14 @@ body {
   .text-meta {
     @apply text-[11px] uppercase tracking-[0.16em] text-neutral-500;
   }
+}
+
+@utility home-primary-heading {
+  @apply text-3xl font-semibold leading-[0.98] tracking-[-0.035em] text-white sm:text-5xl sm:leading-[0.95] sm:tracking-[-0.045em] lg:text-[3.5rem];
+}
+
+@utility home-bridge-heading {
+  @apply text-2xl font-semibold leading-[1.02] tracking-[-0.035em] text-white sm:text-4xl sm:leading-[0.98];
 }
 
 @media (prefers-reduced-motion: no-preference) {

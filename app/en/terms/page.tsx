@@ -5,6 +5,7 @@ import MiniFooterEn from "../../components/blocks/mini/MiniFooterEn";
 export const metadata: Metadata = {
   title: "Terms of Use — Bauma",
   description: "Basic terms of use for the Bauma website.",
+  robots: { index: false, follow: false },
 };
 
 export default function TermsPage() {

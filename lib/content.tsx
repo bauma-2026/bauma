@@ -42,7 +42,7 @@ export const services = [
 export const work: WorkItem[] = [
   {
     slug: "flexido",
-    title: "Kompleksno ponudbo smo spremenili v jasne poti odločanja.",
+    title: "Flexido",
     summary:
       "Industrijsko ponudbo smo strukturirali po realnih proizvodnih procesih, da uporabnik hitreje razume pravo rešitev in naslednji korak.",
     tags: ["Structure", "Decision Flow", "Industrial"],
@@ -107,7 +107,108 @@ export const work: WorkItem[] = [
     ],
   },
 ];
+/* =========================
+   CASE STUDIES
+========================= */
 
+export type CaseStudySection = {
+  eyebrow: string;
+  title: string;
+  body: string[];
+};
+
+export type CaseStudy = {
+  slug: string;
+  client: string;
+  label: string;
+  title: string;
+  intro: string;
+  meta: string[];
+  sections: CaseStudySection[];
+  proof: string[];
+  closing: {
+    title: string;
+    text: string;
+  };
+};
+
+export const caseStudies: CaseStudy[] = [
+  {
+    slug: "flexido",
+    client: "Flexido",
+    label: "Industrial B2B",
+    title: "Kompleksna industrijska ponudba, urejena v jasnejšo pot odločanja.",
+    intro:
+      "Flexido razvija rešitve za avtomatizacijo proizvodnje: robotske celice, standardne sisteme, namenske rešitve in podporne procese. Pri takšni ponudbi ni dovolj, da stran samo dobro izgleda. Pomembno je, da uporabnik hitro razume, kaj podjetje rešuje, kje se lahko prepozna in kaj je smiseln naslednji korak.",
+    meta: ["Structure", "Decision Flow", "Industrial B2B"],
+    sections: [
+      {
+        eyebrow: "Izhodišče",
+        title: "Široka ponudba, ki je potrebovala jasnejši red.",
+        body: [
+          "Flexidova ponudba je široka in tehnično zahtevna.",
+          "Vključuje avtomatizacijo proizvodnje, standardne robotske celice, namenske sisteme, reference, servis in način sodelovanja. Če ti elementi niso jasno povezani, stran hitro začne delovati kot katalog.",
+          "Uporabnik vidi veliko informacij, ampak težje razume, kje začeti in kaj je zanj pomembno.",
+        ],
+      },
+      {
+        eyebrow: "Ključna odločitev",
+        title: "Stran ni bila zastavljena kot seznam rešitev.",
+        body: [
+          "Bolj smiselno je bilo izhajati iz vprašanja: kako uporabnik prepozna svoj problem in pride do pravega tipa rešitve?",
+          "Zato je struktura postavljena okoli proizvodnih procesov, tipičnih zastojev, možnih rešitev, dokazov zaupanja in naslednjega koraka.",
+        ],
+      },
+      {
+        eyebrow: "Strukturna sprememba",
+        title: "Problem → proces → rešitev → dokaz → kontakt.",
+        body: [
+          "Nova logika strani uporabnika vodi postopno: problem, proces, rešitev, dokaz, način sodelovanja in kontakt.",
+          "Najprej dobi osnovni okvir: kaj Flexido rešuje in kje v proizvodnji običajno nastajajo izzivi.",
+          "Potem se lahko premakne v konkretnejše sklope: CNC, brizganje plastike, kolaborativni roboti, manipulacija, logistika ali namenski sistemi.",
+          "Standardne celice dobijo svoj produktni sloj. Reference, proces sodelovanja in servis pa pomagajo graditi občutek zaupanja.",
+        ],
+      },
+      {
+        eyebrow: "Kaj se je izboljšalo",
+        title: "Uporabnik ni več prepuščen razpršenim informacijam.",
+        body: [
+          "Najprej razume širši problem. Nato se lahko prepozna v enem od konkretnih področij. Na koncu ima bolj jasno predstavo, kaj vprašati in kateri naslednji korak ima smisel.",
+          "Cilj ni, da uporabnik prebere vse. Cilj je, da se hitro orientira.",
+        ],
+      },
+      {
+        eyebrow: "Vrednost za naročnika",
+        title: "Flexido je predstavljen bolj jasno, sistemsko in resno.",
+        body: [
+          "Podjetje ne deluje samo kot ponudnik posameznih robotskih celic, ampak kot partner, ki razume proizvodni proces, zastoje, izvedbo in podporo po projektu.",
+          "To pomaga pri prvem vtisu, razumevanju ponudbe in zaupanju.",
+        ],
+      },
+      {
+        eyebrow: "Kaj ta primer pokaže",
+        title: "Struktura ni samo vizualna ureditev strani.",
+        body: [
+          "Pri kompleksnih B2B ponudbah struktura pomaga uporabniku razumeti, kaj je pomembno, kako so rešitve povezane in kateri naslednji korak ima smisel.",
+          "Bauma pri takšnih projektih najprej ureja pot odločanja. Šele potem ima vizualni sloj pravo nalogo.",
+        ],
+      },
+    ],
+    proof: [
+      "osnovni home flow",
+      "razdelitev rešitev po proizvodnih procesih",
+      "standardne celice kot produktni sloj",
+      "proces sodelovanja",
+      "reference oziroma dokazni sloj",
+      "povezava med problemom, rešitvijo in naslednjim korakom",
+    ],
+    closing: {
+      title: "Kompleksna ponudba pogosto najprej potrebuje boljšo strukturo.",
+      text:
+        "Pri Flexidu je bil cilj, da uporabnik hitreje razume, kaj podjetje rešuje, kje se lahko prepozna in kateri naslednji korak ima smisel.",
+    },
+  },
+];
 export type NewsItem = {
   slug: string;
   title: string;

@@ -1,0 +1,9 @@
+# Deploy hygiene — exclude non-production bulk (lab captures, recovery, local tooling).
+# Does not change homepage/runtime authority.
+.recovery
+.playwright-browsers
+public/lab
+public/raw
+public/production-transfer
+*.webm
+*.mp4

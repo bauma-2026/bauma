@@ -12,7 +12,7 @@ const systemNodes: SystemNode[] = [
     id: "structure",
     label: "Structure",
     meaning: "Postavi red, okvir in logiko strani.",
-    className: "absolute left-[49.5%] top-[22.5%] h-[182px] w-[182px]",
+    className: "absolute left-[54%] top-[23%] h-[178px] w-[178px]",
     motionClass: "bauma-structure-motion",
     svg: (
       <svg
@@ -31,7 +31,6 @@ const systemNodes: SystemNode[] = [
             strokeWidth="1.5"
           />
 
-          {/* Internal construction line */}
           <path
             d="M52 92H130"
             stroke="rgba(255,255,255,0.075)"
@@ -45,7 +44,7 @@ const systemNodes: SystemNode[] = [
     id: "clarity",
     label: "Clarity",
     meaning: "Ustvari prostor za razumevanje in orientacijo.",
-    className: "absolute left-[72.5%] top-[27%] h-[240px] w-[240px]",
+    className: "absolute left-[76%] top-[28%] h-[238px] w-[238px]",
     motionClass: "bauma-clarity-motion",
     svg: (
       <svg
@@ -62,7 +61,6 @@ const systemNodes: SystemNode[] = [
           strokeWidth="1.5"
         />
 
-        {/* Subtle focus point */}
         <circle
           cx="120"
           cy="120"
@@ -76,7 +74,7 @@ const systemNodes: SystemNode[] = [
     id: "direction",
     label: "Direction",
     meaning: "Signalizira smer, fokus in naslednji korak.",
-    className: "absolute left-[59%] top-[59.5%] h-[118px] w-[118px]",
+    className: "absolute left-[63%] top-[60%] h-[116px] w-[116px]",
     motionClass: "bauma-direction-motion",
     svg: (
       <svg
@@ -92,7 +90,6 @@ const systemNodes: SystemNode[] = [
           strokeLinejoin="miter"
         />
 
-        {/* Direction axis */}
         <path
           d="M59 30V82"
           stroke="rgba(255,255,255,0.065)"
@@ -117,14 +114,14 @@ export default function MiniHeroSystemField() {
         preserveAspectRatio="xMidYMid slice"
       >
         <path
-          d="M540 225 C650 245 720 300 792 330"
+          d="M560 225 C670 245 740 300 812 330"
           stroke="rgba(255,255,255,0.055)"
           strokeWidth="1"
           vectorEffect="non-scaling-stroke"
         />
 
         <path
-          d="M700 390 C650 430 620 455 585 505"
+          d="M720 390 C670 430 640 455 605 505"
           stroke="rgba(255,255,255,0.045)"
           strokeWidth="1"
           vectorEffect="non-scaling-stroke"
