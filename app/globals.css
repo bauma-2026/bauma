@@ -23,6 +23,111 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Keep the homepage hero polygon outline-led over the photograph. */
+[data-hero-edge-hero] [data-role="fill"] {
+  fill-opacity: 0.02 !important;
+}
+
+/* Reveal mask for the hero road path.
+   Default / first-paint is fully HIDDEN (`dashoffset` past path length)
+   so there is no flash of the finished line and no round-cap fragment
+   at the foreground endpoint. `prefers-reduced-motion: reduce` overrides
+   to a fully drawn static path. Motion users then draw 0 → 100%. */
+.bauma-hero-road-reveal {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1024;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bauma-hero-road-reveal {
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .bauma-hero-road-reveal {
+    /* Calm start, even spatial growth, natural settle — not a snap ease-out wipe. */
+    animation: baumaHeroRoadPathDraw 2300ms cubic-bezier(0.37, 0, 0.63, 1) both;
+  }
+}
+
+@keyframes baumaHeroRoadPathDraw {
+  from {
+    stroke-dashoffset: 1024;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Mobile-only hero readability: light final correction. */
+.bauma-hero-mobile-readability {
+  background-image: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.02) 34%,
+    rgba(0, 0, 0, 0.06) 50%,
+    rgba(0, 0, 0, 0.08) 60%,
+    rgba(0, 0, 0, 0.03) 76%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+@media (min-width: 414px) and (max-width: 447px) and (orientation: portrait) {
+  [data-hero-edge-hero] .mini-page-rail {
+    padding-bottom: calc(clamp(3.25rem, 10svh, 5.5rem) - 24px);
+  }
+}
+
+/* Compact short lg desktop: lower the centered hero copy without
+   changing grid, alignment, padding, or the locked tall-desktop translate. */
+@media (min-width: 1024px) and (max-width: 1279px) and (max-height: 850px) {
+  [data-hero-edge-hero] .mini-page-rail {
+    translate: 0 136px;
+  }
+}
+
+/* Hero-header lifecycle — mobile and desktop:
+   photograph overlay exits, quiet gap, then black sticky with content. */
+header[data-header-phase="gap"] {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px);
+}
+
+/* Mobile in-page anchors: clear the 52px header, iPhone safe area,
+   and a small optical gap so eyebrows/headings land inside the viewport.
+   Desktop scroll-margin is left to existing utility classes. */
+@media (max-width: 1023px) {
+  #approach,
+  #system,
+  #contact,
+  #flow {
+    scroll-margin-top: calc(3.25rem + env(safe-area-inset-top, 0px) + 0.75rem);
+  }
+
+  [data-approach-object-hit] svg [data-edge-kind="possible"] {
+    stroke-width: 1.2px;
+  }
+
+  [data-approach-object-hit] svg [data-edge-kind="support"],
+  [data-approach-object-hit] svg [data-edge-kind="edge"] {
+    stroke-width: 1.3px;
+  }
+
+  [data-approach-object-hit] svg [data-edge-kind="amber"] {
+    stroke-width: 1.45px;
+  }
+
+  .mini-system-field-mobile .mini-system-connection,
+  .mini-system-field-mobile .mini-system-element {
+    stroke-width: 1.35px;
+    vector-effect: non-scaling-stroke;
+  }
+}
+
 
 
 
