@@ -75,16 +75,79 @@ body {
   );
 }
 
+/* Two-state hero copy. Mobile is the default. Desktop when
+   width ≥ 1280px, or width ≥ 768px and height ≥ 650px. */
+[data-hero-edge-hero] .bauma-hero-rail {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-top: 4.5rem;
+  padding-bottom: clamp(3.25rem, 10svh, 5.5rem);
+}
+
+[data-hero-copy] .bauma-hero-eyebrow {
+  color: rgb(255 255 255 / 0.7);
+}
+
+[data-hero-copy] .bauma-hero-h1-mobile {
+  display: block;
+  font-size: 48px;
+  line-height: 0.93;
+}
+
+[data-hero-copy] .bauma-hero-h1-desktop {
+  display: none;
+  max-width: 16ch;
+  font-size: clamp(4.25rem, calc(3.25rem + 1.5625vw), 4.5rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.025em;
+}
+
+[data-hero-copy] > p {
+  font-size: 16px;
+  line-height: 1.55;
+}
+
 @media (min-width: 414px) and (max-width: 447px) and (orientation: portrait) {
   [data-hero-edge-hero] .mini-page-rail {
     padding-bottom: calc(clamp(3.25rem, 10svh, 5.5rem) - 24px);
   }
 }
 
-/* Compact short lg desktop: lower the centered hero copy without
-   changing grid, alignment, padding, or the locked tall-desktop translate. */
-@media (min-width: 1024px) and (max-width: 1279px) and (max-height: 850px) {
-  [data-hero-edge-hero] .mini-page-rail {
+@media (min-width: 1280px), (min-width: 768px) and (min-height: 650px) {
+  [data-hero-edge-hero] .bauma-hero-rail {
+    display: grid;
+    height: auto;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: normal;
+    padding-top: 96px;
+    padding-bottom: 96px;
+    translate: 0 56px;
+  }
+
+  [data-hero-copy] .bauma-hero-eyebrow {
+    color: rgb(255 255 255 / 0.55);
+  }
+
+  [data-hero-copy] .bauma-hero-h1-mobile {
+    display: none;
+  }
+
+  [data-hero-copy] .bauma-hero-h1-desktop {
+    display: block;
+  }
+
+  [data-hero-copy] > p {
+    font-size: 18px;
+    line-height: 28px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1279px) and (min-height: 650px) and (max-height: 850px) {
+  [data-hero-edge-hero] .bauma-hero-rail {
     translate: 0 136px;
   }
 }
