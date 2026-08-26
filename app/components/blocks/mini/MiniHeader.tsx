@@ -123,7 +123,7 @@ export function useMobileMenuChrome(
       const header = document.querySelector("header");
       const menu = document.getElementById(MOBILE_MENU_ID);
       return [header, menu]
-        .filter((root): root is Element => root != null)
+        .filter((root): root is HTMLElement => root instanceof HTMLElement)
         .flatMap((root) =>
           [...root.querySelectorAll<HTMLElement>("a[href], button:not([disabled])")],
         )

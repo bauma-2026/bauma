@@ -12,7 +12,7 @@ import { useEffect, useRef } from "react";
  * pixel-identical to this one curve.
  *
  * RESPONSIVE COORDINATE FIX: this SVG uses the hero photo's own source
- * pixel space (4368x2912, the original `tmp/road-evening-01.jpg` dimensions)
+ * pixel space (4368x2912, the production road image dimensions)
  * as its viewBox, with `preserveAspectRatio="xMidYMid slice"` — the SVG
  * equivalent of the image's `object-fit: cover` / `object-position: center`.
  * Both the <img> and this <svg> fill the same absolutely-positioned box, so

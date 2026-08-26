@@ -8,7 +8,6 @@ import {
 } from "@/components/home/hero-system";
 
 import HeroRoadPath from "./HeroRoadPath";
-import heroPhoto from "../../../../tmp/road-evening-01.jpg";
 
 export type MiniHeroCopy = {
   eyebrow: string;
@@ -51,7 +50,7 @@ export default function MiniHero({ copy = DEFAULT_COPY }: { copy?: MiniHeroCopy 
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 max-lg:origin-[50%_76%] max-lg:scale-[1.12] max-lg:-translate-y-[3%]">
           <Image
-            src={heroPhoto}
+            src="/images/atmosphere/road-evening-01.jpg"
             alt=""
             fill
             priority
