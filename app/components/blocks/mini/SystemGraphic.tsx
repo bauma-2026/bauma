@@ -2,30 +2,53 @@
 
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 
-const concepts = [
-  {
-    id: "structure",
-    label: "Struktura",
-    description: "Uredi vsebino v jasen vrstni red.",
-  },
-  {
-    id: "clarity",
-    label: "Jasnost",
-    description: "Uporabnik hitreje razume, kaj je pomembno.",
-  },
-  {
-    id: "trust",
-    label: "Zaupanje",
-    description: "Dvom se zmanjša, naslednji korak postane lažji.",
-  },
-  {
-    id: "decision",
-    label: "Odločitev",
-    description: "Jasna pot pripelje do akcije.",
-  },
-] as const;
+type Concept = "structure" | "clarity" | "trust" | "decision";
 
-type Concept = (typeof concepts)[number]["id"];
+type SystemConcept = {
+  id: Concept;
+  label: string;
+  description: string;
+};
+
+export type SystemGraphicCopy = {
+  eyebrow: string;
+  headline: string;
+  body: string;
+  conceptsAria: string;
+  concepts: readonly SystemConcept[];
+};
+
+const DEFAULT_COPY: SystemGraphicCopy = {
+  eyebrow: "Sistemska plast",
+  headline: "Pod površino je sistem.",
+  body: "Stran ni samo zaporedje sekcij. Vsak del mora zmanjšati nejasnost, zgraditi zaupanje ali uporabnika premakniti naprej.",
+  conceptsAria: "Sistemski koncepti",
+  concepts: [
+    {
+      id: "structure",
+      label: "Struktura",
+      description: "Uredi vsebino v jasen vrstni red.",
+    },
+    {
+      id: "clarity",
+      label: "Jasnost",
+      description: "Uporabnik hitreje razume, kaj je pomembno.",
+    },
+    {
+      id: "trust",
+      label: "Zaupanje",
+      description: "Dvom se zmanjša, naslednji korak postane lažji.",
+    },
+    {
+      id: "decision",
+      label: "Odločitev",
+      description: "Jasna pot pripelje do akcije.",
+    },
+  ],
+};
+
+/** Ids only — used by field geometry (labels come from copy). */
+const concepts = DEFAULT_COPY.concepts;
 type Connection = "squareCircle" | "squareRing" | "circleDecision" | "ringDecision";
 
 const accentRgb = "209,164,95";
@@ -251,14 +274,20 @@ function connectionStroke(
   connection: Connection,
   committed: Concept,
   preview: Concept | null,
+  compact = false,
 ) {
-  const restOpacity = connectionOpacity(committed)[connection];
+  const restOpacity = Math.min(
+    1,
+    connectionOpacity(committed)[connection] * (compact ? 1.28 : 1),
+  );
   const committedOpacity = isConnectionAccented(committed, connection) ? restOpacity : 0;
   const previewOpacity =
     preview && preview !== committed && isConnectionAccented(preview, connection)
       ? Math.max(restOpacity * CONNECTION_PREVIEW_INTENSITY, 0.05)
       : 0;
-  const finalOpacity = Math.max(restOpacity, committedOpacity, previewOpacity);
+  const accentFloor = compact && isConnectionAccented(committed, connection) ? 0.4 : 0;
+  const restFloor = compact ? 0.05 : 0;
+  const finalOpacity = Math.max(restOpacity, committedOpacity, previewOpacity, accentFloor, restFloor);
 
   if (isConnectionAccented(committed, connection)) {
     return `rgba(${accentRgb},${finalOpacity})`;
@@ -1051,13 +1080,13 @@ function SystemField({
     <div ref={hostRef} className="h-full w-full">
       <svg
         aria-hidden="true"
-        className="pointer-events-auto h-full w-full lg:hidden"
+        className="mini-system-field-mobile pointer-events-auto h-full w-full lg:hidden"
         fill="none"
         focusable="false"
         onPointerLeave={handleFieldPointerLeave}
         preserveAspectRatio="xMidYMid meet"
         ref={mobileFieldRef}
-        viewBox="0 0 480 300"
+        viewBox="12 4 456 280"
       >
         <g aria-hidden="true" className="mini-system-micro-a" stroke="rgba(255,255,255,0.18)" strokeWidth="1">
           <path d="M18 21H36V39" />
@@ -1071,10 +1100,10 @@ function SystemField({
         </g>
 
         <g aria-hidden="true" fill="none" strokeWidth="1">
-          <path className="mini-system-connection mini-system-connection--square-circle" d="M89 23L230.6 71.86" data-system-connection="squareCircle" stroke={connectionStroke("squareCircle", committed, preview)} />
-          <path className="mini-system-connection mini-system-connection--square-ring" d="M89 60L170.07 200.28" data-system-connection="squareRing" stroke={connectionStroke("squareRing", committed, preview)} />
-          <path className="mini-system-connection mini-system-connection--circle-decision" d="M285 100.5L396.5 183" data-system-connection="circleDecision" stroke={connectionStroke("circleDecision", committed, preview)} />
-          <path className="mini-system-connection mini-system-connection--ring-decision" d="M193.69 211.77L396.5 183" data-system-connection="ringDecision" stroke={connectionStroke("ringDecision", committed, preview)} />
+          <path className="mini-system-connection mini-system-connection--square-circle" d="M89 23L230.6 71.86" data-system-connection="squareCircle" stroke={connectionStroke("squareCircle", committed, preview, true)} />
+          <path className="mini-system-connection mini-system-connection--square-ring" d="M89 60L170.07 200.28" data-system-connection="squareRing" stroke={connectionStroke("squareRing", committed, preview, true)} />
+          <path className="mini-system-connection mini-system-connection--circle-decision" d="M285 100.5L396.5 183" data-system-connection="circleDecision" stroke={connectionStroke("circleDecision", committed, preview, true)} />
+          <path className="mini-system-connection mini-system-connection--ring-decision" d="M193.69 211.77L396.5 183" data-system-connection="ringDecision" stroke={connectionStroke("ringDecision", committed, preview, true)} />
         </g>
 
         <g className="mini-system-selectable" data-system-node="structure" onClick={() => onSelect("structure")} onPointerEnter={handleNodePointerEnter("structure")} onPointerLeave={handleNodePointerLeave}>
@@ -1268,9 +1297,13 @@ function SystemField({
   );
 }
 
-function ContextualDescription({ concept }: { concept: Concept }) {
-  const description = concepts.find(({ id }) => id === concept)!.description;
-
+function ContextualDescription({
+  concept,
+  description,
+}: {
+  concept: Concept;
+  description: string;
+}) {
   return (
     <p className="mt-4 min-h-[3rem] max-w-[46ch] text-sm leading-6 text-white/55">
       <span className="mini-system-description" key={concept}>
@@ -1280,10 +1313,14 @@ function ContextualDescription({ concept }: { concept: Concept }) {
   );
 }
 
-export default function SystemGraphic() {
+export default function SystemGraphic({
+  copy = DEFAULT_COPY,
+}: {
+  copy?: SystemGraphicCopy;
+}) {
   const [committed, setCommitted] = useState<Concept>("structure");
   const [preview, setPreview] = useState<Concept | null>(null);
-  const committedConcept = concepts.find(({ id }) => id === committed)!;
+  const committedConcept = copy.concepts.find(({ id }) => id === committed)!;
 
   const handleCommit = (concept: Concept) => {
     setCommitted(concept);
@@ -1315,26 +1352,25 @@ export default function SystemGraphic() {
       <div className="mini-page-rail grid min-w-0 gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
         <div className="min-w-0">
           <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/60">
-            Sistemska plast
+            {copy.eyebrow}
           </p>
 
           <h2 className="home-primary-heading mt-5 max-w-[11ch]">
-  Pod površino je sistem.
-</h2>
+            {copy.headline}
+          </h2>
 
           <p className="mt-6 max-w-[48ch] text-base leading-7 text-white/55">
-            Stran ni samo zaporedje sekcij. Vsak del mora zmanjšati nejasnost,
-            zgraditi zaupanje ali uporabnika premakniti naprej.
+            {copy.body}
           </p>
 
           <div className="mt-7 max-w-[48ch]">
             <div
-              aria-label="Sistemski koncepti"
+              aria-label={copy.conceptsAria}
               className="flex flex-wrap items-center gap-x-2 gap-y-2"
               onPointerLeave={handleConceptGroupPointerLeave}
               role="group"
             >
-              {concepts.map((concept, index) => {
+              {copy.concepts.map((concept, index) => {
                 const isCommitted = committed === concept.id;
                 const isPreview = preview === concept.id && !isCommitted;
 
@@ -1370,13 +1406,16 @@ export default function SystemGraphic() {
               })}
             </div>
 
-            <ContextualDescription concept={committedConcept.id} />
+            <ContextualDescription
+              concept={committedConcept.id}
+              description={committedConcept.description}
+            />
           </div>
         </div>
 
         <figure
           aria-labelledby="system-view-title"
-          className="relative min-w-0 h-[236px] sm:h-[248px] lg:h-[320px]"
+          className="relative min-w-0 w-full max-lg:aspect-[456/280] lg:h-[320px]"
         >
           <figcaption id="system-view-title" className="sr-only">
             An abstract relational system: a structured foundation connects to clarity and trust, which support a user decision.

@@ -21,6 +21,32 @@ export const PROXIMITY_FIELD_SELECTOR =
 
 export const REST_EPS = 0.0015;
 
+/**
+ * Existing field in-view gate (IntersectionObserver + coarse scroll).
+ * Below this the object is treated as left: progress returns to S0.
+ * Original thresholds: [0, 0.35, 0.6, 1].
+ */
+export const FIELD_IN_VIEW_RATIO = 0.35;
+
+/**
+ * Viewport overlap → S0–S2 progress for coarse/touch.
+ * Uses the locked in-view gate; fully visible → 1 (S2). Linear — the
+ * spatial sampler already owns S0→S1→S2 interpolation.
+ */
+export function fieldViewportProgress(
+  el: HTMLElement,
+  viewportHeight =
+    typeof window !== "undefined" ? window.innerHeight : 0,
+): number {
+  const rect = el.getBoundingClientRect();
+  if (!(rect.height > 1) || !(viewportHeight > 0)) return 0;
+  const visible =
+    Math.min(rect.bottom, viewportHeight) - Math.max(rect.top, 0);
+  const ratio = Math.max(0, Math.min(1, visible / rect.height));
+  if (ratio < FIELD_IN_VIEW_RATIO) return 0;
+  return (ratio - FIELD_IN_VIEW_RATIO) / (1 - FIELD_IN_VIEW_RATIO);
+}
+
 export type ProximityRuntimeFrame = {
   progress: number;
   targetProgress: number;
@@ -94,12 +120,14 @@ function resolveField(
   selector: string,
   host: HTMLElement | null,
 ) {
+  // Prefer the object's own field (closest / host) so a leftover page-level
+  // [data-hero-edge-field] cannot steal pointer listeners.
   return (
     (svg?.closest(selector) as HTMLElement | null) ??
+    host ??
     (typeof document !== "undefined"
       ? (document.querySelector(selector) as HTMLElement | null)
-      : null) ??
-    host
+      : null)
   );
 }
 
@@ -114,6 +142,8 @@ export function createProximityRuntime(
   let enabled = true;
   let reduced = false;
   let scrub: number | null = null;
+  /** Lab/dev slider owns scrub; otherwise coarse scroll may write it. */
+  let scrubOwnedExternally = false;
 
   let poly = buildStaticS0FrontTilted();
   let halfDiag = halfDiagFromPoly(poly);
@@ -342,12 +372,15 @@ export function createProximityRuntime(
         : override !== undefined
           ? override != null
           : livePointer != null;
+    const scrubSettled =
+      scrub != null &&
+      Math.abs(rendered - scrub) < REST_EPS &&
+      Math.abs(target - scrub) < REST_EPS;
     const needRaf =
-      scrub != null ||
+      (scrub != null && !scrubSettled) ||
       hold ||
       activePointer ||
-      target > REST_EPS ||
-      rendered > REST_EPS;
+      (scrub == null && (target > REST_EPS || rendered > REST_EPS));
 
     if (
       needRaf &&
@@ -359,7 +392,10 @@ export function createProximityRuntime(
       rafRunning = true;
     } else {
       rafRunning = false;
-      if (blocked || (target < REST_EPS && rendered < REST_EPS)) {
+      if (
+        scrub == null &&
+        (blocked || (target < REST_EPS && rendered < REST_EPS))
+      ) {
         rendered = 0;
         target = 0;
         heldRaw = 0;
@@ -407,6 +443,36 @@ export function createProximityRuntime(
     else inputMode = "off";
   };
 
+  const releaseScrollScrub = () => {
+    if (scrubOwnedExternally) return;
+    if (scrub == null) return;
+    scrub = null;
+    hardReset();
+    stopRaf();
+  };
+
+  /**
+   * Coarse/touch only. Fine pointer never writes scrub.
+   * Maps field viewport overlap through the existing in-view gate onto
+   * the runtime scrub path (linear S0→S1→S2). Leave below the gate
+   * returns to S0 — same as the original IO exit.
+   */
+  const sampleCoarseScroll = () => {
+    if (!enabled || reduced) return;
+    if (inputMode !== "coarse-pointer") return;
+    if (scrubOwnedExternally) return;
+    if (!fieldEl) return;
+
+    const next = fieldViewportProgress(fieldEl);
+    if (next < REST_EPS) {
+      releaseScrollScrub();
+      return;
+    }
+    if (scrub != null && Math.abs(scrub - next) < REST_EPS) return;
+    scrub = next;
+    ensureRaf();
+  };
+
   const mount = () => {
     if (mounted) return;
     mounted = true;
@@ -417,12 +483,17 @@ export function createProximityRuntime(
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const onCap = () => {
       syncCapability();
-      if (inputMode !== "fine-pointer" && scrub == null) {
+      if (inputMode === "fine-pointer") {
+        releaseScrollScrub();
+        return;
+      }
+      if (inputMode === "reduced-motion") {
+        releaseScrollScrub();
         hardReset();
         stopRaf();
-      } else if (scrub != null || options.shouldHoldRaf?.()) {
-        ensureRaf();
+        return;
       }
+      sampleCoarseScroll();
     };
     syncCapability();
     fine.addEventListener("change", onCap);
@@ -454,29 +525,35 @@ export function createProximityRuntime(
         (entries) => {
           const ratio = entries[0]?.intersectionRatio ?? 0;
           const was = heroInView;
-          heroInView = ratio >= 0.35;
+          heroInView = ratio >= FIELD_IN_VIEW_RATIO;
           if (was && !heroInView) {
             livePointer = null;
             target = 0;
             ensureRaf();
           }
+          sampleCoarseScroll();
         },
-        { threshold: [0, 0.35, 0.6, 1] },
+        { threshold: [0, FIELD_IN_VIEW_RATIO, 0.6, 1] },
       );
       io.observe(fieldEl);
     }
 
     const onLayout = () => {
       refreshBounds();
-      livePointer = null;
-      target = 0;
-      ensureRaf();
+      if (inputMode === "fine-pointer") {
+        livePointer = null;
+        target = 0;
+        ensureRaf();
+        return;
+      }
+      sampleCoarseScroll();
     };
     const onScroll = () => {
       if (scrollRaf) return;
       scrollRaf = requestAnimationFrame(() => {
         scrollRaf = 0;
         refreshBounds();
+        sampleCoarseScroll();
       });
     };
     window.addEventListener("resize", onLayout);
@@ -527,6 +604,7 @@ export function createProximityRuntime(
     }
 
     if (scrub != null || options.shouldHoldRaf?.()) ensureRaf();
+    sampleCoarseScroll();
     publish(performance.now());
   };
 
@@ -561,13 +639,23 @@ export function createProximityRuntime(
       reduced = v;
       syncCapability();
       if (v) {
+        if (!scrubOwnedExternally) scrub = null;
         hardReset();
         stopRaf();
       }
     },
     setScrub: (v) => {
-      scrub = v;
-      if (v != null) ensureRaf();
+      scrubOwnedExternally = v != null;
+      if (v != null) {
+        scrub = v;
+        ensureRaf();
+        return;
+      }
+      if (inputMode === "coarse-pointer") {
+        sampleCoarseScroll();
+        return;
+      }
+      scrub = null;
     },
     setPointerViewBox,
     clearPointer,

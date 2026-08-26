@@ -33,6 +33,8 @@ export {
 export { useHeroProximityV3 } from "./useHeroProximityV3";
 export {
   createProximityRuntime,
+  fieldViewportProgress,
+  FIELD_IN_VIEW_RATIO,
   PROXIMITY_FIELD_SELECTOR,
   REST_EPS,
 } from "./createProximityRuntime";

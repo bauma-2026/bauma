@@ -105,6 +105,11 @@ body {
   letter-spacing: -0.025em;
 }
 
+/* English desktop H1 only; Slovenian stays at 1. */
+[data-hero-copy] .bauma-hero-h1-desktop:lang(en) {
+  line-height: 0.94;
+}
+
 [data-hero-copy] > p {
   font-size: 16px;
   line-height: 1.55;

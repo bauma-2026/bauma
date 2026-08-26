@@ -1,25 +1,46 @@
-const principles = [
-  {
-    number: "01",
-    label: "Struktura",
-    shape: "square",
-    text: "Uporabnik hitro razume, kaj podjetje ponuja, komu je namenjeno in kje začeti.",
-  },
-  {
-    number: "02",
-    label: "Jasnost",
-    shape: "circle",
-    text: "Ključne informacije postanejo bolj opazne, odločitev pa zahteva manj napora.",
-  },
-  {
-    number: "03",
-    label: "Naslednji korak",
-    shape: "triangle",
-    text: "Uporabnik ves čas ve, kaj naj pogleda, preveri ali naredi naslednje.",
-  },
-] as const;
-
 type Shape = "square" | "circle" | "triangle";
+
+export type MiniDecisionFlowCopy = {
+  eyebrow: string;
+  headlineLine1: string;
+  headlineLine2: string;
+  body: string;
+  principles: readonly {
+    number: string;
+    label: string;
+    shape: Shape;
+    text: string;
+    active?: boolean;
+  }[];
+};
+
+const DEFAULT_COPY: MiniDecisionFlowCopy = {
+  eyebrow: "Tok odločitve",
+  headlineLine1: "Od strukture do",
+  headlineLine2: "odločitve.",
+  body: "Najprej določimo, kaj mora obiskovalec razumeti in kam ga mora stran voditi.",
+  principles: [
+    {
+      number: "01",
+      label: "Struktura",
+      shape: "square",
+      text: "Uporabnik hitro razume, kaj podjetje ponuja, komu je namenjeno in kje začeti.",
+    },
+    {
+      number: "02",
+      label: "Jasnost",
+      shape: "circle",
+      text: "Ključne informacije postanejo bolj opazne, odločitev pa zahteva manj napora.",
+    },
+    {
+      number: "03",
+      label: "Naslednji korak",
+      shape: "triangle",
+      text: "Uporabnik ves čas ve, kaj naj pogleda, preveri ali naredi naslednje.",
+      active: true,
+    },
+  ],
+};
 
 function ShapeIcon({ shape }: { shape: Shape }) {
   if (shape === "square") {
@@ -38,7 +59,7 @@ function ShapeIcon({ shape }: { shape: Shape }) {
     <svg
       viewBox="0 0 48 48"
       fill="none"
-      className="decision-flow-shape h-[35px] w-[35px] translate-y-px text-white/20"
+      className="decision-flow-shape decision-flow-triangle h-[35px] w-[35px] translate-y-px text-white/20"
       aria-hidden="true"
     >
       <polygon
@@ -50,7 +71,11 @@ function ShapeIcon({ shape }: { shape: Shape }) {
   );
 }
 
-export default function MiniDecisionFlow() {
+export default function MiniDecisionFlow({
+  copy = DEFAULT_COPY,
+}: {
+  copy?: MiniDecisionFlowCopy;
+}) {
   return (
     <section
       id="flow"
@@ -67,6 +92,25 @@ export default function MiniDecisionFlow() {
             transition: color 240ms cubic-bezier(0.22, 1, 0.36, 1);
           }
 
+          .decision-flow-triangle {
+            transform-origin: center;
+            transition:
+              color 240ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+          }
+
+          .decision-flow-card-active {
+            border-color: rgba(209, 164, 95, 0.2);
+          }
+
+          .decision-flow-card-active .decision-flow-number {
+            color: rgba(209, 164, 95, 0.8);
+          }
+
+          .decision-flow-card-active .decision-flow-shape {
+            color: rgba(209, 164, 95, 0.76);
+          }
+
           @media (hover: hover) {
             .decision-flow-card:hover {
               border-color: rgba(209, 164, 95, 0.2);
@@ -79,13 +123,22 @@ export default function MiniDecisionFlow() {
             .decision-flow-card:hover .decision-flow-shape {
               color: rgba(209, 164, 95, 0.76);
             }
+
+            .decision-flow-card-active:hover .decision-flow-triangle {
+              transform: rotate(90deg);
+            }
           }
 
           @media (prefers-reduced-motion: reduce) {
             .decision-flow-card,
             .decision-flow-number,
-            .decision-flow-shape {
+            .decision-flow-shape,
+            .decision-flow-triangle {
               transition-duration: 0ms;
+            }
+
+            .decision-flow-card-active:hover .decision-flow-triangle {
+              transform: none;
             }
           }
         `}</style>
@@ -93,28 +146,31 @@ export default function MiniDecisionFlow() {
         <div className="grid gap-8 lg:grid-cols-[0.8fr_1fr] lg:items-end lg:gap-10">
           <div>
             <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/60">
-              Tok odločitve
+              {copy.eyebrow}
             </p>
 
             <h2 className="home-primary-heading mt-4 max-w-[12ch] sm:max-w-[16ch]">
-              Od strukture do
+              {copy.headlineLine1}
               <br />
-              odločitve.
+              {copy.headlineLine2}
             </h2>
 
             <p className="mt-5 max-w-[48ch] text-base leading-7 text-white/55">
-              Najprej določimo, kaj mora obiskovalec razumeti in kam ga mora
-              stran voditi.
+              {copy.body}
             </p>
           </div>
         </div>
 
         {/* Editorial three-part sequence */}
         <div className="mt-10 grid gap-3 sm:gap-4 lg:mt-12 lg:grid-cols-3">
-          {principles.map((principle) => (
+          {copy.principles.map((principle) => {
+            const isActive = principle.active === true || principle.number === "03";
+
+            return (
             <article
               key={principle.number}
-              className="decision-flow-card flex h-full flex-col rounded-[10px] border border-white/10 bg-white/[0.01] p-6 sm:p-7 lg:p-8"
+              aria-current={isActive ? "true" : undefined}
+              className={`decision-flow-card flex h-full flex-col rounded-[10px] border border-white/10 bg-white/[0.01] p-6 sm:p-7 lg:p-8${isActive ? " decision-flow-card-active" : ""}`}
             >
               <div className="flex items-center justify-between gap-6">
                 <p className="decision-flow-number text-[12px] font-medium uppercase tracking-[0.18em] text-white/[0.48]">
@@ -134,7 +190,8 @@ export default function MiniDecisionFlow() {
                 {principle.text}
               </p>
             </article>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

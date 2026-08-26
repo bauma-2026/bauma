@@ -7,7 +7,11 @@ export const metadata: Metadata = {
   description:
     "I structure websites so users understand faster, trust more easily, and take the next step with less friction.",
 
-  // Launch: EN is not a second public homepage yet.
+  /**
+   * Default for the EN subtree: noindex.
+   * `/en` homepage opts into index,follow via route-owned metadata.
+   * Do not remove this default — it protects about/legal/internal EN routes.
+   */
   robots: { index: false, follow: false },
 
   openGraph: {
@@ -42,5 +46,5 @@ export default function EnglishLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return <div lang="en" className="contents">{children}</div>;
 }

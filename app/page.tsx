@@ -5,20 +5,25 @@ import MiniHero from "./components/blocks/mini/MiniHero";
 import MiniDecisionFlow from "./components/blocks/mini/MiniDecisionFlow";
 import ApproachSection from "@/components/home/approach/ApproachSection";
 import SystemGraphic from "./components/blocks/mini/SystemGraphic";
+import MiniMidPageCta from "./components/blocks/mini/MiniMidPageCta";
 import MiniPerceptionLayer from "./components/blocks/mini/MiniPerceptionLayer";
-import MiniFinalCTA from "./components/blocks/mini/MiniFinalCTA";
-import MiniFooter from "./components/blocks/mini/MiniFooter";
+import MiniClosingBookend from "./components/blocks/mini/MiniClosingBookend";
 import RightObjectAxisDebugGate from "@/components/home/debug/RightObjectAxisDebugGate";
 
 const isProduction = process.env.VERCEL_ENV === "production";
 
 /**
- * Launch indexing: only `/` is indexable, and only on Vercel production.
+ * Launch indexing: `/` and `/en` only, and only on Vercel production.
  * Env gate: VERCEL_ENV === "production"
  */
 export const metadata: Metadata = {
   alternates: {
     canonical: "https://bauma.si",
+    languages: {
+      sl: "https://bauma.si",
+      en: "https://bauma.si/en",
+      "x-default": "https://bauma.si",
+    },
   },
   robots: isProduction
     ? { index: true, follow: true }
@@ -40,11 +45,11 @@ export default function Home() {
         <MiniDecisionFlow />
         <ApproachSection />
         <SystemGraphic />
+        <MiniMidPageCta />
         <MiniPerceptionLayer />
-        <MiniFinalCTA />
       </main>
 
-      <MiniFooter />
+      <MiniClosingBookend />
       {/* ?axis=1 only — module loads only when that query is present */}
       <RightObjectAxisDebugGate />
     </>

@@ -5,8 +5,7 @@ import ApproachSection from "@/components/home/approach/ApproachSection";
 import SystemGraphic from "../components/blocks/mini/SystemGraphic";
 import MiniPerceptionLayer from "../components/blocks/mini/MiniPerceptionLayer";
 import HomeWorkPreview from "@/components/work-preview/HomeWorkPreview";
-import MiniFinalCTA from "../components/blocks/mini/MiniFinalCTA";
-import MiniFooter from "../components/blocks/mini/MiniFooter";
+import MiniClosingBookend from "../components/blocks/mini/MiniClosingBookend";
 
 import type { Metadata } from "next";
 
@@ -29,9 +28,8 @@ export default function MiniHome() {
         <SystemGraphic />
         <MiniPerceptionLayer />
         <HomeWorkPreview />
-        <MiniFinalCTA />
       </main>
-      <MiniFooter />
+      <MiniClosingBookend />
     </>
   );
 }
