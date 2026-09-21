@@ -3,8 +3,9 @@
 import {
   HomeHeroCta,
   HomeHeroProvider,
-  HomeHeroVisual,
 } from "@/components/home/hero-system";
+
+import MiniNextStepCube from "./MiniNextStepCube";
 
 export type MiniMidPageCtaCopy = {
   eyebrow: string;
@@ -34,9 +35,9 @@ export default function MiniMidPageCta({
             <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#D1A45F]">
               {copy.eyebrow}
             </p>
-           <h2 className="home-bridge-heading mt-5 max-w-[18ch]">
-  {copy.headline}
-</h2>
+            <h2 className="home-bridge-heading mt-5 max-w-[18ch]">
+              {copy.headline}
+            </h2>
             <p className="mt-5 max-w-[48ch] text-sm leading-6 text-white/60 sm:text-base sm:leading-7">
               {copy.support}
             </p>
@@ -45,14 +46,8 @@ export default function MiniMidPageCta({
             </div>
           </div>
 
-          <div
-            className="relative h-[260px] sm:h-[320px] lg:h-[400px]"
-            data-hero-edge-field
-          >
-            <HomeHeroVisual
-              className="relative h-full w-full opacity-70"
-              fieldVariant="desktop"
-            />
+          <div className="relative h-[260px] sm:h-[320px] lg:h-[400px]">
+            <MiniNextStepCube className="relative h-full w-full" />
           </div>
         </div>
       </HomeHeroProvider>
