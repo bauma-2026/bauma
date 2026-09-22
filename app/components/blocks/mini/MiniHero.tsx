@@ -7,8 +7,6 @@ import {
   HomeHeroProvider,
 } from "@/components/home/hero-system";
 
-import HeroRoadPath from "./HeroRoadPath";
-
 export type MiniHeroCopy = {
   eyebrow: string;
   line1: string;
@@ -43,9 +41,8 @@ export default function MiniHero({ copy = DEFAULT_COPY }: { copy?: MiniHeroCopy 
       data-hero-edge-hero
     >
       {/*
-        Image + path share one crop so the locked ROAD_PATH_D stays on the
-        asphalt. Mobile only: same 1.12 scale, origin nudged down and a
-        small upward shift so the horizon sits higher and pale sky is reduced.
+        Mobile only: 1.12 scale, origin nudged down and a small upward shift
+        so the horizon sits higher and pale sky is reduced.
       */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 max-lg:origin-[50%_76%] max-lg:scale-[1.12] max-lg:-translate-y-[3%]">
@@ -71,11 +68,6 @@ export default function MiniHero({ copy = DEFAULT_COPY }: { copy?: MiniHeroCopy 
         aria-hidden="true"
         className="bauma-hero-mobile-readability pointer-events-none absolute inset-0 z-[1] lg:hidden"
       />
-      <div className="pointer-events-none absolute inset-0 z-[2] overflow-hidden">
-        <div className="absolute inset-0 max-lg:origin-[50%_76%] max-lg:scale-[1.12] max-lg:-translate-y-[3%]">
-          <HeroRoadPath />
-        </div>
-      </div>
       <HomeHeroProvider>
         <div className="mini-page-rail bauma-hero-rail relative z-10">
           <div className="relative z-10" data-hero-copy>

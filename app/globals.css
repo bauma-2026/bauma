@@ -28,40 +28,6 @@ body {
   fill-opacity: 0.02 !important;
 }
 
-/* Reveal mask for the hero road path.
-   Default / first-paint is fully HIDDEN (`dashoffset` past path length)
-   so there is no flash of the finished line and no round-cap fragment
-   at the foreground endpoint. `prefers-reduced-motion: reduce` overrides
-   to a fully drawn static path. Motion users then draw 0 → 100%. */
-.bauma-hero-road-reveal {
-  stroke-dasharray: 1000;
-  stroke-dashoffset: 1024;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .bauma-hero-road-reveal {
-    stroke-dashoffset: 0;
-    animation: none;
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .bauma-hero-road-reveal {
-    /* Calm start, even spatial growth, natural settle — not a snap ease-out wipe. */
-    animation: baumaHeroRoadPathDraw 2300ms cubic-bezier(0.37, 0, 0.63, 1) both;
-  }
-}
-
-@keyframes baumaHeroRoadPathDraw {
-  from {
-    stroke-dashoffset: 1024;
-  }
-
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
 /* Mobile-only hero readability: light final correction. */
 .bauma-hero-mobile-readability {
   background-image: linear-gradient(
