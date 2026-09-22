@@ -20,22 +20,6 @@ type MiniResponsivePlaneProps = {
   variant?: "desktop" | "mobile";
 };
 
-/**
- * Approved P1 interaction physics (Visual Layer lab → production).
- * Impulse → settle open; asymmetric release. Geometry amplitude unchanged.
- */
-const P1 = {
-  openImpulseMs: 190,
-  openSettleMs: 340,
-  openImpulseTarget: 0.88,
-  attackPow: 4.2,
-  settlePow: 1.55,
-  releaseKick: 0.18,
-  releaseDampMs: 380,
-  releasePow: 2.4,
-  lagMs: { amber: 22, rear: 40, connectors: 58 },
-} as const;
-
 /** Front activation Variant B — locked. */
 const FRONT_B = { rest: 0.35, peak: 0.6, hold: 0.55 } as const;
 
@@ -106,19 +90,29 @@ const MOBILE_SCROLL_VEL_CLAMP = 0.011;
 const MOBILE_SCROLL_VEL_DAMP = 0.93;
 const MOBILE_SCROLL_RETURN_K = 0.11;
 
-/** Damped spring after drag release — u returns to 0 (slightly under-critical). */
-const MOBILE_RELEASE_SPRING_STIFFNESS = 30;
-const MOBILE_RELEASE_SPRING_DAMPING = 8.6;
+/** Damped spring after drag release — slightly slower than first mobile pass. */
+const MOBILE_RELEASE_SPRING_STIFFNESS = 24;
+const MOBILE_RELEASE_SPRING_DAMPING = 8.3;
 const MOBILE_RELEASE_SPRING_SETTLE_EPSILON = 0.0035;
 const MOBILE_RELEASE_SPRING_VEL_EPSILON = 0.0008;
 
-/** ~half hit width for 0 → MOBILE_DIRECT_OPEN_MAX travel. */
-const MOBILE_DRAG_WIDTH_FRACTION = 0.48;
+/** Hit-width fraction for 0 → MOBILE_DIRECT_OPEN_MAX travel. Smaller = more sensitive. */
+const MOBILE_DRAG_WIDTH_FRACTION = 0.38;
 
 const MOBILE_SCROLL_MQ = "(max-width: 1023px)";
 
 /** One restrained open→close breath when the object crosses the viewport mid-band. */
-const MOBILE_PASS_BY_PEAK = 0.2;
+const MOBILE_PASS_BY_PEAK = 0.34;
+
+/**
+ * Pass-by envelope (independent of drag release spring).
+ * Smoothstep open and close — same character.
+ * Open/hold locked: 680 / 80.
+ * Close: A 860 / B 880 (applied) / C 900.
+ */
+const MOBILE_PASS_BY_OPEN_MS = 680;
+const MOBILE_PASS_BY_HOLD_MS = 80;
+const MOBILE_PASS_BY_CLOSE_MS = 880;
 
 /** Object center enters band at 45–65% viewport height; re-arm outside 40–70%. */
 const MOBILE_PASS_BY_ENTER_TOP_RATIO = 0.45;
@@ -132,7 +126,142 @@ const MOBILE_PASS_BY_EXIT_BOTTOM_RATIO = 0.7;
  */
 const MOBILE_SCROLL_VELOCITY_NUDGE_ENABLED = false;
 
+type Quad = {
+  tl: readonly [number, number];
+  tr: readonly [number, number];
+  br: readonly [number, number];
+  bl: readonly [number, number];
+};
+
+type RearSpan = {
+  closed: Quad;
+  open: Quad;
+};
+
+/**
+ * Mobile rear cassette: one closed→open coordinate span.
+ * Closed ≈ former B rest-tuck (−13, −5) baked into points.
+ * Open = original rear + approved P1 amplitude (8, 7) at u=1.
+ * Connectors use the same interpolated TR / BL corners.
+ */
+const MOBILE_REAR_SPAN: RearSpan = {
+  closed: {
+    tl: [63, 79],
+    tr: [293, 101],
+    br: [267, 251],
+    bl: [49, 225],
+  },
+  open: {
+    tl: [84, 91],
+    tr: [314, 113],
+    br: [288, 263],
+    bl: [70, 237],
+  },
+};
+
 type MobilePassByZone = "above" | "in" | "below";
+type PassByPhase = "open" | "hold" | "close";
+type PassByEnvelope = {
+  phase: PassByPhase;
+  phaseStartedAt: number;
+  fromU: number;
+  peakU: number;
+};
+
+function easeInOutSmooth(t: number) {
+  const x = clamp01(t);
+  return x * x * (3 - 2 * x);
+}
+
+function sampleBreathEnvelope(
+  env: PassByEnvelope,
+  now: number,
+  openMs: number,
+  holdMs: number,
+  closeMs: number,
+) {
+  const elapsed = now - env.phaseStartedAt;
+
+  if (env.phase === "open") {
+    const t = elapsed / openMs;
+    const u =
+      env.fromU + (env.peakU - env.fromU) * easeInOutSmooth(Math.min(1, t));
+    if (t >= 1) {
+      return {
+        u: env.peakU,
+        next: {
+          ...env,
+          phase: "hold" as const,
+          phaseStartedAt: now,
+          fromU: env.peakU,
+        },
+      };
+    }
+    return { u, next: env };
+  }
+
+  if (env.phase === "hold") {
+    if (elapsed >= holdMs) {
+      return {
+        u: env.peakU,
+        next: {
+          ...env,
+          phase: "close" as const,
+          phaseStartedAt: now,
+          fromU: env.peakU,
+        },
+      };
+    }
+    return { u: env.peakU, next: env };
+  }
+
+  const t = elapsed / closeMs;
+  const u = env.fromU * (1 - easeInOutSmooth(Math.min(1, t)));
+  if (t >= 1) {
+    return { u: 0, next: null };
+  }
+  return { u, next: env };
+}
+
+function samplePassByEnvelope(env: PassByEnvelope, now: number) {
+  return sampleBreathEnvelope(
+    env,
+    now,
+    MOBILE_PASS_BY_OPEN_MS,
+    MOBILE_PASS_BY_HOLD_MS,
+    MOBILE_PASS_BY_CLOSE_MS,
+  );
+}
+
+type HoverTween = {
+  fromU: number;
+  toU: number;
+  durationMs: number;
+  startedAt: number;
+};
+
+function sampleHoverTween(tween: HoverTween, now: number) {
+  const t = (now - tween.startedAt) / tween.durationMs;
+  const eased = easeInOutSmooth(Math.min(1, t));
+  return {
+    u: tween.fromU + (tween.toU - tween.fromU) * eased,
+    done: t >= 1,
+  };
+}
+
+/** Desktop hover — same family as mobile pass-by, full open geometry unchanged. */
+const DESKTOP_HOVER_OPEN_MS = 580;
+const DESKTOP_HOVER_CLOSE_MS = 880;
+
+/** One quiet acknowledgement when the desktop object first enters the mid-band. */
+const DESKTOP_SCROLL_SIGNAL_PEAK = 0.18;
+const DESKTOP_SCROLL_SIGNAL_OPEN_MS = 680;
+const DESKTOP_SCROLL_SIGNAL_HOLD_MS = 70;
+const DESKTOP_SCROLL_SIGNAL_CLOSE_MS = 880;
+const DESKTOP_SIGNAL_ENTER_TOP_RATIO = 0.45;
+const DESKTOP_SIGNAL_ENTER_BOTTOM_RATIO = 0.65;
+const DESKTOP_SIGNAL_EXIT_TOP_RATIO = 0.4;
+const DESKTOP_SIGNAL_EXIT_BOTTOM_RATIO = 0.7;
 
 const DESKTOP_P1_CONNECTORS = {
   topX2: 344,
@@ -181,6 +310,23 @@ type P1ConnectorEndpoints = {
   botY2Open: number;
 };
 
+function lerp(a: number, b: number, t: number) {
+  return a + (b - a) * t;
+}
+
+function lerpQuad(closed: Quad, open: Quad, u: number): Quad {
+  return {
+    tl: [lerp(closed.tl[0], open.tl[0], u), lerp(closed.tl[1], open.tl[1], u)],
+    tr: [lerp(closed.tr[0], open.tr[0], u), lerp(closed.tr[1], open.tr[1], u)],
+    br: [lerp(closed.br[0], open.br[0], u), lerp(closed.br[1], open.br[1], u)],
+    bl: [lerp(closed.bl[0], open.bl[0], u), lerp(closed.bl[1], open.bl[1], u)],
+  };
+}
+
+function quadPoints(q: Quad) {
+  return `${q.tl[0]},${q.tl[1]} ${q.tr[0]},${q.tr[1]} ${q.br[0]},${q.br[1]} ${q.bl[0]},${q.bl[1]}`;
+}
+
 function applyP1Open(
   targets: P1ApplyTargets,
   connectors: P1ConnectorEndpoints,
@@ -190,6 +336,7 @@ function applyP1Open(
   uAmber: number,
   uRear: number,
   uConn: number,
+  rearSpan?: RearSpan,
 ) {
   if (targets.front) {
     targets.front.setAttribute(
@@ -210,7 +357,23 @@ function applyP1Open(
     targets.mainGroup.style.transform = `translate(${mainX}px, ${mainY}px) rotate(${mainR}deg)`;
   }
 
-  if (targets.rearPose) {
+  if (rearSpan) {
+    const rear = lerpQuad(rearSpan.closed, rearSpan.open, uRear);
+    if (targets.rearPose) {
+      targets.rearPose.style.transform = "translate(0px, 0px)";
+    }
+    if (targets.rearPoly) {
+      targets.rearPoly.setAttribute("points", quadPoints(rear));
+    }
+    if (targets.connTop) {
+      targets.connTop.setAttribute("x2", String(rear.tr[0]));
+      targets.connTop.setAttribute("y2", String(rear.tr[1]));
+    }
+    if (targets.connBot) {
+      targets.connBot.setAttribute("x2", String(rear.bl[0]));
+      targets.connBot.setAttribute("y2", String(rear.bl[1]));
+    }
+  } else if (targets.rearPose) {
     targets.rearPose.style.transform = `translate(${8 * uRear}px, ${7 * uRear}px)`;
   }
   if (targets.rearPoly) {
@@ -238,7 +401,7 @@ function applyP1Open(
     );
   }
 
-  if (targets.connTop) {
+  if (!rearSpan && targets.connTop) {
     targets.connTop.setAttribute(
       "x2",
       String(connectors.topX2 + (connectors.topX2Open - connectors.topX2) * uConn),
@@ -248,7 +411,7 @@ function applyP1Open(
       String(connectors.topY2 + (connectors.topY2Open - connectors.topY2) * uConn),
     );
   }
-  if (targets.connBot) {
+  if (!rearSpan && targets.connBot) {
     targets.connBot.setAttribute(
       "x2",
       String(connectors.botX2 + (connectors.botX2Open - connectors.botX2) * uConn),
@@ -269,12 +432,16 @@ function resetP1ClosedPose(
   edgeOpacityBase: number,
   rearStroke: string,
   frontStrokeRest: string,
+  rearSpan?: RearSpan,
 ) {
   if (targets.mainGroup) {
     targets.mainGroup.style.transform = "translate(1px, 0) rotate(-1deg)";
   }
   if (targets.rearPose) {
     targets.rearPose.style.transform = "translate(0, 0)";
+  }
+  if (rearSpan && targets.rearPoly) {
+    targets.rearPoly.setAttribute("points", quadPoints(rearSpan.closed));
   }
   if (targets.front) {
     targets.front.setAttribute("stroke", frontStrokeRest);
@@ -299,12 +466,24 @@ function resetP1ClosedPose(
     targets.edgeStroke.style.strokeOpacity = String(edgeOpacityBase);
   }
   if (targets.connTop) {
-    targets.connTop.setAttribute("x2", String(connectors.topX2));
-    targets.connTop.setAttribute("y2", String(connectors.topY2));
+    targets.connTop.setAttribute(
+      "x2",
+      String(rearSpan ? rearSpan.closed.tr[0] : connectors.topX2),
+    );
+    targets.connTop.setAttribute(
+      "y2",
+      String(rearSpan ? rearSpan.closed.tr[1] : connectors.topY2),
+    );
   }
   if (targets.connBot) {
-    targets.connBot.setAttribute("x2", String(connectors.botX2));
-    targets.connBot.setAttribute("y2", String(connectors.botY2));
+    targets.connBot.setAttribute(
+      "x2",
+      String(rearSpan ? rearSpan.closed.bl[0] : connectors.botX2),
+    );
+    targets.connBot.setAttribute(
+      "y2",
+      String(rearSpan ? rearSpan.closed.bl[1] : connectors.botY2),
+    );
   }
   for (const line of targets.extraLines) {
     if (line) line.style.opacity = "0";
@@ -327,8 +506,6 @@ type AmbientBlendTransition = {
   startedAt: number;
   duration: number;
 };
-
-type InteractionMode = "rest" | "open" | "release";
 
 const TWO_PI = Math.PI * 2;
 
@@ -355,41 +532,6 @@ function sampleAmbientBlend(
   const eased = progress * progress * (3 - 2 * progress);
 
   return transition.from + (transition.to - transition.from) * eased;
-}
-
-function openProgress(elapsed: number) {
-  if (elapsed <= 0) return 0;
-  if (elapsed < P1.openImpulseMs) {
-    const t = elapsed / P1.openImpulseMs;
-    return P1.openImpulseTarget * (1 - (1 - t) ** P1.attackPow);
-  }
-  const t = clamp01((elapsed - P1.openImpulseMs) / P1.openSettleMs);
-  const settled = 1 - (1 - t) ** P1.settlePow;
-  return P1.openImpulseTarget + (1 - P1.openImpulseTarget) * settled;
-}
-
-/** Immediate disengage kick, then damped return — not entry rewind. */
-function releaseProgress(from: number, elapsed: number) {
-  if (elapsed <= 0) return from;
-  const kicked = Math.max(0, from - P1.releaseKick);
-  const t = clamp01(elapsed / P1.releaseDampMs);
-  const ease = 1 - (1 - t) ** P1.releasePow;
-  return kicked * (1 - ease);
-}
-
-/** Map a current u onto the open curve so re-entry continues without snap. */
-function openElapsedForU(targetU: number) {
-  if (targetU <= 0) return 0;
-  const span = P1.openImpulseMs + P1.openSettleMs;
-  if (targetU >= 1) return span;
-  let lo = 0;
-  let hi = span;
-  for (let i = 0; i < 24; i++) {
-    const mid = (lo + hi) / 2;
-    if (openProgress(mid) < targetU) lo = mid;
-    else hi = mid;
-  }
-  return (lo + hi) / 2;
 }
 
 function softFrontOpacity(u: number) {
@@ -657,9 +799,12 @@ function DesktopPlane({
     amplitudeGain: 1,
   });
 
-  const modeRef = useRef<InteractionMode>("rest");
-  const modeStartedRef = useRef(0);
-  const releaseFromRef = useRef(1);
+  const uRef = useRef(0);
+  const hoveringRef = useRef(false);
+  const hoverTweenRef = useRef<HoverTween | null>(null);
+  const signalRef = useRef<PassByEnvelope | null>(null);
+  const signalZoneRef = useRef<MobilePassByZone | null>(null);
+  const signalCanTriggerRef = useRef(true);
   const physicsRafRef = useRef<number | null>(null);
 
   const mainGroupRef = useRef<SVGGElement>(null);
@@ -690,7 +835,12 @@ function DesktopPlane({
 
   useEffect(() => {
     if (!interactive) {
-      modeRef.current = "rest";
+      hoveringRef.current = false;
+      hoverTweenRef.current = null;
+      signalRef.current = null;
+      signalZoneRef.current = null;
+      signalCanTriggerRef.current = true;
+      uRef.current = 0;
       resetP1ClosedPose(
         p1Targets(),
         DESKTOP_P1_CONNECTORS,
@@ -701,66 +851,120 @@ function DesktopPlane({
       return;
     }
 
-    const apply = (
-      uFront: number,
-      uAmber: number,
-      uRear: number,
-      uConn: number,
-    ) => {
+    const applyU = (u: number) => {
       applyP1Open(
         p1Targets(),
         DESKTOP_P1_CONNECTORS,
         0.21,
         desktopStrokes.rear,
-        uFront,
-        uAmber,
-        uRear,
-        uConn,
+        u,
+        u,
+        u,
+        u,
+      );
+      if (svgRef.current) {
+        svgRef.current.setAttribute("data-vl-u", u.toFixed(3));
+      }
+    };
+
+    const signalEnterZone = (centerY: number, vh: number): MobilePassByZone => {
+      if (centerY < vh * DESKTOP_SIGNAL_ENTER_TOP_RATIO) return "above";
+      if (centerY > vh * DESKTOP_SIGNAL_ENTER_BOTTOM_RATIO) return "below";
+      return "in";
+    };
+
+    const signalOutsideExit = (centerY: number, vh: number) => {
+      return (
+        centerY < vh * DESKTOP_SIGNAL_EXIT_TOP_RATIO ||
+        centerY > vh * DESKTOP_SIGNAL_EXIT_BOTTOM_RATIO
       );
     };
 
+    const updateScrollSignal = (now: number) => {
+      const el = svgRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      if (rect.height <= 0) return;
+
+      const centerY = rect.top + rect.height / 2;
+      const vh = window.innerHeight;
+      const zone = signalEnterZone(centerY, vh);
+
+      if (signalZoneRef.current === null) {
+        signalZoneRef.current = zone;
+        if (zone === "in") signalCanTriggerRef.current = false;
+        return;
+      }
+
+      if (signalOutsideExit(centerY, vh) && signalRef.current == null) {
+        signalCanTriggerRef.current = true;
+        svgRef.current?.removeAttribute("data-vl-signal");
+      }
+
+      const hoverLocked =
+        hoveringRef.current || hoverTweenRef.current != null;
+
+      if (
+        !hoverLocked &&
+        signalRef.current == null &&
+        signalCanTriggerRef.current &&
+        signalZoneRef.current !== "in" &&
+        zone === "in"
+      ) {
+        signalRef.current = {
+          phase: "open",
+          phaseStartedAt: now,
+          fromU: uRef.current,
+          peakU: DESKTOP_SCROLL_SIGNAL_PEAK,
+        };
+        signalCanTriggerRef.current = false;
+        svgRef.current?.setAttribute("data-vl-signal", "1");
+      }
+
+      signalZoneRef.current = zone;
+    };
+
     const tick = (now: number) => {
-      const mode = modeRef.current;
-      const elapsed = now - modeStartedRef.current;
+      let mode = "rest";
+      const hoverTween = hoverTweenRef.current;
 
-      let uFront = 0;
-      let uAmber = 0;
-      let uRear = 0;
-      let uConn = 0;
-
-      if (mode === "rest") {
-        uFront = uAmber = uRear = uConn = 0;
-      } else if (mode === "open") {
-        uFront = openProgress(elapsed);
-        uAmber = openProgress(Math.max(0, elapsed - P1.lagMs.amber));
-        uRear = openProgress(Math.max(0, elapsed - P1.lagMs.rear));
-        uConn = openProgress(Math.max(0, elapsed - P1.lagMs.connectors));
-      } else {
-        const base = releaseProgress(releaseFromRef.current, elapsed);
-        uFront = base;
-        uAmber = releaseProgress(
-          releaseFromRef.current,
-          Math.max(0, elapsed - 12),
+      if (hoverTween) {
+        const sampled = sampleHoverTween(hoverTween, now);
+        uRef.current = Math.min(1, Math.max(0, sampled.u));
+        mode = hoverTween.toU > hoverTween.fromU ? "hover-open" : "hover-close";
+        if (sampled.done) {
+          uRef.current = hoverTween.toU;
+          hoverTweenRef.current = null;
+          if (hoverTween.toU <= 0) mode = "rest";
+          else mode = "hover-open";
+        }
+      } else if (signalRef.current && !hoveringRef.current) {
+        const sampled = sampleBreathEnvelope(
+          signalRef.current,
+          now,
+          DESKTOP_SCROLL_SIGNAL_OPEN_MS,
+          DESKTOP_SCROLL_SIGNAL_HOLD_MS,
+          DESKTOP_SCROLL_SIGNAL_CLOSE_MS,
         );
-        uRear = releaseProgress(
-          releaseFromRef.current,
-          Math.max(0, elapsed - 28),
-        );
-        uConn = releaseProgress(
-          releaseFromRef.current,
-          Math.max(0, elapsed - 40),
-        );
-        if (base < 0.004 && uRear < 0.004) {
-          modeRef.current = "rest";
-          uFront = uAmber = uRear = uConn = 0;
-          setResolved(false);
+        uRef.current = Math.min(1, Math.max(0, sampled.u));
+        signalRef.current = sampled.next;
+        mode = "signal";
+        if (sampled.next == null) {
+          uRef.current = 0;
+          mode = "rest";
+          svgRef.current?.removeAttribute("data-vl-signal");
         }
       }
 
-      apply(uFront, uAmber, uRear, uConn);
+      updateScrollSignal(now);
+      if (signalRef.current && hoverTweenRef.current == null && !hoveringRef.current) {
+        if (mode === "rest") mode = "signal";
+      }
+
+      const u = uRef.current;
+      applyU(u);
       if (svgRef.current) {
-        svgRef.current.setAttribute("data-vl-u", uFront.toFixed(3));
-        svgRef.current.setAttribute("data-vl-mode", modeRef.current);
+        svgRef.current.setAttribute("data-vl-mode", mode);
       }
       physicsRafRef.current = requestAnimationFrame(tick);
     };
@@ -776,37 +980,29 @@ function DesktopPlane({
 
   const handleActivate = () => {
     if (!interactive) return;
-    const now = performance.now();
-    let current = 0;
-    if (modeRef.current === "open") {
-      current = openProgress(now - modeStartedRef.current);
-    } else if (modeRef.current === "release") {
-      current = releaseProgress(
-        releaseFromRef.current,
-        now - modeStartedRef.current,
-      );
-    }
-    modeRef.current = "open";
-    modeStartedRef.current = now - openElapsedForU(current);
+    hoveringRef.current = true;
+    signalRef.current = null;
+    svgRef.current?.removeAttribute("data-vl-signal");
+    hoverTweenRef.current = {
+      fromU: uRef.current,
+      toU: 1,
+      durationMs: DESKTOP_HOVER_OPEN_MS,
+      startedAt: performance.now(),
+    };
     setResolved(true);
   };
 
   const handleDeactivate = () => {
     if (!interactive) return;
-    const now = performance.now();
-    let current = 0;
-    if (modeRef.current === "open") {
-      current = openProgress(now - modeStartedRef.current);
-    } else if (modeRef.current === "release") {
-      current = releaseProgress(
-        releaseFromRef.current,
-        now - modeStartedRef.current,
-      );
-    }
-    releaseFromRef.current = Math.max(current, 0.2);
-    modeRef.current = "release";
-    modeStartedRef.current = now;
-    // Ambient return begins on pointer leave; pose damps via release curve.
+    hoveringRef.current = false;
+    signalRef.current = null;
+    svgRef.current?.removeAttribute("data-vl-signal");
+    hoverTweenRef.current = {
+      fromU: uRef.current,
+      toU: 0,
+      durationMs: DESKTOP_HOVER_CLOSE_MS,
+      startedAt: performance.now(),
+    };
     setResolved(false);
   };
 
@@ -1097,6 +1293,7 @@ function MobilePlane({
     let passByZone: MobilePassByZone | null = null;
     let passByCanTrigger = true;
     let passBySuppressAfterDrag = false;
+    let passByEnvelope: PassByEnvelope | null = null;
 
     const passByEnterZone = (centerY: number, vh: number): MobilePassByZone => {
       const top = vh * MOBILE_PASS_BY_ENTER_TOP_RATIO;
@@ -1116,6 +1313,7 @@ function MobilePlane({
       passByZone = null;
       passByCanTrigger = true;
       passBySuppressAfterDrag = false;
+      passByEnvelope = null;
       svgRef.current?.removeAttribute("data-vl-passby");
     };
 
@@ -1148,23 +1346,26 @@ function MobilePlane({
         return;
       }
 
-      if (passByOutsideExitBand(centerY, vh)) {
+      if (passByOutsideExitBand(centerY, vh) && passByEnvelope == null) {
         passByCanTrigger = true;
         passBySuppressAfterDrag = false;
         svgRef.current?.removeAttribute("data-vl-passby");
       }
 
       if (
+        passByEnvelope == null &&
         passByCanTrigger &&
         !passBySuppressAfterDrag &&
         passByZone !== "in" &&
         zone === "in"
       ) {
         resetScrollOpenNudge();
-        releaseURef.current = clampMobileOpen(
-          Math.max(releaseURef.current, MOBILE_PASS_BY_PEAK),
-        );
-        releaseVelURef.current = 0;
+        passByEnvelope = {
+          phase: "open",
+          phaseStartedAt: performance.now(),
+          fromU: clampMobileOpen(releaseURef.current),
+          peakU: MOBILE_PASS_BY_PEAK,
+        };
         passByCanTrigger = false;
         svgRef.current?.setAttribute("data-vl-passby", "1");
       }
@@ -1205,6 +1406,7 @@ function MobilePlane({
         uAmber,
         uRear,
         uConn,
+        MOBILE_REAR_SPAN,
       );
       if (svgRef.current) {
         svgRef.current.setAttribute("data-vl-u", openProgress.toFixed(3));
@@ -1237,9 +1439,18 @@ function MobilePlane({
 
       if (drag == null && debugOpenProgressRef.current == null) {
         if (prefersReducedMotionRef.current) {
+          passByEnvelope = null;
           if (releaseURef.current > 0) {
             releaseURef.current = 0;
             releaseVelURef.current = 0;
+          }
+        } else if (passByEnvelope) {
+          const sampled = samplePassByEnvelope(passByEnvelope, now);
+          releaseURef.current = clampMobileOpen(sampled.u);
+          releaseVelURef.current = 0;
+          passByEnvelope = sampled.next;
+          if (passByEnvelope == null) {
+            svgRef.current?.removeAttribute("data-vl-passby");
           }
         } else if (releaseSpringActive()) {
           const u = releaseURef.current;
@@ -1269,6 +1480,7 @@ function MobilePlane({
         !prefersReducedMotionRef.current &&
         ambientEnabledRef.current &&
         drag == null &&
+        passByEnvelope == null &&
         !releaseSpringActive() &&
         debugOpenProgressRef.current == null;
 
@@ -1301,6 +1513,7 @@ function MobilePlane({
         !sectionVisibleRef.current ||
         prefersReducedMotionRef.current ||
         drag != null ||
+        passByEnvelope != null ||
         releaseSpringActive() ||
         debugOpenProgressRef.current != null
       ) {
@@ -1369,6 +1582,8 @@ function MobilePlane({
       const startU = currentOpenProgress();
       resetScrollOpenNudge();
       resetReleaseSpring();
+      passByEnvelope = null;
+      svgRef.current?.removeAttribute("data-vl-passby");
       passBySuppressAfterDrag = true;
       passByCanTrigger = false;
 
@@ -1434,6 +1649,7 @@ function MobilePlane({
       0.26,
       mobileStrokes.rear,
       mobileFrontRest,
+      MOBILE_REAR_SPAN,
     );
 
     raf = requestAnimationFrame(tick);
@@ -1474,7 +1690,7 @@ function MobilePlane({
           className="absolute bottom-0 left-0 z-30 flex gap-1 rounded bg-black/70 p-1 text-[10px] text-white"
           aria-hidden="true"
         >
-          {([0, 0.5, 0.92] as const).map((u) => (
+          {([0, 0.2, 0.5, 0.92] as const).map((u) => (
             <button
               key={u}
               type="button"
@@ -1548,7 +1764,7 @@ function MobilePlane({
               >
                 <polygon
                   ref={rearPolyRef}
-                  points="76,84 306,106 280,256 62,230"
+                  points="63,79 293,101 267,251 49,225"
                   fill={MINI_OBJECT_FILL.rear}
                   stroke={mobileStrokes.rear}
                 />
@@ -1612,16 +1828,16 @@ function MobilePlane({
               ref={connTopRef}
               x1="284"
               y1="89"
-              x2="306"
-              y2="106"
+              x2="293"
+              y2="101"
               stroke="rgba(255,255,255,0.13)"
             />
             <line
               ref={connBotRef}
               x1="48"
               y1="218"
-              x2="62"
-              y2="230"
+              x2="49"
+              y2="225"
               stroke="rgba(255,255,255,0.13)"
             />
           </g>
