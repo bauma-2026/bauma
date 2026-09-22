@@ -150,6 +150,17 @@ const IDLE_TEASE_HOLD_MS = 120;
 const HOVER_YAW_MAX = 0.08;
 const HOVER_PITCH_MAX = 0.048;
 
+/** Mobile-only ambient scroll nudge (radians). Preset B: ~4.0° yaw, ~2.0° pitch caps. */
+const MOBILE_SCROLL_MQ = "(max-width: 1023px)";
+const SCROLL_OFFSET_MAX_RY = (4.0 * Math.PI) / 180;
+const SCROLL_OFFSET_MAX_RX = (2.0 * Math.PI) / 180;
+const SCROLL_IMPULSE_PER_PX = 0.000112;
+const SCROLL_VEL_DAMP_PER_S = 9.5;
+const SCROLL_OFFSET_RETURN_PER_S = 5.8;
+const SCROLL_VEL_CLAMP_RY = 0.014;
+const SCROLL_VEL_CLAMP_RX = 0.0085;
+const SCROLL_PITCH_MIX = 0.26;
+
 const CORNERS: Vec3[] = [
   { x: -EX, y: -EY, z: -EZ },
   { x: EX, y: -EY, z: -EZ },
@@ -590,6 +601,40 @@ export default function MiniNextStepCube({
     let lastIdleTease: IdleTeaseName | null = null;
     let startIdleTease = () => {};
 
+    const mobileScrollMq = window.matchMedia(MOBILE_SCROLL_MQ);
+    let isMobile = mobileScrollMq.matches;
+    let scrollOffsetRx = 0;
+    let scrollOffsetRy = 0;
+    let scrollVelRx = 0;
+    let scrollVelRy = 0;
+    let lastScrollY = window.scrollY;
+
+    const resetScrollNudge = () => {
+      scrollOffsetRx = 0;
+      scrollOffsetRy = 0;
+      scrollVelRx = 0;
+      scrollVelRy = 0;
+      lastScrollY = window.scrollY;
+    };
+
+    const onWindowScroll = () => {
+      if (!isMobile || reduced || drag != null) return;
+      const y = window.scrollY;
+      const dy = y - lastScrollY;
+      lastScrollY = y;
+      if (dy === 0) return;
+      scrollVelRy += -dy * SCROLL_IMPULSE_PER_PX;
+      scrollVelRx += dy * SCROLL_IMPULSE_PER_PX * SCROLL_PITCH_MIX;
+      scrollVelRy = clamp(scrollVelRy, -SCROLL_VEL_CLAMP_RY, SCROLL_VEL_CLAMP_RY);
+      scrollVelRx = clamp(scrollVelRx, -SCROLL_VEL_CLAMP_RX, SCROLL_VEL_CLAMP_RX);
+    };
+
+    const syncMobileScroll = () => {
+      isMobile = mobileScrollMq.matches;
+      if (!isMobile || reduced) resetScrollNudge();
+      else lastScrollY = window.scrollY;
+    };
+
     const paint = (rx: number, ry: number) => {
       const pts = CORNERS.map((c) => project(c, rx, ry));
       const ghostPts = CORNERS.map((c) => project(c, rx, ry, SCALE * 1.035));
@@ -643,10 +688,16 @@ export default function MiniNextStepCube({
       hit.setAttribute("height", box.h.toFixed(2));
     };
 
-    const visiblePose = () => ({
-      rx: rxRef.current + idleGain * idleRx + hoverRx,
-      ry: ryRef.current + idleGain * idleRy + hoverRy,
-    });
+    const visiblePose = () => {
+      const scrollRx =
+        isMobile && !reduced && drag == null ? scrollOffsetRx : 0;
+      const scrollRy =
+        isMobile && !reduced && drag == null ? scrollOffsetRy : 0;
+      return {
+        rx: rxRef.current + idleGain * idleRx + hoverRx + scrollRx,
+        ry: ryRef.current + idleGain * idleRy + hoverRy + scrollRy,
+      };
+    };
 
     const applyPose = (rx: number, ry: number) => {
       rxRef.current = rx;
@@ -1321,6 +1372,7 @@ export default function MiniNextStepCube({
         hoverRy = 0;
         hoverTargetRx = 0;
         hoverTargetRy = 0;
+        resetScrollNudge();
         cancelAutonomous(true);
         stopReturn();
         stopTurn();
@@ -1345,6 +1397,7 @@ export default function MiniNextStepCube({
       cancelAutonomous(true);
       if (introCancelledByPointer) draggedAfterIntroCancel = true;
       bakeIdleIntoPose();
+      resetScrollNudge();
       stopReturn();
 
       try {
@@ -1610,6 +1663,10 @@ export default function MiniNextStepCube({
     hit.addEventListener("pointerenter", onPointerEnter);
     hit.addEventListener("pointerleave", onPointerLeave);
 
+    window.addEventListener("scroll", onWindowScroll, { passive: true });
+    mobileScrollMq.addEventListener("change", syncMobileScroll);
+    syncMobileScroll();
+
     const io =
       typeof IntersectionObserver === "undefined"
         ? null
@@ -1651,6 +1708,27 @@ export default function MiniNextStepCube({
       if (drag == null && !reduced) {
         hoverRx += (hoverTargetRx - hoverRx) * hoverK;
         hoverRy += (hoverTargetRy - hoverRy) * hoverK;
+      }
+
+      if (isMobile && !reduced && drag == null) {
+        const velDamp = Math.exp(-SCROLL_VEL_DAMP_PER_S * dt);
+        scrollOffsetRy += scrollVelRy;
+        scrollOffsetRx += scrollVelRx;
+        scrollVelRy *= velDamp;
+        scrollVelRx *= velDamp;
+        const returnK = 1 - Math.exp(-SCROLL_OFFSET_RETURN_PER_S * dt);
+        scrollOffsetRy += (0 - scrollOffsetRy) * returnK;
+        scrollOffsetRx += (0 - scrollOffsetRx) * returnK;
+        scrollOffsetRy = clamp(
+          scrollOffsetRy,
+          -SCROLL_OFFSET_MAX_RY,
+          SCROLL_OFFSET_MAX_RY,
+        );
+        scrollOffsetRx = clamp(
+          scrollOffsetRx,
+          -SCROLL_OFFSET_MAX_RX,
+          SCROLL_OFFSET_MAX_RX,
+        );
       }
 
       if (canAdvanceIdle) {
@@ -1724,7 +1802,21 @@ export default function MiniNextStepCube({
       const accentK = 1 - Math.exp(-dt / accentTau);
       accent += (accentTarget - accent) * accentK;
 
-      if (!interacting || accent > 0.001 || accentTarget > 0.001) {
+      const scrollNudgeActive =
+        isMobile &&
+        !reduced &&
+        drag == null &&
+        (Math.abs(scrollOffsetRx) > 0.00015 ||
+          Math.abs(scrollOffsetRy) > 0.00015 ||
+          Math.abs(scrollVelRx) > 0.00015 ||
+          Math.abs(scrollVelRy) > 0.00015);
+
+      if (
+        !interacting ||
+        accent > 0.001 ||
+        accentTarget > 0.001 ||
+        scrollNudgeActive
+      ) {
         const vis = visiblePose();
         paint(vis.rx, vis.ry);
       }
@@ -1734,6 +1826,8 @@ export default function MiniNextStepCube({
     decayRafRef.current = requestAnimationFrame(tickDecay);
 
     return () => {
+      window.removeEventListener("scroll", onWindowScroll);
+      mobileScrollMq.removeEventListener("change", syncMobileScroll);
       media.removeEventListener("change", syncInteractive);
       hit.removeEventListener("pointerdown", onPointerDown);
       hit.removeEventListener("pointermove", onPointerMove);
@@ -1761,7 +1855,7 @@ export default function MiniNextStepCube({
   return (
     <div
       ref={rootRef}
-      className={className}
+      className={`${className} origin-center max-lg:scale-[1.15]`}
       aria-hidden="true"
       data-next-step-cube
       style={{ userSelect: "none" }}
