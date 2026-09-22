@@ -23,7 +23,7 @@ export default function MiniPerceptionLayer({
   copy?: MiniPerceptionCopy;
 }) {
   return (
-    <section className="relative overflow-hidden border-t border-white/10 bg-[#080808] py-12 text-white sm:py-14 lg:py-20">
+    <section className="relative overflow-hidden border-t border-white/10 bg-[#12100d] py-12 text-white sm:py-14 lg:py-20">
       {/* Desktop proof object */}
       <MiniResponsivePlane
         variant="desktop"
@@ -46,20 +46,16 @@ export default function MiniPerceptionLayer({
             {copy.body}
           </p>
 
-          <div className="mt-6 flex items-center gap-4 text-sm text-white/[0.48] lg:mt-7">
-            <span>{copy.trail[0]}</span>
-            <span>→</span>
-            <span>{copy.trail[1]}</span>
-            <span>→</span>
-            <span>{copy.trail[2]}</span>
-          </div>
+          <p className="mt-6 text-sm text-white/[0.48] lg:mt-7">
+            {copy.trail[0]} → {copy.trail[1]} → {copy.trail[2]}
+          </p>
         </div>
 
         {/* Mobile proof object */}
         <div className="relative mt-8 flex justify-center lg:hidden">
           <MiniResponsivePlane
             variant="mobile"
-            className="pointer-events-none aspect-[360/320] w-[82%] max-w-[340px]"
+            className="pointer-events-auto aspect-[360/320] w-[82%] max-w-[340px]"
           />
         </div>
 
