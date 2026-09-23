@@ -27,13 +27,14 @@ export default function MiniFinalCTA({
 }) {
   return (
     <section
-      id="contact"
       className={
         embedded
           ? "relative z-10 py-14 text-white sm:py-16 lg:py-20"
           : "relative border-t border-white/10 bg-[#0a0a0a] py-14 text-white sm:py-16 lg:py-20"
       }
     >
+      {/* Embedded: the 1px border-t sits on the bookend wrapper directly above. */}
+      <span id="contact" data-anchor-marker aria-hidden="true" />
       <div className="mini-page-rail">
         <div className="mx-auto max-w-[620px] text-center">
           <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/70">

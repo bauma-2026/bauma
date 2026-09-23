@@ -144,10 +144,9 @@ header[data-header-phase="gap"] {
   scroll-margin-top: calc(3.25rem + env(safe-area-inset-top, 0px));
 }
 
-/* Remaining mobile section anchors: clear the 52px header, iPhone safe area,
-   and a small optical gap. #contact clamps at page end on normal viewports. */
+/* #flow mobile anchor: clear the 52px header, iPhone safe area,
+   and a small optical gap. */
 @media (max-width: 1023px) {
-  #contact,
   #flow {
     scroll-margin-top: calc(3.25rem + env(safe-area-inset-top, 0px) + 0.75rem);
   }
