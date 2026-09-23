@@ -2,8 +2,16 @@ export type MiniFinalCtaCopy = {
   eyebrow: string;
   line1: string;
   line2: string;
-  bodyLine1: string;
-  bodyLine2: string;
+  bodyLine1?: string;
+  bodyLine2?: string;
+  /**
+   * Single-string alternative to `bodyLine1`/`bodyLine2`. When set, the body
+   * wraps naturally (no manual break) in a wider column — for copy that
+   * should read as one flowing sentence rather than two forced lines.
+   * Opt-in only: existing callers keep the bodyLine1/bodyLine2 + forced
+   * break behavior unchanged.
+   */
+  body?: string;
   cta: string;
   mailto: string;
 };
@@ -47,12 +55,18 @@ export default function MiniFinalCTA({
             {copy.line2}
           </h2>
 
-          <p className="mx-auto mt-5 max-w-[18rem] text-sm leading-[1.45] text-white/60 sm:max-w-[32rem] sm:text-base sm:leading-[1.5]">
-            {copy.bodyLine1}
-            <br className="hidden sm:block" />
-            <span className="sm:hidden"> </span>
-            {copy.bodyLine2}
-          </p>
+          {copy.body ? (
+            <p className="mx-auto mt-5 max-w-[330px] text-pretty text-sm font-normal leading-[1.5] text-white/60 sm:max-w-[650px] sm:text-base sm:leading-[1.6]">
+              {copy.body}
+            </p>
+          ) : (
+            <p className="mx-auto mt-5 max-w-[18rem] text-sm leading-[1.45] text-white/60 sm:max-w-[32rem] sm:text-base sm:leading-[1.5]">
+              {copy.bodyLine1}
+              <br className="hidden sm:block" />
+              <span className="sm:hidden"> </span>
+              {copy.bodyLine2}
+            </p>
+          )}
           <div className="mt-8 flex justify-center sm:mt-9">
             <a
               href={copy.mailto}
