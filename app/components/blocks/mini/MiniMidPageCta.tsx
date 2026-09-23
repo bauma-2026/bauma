@@ -28,7 +28,7 @@ export default function MiniMidPageCta({
   copy?: MiniMidPageCtaCopy;
 }) {
   return (
-    <section className="overflow-hidden border-t border-white/10 bg-[#0a0a0a] py-16 text-white sm:py-20 lg:py-20">
+    <section className="overflow-hidden border-t border-white/10 bg-[#0f0e0c] py-16 text-white sm:py-20 lg:py-20">
       <HomeHeroProvider>
         <div className="mini-page-rail grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-center lg:gap-14">
           <div className="max-w-[34rem]">

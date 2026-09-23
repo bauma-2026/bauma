@@ -1346,7 +1346,7 @@ export default function SystemGraphic({
 
   return (
     <section
-      className="relative overflow-hidden border-t border-white/10 bg-[#0a0a0a] py-20 text-white sm:py-24 lg:py-28"
+      className="relative overflow-hidden border-t border-white/10 bg-[#0e0e0f] py-20 text-white sm:py-24 lg:py-28"
     >
       <span id="system" data-anchor-marker aria-hidden="true" />
       <div className="mini-page-rail grid min-w-0 gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
