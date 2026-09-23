@@ -1,16 +1,21 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import {
+  hoverFollowCurve,
+  pocketHoverFollowK,
+} from "@/lib/pocketHoverFollow";
 import { MINI_OBJECT_FILL } from "./miniObjectMaterial";
 
 type Vec3 = { x: number; y: number; z: number };
 type Vec2 = { x: number; y: number; z: number };
 
-const VW = 520;
-const VH = 400;
-const CX = 262;
-const CY = 208;
-const SCALE = 102;
+const VW = 170;
+const VH = 170;
+const CX = 85;
+const CY = 85;
+/** Pocket scale — same camera as production cube; frame cropped to the object. Was 102. */
+const SCALE = 76;
 const FOCAL = 3.4;
 const CAMERA_Z = 2.45;
 
@@ -73,7 +78,7 @@ const X_PRE_TURN_HOLD_MS = 105;
 const X_FULL_TURN_DURATION_MS = 820;
 const X_POST_TURN_HOLD_MS = 125;
 
-const HIT_PAD = 22;
+const HIT_PAD = 12;
 
 /** True cube in local space so depth recedes as volume, not a slab. */
 const EX = 1;
@@ -282,14 +287,6 @@ function clamp(value: number, min: number, max: number) {
 function smoothstep(value: number) {
   const t = clamp(value, 0, 1);
   return t * t * (3 - 2 * t);
-}
-
-/** Calm at center, assertive through mid travel, eases into max. */
-function hoverFollowCurve(n: number, ease: number, calm: number) {
-  const s = n < 0 ? -1 : n > 0 ? 1 : 0;
-  const u = clamp(Math.abs(n), 0, 1);
-  const out = 1 - Math.pow(1 - u, ease);
-  return s * (calm * smoothstep(u) + (1 - calm) * out);
 }
 
 /** gb-next MobileCubeScene.applyHorizontalResistance */
@@ -675,10 +672,10 @@ export default function MiniNextStepCube({
         if (!(el instanceof SVGLineElement)) continue;
         const a = ghostPts[ia];
         const b = ghostPts[ib];
-        el.setAttribute("x1", (a.x + 3).toFixed(2));
-        el.setAttribute("y1", (a.y + 2.5).toFixed(2));
-        el.setAttribute("x2", (b.x + 3).toFixed(2));
-        el.setAttribute("y2", (b.y + 2.5).toFixed(2));
+        el.setAttribute("x1", (a.x + 1.6).toFixed(2));
+        el.setAttribute("y1", (a.y + 1.3).toFixed(2));
+        el.setAttribute("x2", (b.x + 1.6).toFixed(2));
+        el.setAttribute("y2", (b.y + 1.3).toFixed(2));
       }
 
       const box = hitBox(pts);
@@ -1703,8 +1700,7 @@ export default function MiniNextStepCube({
         Math.abs(hoverRx) < 0.0008 &&
         Math.abs(hoverRy) < 0.0008;
 
-      const hoverTau = hovering ? 0.08 : 0.16;
-      const hoverK = 1 - Math.exp(-dt / hoverTau);
+      const hoverK = pocketHoverFollowK(dt, hovering);
       if (drag == null && !reduced) {
         hoverRx += (hoverTargetRx - hoverRx) * hoverK;
         hoverRy += (hoverTargetRy - hoverRy) * hoverK;
@@ -1855,7 +1851,7 @@ export default function MiniNextStepCube({
   return (
     <div
       ref={rootRef}
-      className={`${className} origin-center max-lg:scale-[1.15]`}
+      className={`${className} origin-center`}
       aria-hidden="true"
       data-next-step-cube
       style={{ userSelect: "none" }}
@@ -1873,10 +1869,10 @@ export default function MiniNextStepCube({
             <line
               key={`g-${index}`}
               data-ghost={index}
-              x1={restGhost[ia].x + 3}
-              y1={restGhost[ia].y + 2.5}
-              x2={restGhost[ib].x + 3}
-              y2={restGhost[ib].y + 2.5}
+              x1={restGhost[ia].x + 1.6}
+              y1={restGhost[ia].y + 1.3}
+              x2={restGhost[ib].x + 1.6}
+              y2={restGhost[ib].y + 1.3}
               stroke={STROKE.ghost}
               strokeWidth={1}
             />
