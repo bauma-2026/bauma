@@ -67,7 +67,7 @@ export const metadata: Metadata = {
     images: ["/og/bauma-og.png"],
   },
 
-  // Default: non-indexable. Only `/` opts into index,follow in production.
+  // Default: non-indexable. Only `/` and `/en` opt into index,follow in production.
   robots: { index: false, follow: false },
 };
 export default function RootLayout({
