@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter, DM_Serif_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { HASH_LANDING_SCRIPT } from "@/lib/hashLandingScript";
 
 /** latin-ext covers Slovenian č/š/ž in the same next/font preload path as latin. */
 const inter = Inter({
@@ -76,6 +77,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="sl" className={`${inter.variable} ${dmSerif.variable}`}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: HASH_LANDING_SCRIPT }} />
+      </head>
       <body className="min-h-screen font-sans bg-[#080808] text-white">
         {/* subtle background layer */}
         <div className="pointer-events-none fixed inset-0 -z-10">
