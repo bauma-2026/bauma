@@ -34,42 +34,13 @@ const DEFAULT_COPY: MiniDecisionFlowCopy = {
     },
     {
       number: "03",
-      label: "Naslednji korak",
+      label: "Kaj sledi",
       shape: "triangle",
       text: "Uporabnik ves čas ve, kaj naj pogleda, preveri ali naredi naslednje.",
       active: true,
     },
   ],
 };
-
-function ShapeIcon({ shape }: { shape: Shape }) {
-  if (shape === "square") {
-    return (
-      <div className="decision-flow-shape h-[25px] w-[25px] rotate-[8deg] border border-current text-white/[0.19]" />
-    );
-  }
-
-  if (shape === "circle") {
-    return (
-      <div className="decision-flow-shape h-[28px] w-[28px] rounded-full border border-current text-white/[0.16]" />
-    );
-  }
-
-  return (
-    <svg
-      viewBox="0 0 48 48"
-      fill="none"
-      className="decision-flow-shape decision-flow-triangle h-[35px] w-[35px] translate-y-px text-white/20"
-      aria-hidden="true"
-    >
-      <polygon
-        points="24,7 42,39 6,39"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
-    </svg>
-  );
-}
 
 export default function MiniDecisionFlow({
   copy = DEFAULT_COPY,
@@ -82,117 +53,62 @@ export default function MiniDecisionFlow({
       className="scroll-mt-13 overflow-hidden border-t border-white/10 bg-[#0a0a0a] py-14 text-white sm:py-20 lg:py-24"
     >
       <div className="mini-page-rail">
-        <style>{`
-          .decision-flow-card {
-            transition: border-color 240ms cubic-bezier(0.22, 1, 0.36, 1);
-          }
-
-          .decision-flow-number,
-          .decision-flow-shape {
-            transition: color 240ms cubic-bezier(0.22, 1, 0.36, 1);
-          }
-
-          .decision-flow-triangle {
-            transform-origin: center;
-            transition:
-              color 240ms cubic-bezier(0.22, 1, 0.36, 1),
-              transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
-          }
-
-          .decision-flow-card-active {
-            border-color: rgba(209, 164, 95, 0.2);
-          }
-
-          .decision-flow-card-active .decision-flow-number {
-            color: rgba(209, 164, 95, 0.8);
-          }
-
-          .decision-flow-card-active .decision-flow-shape {
-            color: rgba(209, 164, 95, 0.76);
-          }
-
-          @media (hover: hover) {
-            .decision-flow-card:hover {
-              border-color: rgba(209, 164, 95, 0.2);
-            }
-
-            .decision-flow-card:hover .decision-flow-number {
-              color: rgba(209, 164, 95, 0.8);
-            }
-
-            .decision-flow-card:hover .decision-flow-shape {
-              color: rgba(209, 164, 95, 0.76);
-            }
-
-            .decision-flow-card-active:hover .decision-flow-triangle {
-              transform: rotate(90deg);
-            }
-          }
-
-          @media (prefers-reduced-motion: reduce) {
-            .decision-flow-card,
-            .decision-flow-number,
-            .decision-flow-shape,
-            .decision-flow-triangle {
-              transition-duration: 0ms;
-            }
-
-            .decision-flow-card-active:hover .decision-flow-triangle {
-              transform: none;
-            }
-          }
-        `}</style>
         {/* Intro */}
-        <div className="grid gap-8 lg:grid-cols-[0.8fr_1fr] lg:items-end lg:gap-10">
-          <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/60">
-              {copy.eyebrow}
-            </p>
+        <div>
+          <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/60">
+            {copy.eyebrow}
+          </p>
 
-            <h2 className="home-primary-heading mt-4 max-w-[12ch] sm:max-w-[16ch]">
-              {copy.headlineLine1}
-              <br />
-              {copy.headlineLine2}
-            </h2>
+          <h2 className="home-primary-heading mt-4 max-w-[12ch] sm:max-w-[16ch]">
+            {copy.headlineLine1}
+            <br />
+            {copy.headlineLine2}
+          </h2>
 
-            <p className="mt-5 max-w-[48ch] text-base leading-7 text-white/55">
-              {copy.body}
-            </p>
-          </div>
+          <p className="mt-5 max-w-[48ch] text-base leading-7 text-white/55">
+            {copy.body}
+          </p>
         </div>
 
-        {/* Editorial three-part sequence */}
-        <div className="mt-10 grid gap-3 sm:gap-4 lg:mt-12 lg:grid-cols-3">
+        {/* Open three-part sequence — ruled rows on mobile, hairline columns on desktop */}
+        <ol className="mt-10 grid lg:mt-12 lg:grid-cols-3 lg:gap-10">
           {copy.principles.map((principle) => {
             const isActive = principle.active === true || principle.number === "03";
 
             return (
-            <article
-              key={principle.number}
-              aria-current={isActive ? "true" : undefined}
-              className={`decision-flow-card flex h-full flex-col rounded-[10px] border border-white/10 bg-white/[0.01] p-6 sm:p-7 lg:p-8${isActive ? " decision-flow-card-active" : ""}`}
-            >
-              <div className="flex items-center justify-between gap-6">
-                <p className="decision-flow-number text-[12px] font-medium uppercase tracking-[0.18em] text-white/[0.48]">
+              <li
+                key={principle.number}
+                aria-current={isActive ? "step" : undefined}
+                className="relative grid grid-cols-[2.75rem_1fr] items-baseline gap-x-4 border-t border-white/10 py-6 last:pb-0 sm:grid-cols-[3.5rem_1fr] lg:block lg:py-0 lg:pt-7"
+              >
+                <span
+                  aria-hidden="true"
+                  className={`absolute -top-px left-0 h-px w-6 ${
+                    isActive ? "bg-[rgba(209,164,95,0.7)]" : "bg-white/30"
+                  }`}
+                />
+
+                <p
+                  className={`text-[12px] font-medium uppercase tabular-nums tracking-[0.18em] ${
+                    isActive ? "text-[rgba(209,164,95,0.85)]" : "text-white/[0.52]"
+                  }`}
+                >
                   {principle.number}
                 </p>
 
-                <div aria-hidden="true">
-                  <ShapeIcon shape={principle.shape} />
+                <div className="lg:mt-6">
+                  <h3 className="text-base font-medium leading-snug tracking-[-0.015em] text-white/92">
+                    {principle.label}
+                  </h3>
+
+                  <p className="mt-2 max-w-[34ch] text-pretty text-sm leading-[1.6] text-white/55">
+                    {principle.text}
+                  </p>
                 </div>
-              </div>
-
-              <h3 className="mt-7 text-lg font-semibold leading-tight tracking-[-0.02em] text-white/88">
-                {principle.label}
-              </h3>
-
-              <p className="mt-3 text-sm leading-[1.55] text-white/46">
-                {principle.text}
-              </p>
-            </article>
+              </li>
             );
           })}
-        </div>
+        </ol>
       </div>
     </section>
   );
