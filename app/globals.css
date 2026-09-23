@@ -131,12 +131,31 @@ header[data-header-phase="gap"] {
   transform: translateY(-8px);
 }
 
-/* Mobile in-page anchors: clear the 52px header, iPhone safe area,
-   and a small optical gap so eyebrows/headings land inside the viewport.
-   Desktop scroll-margin is left to existing utility classes. */
+/* Nav anchor markers (#approach, #system): zero-height spans at each
+   section's eyebrow, so the visual content start lands one shared optical
+   gap below the fixed 52px header regardless of section padding. */
+[data-anchor-marker] {
+  --anchor-gap: 2rem;
+  display: block;
+  height: 0;
+  scroll-margin-top: calc(3.25rem + env(safe-area-inset-top, 0px) + var(--anchor-gap));
+}
+
+@media (min-width: 640px) {
+  [data-anchor-marker] {
+    --anchor-gap: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  [data-anchor-marker] {
+    --anchor-gap: 3rem;
+  }
+}
+
+/* Remaining mobile section anchors: clear the 52px header, iPhone safe area,
+   and a small optical gap. #contact clamps at page end on normal viewports. */
 @media (max-width: 1023px) {
-  #approach,
-  #system,
   #contact,
   #flow {
     scroll-margin-top: calc(3.25rem + env(safe-area-inset-top, 0px) + 0.75rem);

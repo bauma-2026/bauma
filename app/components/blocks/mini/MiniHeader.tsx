@@ -395,7 +395,8 @@ export default function MiniHeader({
       setHideHeroChrome(heroInView && (scrolledPast || colliding));
 
       sectionIds.forEach((id) => {
-        const section = document.getElementById(id);
+        // Nav ids may sit on a zero-height anchor marker; track its section.
+        const section = document.getElementById(id)?.closest("section");
 
         if (!section) return;
 

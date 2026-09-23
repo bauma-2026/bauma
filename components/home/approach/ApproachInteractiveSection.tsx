@@ -270,7 +270,6 @@ export default function ApproachInteractiveSection({
   return (
     <section
       ref={sectionRef}
-      id="approach"
       data-section="approach-interactive"
       data-ambient-phase={ambientPhase}
       data-ambient-variant={ambientVariant}
@@ -284,6 +283,7 @@ export default function ApproachInteractiveSection({
           onMouseLeave={leaveWholeField}
         >
           <div className="min-w-0 max-w-[420px]">
+            <span id="approach" data-anchor-marker aria-hidden="true" />
             <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/60">
               {copy.eyebrow}
             </p>

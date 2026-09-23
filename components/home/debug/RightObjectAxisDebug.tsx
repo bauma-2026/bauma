@@ -117,7 +117,10 @@ function measureApproach(): ObjectMeasure {
 }
 
 function measureSystem(): ObjectMeasure {
-  const fig = document.querySelector("#system figure");
+  const fig = document
+    .getElementById("system")
+    ?.closest("section")
+    ?.querySelector("figure") ?? null;
   const svgs = [...(fig?.querySelectorAll("svg") ?? [])];
   const svg =
     svgs.find((s) => (s.getAttribute("viewBox") || "").includes("600")) ??
