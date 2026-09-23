@@ -274,8 +274,9 @@ export default function ApproachInteractiveSection({
       data-ambient-phase={ambientPhase}
       data-ambient-variant={ambientVariant}
       data-authority={authority}
-      className="border-t border-white/10 bg-[#080808] py-10 text-white sm:py-12 lg:py-16"
+      className="relative border-t border-white/10 bg-[#080808] py-10 text-white sm:py-12 lg:py-16"
     >
+      <span id="approach" data-anchor-marker aria-hidden="true" />
       <div className="mini-page-rail">
         <div
           data-approach-field
@@ -283,7 +284,6 @@ export default function ApproachInteractiveSection({
           onMouseLeave={leaveWholeField}
         >
           <div className="min-w-0 max-w-[420px]">
-            <span id="approach" data-anchor-marker aria-hidden="true" />
             <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/60">
               {copy.eyebrow}
             </p>

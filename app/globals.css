@@ -131,26 +131,17 @@ header[data-header-phase="gap"] {
   transform: translateY(-8px);
 }
 
-/* Nav anchor markers (#approach, #system): zero-height spans at each
-   section's eyebrow, so the visual content start lands one shared optical
-   gap below the fixed 52px header regardless of section padding. */
+/* Nav anchor markers (#approach, #system): zero-size spans pinned to the
+   section's outer top edge (top: -1px sits on the 1px border-t), so the
+   section itself starts exactly at the bottom of the fixed 52px header and
+   its own padding places the content. Parent section must be positioned. */
 [data-anchor-marker] {
-  --anchor-gap: 2rem;
-  display: block;
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 0;
   height: 0;
-  scroll-margin-top: calc(3.25rem + env(safe-area-inset-top, 0px) + var(--anchor-gap));
-}
-
-@media (min-width: 640px) {
-  [data-anchor-marker] {
-    --anchor-gap: 2.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  [data-anchor-marker] {
-    --anchor-gap: 3rem;
-  }
+  scroll-margin-top: calc(3.25rem + env(safe-area-inset-top, 0px));
 }
 
 /* Remaining mobile section anchors: clear the 52px header, iPhone safe area,

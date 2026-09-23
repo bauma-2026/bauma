@@ -1348,9 +1348,9 @@ export default function SystemGraphic({
     <section
       className="relative overflow-hidden border-t border-white/10 bg-[#0a0a0a] py-20 text-white sm:py-24 lg:py-28"
     >
+      <span id="system" data-anchor-marker aria-hidden="true" />
       <div className="mini-page-rail grid min-w-0 gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
         <div className="min-w-0">
-          <span id="system" data-anchor-marker aria-hidden="true" />
           <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/60">
             {copy.eyebrow}
           </p>
