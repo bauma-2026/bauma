@@ -13,13 +13,11 @@ export type ApproachCopy = {
   }[];
 };
 
-/** Production Approach copy — process heading + short support under it. */
+/** Production Approach copy — aligned to locked V2 sequence. No support line. */
 export const APPROACH_COPY: ApproachCopy = {
   eyebrow: "Pristop",
   headline: "Od nejasnosti",
   headlineSecondary: "do jasne poti.",
-  support:
-    "Najprej odstranimo odvečno, določimo prioritete in obliki damo jasno nalogo.",
   steps: [
     {
       number: "01",
@@ -33,7 +31,7 @@ export const APPROACH_COPY: ApproachCopy = {
     },
     {
       number: "03",
-      title: "Oblika dobi nalogo",
+      title: "Vsak del dobi svojo vlogo",
       text: "Vizual in detajli podprejo razumevanje — ne hrup.",
     },
   ],

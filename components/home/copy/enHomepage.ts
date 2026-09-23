@@ -61,8 +61,6 @@ export const EN_APPROACH: ApproachCopy = {
   eyebrow: "Approach",
   headline: "From uncertainty",
   headlineSecondary: "to a clear path.",
-  support:
-    "First I remove the noise, set priorities, and give form a clear role.",
   steps: [
     {
       number: "01",
@@ -71,12 +69,12 @@ export const EN_APPROACH: ApproachCopy = {
     },
     {
       number: "02",
-      title: "Build the path",
+      title: "Set the path",
       text: "Hierarchy, information order, and a clear transition to the next step.",
     },
     {
       number: "03",
-      title: "Give form a role",
+      title: "Each part gets its role",
       text: "Visuals, details, and the feel of the page support understanding — not noise.",
     },
   ],
