@@ -12,9 +12,10 @@ type Vec2 = { x: number; y: number; z: number };
 
 const VW = 520;
 const VH = 400;
-/** Projection centre, offset so the rest silhouette keeps the previous bbox centre (268, 194.5). */
-const CX = 273;
-const CY = 181.5;
+/** Projection centre, offset so the rest silhouette is centred on the object field's x-axis
+ * and its optical centre sits on the text-group centre (shared Pristop / System placement). */
+const CX = 265;
+const CY = 185.5;
 /** Screen-space pocket size is calibrated by rendered bbox, not vs Pristop SCALE. */
 const SCALE = 102;
 const FOCAL = 3.4;

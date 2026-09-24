@@ -9,7 +9,7 @@ export type FaceFill = "front" | "side" | "rear";
 export type Quad = readonly [Vec3, Vec3, Vec3, Vec3];
 
 export const VIEWBOX = "0 0 280 240";
-export const ORIGIN = { x: 140, y: 126 };
+export const ORIGIN = { x: 140, y: 120 };
 
 /** Pocket bbox target ~160–190px at 1440. Measured in the section, not SCALE. */
 export const SCALE = 72;
