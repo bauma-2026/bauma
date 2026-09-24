@@ -13,7 +13,6 @@ import {
   POCKET_HOVER_YAW_CURVE,
 } from "@/lib/pocketHoverFollow";
 
-import { MINI_OBJECT_FILL, MINI_OBJECT_STROKE, mixHex } from "./miniObjectMaterial";
 import {
   BASE_PITCH,
   BASE_YAW,
@@ -26,21 +25,29 @@ import {
 const STROKE_W = 0.78;
 const STROKE_AMBER = 0.92;
 /**
- * Visual Layer cassette as primary material reference.
- * Cassette front is `#181613` / rear `#161411`. System sits one step lighter.
+ * `sm`+: half-step from the prior System set toward Pocket Cube (`#1b1916 / #181613 / #161411`):
+ * front leads, side and top stay distinct, still quieter than Pocket.
+ * `max-sm`: prior set (`#171512 / #161411`) — fixed 0.78px strokes already carry
+ * more weight at pocket size, so the lifted fills would outweigh Pocket Cube.
+ * Switched in CSS so SSR and first paint pick the right set.
  */
-const CHARCOAL_BG = "#12100d";
 const FILL = {
-  front: mixHex(MINI_OBJECT_FILL.side, MINI_OBJECT_FILL.rear, 0.28),
-  side: MINI_OBJECT_FILL.rear,
-  rear: mixHex(MINI_OBJECT_FILL.rear, CHARCOAL_BG, 0.25),
+  front: "var(--system-fill-front)",
+  side: "var(--system-fill-side)",
+  rear: "#151310",
 } as const;
-/** VL secondary — softer rim than prior 0.31 wire. */
-const SILHOUETTE = MINI_OBJECT_STROKE.secondary;
-/** Interior cuts — quieter than silhouette 0.21, readable on dim displays. */
-const SEAM = "rgba(255,255,255,0.086)";
+const FILL_VARS =
+  "[--system-fill-front:#171512] [--system-fill-side:#161411] sm:[--system-fill-front:#1a1815] sm:[--system-fill-side:#171512]";
+/** Outline by camera depth — near edges carry the volume, rear edges stay quiet. */
+const SILHOUETTE = {
+  front: "rgba(255,255,255,0.3)",
+  mid: "rgba(255,255,255,0.24)",
+  rear: "rgba(255,255,255,0.17)",
+} as const;
+/** Interior cuts — clearly under the rear outline tier, readable on dim displays. */
+const SEAM = "rgba(255,255,255,0.1)";
 /** Rest T-stems (amber carriers) — a step above seams, not yet amber. */
-const CARRIER = "rgba(255,255,255,0.105)";
+const CARRIER = "rgba(255,255,255,0.12)";
 const AMBER = "rgba(209,164,95,1)";
 const AMBER_OPACITY = 0.72;
 const ACTIVATION_EPS = 0.002;
@@ -330,13 +337,13 @@ export default function SystemCubeObject({ className = "" }: SystemCubeObjectPro
         shapeRendering="geometricPrecision"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="h-full w-full overflow-visible"
+        className={`h-full w-full overflow-visible ${FILL_VARS}`}
       >
         {drawn.fills.map((face) => (
           <path
             key={face.id}
             d={face.d}
-            fill={FILL[face.fill]}
+            style={{ fill: FILL[face.fill] }}
             fillOpacity={face.joint ? 0.4 * pose.on : 1}
             stroke="none"
           />
@@ -354,7 +361,7 @@ export default function SystemCubeObject({ className = "" }: SystemCubeObjectPro
           <path
             key={edge.id}
             d={edge.d}
-            stroke={SILHOUETTE}
+            stroke={SILHOUETTE[edge.tier ?? "mid"]}
             strokeWidth={STROKE_W}
             vectorEffect="non-scaling-stroke"
           />

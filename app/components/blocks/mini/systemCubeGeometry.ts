@@ -14,8 +14,8 @@ export const ORIGIN = { x: 140, y: 120 };
 /** Pocket bbox target ~160–190px at 1440. Measured in the section, not SCALE. */
 export const SCALE = 72;
 
-export const BASE_YAW = 0.62;
-export const BASE_PITCH = 0.52;
+export const BASE_YAW = 0.52;
+export const BASE_PITCH = 0.4;
 
 /** Same family as Pristop pocket follow — smaller amplitude. */
 export const FOLLOW_YAW = 0.055;
@@ -65,11 +65,15 @@ export type DrawnFace = {
   joint?: boolean;
 };
 
+export type EdgeTier = "front" | "mid" | "rear";
+
 export type DrawnEdge = {
   id: string;
   d: string;
   z: number;
   role: "silhouette" | "seam";
+  /** Silhouette only — camera depth of the full cube edge the segment lies on. */
+  tier?: EdgeTier;
 };
 
 function quadPath(pts: Vec2[]): string {
@@ -212,6 +216,23 @@ function onCubeOutline(a: Vec3, b: Vec3, eps = 0.002): boolean {
   return [lock("x"), lock("y"), lock("z")].filter(Boolean).length >= 2;
 }
 
+/**
+ * Depth tier from the midpoint of the whole cube edge (free axis at 0), so every
+ * module segment on one edge shares a tier. At rest the cube edges sit near
+ * ±1.2 / ±0.4 / ±0.07 in camera z — the ±0.2 cuts stay clear under hover/wake.
+ */
+function outlineTier(a: Vec3, b: Vec3, yaw: number, pitch: number, eps = 0.002): EdgeTier {
+  const mid = v(
+    Math.abs(a.x - b.x) < eps ? a.x : 0,
+    Math.abs(a.y - b.y) < eps ? a.y : 0,
+    Math.abs(a.z - b.z) < eps ? a.z : 0,
+  );
+  const z = rotateYawPitch(mid, yaw, pitch).z;
+  if (z >= 0.2) return "front";
+  if (z > -0.2) return "mid";
+  return "rear";
+}
+
 function edgeKey(a: Vec3, b: Vec3): string {
   const fmt = (p: Vec3) => `${p.x.toFixed(3)},${p.y.toFixed(3)},${p.z.toFixed(3)}`;
   const ka = fmt(a);
@@ -279,6 +300,7 @@ export function systemCubeDrawing(
           d: lineD(pa, pb),
           z: (pa.z + pb.z) / 2,
           role: outline ? "silhouette" : "seam",
+          tier: outline ? outlineTier(a0, b0, yaw, pitch) : undefined,
         };
         if (outline) silhouetteMap.set(key, drawn);
         else if (!silhouetteMap.has(key)) seamMap.set(key, drawn);
