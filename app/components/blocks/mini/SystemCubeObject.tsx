@@ -4,23 +4,18 @@ import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent } 
 
 import { useReducedMotion } from "@/components/home/approach/useReducedMotion";
 import {
-  followToward,
-  pocketHoverDt,
-  pocketHoverFollowK,
-  POCKET_HOVER_REST_EPS,
-} from "@/lib/pocketHoverFollow";
-import {
   applyScrollImpulse,
   createScrollNudge,
+  followToward,
   pocketFollowTarget,
+  pocketHoverDt,
+  pocketHoverFollowK,
   pointerNormFromRect,
   POCKET_FAMILY_WAKE_HOLD_MS,
-  POCKET_FAMILY_WAKE_IO_THRESHOLDS,
-  POCKET_FAMILY_WAKE_LEAVE,
-  POCKET_FAMILY_WAKE_VISIBLE,
-  POCKET_POINTER_FOLLOW_MQ,
+  POCKET_HOVER_REST_EPS,
   resetScrollNudge,
   scrollNudgeQuiet,
+  subscribePocketFamilyMotion,
   tickScrollNudge,
 } from "@/lib/pocketSpatialMotion";
 
@@ -92,11 +87,8 @@ export default function SystemCubeObject({ className = "" }: SystemCubeObjectPro
   const hostRef = useRef<HTMLDivElement>(null);
   const [hostEl, setHostEl] = useState<HTMLDivElement | null>(null);
   const tickRef = useRef<() => void>(() => {});
-  const sectionInViewRef = useRef(false);
-  const wakeUsedRef = useRef(false);
   const wakeHoldUntilRef = useRef(0);
   const scrollRef = useRef(createScrollNudge());
-  const lastScrollYRef = useRef(0);
   const pointerFollowRef = useRef(false);
 
   const drawn = useMemo(
@@ -191,60 +183,31 @@ export default function SystemCubeObject({ className = "" }: SystemCubeObjectPro
   useEffect(() => {
     if (reducedMotion || !hostEl || typeof IntersectionObserver === "undefined") return;
     const root = hostEl.closest("section") ?? hostEl;
-    const pointerMq = window.matchMedia(POCKET_POINTER_FOLLOW_MQ);
-    const syncPointer = () => {
-      pointerFollowRef.current = pointerMq.matches;
-    };
-    syncPointer();
-    pointerMq.addEventListener("change", syncPointer);
-    lastScrollYRef.current = window.scrollY;
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[entries.length - 1];
-        if (!entry) return;
-        const ratio = entry.intersectionRatio;
-        sectionInViewRef.current = entry.isIntersecting && ratio > 0.02;
-        if (ratio >= POCKET_FAMILY_WAKE_VISIBLE && !wakeUsedRef.current) {
-          wakeUsedRef.current = true;
-          startWake();
-        }
-        if (!entry.isIntersecting || ratio <= POCKET_FAMILY_WAKE_LEAVE) {
-          wakeUsedRef.current = false;
-          wakeHoldUntilRef.current = 0;
-          if (!hoveringRef.current) {
-            targetRef.current = { yaw: 0, pitch: 0, on: 0 };
-            ensureLoop();
-          }
+    return subscribePocketFamilyMotion({
+      root,
+      getHovering: () => hoveringRef.current,
+      onPointerFollowChange: (enabled) => {
+        pointerFollowRef.current = enabled;
+      },
+      onWake: startWake,
+      onLeaveView: () => {
+        wakeHoldUntilRef.current = 0;
+        if (!hoveringRef.current) {
+          targetRef.current = { yaw: 0, pitch: 0, on: 0 };
+          ensureLoop();
         }
       },
-      { threshold: POCKET_FAMILY_WAKE_IO_THRESHOLDS },
-    );
-    io.observe(root);
-
-    const onScroll = () => {
-      const y = window.scrollY;
-      const dy = y - lastScrollYRef.current;
-      lastScrollYRef.current = y;
-      if (hoveringRef.current || !sectionInViewRef.current || dy === 0) {
-        return;
-      }
-      applyScrollImpulse(
-        scrollRef.current,
-        dy,
-        SCROLL_IMPULSE_PER_PX,
-        SCROLL_VEL_CLAMP_YAW,
-        SCROLL_VEL_CLAMP_PITCH,
-      );
-      ensureLoop();
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-
-    return () => {
-      io.disconnect();
-      pointerMq.removeEventListener("change", syncPointer);
-      window.removeEventListener("scroll", onScroll);
-    };
+      onScrollImpulse: (dy) => {
+        applyScrollImpulse(
+          scrollRef.current,
+          dy,
+          SCROLL_IMPULSE_PER_PX,
+          SCROLL_VEL_CLAMP_YAW,
+          SCROLL_VEL_CLAMP_PITCH,
+        );
+        ensureLoop();
+      },
+    });
   }, [ensureLoop, hostEl, reducedMotion, startWake]);
 
   const writeTarget = useCallback((event: PointerEvent<HTMLDivElement>, hovering: boolean) => {

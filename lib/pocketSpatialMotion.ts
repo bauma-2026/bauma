@@ -5,6 +5,19 @@
 
 import { hoverFollowCurve, POCKET_HOVER_PITCH_CURVE, POCKET_HOVER_YAW_CURVE } from "./pocketHoverFollow";
 
+export {
+  followToward,
+  hoverFollowCurve,
+  pocketHoverDt,
+  pocketHoverFollowK,
+  POCKET_HOVER_DT_MAX,
+  POCKET_HOVER_PITCH_CURVE,
+  POCKET_HOVER_REST_EPS,
+  POCKET_HOVER_TAU_ACTIVE,
+  POCKET_HOVER_TAU_RETURN,
+  POCKET_HOVER_YAW_CURVE,
+} from "./pocketHoverFollow";
+
 export const POCKET_SCROLL_VEL_DAMP_PER_S = 9.5;
 export const POCKET_SCROLL_OFFSET_RETURN_PER_S = 5.8;
 export const POCKET_SCROLL_PITCH_MIX = 0.26;
@@ -14,6 +27,7 @@ export const POCKET_SCROLL_EPS = 0.00015;
 export const POCKET_FAMILY_WAKE_VISIBLE = 0.45;
 export const POCKET_FAMILY_WAKE_LEAVE = 0.12;
 export const POCKET_FAMILY_WAKE_HOLD_MS = 820;
+export const POCKET_FAMILY_IN_VIEW = 0.02;
 export const POCKET_FAMILY_WAKE_IO_THRESHOLDS = [0, 0.08, 0.2, 0.35, 0.45, 0.6, 1];
 
 export const POCKET_POINTER_FOLLOW_MQ =
@@ -106,4 +120,59 @@ export function scrollNudgeQuiet(scroll: ScrollNudge, eps = POCKET_SCROLL_EPS) {
     Math.abs(scroll.velYaw) < eps &&
     Math.abs(scroll.velPitch) < eps
   );
+}
+
+/** Shared viewport wiring for Pristop/System. Pocket Cube keeps its own intro IO + mobile-only scroll. */
+export function subscribePocketFamilyMotion(args: {
+  root: Element;
+  getHovering: () => boolean;
+  onPointerFollowChange: (enabled: boolean) => void;
+  onWake: () => void;
+  onLeaveView: () => void;
+  onScrollImpulse: (dy: number) => void;
+}) {
+  const pointerMq = window.matchMedia(POCKET_POINTER_FOLLOW_MQ);
+  const syncPointer = () => {
+    args.onPointerFollowChange(pointerMq.matches);
+  };
+  syncPointer();
+  pointerMq.addEventListener("change", syncPointer);
+
+  let lastScrollY = window.scrollY;
+  let inView = false;
+  let wakeUsed = false;
+
+  const io = new IntersectionObserver(
+    (entries) => {
+      const entry = entries[entries.length - 1];
+      if (!entry) return;
+      const ratio = entry.intersectionRatio;
+      inView = entry.isIntersecting && ratio > POCKET_FAMILY_IN_VIEW;
+      if (ratio >= POCKET_FAMILY_WAKE_VISIBLE && !wakeUsed) {
+        wakeUsed = true;
+        args.onWake();
+      }
+      if (!entry.isIntersecting || ratio <= POCKET_FAMILY_WAKE_LEAVE) {
+        wakeUsed = false;
+        args.onLeaveView();
+      }
+    },
+    { threshold: POCKET_FAMILY_WAKE_IO_THRESHOLDS },
+  );
+  io.observe(args.root);
+
+  const onScroll = () => {
+    const y = window.scrollY;
+    const dy = y - lastScrollY;
+    lastScrollY = y;
+    if (args.getHovering() || !inView || dy === 0) return;
+    args.onScrollImpulse(dy);
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  return () => {
+    io.disconnect();
+    pointerMq.removeEventListener("change", syncPointer);
+    window.removeEventListener("scroll", onScroll);
+  };
 }

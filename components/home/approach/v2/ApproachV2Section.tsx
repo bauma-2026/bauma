@@ -16,23 +16,18 @@ import {
 import type { ApproachCopy } from "@/components/home/approach/copy";
 import { useFinePointer } from "@/components/home/approach/useFinePointer";
 import {
-  followToward,
-  pocketHoverDt,
-  pocketHoverFollowK,
-  POCKET_HOVER_REST_EPS,
-} from "@/lib/pocketHoverFollow";
-import {
   applyScrollImpulse,
   createScrollNudge,
+  followToward,
   pocketFollowTarget,
+  pocketHoverDt,
+  pocketHoverFollowK,
   pointerNormFromRect,
   POCKET_FAMILY_WAKE_HOLD_MS,
-  POCKET_FAMILY_WAKE_IO_THRESHOLDS,
-  POCKET_FAMILY_WAKE_LEAVE,
-  POCKET_FAMILY_WAKE_VISIBLE,
-  POCKET_POINTER_FOLLOW_MQ,
+  POCKET_HOVER_REST_EPS,
   resetScrollNudge,
   scrollNudgeQuiet,
+  subscribePocketFamilyMotion,
   tickScrollNudge,
 } from "@/lib/pocketSpatialMotion";
 
@@ -87,11 +82,8 @@ export default function ApproachV2Section({
   const rafRef = useRef(0);
   const lastTickRef = useRef(0);
   const pointerFollowRef = useRef(false);
-  const sectionInViewRef = useRef(false);
-  const wakeUsedRef = useRef(false);
   const wakeHoldUntilRef = useRef(0);
   const scrollRef = useRef(createScrollNudge());
-  const lastScrollYRef = useRef(0);
 
   const [display, setDisplay] = useState<StructuralState>(
     reducedMotion ? "03" : "01",
@@ -216,58 +208,31 @@ export default function ApproachV2Section({
     const el = sectionRef.current;
     if (!el) return;
 
-    const pointerMq = window.matchMedia(POCKET_POINTER_FOLLOW_MQ);
-    const syncPointer = () => {
-      pointerFollowRef.current = pointerMq.matches;
-    };
-    syncPointer();
-    pointerMq.addEventListener("change", syncPointer);
-    lastScrollYRef.current = window.scrollY;
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[entries.length - 1];
-        if (!entry) return;
-        const ratio = entry.intersectionRatio;
-        sectionInViewRef.current = entry.isIntersecting && ratio > 0.02;
-        if (ratio >= POCKET_FAMILY_WAKE_VISIBLE && !wakeUsedRef.current) {
-          wakeUsedRef.current = true;
-          startPoseWake();
-        }
-        if (!entry.isIntersecting || ratio <= POCKET_FAMILY_WAKE_LEAVE) {
-          wakeUsedRef.current = false;
-          wakeHoldUntilRef.current = 0;
-          if (!hoveringRef.current) {
-            targetOffsetRef.current = { yaw: 0, pitch: 0 };
-            ensurePoseLoop();
-          }
+    return subscribePocketFamilyMotion({
+      root: el,
+      getHovering: () => hoveringRef.current,
+      onPointerFollowChange: (enabled) => {
+        pointerFollowRef.current = enabled;
+      },
+      onWake: startPoseWake,
+      onLeaveView: () => {
+        wakeHoldUntilRef.current = 0;
+        if (!hoveringRef.current) {
+          targetOffsetRef.current = { yaw: 0, pitch: 0 };
+          ensurePoseLoop();
         }
       },
-      { threshold: POCKET_FAMILY_WAKE_IO_THRESHOLDS },
-    );
-    io.observe(el);
-
-    const onScroll = () => {
-      const y = window.scrollY;
-      const dy = y - lastScrollYRef.current;
-      lastScrollYRef.current = y;
-      if (hoveringRef.current || !sectionInViewRef.current || dy === 0) return;
-      applyScrollImpulse(
-        scrollRef.current,
-        dy,
-        SCROLL_IMPULSE_PER_PX,
-        SCROLL_VEL_CLAMP_YAW,
-        SCROLL_VEL_CLAMP_PITCH,
-      );
-      ensurePoseLoop();
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-
-    return () => {
-      io.disconnect();
-      pointerMq.removeEventListener("change", syncPointer);
-      window.removeEventListener("scroll", onScroll);
-    };
+      onScrollImpulse: (dy) => {
+        applyScrollImpulse(
+          scrollRef.current,
+          dy,
+          SCROLL_IMPULSE_PER_PX,
+          SCROLL_VEL_CLAMP_YAW,
+          SCROLL_VEL_CLAMP_PITCH,
+        );
+        ensurePoseLoop();
+      },
+    });
   }, [ensurePoseLoop, reducedMotion, startPoseWake]);
 
   useEffect(() => () => clearSettle(), [clearSettle]);

@@ -2,13 +2,19 @@
 
 import { useEffect, useRef } from "react";
 import {
+  followToward,
   hoverFollowCurve,
+  pocketHoverDt,
   pocketHoverFollowK,
+  POCKET_HOVER_PITCH_CURVE,
+  POCKET_HOVER_YAW_CURVE,
 } from "@/lib/pocketHoverFollow";
 import {
-  POCKET_SCROLL_OFFSET_RETURN_PER_S,
-  POCKET_SCROLL_PITCH_MIX,
-  POCKET_SCROLL_VEL_DAMP_PER_S,
+  applyScrollImpulse,
+  createScrollNudge,
+  resetScrollNudge as clearScrollNudge,
+  scrollNudgeQuiet,
+  tickScrollNudge,
 } from "@/lib/pocketSpatialMotion";
 import { MINI_OBJECT_FILL } from "./miniObjectMaterial";
 
@@ -626,17 +632,11 @@ export default function MiniNextStepCube({
 
     const mobileScrollMq = window.matchMedia(MOBILE_SCROLL_MQ);
     let isMobile = mobileScrollMq.matches;
-    let scrollOffsetRx = 0;
-    let scrollOffsetRy = 0;
-    let scrollVelRx = 0;
-    let scrollVelRy = 0;
+    const scroll = createScrollNudge();
     let lastScrollY = window.scrollY;
 
     const resetScrollNudge = () => {
-      scrollOffsetRx = 0;
-      scrollOffsetRy = 0;
-      scrollVelRx = 0;
-      scrollVelRy = 0;
+      clearScrollNudge(scroll);
       lastScrollY = window.scrollY;
     };
 
@@ -645,11 +645,13 @@ export default function MiniNextStepCube({
       const y = window.scrollY;
       const dy = y - lastScrollY;
       lastScrollY = y;
-      if (dy === 0) return;
-      scrollVelRy += -dy * SCROLL_IMPULSE_PER_PX;
-      scrollVelRx += dy * SCROLL_IMPULSE_PER_PX * POCKET_SCROLL_PITCH_MIX;
-      scrollVelRy = clamp(scrollVelRy, -SCROLL_VEL_CLAMP_RY, SCROLL_VEL_CLAMP_RY);
-      scrollVelRx = clamp(scrollVelRx, -SCROLL_VEL_CLAMP_RX, SCROLL_VEL_CLAMP_RX);
+      applyScrollImpulse(
+        scroll,
+        dy,
+        SCROLL_IMPULSE_PER_PX,
+        SCROLL_VEL_CLAMP_RY,
+        SCROLL_VEL_CLAMP_RX,
+      );
     };
 
     const syncMobileScroll = () => {
@@ -716,9 +718,9 @@ export default function MiniNextStepCube({
 
     const visiblePose = () => {
       const scrollRx =
-        isMobile && !reduced && drag == null ? scrollOffsetRx : 0;
+        isMobile && !reduced && drag == null ? scroll.pitch : 0;
       const scrollRy =
-        isMobile && !reduced && drag == null ? scrollOffsetRy : 0;
+        isMobile && !reduced && drag == null ? scroll.yaw : 0;
       return {
         rx: rxRef.current + idleGain * idleRx + hoverRx + scrollRx,
         ry: ryRef.current + idleGain * idleRy + hoverRy + scrollRy,
@@ -782,8 +784,12 @@ export default function MiniNextStepCube({
       const halfH = Math.max((maxY - minY) * 0.5, 1);
       const nx = clamp((pointer.x - ox) / halfW, -1, 1);
       const ny = clamp((pointer.y - oy) / halfH, -1, 1);
-      hoverTargetRy = hoverFollowCurve(nx, 2.25, 0.2) * HOVER_YAW_MAX;
-      hoverTargetRx = hoverFollowCurve(ny, 1.85, 0.52) * HOVER_PITCH_MAX;
+      hoverTargetRy =
+        hoverFollowCurve(nx, POCKET_HOVER_YAW_CURVE.ease, POCKET_HOVER_YAW_CURVE.calm) *
+        HOVER_YAW_MAX;
+      hoverTargetRx =
+        hoverFollowCurve(ny, POCKET_HOVER_PITCH_CURVE.ease, POCKET_HOVER_PITCH_CURVE.calm) *
+        HOVER_PITCH_MAX;
     };
 
     const scheduleIdle = (delay = IDLE_RESUME_MS) => {
@@ -1712,7 +1718,7 @@ export default function MiniNextStepCube({
     let decayPreviousTime = performance.now();
     const tickDecay = (now: number) => {
       decayPersistence(now, decayPreviousTime);
-      const dt = Math.min(Math.max(now - decayPreviousTime, 0) / 1000, 0.05);
+      const dt = pocketHoverDt(now, decayPreviousTime);
       decayPreviousTime = now;
 
       const interacting =
@@ -1731,27 +1737,16 @@ export default function MiniNextStepCube({
 
       const hoverK = pocketHoverFollowK(dt, hovering);
       if (drag == null && !reduced) {
-        hoverRx += (hoverTargetRx - hoverRx) * hoverK;
-        hoverRy += (hoverTargetRy - hoverRy) * hoverK;
+        hoverRx = followToward(hoverRx, hoverTargetRx, hoverK);
+        hoverRy = followToward(hoverRy, hoverTargetRy, hoverK);
       }
 
       if (isMobile && !reduced && drag == null) {
-        const velDamp = Math.exp(-POCKET_SCROLL_VEL_DAMP_PER_S * dt);
-        scrollOffsetRy += scrollVelRy;
-        scrollOffsetRx += scrollVelRx;
-        scrollVelRy *= velDamp;
-        scrollVelRx *= velDamp;
-        const returnK = 1 - Math.exp(-POCKET_SCROLL_OFFSET_RETURN_PER_S * dt);
-        scrollOffsetRy += (0 - scrollOffsetRy) * returnK;
-        scrollOffsetRx += (0 - scrollOffsetRx) * returnK;
-        scrollOffsetRy = clamp(
-          scrollOffsetRy,
-          -SCROLL_OFFSET_MAX_RY,
+        tickScrollNudge(
+          scroll,
+          dt,
+          false,
           SCROLL_OFFSET_MAX_RY,
-        );
-        scrollOffsetRx = clamp(
-          scrollOffsetRx,
-          -SCROLL_OFFSET_MAX_RX,
           SCROLL_OFFSET_MAX_RX,
         );
       }
@@ -1828,13 +1823,7 @@ export default function MiniNextStepCube({
       accent += (accentTarget - accent) * accentK;
 
       const scrollNudgeActive =
-        isMobile &&
-        !reduced &&
-        drag == null &&
-        (Math.abs(scrollOffsetRx) > 0.00015 ||
-          Math.abs(scrollOffsetRy) > 0.00015 ||
-          Math.abs(scrollVelRx) > 0.00015 ||
-          Math.abs(scrollVelRy) > 0.00015);
+        isMobile && !reduced && drag == null && !scrollNudgeQuiet(scroll);
 
       if (
         !interacting ||
