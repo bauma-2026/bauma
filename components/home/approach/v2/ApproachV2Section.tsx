@@ -373,7 +373,12 @@ export default function ApproachV2Section({
               onPointerMove={onObjectPointerMove}
               onPointerLeave={onObjectPointerLeave}
             >
-              <div className="h-full w-full max-sm:origin-center max-sm:translate-x-7 max-sm:scale-[1.23]">
+              {/*
+                Mobile pocket size: fluid with the column, capped at the 390px target
+                (optical ~112px). The transform is the containing block for the SVG,
+                so the width cap sizes the drawing without touching layout height.
+              */}
+              <div className="h-full w-full max-sm:mx-auto max-sm:max-w-[294px] max-sm:origin-center max-sm:translate-x-7 max-sm:scale-[1.35]">
                 <ApproachOpenShellGraphic
                   state={shownState}
                   reducedMotion={reducedMotion}

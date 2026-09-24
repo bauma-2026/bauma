@@ -8,17 +8,20 @@ import {
   averageZ,
   DEFAULT_HIERARCHY03,
   DEFAULT_NOISE_VARIANT,
+  edgeOpacity,
   NOISE_EDGES,
   NOISE_GHOST_EDGES,
-  NOISE_GHOST_PANELS,
   NOISE_PLANES,
   pointsToPath,
   project,
   projectQuad,
+  rimOpacity,
+  RIM_TIER,
   SHELL_VIEWBOX,
   STATE_LOOK,
   HIERARCHY03,
   shellForState,
+  uniqueEdges,
   type Form03Variant,
   type Hierarchy03Variant,
   type NoiseVariant,
@@ -75,13 +78,7 @@ export default function ApproachOpenShellGraphic({
       };
     }).sort((a, b) => a.z - b.z);
 
-    const planes = (
-      noiseVariant === "planes"
-        ? NOISE_PLANES
-        : noiseVariant === "ghost"
-          ? NOISE_GHOST_PANELS
-          : []
-    ).map((panel) => {
+    const planes = (noiseVariant === "planes" ? NOISE_PLANES : []).map((panel) => {
       const pts = projectQuad(panel.points, yaw, pitch);
       return {
         ...panel,
@@ -102,13 +99,20 @@ export default function ApproachOpenShellGraphic({
       b: project(edge.b, yaw, pitch),
     }));
 
+    /** Each panel edge once; rim edges are drawn by the opening layer only. */
+    const structure = uniqueEdges(panels, edges).map((edge) => {
+      const a = project(edge.a, yaw, pitch);
+      const b = project(edge.b, yaw, pitch);
+      return { ...edge, a, b, z: (a.z + b.z) / 2 };
+    });
+
     const opening = edges.map((edge) => {
       const a = project(edge.a, yaw, pitch);
       const b = project(edge.b, yaw, pitch);
-      return { ...edge, a, b };
+      return { ...edge, a, b, z: (a.z + b.z) / 2 };
     });
 
-    return { shells, planes, extraEdges, opening };
+    return { shells, planes, extraEdges, structure, opening };
   }, [yaw, pitch, noiseVariant, state, form03, hierarchy]);
 
   const fillFor = (
@@ -119,16 +123,6 @@ export default function ApproachOpenShellGraphic({
     if (role === "back") return look.fillBack;
     if (role === "side") return look.fillSide;
     return look.fillLid;
-  };
-
-  const strokeFor = (
-    id: string,
-    role: "back" | "side" | "lid",
-  ) => {
-    if (hierarchy?.[id]) return hierarchy[id].stroke;
-    if (role === "back") return look.strokeBack;
-    if (role === "side") return look.strokeSide;
-    return look.strokeLid;
   };
 
   const planeFill = noiseVariant === "planes" && noiseOn ? 0.028 : 0;
@@ -206,17 +200,19 @@ export default function ApproachOpenShellGraphic({
       </g>
 
       <g data-layer="shell-stroke">
-        {projected.shells.map((panel) => (
-          <path
-            key={`stroke-${panel.id}`}
-            d={panel.d}
-            fill="none"
+        {projected.structure.map((edge) => (
+          <line
+            key={edge.id}
+            x1={edge.a.x}
+            y1={edge.a.y}
+            x2={edge.b.x}
+            y2={edge.b.y}
             stroke={STROKE}
             strokeWidth={STROKE_W}
             vectorEffect="non-scaling-stroke"
-            strokeLinejoin="round"
+            strokeLinecap="round"
             style={{
-              strokeOpacity: strokeFor(panel.id, panel.role),
+              strokeOpacity: edgeOpacity(edge.z) * look.edge,
               transition: `stroke-opacity ${duration} ${EASE}`,
             }}
           />
@@ -224,10 +220,29 @@ export default function ApproachOpenShellGraphic({
       </g>
 
       <g data-layer="opening">
-        {projected.opening.map((edge) =>
-          edge.amber ? (
+        {projected.opening.map((edge) => (
+          <line
+            key={edge.id}
+            x1={edge.a.x}
+            y1={edge.a.y}
+            x2={edge.b.x}
+            y2={edge.b.y}
+            stroke={STROKE}
+            strokeWidth={STROKE_W}
+            vectorEffect="non-scaling-stroke"
+            strokeLinecap="round"
+            style={{
+              strokeOpacity:
+                (edge.amber ? RIM_TIER.side : rimOpacity(edge.z)) * look.edge,
+              transition: `stroke-opacity ${duration} ${EASE}`,
+            }}
+          />
+        ))}
+        {projected.opening
+          .filter((edge) => edge.amber)
+          .map((edge) => (
             <line
-              key={edge.id}
+              key={`${edge.id}-amber`}
               x1={edge.a.x}
               y1={edge.a.y}
               x2={edge.b.x}
@@ -241,28 +256,7 @@ export default function ApproachOpenShellGraphic({
                 transition: `stroke-opacity ${duration} ${EASE}`,
               }}
             />
-          ) : (
-            <line
-              key={edge.id}
-              x1={edge.a.x}
-              y1={edge.a.y}
-              x2={edge.b.x}
-              y2={edge.b.y}
-              stroke={STROKE}
-              strokeWidth={STROKE_W}
-              vectorEffect="non-scaling-stroke"
-              strokeLinecap="round"
-              style={{
-                strokeOpacity: hierarchy
-                  ? hierarchy03 === "path"
-                    ? 0.22
-                    : 0.3
-                  : look.opening,
-                transition: `stroke-opacity ${duration} ${EASE}`,
-              }}
-            />
-          ),
-        )}
+          ))}
       </g>
     </svg>
   );

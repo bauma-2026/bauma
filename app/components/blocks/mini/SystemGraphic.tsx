@@ -44,7 +44,8 @@ export default function SystemGraphic({
           <figcaption id="system-view-title" className="sr-only">
             A compact cube of interlocking parts forming one system.
           </figcaption>
-          <SystemCubeObject className="h-[200px] w-[240px] max-sm:h-[132px] max-sm:w-[159px]" />
+          {/* Mobile: 159×132 at most, then shrinks with the column (Pocket Cube rule). */}
+          <SystemCubeObject className="h-[200px] w-[240px] max-sm:aspect-[159/132] max-sm:h-auto max-sm:w-[min(159px,48.5%)]" />
         </figure>
       </div>
     </section>

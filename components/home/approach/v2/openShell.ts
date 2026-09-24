@@ -107,19 +107,32 @@ function scaleQuad(q: Quad, s: number, t?: Vec3): Quad {
   ];
 }
 
-function uniqueShellEdges(): NoiseEdge[] {
-  const seen = new Set<string>();
+function edgeKey(a: Vec3, b: Vec3): string {
+  return [a, b]
+    .map((p) => `${p.x}:${p.y}:${p.z}`)
+    .sort()
+    .join("|");
+}
+
+/**
+ * Every panel outline edge exactly once. Adjacent panels share edges, and
+ * stroking each quad double-draws them (0.26 + 0.30 composites to ~0.48).
+ * Edges listed in `skip` (opening rim) are left to the caller.
+ */
+export function uniqueEdges(
+  panels: readonly { points: Quad }[],
+  skip: readonly { a: Vec3; b: Vec3 }[] = [],
+  prefix = "e",
+): NoiseEdge[] {
+  const seen = new Set<string>(skip.map((edge) => edgeKey(edge.a, edge.b)));
   const edges: NoiseEdge[] = [];
   const push = (a: Vec3, b: Vec3) => {
-    const key = [a, b]
-      .map((p) => `${p.x}:${p.y}:${p.z}`)
-      .sort()
-      .join("|");
+    const key = edgeKey(a, b);
     if (seen.has(key)) return;
     seen.add(key);
-    edges.push({ id: `e-${edges.length}`, a, b });
+    edges.push({ id: `${prefix}-${edges.length}`, a, b });
   };
-  for (const panel of SHELL_PANELS) {
+  for (const panel of panels) {
     const pts = panel.points;
     push(pts[0], pts[1]);
     push(pts[1], pts[2]);
@@ -129,7 +142,7 @@ function uniqueShellEdges(): NoiseEdge[] {
   return edges;
 }
 
-const SHELL_EDGES = uniqueShellEdges();
+const SHELL_EDGES = uniqueEdges(SHELL_PANELS);
 
 /** Duplicate / offset edge lines — extra construction + competing inner paths. */
 export const NOISE_EDGES: NoiseEdge[] = [
@@ -205,29 +218,55 @@ export const NOISE_PLANES: NoisePlane[] = [
 
 const GHOST_SHIFT = { x: 0.08, y: 0.06, z: 0.055 };
 
-/** Ghost-shell — same size, one offset reading. No scale-up, no extra paths. */
-export const NOISE_GHOST_PANELS: NoisePlane[] = SHELL_PANELS.map((panel) => ({
-  id: `ghost-${panel.id}`,
-  points: scaleQuad(panel.points, 1, GHOST_SHIFT),
-}));
-
-export const NOISE_GHOST_EDGES: NoiseEdge[] = OPENING_EDGES.map((edge) => ({
+/**
+ * Ghost-shell — same size, one offset reading. No scale-up, no extra paths.
+ * Drawn as single lines (shell edges + rim, each once) so shared edges stay at
+ * the family ghost alpha instead of compositing brighter.
+ */
+const GHOST_RIM: NoiseEdge[] = OPENING_EDGES.map((edge) => ({
   id: `ghost-${edge.id}`,
   a: scalePoint(edge.a, 1, GHOST_SHIFT),
   b: scalePoint(edge.b, 1, GHOST_SHIFT),
 }));
+
+export const NOISE_GHOST_EDGES: NoiseEdge[] = [
+  ...uniqueEdges(
+    SHELL_PANELS.map((panel) => ({ points: scaleQuad(panel.points, 1, GHOST_SHIFT) })),
+    GHOST_RIM,
+    "ghost-e",
+  ),
+  ...GHOST_RIM,
+];
 
 export type StateLook = {
   noise: number;
   fillBack: number;
   fillSide: number;
   fillLid: number;
-  strokeBack: number;
-  strokeSide: number;
-  strokeLid: number;
-  opening: number;
+  /** Multiplier on the depth tiers — keeps 01 < 03 < 02 without re-ordering depth. */
+  edge: number;
   amber: number;
 };
+
+/**
+ * Depth tiers (camera z of the edge midpoint), same family as System / Pocket Cube:
+ * near edges carry the volume, far edges recede. Rest-pose edges sit at
+ * z ≈ ±1.22 / ±0.86 / ±0.36 / 0 — the ±0.2 cuts stay clear under parallax.
+ */
+export const EDGE_TIER = { front: 0.31, mid: 0.24, rear: 0.17 } as const;
+/** Opening rim: sides ~0.24, back ~0.20. Amber sill keeps the side value as its base. */
+export const RIM_TIER = { side: 0.24, back: 0.2 } as const;
+const TIER_CUT = 0.2;
+
+export function edgeOpacity(z: number): number {
+  if (z >= TIER_CUT) return EDGE_TIER.front;
+  if (z > -TIER_CUT) return EDGE_TIER.mid;
+  return EDGE_TIER.rear;
+}
+
+export function rimOpacity(z: number): number {
+  return z > -TIER_CUT ? RIM_TIER.side : RIM_TIER.back;
+}
 
 export type Form03Variant = "portal" | "frame" | "guide";
 
@@ -545,14 +584,15 @@ export const HIERARCHY03_VARIANTS: readonly Hierarchy03Variant[] = [
 /** Implemented 03 hierarchy: floor primary + back support. */
 export const DEFAULT_HIERARCHY03: Hierarchy03Variant = "support";
 
-type PanelWeight = { fill: number; stroke: number };
+/** Fill only — edge weight comes from depth tiers, not panel role. */
+type PanelWeight = { fill: number };
 
 /** Structural remainder — present, not competing. */
-const H_WIRE: PanelWeight = { fill: 0.006, stroke: 0.18 };
+const H_WIRE: PanelWeight = { fill: 0.006 };
 /** Quieter supporting face. */
-const H_SUPPORT: PanelWeight = { fill: 0.04, stroke: 0.26 };
-/** Primary assigned face — weight, not material. */
-const H_PRIMARY: PanelWeight = { fill: 0.1, stroke: 0.38 };
+const H_SUPPORT: PanelWeight = { fill: 0.035 };
+/** Primary assigned face — reads first, no longer outweighs the shell. */
+const H_PRIMARY: PanelWeight = { fill: 0.07 };
 
 /**
  * Lab-only 03 hierarchy. Same SHELL_PANELS; roles by fill/stroke weight only.
@@ -587,14 +627,12 @@ export const HIERARCHY03: Record<
 
 export const STATE_LOOK: Record<StructuralState, StateLook> = {
   "01": {
-    noise: 0.09,
+    /** Family ghost alpha. */
+    noise: 0.06,
     fillBack: 0.008,
     fillSide: 0.011,
     fillLid: 0.014,
-    strokeBack: 0.16,
-    strokeSide: 0.26,
-    strokeLid: 0.22,
-    opening: 0.2,
+    edge: 0.9,
     amber: 0,
   },
   "02": {
@@ -602,10 +640,7 @@ export const STATE_LOOK: Record<StructuralState, StateLook> = {
     fillBack: 0.014,
     fillSide: 0.02,
     fillLid: 0.026,
-    strokeBack: 0.2,
-    strokeSide: 0.34,
-    strokeLid: 0.3,
-    opening: 0.3,
+    edge: 1.1,
     amber: 0.7,
   },
   "03": {
@@ -613,10 +648,7 @@ export const STATE_LOOK: Record<StructuralState, StateLook> = {
     fillBack: 0.02,
     fillSide: 0.028,
     fillLid: 0.038,
-    strokeBack: 0.18,
-    strokeSide: 0.32,
-    strokeLid: 0.36,
-    opening: 0.28,
+    edge: 1,
     amber: 0.7,
   },
 };
