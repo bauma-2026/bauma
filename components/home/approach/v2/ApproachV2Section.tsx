@@ -373,13 +373,15 @@ export default function ApproachV2Section({
               onPointerMove={onObjectPointerMove}
               onPointerLeave={onObjectPointerLeave}
             >
-              <ApproachOpenShellGraphic
-                state={shownState}
-                reducedMotion={reducedMotion}
-                yaw={shownYaw}
-                pitch={shownPitch}
-                noiseVariant={noiseVariant}
-              />
+              <div className="h-full w-full max-sm:origin-center max-sm:translate-x-7 max-sm:scale-[1.09]">
+                <ApproachOpenShellGraphic
+                  state={shownState}
+                  reducedMotion={reducedMotion}
+                  yaw={shownYaw}
+                  pitch={shownPitch}
+                  noiseVariant={noiseVariant}
+                />
+              </div>
             </div>
           </div>
         </div>

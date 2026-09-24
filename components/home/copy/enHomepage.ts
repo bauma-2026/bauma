@@ -34,25 +34,25 @@ export const EN_DECISION_FLOW = {
   eyebrow: "Decision flow",
   headlineLine1: "From structure to",
   headlineLine2: "decision.",
-  body: "First, we define what the visitor needs to understand and where the page should lead them.",
+  body: "First, we set the direction.",
   principles: [
     {
       number: "01",
       label: "Structure",
       shape: "square" as const,
-      text: "The user quickly understands what the company offers, who it is for, and where to start.",
+      text: "We organise the content so it is immediately clear what is offered and to whom.",
     },
     {
       number: "02",
       label: "Clarity",
       shape: "circle" as const,
-      text: "Key information is easier to notice, so decisions take less effort.",
+      text: "We highlight what matters and remove what distracts from it.",
     },
     {
       number: "03",
-      label: "Next step",
+      label: "What’s next",
       shape: "triangle" as const,
-      text: "The user always knows what to look at, check, or do next.",
+      text: "We guide the user forward so it is always clear what comes next.",
     },
   ],
 } as const;

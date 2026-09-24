@@ -16,27 +16,27 @@ export type MiniDecisionFlowCopy = {
 
 const DEFAULT_COPY: MiniDecisionFlowCopy = {
   eyebrow: "Tok odločitve",
-  headlineLine1: "Od strukture do",
-  headlineLine2: "odločitve.",
-  body: "Najprej določimo, kaj mora obiskovalec razumeti in kam ga mora stran voditi.",
+  headlineLine1: "Od strukture",
+  headlineLine2: "do odločitve.",
+  body: "Najprej postavimo smer.",
   principles: [
     {
       number: "01",
       label: "Struktura",
       shape: "square",
-      text: "Uporabnik hitro razume, kaj podjetje ponuja, komu je namenjeno in kje začeti.",
+      text: "Vsebino uredimo tako, da je takoj jasno, kaj podjetje ponuja in komu.",
     },
     {
       number: "02",
       label: "Jasnost",
       shape: "circle",
-      text: "Ključne informacije postanejo bolj opazne, odločitev pa zahteva manj napora.",
+      text: "Poudarimo bistveno in odstranimo vse, kar odvrača pozornost.",
     },
     {
       number: "03",
       label: "Kaj sledi",
       shape: "triangle",
-      text: "Uporabnik ves čas ve, kaj naj pogleda, preveri ali naredi naslednje.",
+      text: "Uporabnika vodimo naprej, da je vedno jasno, kaj sledi.",
       active: true,
     },
   ],
@@ -79,11 +79,11 @@ export default function MiniDecisionFlow({
               <li
                 key={principle.number}
                 aria-current={isActive ? "step" : undefined}
-                className="relative grid grid-cols-[2.75rem_1fr] items-baseline gap-x-4 border-t border-white/10 py-6 last:pb-0 sm:grid-cols-[3.5rem_1fr] lg:block lg:py-0 lg:pt-7"
+                className="relative grid grid-cols-[2.75rem_1fr] items-baseline gap-x-4 py-6 last:pb-0 sm:grid-cols-[3.5rem_1fr] lg:block lg:py-0 lg:pt-7"
               >
                 <span
                   aria-hidden="true"
-                  className={`absolute -top-px left-0 h-px w-6 ${
+                  className={`absolute top-1 left-0 h-px w-[1.1rem] ${
                     isActive ? "bg-[rgba(209,164,95,0.7)]" : "bg-white/30"
                   }`}
                 />
