@@ -12,19 +12,20 @@ type Vec2 = { x: number; y: number; z: number };
 
 const VW = 520;
 const VH = 400;
-const CX = 262;
-const CY = 208;
+/** Projection centre, offset so the rest silhouette keeps the previous bbox centre (268, 194.5). */
+const CX = 273;
+const CY = 181.5;
 /** Screen-space pocket size is calibrated by rendered bbox, not vs Pristop SCALE. */
 const SCALE = 102;
 const FOCAL = 3.4;
 const CAMERA_Z = 2.45;
 
 /**
- * Rest pose matched to gb Spline PocketCubeRig at rest:
- * front dominant, right side a real plane, underside visible (camera slightly below).
+ * Rest pose: camera slightly above-right (~23° pitch, ~31° yaw).
+ * Main face dominant on the left, right side a real plane, top visible but secondary.
  */
-const REST_RX = -0.36;
-const REST_RY = 0.5;
+const REST_RX = 0.4;
+const REST_RY = -0.54;
 
 /**
  * Interaction copied from gb-next MobileCubeScene
@@ -204,6 +205,12 @@ const FACES: readonly {
   { i: [3, 2, 6, 7], fill: FILL.top },
 ];
 
+const EDGE_FACES: readonly number[][] = EDGES.map(([ia, ib]) =>
+  FACES.flatMap((face, faceIndex) =>
+    face.i.includes(ia) && face.i.includes(ib) ? [faceIndex] : [],
+  ),
+);
+
 type DragState = {
   pointerId: number;
   previousX: number;
@@ -257,6 +264,22 @@ function project(p: Vec3, rx: number, ry: number, scale = SCALE): Vec2 {
 
 function poly(pts: Vec2[]) {
   return pts.map((p) => `${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(" ");
+}
+
+/** Positive screen-space signed area = face points at the camera (exact under perspective). */
+function faceFacing(pts: Vec2[], face: readonly number[]) {
+  let area = 0;
+  for (let k = 0; k < face.length; k++) {
+    const a = pts[face[k]];
+    const b = pts[face[(k + 1) % face.length]];
+    area += a.x * b.y - b.x * a.y;
+  }
+  return area > 0;
+}
+
+/** An edge is drawn only when at least one adjacent face is visible — solid cube, no see-through wire. */
+function edgeVisible(facing: boolean[], edgeIndex: number) {
+  return EDGE_FACES[edgeIndex].some((faceIndex) => facing[faceIndex]);
 }
 
 function edgeWeight(a: Vec2, b: Vec2) {
@@ -639,14 +662,14 @@ export default function MiniNextStepCube({
         drag != null || turnRafRef.current != null || autoRaf != null;
       ghost.style.opacity = ghostActive ? "0.4" : "1";
 
+      const facing = FACES.map((face) => faceFacing(pts, face.i));
+
       for (const [index, face] of FACES.entries()) {
         const el = faceEls[index];
         if (!(el instanceof SVGPolygonElement)) continue;
         const corners = face.i.map((i) => pts[i]);
-        const z =
-          corners.reduce((sum, p) => sum + p.z, 0) / corners.length;
         el.setAttribute("points", poly(corners));
-        el.setAttribute("opacity", z < 0.12 ? "1" : "0");
+        el.setAttribute("opacity", facing[index] ? "1" : "0");
       }
 
       for (const [index, [ia, ib]] of EDGES.entries()) {
@@ -664,7 +687,10 @@ export default function MiniNextStepCube({
         el.setAttribute("y2", b.y.toFixed(2));
         el.setAttribute("stroke", stroke);
         el.setAttribute("stroke-width", String(w.width));
-        el.setAttribute("opacity", String(w.opacity));
+        el.setAttribute(
+          "opacity",
+          edgeVisible(facing, index) ? String(w.opacity) : "0",
+        );
       }
 
       for (const [index, [ia, ib]] of EDGES.entries()) {
@@ -1843,6 +1869,7 @@ export default function MiniNextStepCube({
   }, []);
 
   const restPts = CORNERS.map((c) => project(c, REST_RX, REST_RY));
+  const restFacing = FACES.map((face) => faceFacing(restPts, face.i));
   const restGhost = CORNERS.map((c) =>
     project(c, REST_RX, REST_RY, SCALE * 1.035),
   );
@@ -1885,13 +1912,7 @@ export default function MiniNextStepCube({
               data-face={index}
               points={poly(face.i.map((i) => restPts[i]))}
               fill={face.fill}
-              opacity={
-                face.i.map((i) => restPts[i]).reduce((s, p) => s + p.z, 0) /
-                  4 <
-                0.12
-                  ? 1
-                  : 0
-              }
+              opacity={restFacing[index] ? 1 : 0}
             />
           ))}
           {EDGES.map(([ia, ib], index) => {
@@ -1906,7 +1927,7 @@ export default function MiniNextStepCube({
                 y2={restPts[ib].y}
                 stroke={w.stroke}
                 strokeWidth={w.width}
-                opacity={w.opacity}
+                opacity={edgeVisible(restFacing, index) ? w.opacity : 0}
               />
             );
           })}

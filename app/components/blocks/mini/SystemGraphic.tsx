@@ -44,7 +44,7 @@ export default function SystemGraphic({
           <figcaption id="system-view-title" className="sr-only">
             A compact cube of interlocking parts forming one system.
           </figcaption>
-          <SystemCubeObject className="h-[200px] w-[240px] max-sm:h-[126px] max-sm:w-[151px]" />
+          <SystemCubeObject className="h-[200px] w-[240px] max-sm:h-[132px] max-sm:w-[159px]" />
         </figure>
       </div>
     </section>

@@ -278,7 +278,7 @@ export default function ApproachV2Section({
       ref={sectionRef}
       data-section="approach-interactive"
       data-pristop-v2="1"
-      className="relative border-t border-white/10 bg-[#080808] py-10 text-white sm:py-12 lg:py-16"
+      className="relative border-t border-white/10 bg-[#080808] py-10 text-white max-sm:overflow-x-clip sm:py-12 lg:py-16"
     >
       <span id={anchorId} data-anchor-marker aria-hidden="true" />
       <div className="mini-page-rail">
@@ -373,7 +373,7 @@ export default function ApproachV2Section({
               onPointerMove={onObjectPointerMove}
               onPointerLeave={onObjectPointerLeave}
             >
-              <div className="h-full w-full max-sm:origin-center max-sm:translate-x-7 max-sm:scale-[1.09]">
+              <div className="h-full w-full max-sm:origin-center max-sm:translate-x-7 max-sm:scale-[1.23]">
                 <ApproachOpenShellGraphic
                   state={shownState}
                   reducedMotion={reducedMotion}
