@@ -278,7 +278,11 @@ export default function ApproachV2Section({
       ref={sectionRef}
       data-section="approach-interactive"
       data-pristop-v2="1"
-      className="relative border-t border-white/10 bg-[#080808] py-10 text-white max-sm:overflow-x-clip sm:py-12 lg:py-16"
+      /* Narrow phones: the object eases down (see object field), so the base 2.5rem
+         bottom pad grows by up to 32px below 390px to keep it off the divider.
+         The recentring shift (< lg) and the fixed lg+ drawing box push empty SVG area
+         past the rail — clip x. */
+      className="relative border-t border-white/10 bg-[#080808] py-10 text-white overflow-x-clip max-sm:pb-[calc(2.5rem+clamp(0px,calc((390px_-_100vw)*0.4),32px))] sm:py-12 lg:py-16"
     >
       <span id={anchorId} data-anchor-marker aria-hidden="true" />
       <div className="mini-page-rail">
@@ -368,7 +372,7 @@ export default function ApproachV2Section({
               ref={objectRef}
               data-approach-object-hit
               data-approach-field-shift="desktop-right"
-              className="relative w-full max-w-[480px] max-lg:mx-auto max-lg:aspect-[400/260] max-lg:w-[86%] max-lg:overflow-visible md:max-w-[520px] lg:max-w-[560px] lg:translate-x-[24px] xl:max-w-[600px]"
+              className="relative w-full max-w-[480px] max-lg:mx-auto max-lg:aspect-[400/260] max-sm:w-[86%] max-lg:overflow-visible sm:max-w-[600px] lg:max-w-[560px] lg:translate-x-[24px] xl:max-w-[600px]"
               onPointerEnter={onObjectPointerEnter}
               onPointerMove={onObjectPointerMove}
               onPointerLeave={onObjectPointerLeave}
@@ -377,14 +381,23 @@ export default function ApproachV2Section({
                 Mobile pocket size: fluid with the column, capped at the 390px target
                 (optical ~112px). The transform is the containing block for the SVG,
                 so the width cap sizes the drawing without touching layout height.
+                x: the drawing sits 30/400 of the box left of centre (ORIGIN.x 170), ×1.35
+                → 10.125% of the box recentres it at every width.
+                y: nothing from 430px; below, eases down to keep the text gap in the
+                System / Pocket rhythm (~88–94px), capped at 24px.
+                Tablet (sm → lg, unscaled): the same 30/400 offset → 7.5% of the frame.
+                lg+: the box keeps the column-driven 400:260 layout, but the drawing is a
+                fixed 600×390 anchored on ORIGIN (42.5% / 50% of the box), so the object
+                keeps the xl size and position instead of shrinking with the grid column.
               */}
-              <div className="h-full w-full max-sm:mx-auto max-sm:max-w-[294px] max-sm:origin-center max-sm:translate-x-7 max-sm:scale-[1.35]">
+              <div className="h-full w-full max-sm:mx-auto max-sm:max-w-[294px] max-sm:origin-center max-sm:translate-x-[10.125%] max-sm:translate-y-[clamp(0px,calc((430px_-_100vw)*0.25),24px)] max-sm:scale-[1.35] sm:max-lg:translate-x-[7.5%] lg:relative lg:h-auto lg:aspect-[400/260]">
                 <ApproachOpenShellGraphic
                   state={shownState}
                   reducedMotion={reducedMotion}
                   yaw={shownYaw}
                   pitch={shownPitch}
                   noiseVariant={noiseVariant}
+                  className="absolute inset-0 h-full w-full lg:inset-auto lg:left-[calc(42.5%-255px)] lg:top-[calc(50%-195px)] lg:h-[390px] lg:w-[600px]"
                 />
               </div>
             </div>
