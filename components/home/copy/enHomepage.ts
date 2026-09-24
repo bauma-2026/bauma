@@ -82,30 +82,7 @@ export const EN_APPROACH: ApproachCopy = {
 export const EN_SYSTEM = {
   eyebrow: "System layer",
   headline: "Under the surface is a system.",
-  body: "A page is more than a sequence of sections. Each part must reduce uncertainty, build trust, or move the user forward.",
-  conceptsAria: "System concepts",
-  concepts: [
-    {
-      id: "structure" as const,
-      label: "Structure",
-      description: "Arrange content into a clear order.",
-    },
-    {
-      id: "clarity" as const,
-      label: "Clarity",
-      description: "The user understands what matters faster.",
-    },
-    {
-      id: "trust" as const,
-      label: "Trust",
-      description: "Uncertainty is reduced and the next step feels easier.",
-    },
-    {
-      id: "decision" as const,
-      label: "Decision",
-      description: "A clear path leads to action.",
-    },
-  ],
+  body: "Each part has a role. We bring them together into one clear whole.",
 } as const;
 
 export const EN_VISUAL = {
