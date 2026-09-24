@@ -5,6 +5,11 @@ import {
   hoverFollowCurve,
   pocketHoverFollowK,
 } from "@/lib/pocketHoverFollow";
+import {
+  POCKET_SCROLL_OFFSET_RETURN_PER_S,
+  POCKET_SCROLL_PITCH_MIX,
+  POCKET_SCROLL_VEL_DAMP_PER_S,
+} from "@/lib/pocketSpatialMotion";
 import { MINI_OBJECT_FILL } from "./miniObjectMaterial";
 
 type Vec3 = { x: number; y: number; z: number };
@@ -162,11 +167,8 @@ const MOBILE_SCROLL_MQ = "(max-width: 1023px)";
 const SCROLL_OFFSET_MAX_RY = (4.0 * Math.PI) / 180;
 const SCROLL_OFFSET_MAX_RX = (2.0 * Math.PI) / 180;
 const SCROLL_IMPULSE_PER_PX = 0.000112;
-const SCROLL_VEL_DAMP_PER_S = 9.5;
-const SCROLL_OFFSET_RETURN_PER_S = 5.8;
 const SCROLL_VEL_CLAMP_RY = 0.014;
 const SCROLL_VEL_CLAMP_RX = 0.0085;
-const SCROLL_PITCH_MIX = 0.26;
 
 const CORNERS: Vec3[] = [
   { x: -EX, y: -EY, z: -EZ },
@@ -645,7 +647,7 @@ export default function MiniNextStepCube({
       lastScrollY = y;
       if (dy === 0) return;
       scrollVelRy += -dy * SCROLL_IMPULSE_PER_PX;
-      scrollVelRx += dy * SCROLL_IMPULSE_PER_PX * SCROLL_PITCH_MIX;
+      scrollVelRx += dy * SCROLL_IMPULSE_PER_PX * POCKET_SCROLL_PITCH_MIX;
       scrollVelRy = clamp(scrollVelRy, -SCROLL_VEL_CLAMP_RY, SCROLL_VEL_CLAMP_RY);
       scrollVelRx = clamp(scrollVelRx, -SCROLL_VEL_CLAMP_RX, SCROLL_VEL_CLAMP_RX);
     };
@@ -1734,12 +1736,12 @@ export default function MiniNextStepCube({
       }
 
       if (isMobile && !reduced && drag == null) {
-        const velDamp = Math.exp(-SCROLL_VEL_DAMP_PER_S * dt);
+        const velDamp = Math.exp(-POCKET_SCROLL_VEL_DAMP_PER_S * dt);
         scrollOffsetRy += scrollVelRy;
         scrollOffsetRx += scrollVelRx;
         scrollVelRy *= velDamp;
         scrollVelRx *= velDamp;
-        const returnK = 1 - Math.exp(-SCROLL_OFFSET_RETURN_PER_S * dt);
+        const returnK = 1 - Math.exp(-POCKET_SCROLL_OFFSET_RETURN_PER_S * dt);
         scrollOffsetRy += (0 - scrollOffsetRy) * returnK;
         scrollOffsetRx += (0 - scrollOffsetRx) * returnK;
         scrollOffsetRy = clamp(

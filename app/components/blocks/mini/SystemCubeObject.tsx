@@ -5,13 +5,24 @@ import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent } 
 import { useReducedMotion } from "@/components/home/approach/useReducedMotion";
 import {
   followToward,
-  hoverFollowCurve,
   pocketHoverDt,
   pocketHoverFollowK,
-  POCKET_HOVER_PITCH_CURVE,
   POCKET_HOVER_REST_EPS,
-  POCKET_HOVER_YAW_CURVE,
 } from "@/lib/pocketHoverFollow";
+import {
+  applyScrollImpulse,
+  createScrollNudge,
+  pocketFollowTarget,
+  pointerNormFromRect,
+  POCKET_FAMILY_WAKE_HOLD_MS,
+  POCKET_FAMILY_WAKE_IO_THRESHOLDS,
+  POCKET_FAMILY_WAKE_LEAVE,
+  POCKET_FAMILY_WAKE_VISIBLE,
+  POCKET_POINTER_FOLLOW_MQ,
+  resetScrollNudge,
+  scrollNudgeQuiet,
+  tickScrollNudge,
+} from "@/lib/pocketSpatialMotion";
 
 import {
   BASE_PITCH,
@@ -51,32 +62,20 @@ const CARRIER = "rgba(255,255,255,0.12)";
 const AMBER = "rgba(209,164,95,1)";
 const AMBER_OPACITY = 0.72;
 const ACTIVATION_EPS = 0.002;
-const SCROLL_EPS = 0.00015;
 
-/** One-shot section-enter: existing open + amber, then rest. */
+/** One-shot section-enter: existing open + amber, then rest. Tiny pose vs Pocket intro. */
 const WAKE_YAW = FOLLOW_YAW * 0.55;
 const WAKE_PITCH = -FOLLOW_PITCH * 0.52;
-const WAKE_VISIBLE = 0.45;
-const WAKE_LEAVE = 0.12;
-const WAKE_HOLD_MS = 820;
 
 /**
- * Pocket Cube scroll nudge, scaled under System hover
- * (`FOLLOW_YAW` 0.055 / `FOLLOW_PITCH` 0.034). Desktop only.
+ * Pocket Cube scroll character, scaled under System hover
+ * (`FOLLOW_YAW` 0.055 / `FOLLOW_PITCH` 0.034). Pose only — never drives `on`.
  */
 const SCROLL_YAW_MAX = FOLLOW_YAW * 0.4;
 const SCROLL_PITCH_MAX = FOLLOW_PITCH * 0.38;
 const SCROLL_IMPULSE_PER_PX = 0.000055;
-const SCROLL_VEL_DAMP_PER_S = 9.5;
-const SCROLL_OFFSET_RETURN_PER_S = 5.8;
 const SCROLL_VEL_CLAMP_YAW = 0.006;
 const SCROLL_VEL_CLAMP_PITCH = 0.0036;
-const SCROLL_PITCH_MIX = 0.26;
-const DESKTOP_MOTION_MQ = "(min-width: 1024px)";
-
-function clamp(value: number, min: number, max: number) {
-  return Math.min(max, Math.max(min, value));
-}
 
 type SystemCubeObjectProps = {
   className?: string;
@@ -96,9 +95,9 @@ export default function SystemCubeObject({ className = "" }: SystemCubeObjectPro
   const sectionInViewRef = useRef(false);
   const wakeUsedRef = useRef(false);
   const wakeHoldUntilRef = useRef(0);
-  const scrollRef = useRef({ yaw: 0, pitch: 0, velYaw: 0, velPitch: 0 });
+  const scrollRef = useRef(createScrollNudge());
   const lastScrollYRef = useRef(0);
-  const desktopMotionRef = useRef(false);
+  const pointerFollowRef = useRef(false);
 
   const drawn = useMemo(
     () => systemCubeDrawing(pose.yaw, pose.pitch, pose.on),
@@ -126,30 +125,8 @@ export default function SystemCubeObject({ className = "" }: SystemCubeObjectPro
       }
 
       const scroll = scrollRef.current;
-      if (!hovering) {
-        const velDamp = Math.exp(-SCROLL_VEL_DAMP_PER_S * dt);
-        scroll.yaw += scroll.velYaw;
-        scroll.pitch += scroll.velPitch;
-        scroll.velYaw *= velDamp;
-        scroll.velPitch *= velDamp;
-        const returnK = 1 - Math.exp(-SCROLL_OFFSET_RETURN_PER_S * dt);
-        scroll.yaw += (0 - scroll.yaw) * returnK;
-        scroll.pitch += (0 - scroll.pitch) * returnK;
-        scroll.yaw = clamp(scroll.yaw, -SCROLL_YAW_MAX, SCROLL_YAW_MAX);
-        scroll.pitch = clamp(scroll.pitch, -SCROLL_PITCH_MAX, SCROLL_PITCH_MAX);
-      } else {
-        const returnK = 1 - Math.exp(-SCROLL_OFFSET_RETURN_PER_S * dt);
-        scroll.yaw += (0 - scroll.yaw) * returnK;
-        scroll.pitch += (0 - scroll.pitch) * returnK;
-        scroll.velYaw = 0;
-        scroll.velPitch = 0;
-      }
-
-      const scrollQuiet =
-        Math.abs(scroll.yaw) < SCROLL_EPS &&
-        Math.abs(scroll.pitch) < SCROLL_EPS &&
-        Math.abs(scroll.velYaw) < SCROLL_EPS &&
-        Math.abs(scroll.velPitch) < SCROLL_EPS;
+      tickScrollNudge(scroll, dt, hovering, SCROLL_YAW_MAX, SCROLL_PITCH_MAX);
+      const scrollQuiet = scrollNudgeQuiet(scroll);
 
       const atRest =
         !hovering &&
@@ -163,10 +140,7 @@ export default function SystemCubeObject({ className = "" }: SystemCubeObjectPro
         offset.yaw = 0;
         offset.pitch = 0;
         offset.on = 0;
-        scroll.yaw = 0;
-        scroll.pitch = 0;
-        scroll.velYaw = 0;
-        scroll.velPitch = 0;
+        resetScrollNudge(scroll);
         setPose({ yaw: BASE_YAW, pitch: BASE_PITCH, on: 0 });
         rafRef.current = 0;
         lastTickRef.current = 0;
@@ -205,7 +179,7 @@ export default function SystemCubeObject({ className = "" }: SystemCubeObjectPro
     target.yaw = WAKE_YAW;
     target.pitch = WAKE_PITCH;
     target.on = 1;
-    wakeHoldUntilRef.current = performance.now() + WAKE_HOLD_MS;
+    wakeHoldUntilRef.current = performance.now() + POCKET_FAMILY_WAKE_HOLD_MS;
     ensureLoop();
   }, [ensureLoop]);
 
@@ -217,12 +191,12 @@ export default function SystemCubeObject({ className = "" }: SystemCubeObjectPro
   useEffect(() => {
     if (reducedMotion || !hostEl || typeof IntersectionObserver === "undefined") return;
     const root = hostEl.closest("section") ?? hostEl;
-    const desktopMq = window.matchMedia(DESKTOP_MOTION_MQ);
-    const syncDesktop = () => {
-      desktopMotionRef.current = desktopMq.matches;
+    const pointerMq = window.matchMedia(POCKET_POINTER_FOLLOW_MQ);
+    const syncPointer = () => {
+      pointerFollowRef.current = pointerMq.matches;
     };
-    syncDesktop();
-    desktopMq.addEventListener("change", syncDesktop);
+    syncPointer();
+    pointerMq.addEventListener("change", syncPointer);
     lastScrollYRef.current = window.scrollY;
 
     const io = new IntersectionObserver(
@@ -231,11 +205,11 @@ export default function SystemCubeObject({ className = "" }: SystemCubeObjectPro
         if (!entry) return;
         const ratio = entry.intersectionRatio;
         sectionInViewRef.current = entry.isIntersecting && ratio > 0.02;
-        if (ratio >= WAKE_VISIBLE && !wakeUsedRef.current && desktopMotionRef.current) {
+        if (ratio >= POCKET_FAMILY_WAKE_VISIBLE && !wakeUsedRef.current) {
           wakeUsedRef.current = true;
           startWake();
         }
-        if (!entry.isIntersecting || ratio <= WAKE_LEAVE) {
+        if (!entry.isIntersecting || ratio <= POCKET_FAMILY_WAKE_LEAVE) {
           wakeUsedRef.current = false;
           wakeHoldUntilRef.current = 0;
           if (!hoveringRef.current) {
@@ -244,7 +218,7 @@ export default function SystemCubeObject({ className = "" }: SystemCubeObjectPro
           }
         }
       },
-      { threshold: [0, 0.08, 0.2, 0.35, 0.45, 0.6, 1] },
+      { threshold: POCKET_FAMILY_WAKE_IO_THRESHOLDS },
     );
     io.observe(root);
 
@@ -252,21 +226,14 @@ export default function SystemCubeObject({ className = "" }: SystemCubeObjectPro
       const y = window.scrollY;
       const dy = y - lastScrollYRef.current;
       lastScrollYRef.current = y;
-      if (
-        !desktopMotionRef.current ||
-        hoveringRef.current ||
-        !sectionInViewRef.current ||
-        dy === 0
-      ) {
+      if (hoveringRef.current || !sectionInViewRef.current || dy === 0) {
         return;
       }
-      const scroll = scrollRef.current;
-      scroll.velYaw += -dy * SCROLL_IMPULSE_PER_PX;
-      scroll.velPitch += dy * SCROLL_IMPULSE_PER_PX * SCROLL_PITCH_MIX;
-      scroll.velYaw = clamp(scroll.velYaw, -SCROLL_VEL_CLAMP_YAW, SCROLL_VEL_CLAMP_YAW);
-      scroll.velPitch = clamp(
-        scroll.velPitch,
-        -SCROLL_VEL_CLAMP_PITCH,
+      applyScrollImpulse(
+        scrollRef.current,
+        dy,
+        SCROLL_IMPULSE_PER_PX,
+        SCROLL_VEL_CLAMP_YAW,
         SCROLL_VEL_CLAMP_PITCH,
       );
       ensureLoop();
@@ -275,7 +242,7 @@ export default function SystemCubeObject({ className = "" }: SystemCubeObjectPro
 
     return () => {
       io.disconnect();
-      desktopMq.removeEventListener("change", syncDesktop);
+      pointerMq.removeEventListener("change", syncPointer);
       window.removeEventListener("scroll", onScroll);
     };
   }, [ensureLoop, hostEl, reducedMotion, startWake]);
@@ -283,30 +250,23 @@ export default function SystemCubeObject({ className = "" }: SystemCubeObjectPro
   const writeTarget = useCallback((event: PointerEvent<HTMLDivElement>, hovering: boolean) => {
     const el = hostRef.current;
     if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const nx = Math.min(1, Math.max(-1, ((event.clientX - rect.left) / rect.width) * 2 - 1));
-    const ny = Math.min(1, Math.max(-1, ((event.clientY - rect.top) / rect.height) * 2 - 1));
+    const { nx, ny } = pointerNormFromRect(event.clientX, event.clientY, el.getBoundingClientRect());
     wakeHoldUntilRef.current = 0;
-    targetRef.current = {
-      yaw: hoverFollowCurve(nx, POCKET_HOVER_YAW_CURVE.ease, POCKET_HOVER_YAW_CURVE.calm) * FOLLOW_YAW,
-      pitch:
-        -hoverFollowCurve(ny, POCKET_HOVER_PITCH_CURVE.ease, POCKET_HOVER_PITCH_CURVE.calm) *
-        FOLLOW_PITCH,
-      on: hovering ? 1 : 0,
-    };
+    const follow = pocketFollowTarget(nx, ny, FOLLOW_YAW, FOLLOW_PITCH);
+    targetRef.current = { ...follow, on: hovering ? 1 : 0 };
   }, []);
 
   const canFollow = !reducedMotion;
 
   const onEnter = (event: PointerEvent<HTMLDivElement>) => {
-    if (!canFollow || event.pointerType === "touch") return;
+    if (!canFollow || !pointerFollowRef.current || event.pointerType === "touch") return;
     hoveringRef.current = true;
     writeTarget(event, true);
     ensureLoop();
   };
 
   const onMove = (event: PointerEvent<HTMLDivElement>) => {
-    if (!canFollow || event.pointerType === "touch") return;
+    if (!canFollow || !pointerFollowRef.current || event.pointerType === "touch") return;
     hoveringRef.current = true;
     writeTarget(event, true);
     ensureLoop();

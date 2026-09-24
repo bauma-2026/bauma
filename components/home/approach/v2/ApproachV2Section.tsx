@@ -17,13 +17,24 @@ import type { ApproachCopy } from "@/components/home/approach/copy";
 import { useFinePointer } from "@/components/home/approach/useFinePointer";
 import {
   followToward,
-  hoverFollowCurve,
   pocketHoverDt,
   pocketHoverFollowK,
-  POCKET_HOVER_PITCH_CURVE,
   POCKET_HOVER_REST_EPS,
-  POCKET_HOVER_YAW_CURVE,
 } from "@/lib/pocketHoverFollow";
+import {
+  applyScrollImpulse,
+  createScrollNudge,
+  pocketFollowTarget,
+  pointerNormFromRect,
+  POCKET_FAMILY_WAKE_HOLD_MS,
+  POCKET_FAMILY_WAKE_IO_THRESHOLDS,
+  POCKET_FAMILY_WAKE_LEAVE,
+  POCKET_FAMILY_WAKE_VISIBLE,
+  POCKET_POINTER_FOLLOW_MQ,
+  resetScrollNudge,
+  scrollNudgeQuiet,
+  tickScrollNudge,
+} from "@/lib/pocketSpatialMotion";
 
 import ApproachOpenShellGraphic from "./ApproachOpenShellGraphic";
 import {
@@ -46,6 +57,15 @@ type ApproachV2SectionProps = {
 const SETTLE_HOLD_MS = 720;
 const SETTLE_GAP_MS = 80;
 
+/** Lighter than Pocket (0.08 / 0.048); uses existing PARALLAX amps. */
+const WAKE_YAW = PARALLAX_YAW * 0.45;
+const WAKE_PITCH = -PARALLAX_PITCH * 0.42;
+const SCROLL_YAW_MAX = PARALLAX_YAW * 0.38;
+const SCROLL_PITCH_MAX = PARALLAX_PITCH * 0.36;
+const SCROLL_IMPULSE_PER_PX = 0.00007;
+const SCROLL_VEL_CLAMP_YAW = 0.008;
+const SCROLL_VEL_CLAMP_PITCH = 0.0046;
+
 type Pose = { yaw: number; pitch: number };
 
 export default function ApproachV2Section({
@@ -66,6 +86,12 @@ export default function ApproachV2Section({
   const hoveringRef = useRef(false);
   const rafRef = useRef(0);
   const lastTickRef = useRef(0);
+  const pointerFollowRef = useRef(false);
+  const sectionInViewRef = useRef(false);
+  const wakeUsedRef = useRef(false);
+  const wakeHoldUntilRef = useRef(0);
+  const scrollRef = useRef(createScrollNudge());
+  const lastScrollYRef = useRef(0);
 
   const [display, setDisplay] = useState<StructuralState>(
     reducedMotion ? "03" : "01",
@@ -115,25 +141,38 @@ export default function ApproachV2Section({
       lastTickRef.current = now;
 
       const hovering = hoveringRef.current;
-      const k = pocketHoverFollowK(dt, hovering);
-      const offset = offsetRef.current;
       const target = targetOffsetRef.current;
+      const opening = !hovering && wakeHoldUntilRef.current > 0;
+      const k = pocketHoverFollowK(dt, hovering || opening);
+      const offset = offsetRef.current;
       offset.yaw = followToward(offset.yaw, target.yaw, k);
       offset.pitch = followToward(offset.pitch, target.pitch, k);
 
+      if (!hovering && wakeHoldUntilRef.current > 0 && now >= wakeHoldUntilRef.current) {
+        wakeHoldUntilRef.current = 0;
+        target.yaw = 0;
+        target.pitch = 0;
+      }
+
+      const scroll = scrollRef.current;
+      tickScrollNudge(scroll, dt, hovering, SCROLL_YAW_MAX, SCROLL_PITCH_MAX);
+
       poseRef.current = {
-        yaw: BASE_YAW + offset.yaw,
-        pitch: BASE_PITCH + offset.pitch,
+        yaw: BASE_YAW + offset.yaw + scroll.yaw,
+        pitch: BASE_PITCH + offset.pitch + scroll.pitch,
       };
 
       const atRest =
         !hovering &&
+        wakeHoldUntilRef.current === 0 &&
         Math.abs(offset.yaw) < POCKET_HOVER_REST_EPS &&
-        Math.abs(offset.pitch) < POCKET_HOVER_REST_EPS;
+        Math.abs(offset.pitch) < POCKET_HOVER_REST_EPS &&
+        scrollNudgeQuiet(scroll);
 
       if (atRest) {
         offset.yaw = 0;
         offset.pitch = 0;
+        resetScrollNudge(scroll);
         poseRef.current = { yaw: BASE_YAW, pitch: BASE_PITCH };
         setPose({ yaw: BASE_YAW, pitch: BASE_PITCH });
         rafRef.current = 0;
@@ -164,6 +203,72 @@ export default function ApproachV2Section({
       tickPoseRef.current();
     });
   }, []);
+
+  const startPoseWake = useCallback(() => {
+    if (hoveringRef.current) return;
+    targetOffsetRef.current = { yaw: WAKE_YAW, pitch: WAKE_PITCH };
+    wakeHoldUntilRef.current = performance.now() + POCKET_FAMILY_WAKE_HOLD_MS;
+    ensurePoseLoop();
+  }, [ensurePoseLoop]);
+
+  useEffect(() => {
+    if (reducedMotion) return;
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const pointerMq = window.matchMedia(POCKET_POINTER_FOLLOW_MQ);
+    const syncPointer = () => {
+      pointerFollowRef.current = pointerMq.matches;
+    };
+    syncPointer();
+    pointerMq.addEventListener("change", syncPointer);
+    lastScrollYRef.current = window.scrollY;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[entries.length - 1];
+        if (!entry) return;
+        const ratio = entry.intersectionRatio;
+        sectionInViewRef.current = entry.isIntersecting && ratio > 0.02;
+        if (ratio >= POCKET_FAMILY_WAKE_VISIBLE && !wakeUsedRef.current) {
+          wakeUsedRef.current = true;
+          startPoseWake();
+        }
+        if (!entry.isIntersecting || ratio <= POCKET_FAMILY_WAKE_LEAVE) {
+          wakeUsedRef.current = false;
+          wakeHoldUntilRef.current = 0;
+          if (!hoveringRef.current) {
+            targetOffsetRef.current = { yaw: 0, pitch: 0 };
+            ensurePoseLoop();
+          }
+        }
+      },
+      { threshold: POCKET_FAMILY_WAKE_IO_THRESHOLDS },
+    );
+    io.observe(el);
+
+    const onScroll = () => {
+      const y = window.scrollY;
+      const dy = y - lastScrollYRef.current;
+      lastScrollYRef.current = y;
+      if (hoveringRef.current || !sectionInViewRef.current || dy === 0) return;
+      applyScrollImpulse(
+        scrollRef.current,
+        dy,
+        SCROLL_IMPULSE_PER_PX,
+        SCROLL_VEL_CLAMP_YAW,
+        SCROLL_VEL_CLAMP_PITCH,
+      );
+      ensurePoseLoop();
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      io.disconnect();
+      pointerMq.removeEventListener("change", syncPointer);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, [ensurePoseLoop, reducedMotion, startPoseWake]);
 
   useEffect(() => () => clearSettle(), [clearSettle]);
 
@@ -207,29 +312,18 @@ export default function ApproachV2Section({
     (event: ReactPointerEvent<HTMLDivElement>) => {
       const el = objectRef.current;
       if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const nx = Math.min(
-        1,
-        Math.max(-1, ((event.clientX - rect.left) / rect.width) * 2 - 1),
+      const { nx, ny } = pointerNormFromRect(
+        event.clientX,
+        event.clientY,
+        el.getBoundingClientRect(),
       );
-      const ny = Math.min(
-        1,
-        Math.max(-1, ((event.clientY - rect.top) / rect.height) * 2 - 1),
+      wakeHoldUntilRef.current = 0;
+      targetOffsetRef.current = pocketFollowTarget(
+        nx,
+        ny,
+        PARALLAX_YAW,
+        PARALLAX_PITCH,
       );
-      targetOffsetRef.current = {
-        yaw:
-          hoverFollowCurve(
-            nx,
-            POCKET_HOVER_YAW_CURVE.ease,
-            POCKET_HOVER_YAW_CURVE.calm,
-          ) * PARALLAX_YAW,
-        pitch:
-          -hoverFollowCurve(
-            ny,
-            POCKET_HOVER_PITCH_CURVE.ease,
-            POCKET_HOVER_PITCH_CURVE.calm,
-          ) * PARALLAX_PITCH,
-      };
     },
     [],
   );
@@ -238,13 +332,16 @@ export default function ApproachV2Section({
     setUserOwns(false);
     setDisplay("03");
     hoveringRef.current = false;
-    targetOffsetRef.current = { yaw: 0, pitch: 0 };
+    if (wakeHoldUntilRef.current === 0) {
+      targetOffsetRef.current = { yaw: 0, pitch: 0 };
+    }
     ensurePoseLoop();
   }, [ensurePoseLoop]);
 
   const onObjectPointerEnter = useCallback(
     (event: ReactPointerEvent<HTMLDivElement>) => {
-      if (!finePointer || reducedMotion) return;
+      if (!finePointer || reducedMotion || !pointerFollowRef.current) return;
+      if (event.pointerType === "touch") return;
       hoveringRef.current = true;
       writePointerTarget(event);
       ensurePoseLoop();
@@ -254,7 +351,8 @@ export default function ApproachV2Section({
 
   const onObjectPointerMove = useCallback(
     (event: ReactPointerEvent<HTMLDivElement>) => {
-      if (!finePointer || reducedMotion) return;
+      if (!finePointer || reducedMotion || !pointerFollowRef.current) return;
+      if (event.pointerType === "touch") return;
       hoveringRef.current = true;
       writePointerTarget(event);
       ensurePoseLoop();
@@ -278,6 +376,11 @@ export default function ApproachV2Section({
       ref={sectionRef}
       data-section="approach-interactive"
       data-pristop-v2="1"
+      data-pristop-live={
+        Math.abs(shownYaw - BASE_YAW) > 0.002 || Math.abs(shownPitch - BASE_PITCH) > 0.002
+          ? "1"
+          : "0"
+      }
       /* Narrow phones: the object eases down (see object field), so the base 2.5rem
          bottom pad grows by up to 32px below 390px to keep it off the divider.
          The recentring shift (< lg) and the fixed lg+ drawing box push empty SVG area
@@ -378,26 +481,25 @@ export default function ApproachV2Section({
               onPointerLeave={onObjectPointerLeave}
             >
               {/*
-                Mobile pocket size: fluid with the column, capped at the 390px target
-                (optical ~112px). The transform is the containing block for the SVG,
-                so the width cap sizes the drawing without touching layout height.
-                x: the drawing sits 30/400 of the box left of centre (ORIGIN.x 170), ×1.35
-                → 10.125% of the box recentres it at every width.
+                Mobile pocket size: fluid with the column, capped at the 390px target.
+                The transform is the containing block for the SVG, so the width cap
+                sizes the drawing without touching layout height.
+                x: the drawing sits 30/400 of the box left of centre (ORIGIN.x 170).
+                Scale × recentre: max-sm 1.411 → 10.582%; sm–lg 1.045 → 7.837%.
                 y: nothing from 430px; below, eases down to keep the text gap in the
                 System / Pocket rhythm (~88–94px), capped at 24px.
-                Tablet (sm → lg, unscaled): the same 30/400 offset → 7.5% of the frame.
                 lg+: the box keeps the column-driven 400:260 layout, but the drawing is a
-                fixed 600×390 anchored on ORIGIN (42.5% / 50% of the box), so the object
-                keeps the xl size and position instead of shrinking with the grid column.
+                fixed 600×390 anchored on ORIGIN (42.5% / 50% of the box), scaled 1.045
+                about that origin so size grows without a position shift.
               */}
-              <div className="h-full w-full max-sm:mx-auto max-sm:max-w-[294px] max-sm:origin-center max-sm:translate-x-[10.125%] max-sm:translate-y-[clamp(0px,calc((430px_-_100vw)*0.25),24px)] max-sm:scale-[1.35] sm:max-lg:translate-x-[7.5%] lg:relative lg:h-auto lg:aspect-[400/260]">
+              <div className="h-full w-full max-sm:mx-auto max-sm:max-w-[294px] max-sm:origin-center max-sm:translate-x-[10.582%] max-sm:translate-y-[clamp(0px,calc((430px_-_100vw)*0.25),24px)] max-sm:scale-[1.411] sm:max-lg:origin-center sm:max-lg:translate-x-[7.837%] sm:max-lg:scale-[1.045] lg:relative lg:h-auto lg:aspect-[400/260]">
                 <ApproachOpenShellGraphic
                   state={shownState}
                   reducedMotion={reducedMotion}
                   yaw={shownYaw}
                   pitch={shownPitch}
                   noiseVariant={noiseVariant}
-                  className="absolute inset-0 h-full w-full lg:inset-auto lg:left-[calc(42.5%-255px)] lg:top-[calc(50%-195px)] lg:h-[390px] lg:w-[600px]"
+                  className="absolute inset-0 h-full w-full lg:inset-auto lg:left-[calc(42.5%-255px)] lg:top-[calc(50%-195px)] lg:h-[390px] lg:w-[600px] lg:origin-[42.5%_50%] lg:scale-[1.045]"
                 />
               </div>
             </div>
