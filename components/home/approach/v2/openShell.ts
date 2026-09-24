@@ -17,7 +17,7 @@ const W = 1.0;
 const H = 0.97;
 const D = 1.0;
 
-const ORIGIN = { x: 170, y: 142 };
+const ORIGIN = { x: 170, y: 130 };
 /**
  * Pocket scale — match System’s rendered family (~167×187 at 1440).
  * Calibrated by screen-space ink bbox, not SCALE vs System’s 72.
@@ -25,10 +25,10 @@ const ORIGIN = { x: 170, y: 142 };
  */
 const SCALE = 40;
 
-/** Rest pose: from above-right, looking into the open top.
- * Yaw 0.34 — slight +0.04 bias off the Necker-symmetric start. Pitch locked. */
-export const BASE_YAW = 0.34;
-export const BASE_PITCH = 0.72;
+/** Rest pose: slightly above-right (~26° pitch, ~29° yaw) — upright, interior visible
+ * without looking down into the box. Yaw well clear of the Necker-symmetric start (0.30). */
+export const BASE_YAW = 0.5;
+export const BASE_PITCH = 0.46;
 
 export const PARALLAX_YAW = 0.07;
 export const PARALLAX_PITCH = 0.045;
