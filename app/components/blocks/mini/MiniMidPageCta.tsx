@@ -46,7 +46,7 @@ export default function MiniMidPageCta({
             </div>
           </div>
 
-          <div className="relative h-[208px] sm:h-[248px] lg:h-[320px]">
+          <div className="relative h-[260px] sm:h-[320px] lg:h-[400px]">
             <MiniNextStepCube className="relative h-full w-full" />
           </div>
         </div>
