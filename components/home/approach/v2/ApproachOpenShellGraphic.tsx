@@ -135,7 +135,7 @@ export default function ApproachOpenShellGraphic({
       xmlns="http://www.w3.org/2000/svg"
       className={
         className ??
-        "h-auto w-full max-w-[480px] max-lg:absolute max-lg:inset-0 max-lg:h-full max-lg:max-w-none md:max-w-[520px] lg:max-w-[560px] xl:max-w-[600px]"
+        "h-auto w-full max-w-[480px] max-lg:absolute max-lg:inset-0 max-lg:h-full max-lg:max-w-none lg:max-w-[560px] xl:max-w-[600px]"
       }
       aria-hidden
       data-pristop-v2-graphic=""

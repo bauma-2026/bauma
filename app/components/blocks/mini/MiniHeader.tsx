@@ -234,7 +234,7 @@ function HeaderInner({
           alt="Bauma"
           width={68}
           height={13}
-          className="h-auto w-[68px] invert sm:w-[78px]"
+          className="h-auto w-[76px] invert sm:w-[78px]"
         />
       </Link>
 
@@ -364,13 +364,22 @@ function MobileMenu({
 
 export default function MiniHeader({
   copy = DEFAULT_COPY,
+  treatAsHomepage = false,
 }: {
   copy?: MiniHeaderCopy;
+  /**
+   * Forces homepage hero header treatment on routes that render the exact
+   * homepage hero but whose pathname isn't `/` or `/en` (e.g. the noindex
+   * `/mini` preview). Production routes never pass this — default keeps
+   * their pathname-based behavior unchanged.
+   */
+  treatAsHomepage?: boolean;
 }) {
   const pathname = usePathname();
   const [activeId, setActiveId] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const isHomepage = pathname === "/" || pathname === "/en";
+  const isHomepage =
+    treatAsHomepage || pathname === "/" || pathname === "/en";
   const [isHeroVisible, setIsHeroVisible] = useState(isHomepage);
   const [hideHeroChrome, setHideHeroChrome] = useState(false);
   const langSwitchHref = useLanguageSwitchHref(copy.langHref);
@@ -449,11 +458,18 @@ export default function MiniHeader({
       >
         <div
           aria-hidden="true"
+          data-header-scrim
+          className={`pointer-events-none absolute inset-x-0 top-0 z-0 h-[88px] bg-gradient-to-b from-black/[0.28] via-black/10 to-transparent sm:hidden ${
+            overPhotoHero ? "opacity-100" : "opacity-0"
+          }`}
+        />
+        <div
+          aria-hidden="true"
           className={`pointer-events-none absolute inset-0 border-b border-white/10 bg-[#080808] transition-opacity duration-[180ms] ease-out ${
             overPhotoHero ? "opacity-0" : "opacity-100"
           }`}
         />
-        <div className={`relative ${overPhotoHero ? "text-black" : "text-white"}`}>
+        <div className={`relative z-10 ${overPhotoHero ? "text-black" : "text-white"}`}>
           <HeaderInner
             copy={copy}
             langSwitchHref={langSwitchHref}
