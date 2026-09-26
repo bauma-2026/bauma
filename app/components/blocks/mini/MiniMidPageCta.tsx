@@ -1,5 +1,7 @@
 "use client";
 
+import { Fragment } from "react";
+
 import {
   HomeHeroCta,
   HomeHeroProvider,
@@ -15,10 +17,9 @@ export type MiniMidPageCtaCopy = {
 };
 
 const DEFAULT_COPY: MiniMidPageCtaCopy = {
-  eyebrow: "NASLEDNJI KORAK",
-  headline: "Ko je sistem jasen, je naslednji korak lažji.",
-  support:
-    "Če želite preveriti, kje se vaša stran zatika, lahko začneva pri enem konkretnem primeru.",
+  eyebrow: "V PRAKSI",
+  headline: "En primer je dovolj\nza začetek.",
+  support: "Najprej se pokaže, kaj je res pomembno.",
   cta: "Pogovorimo se",
 };
 
@@ -36,7 +37,12 @@ export default function MiniMidPageCta({
               {copy.eyebrow}
             </p>
             <h2 className="home-bridge-heading mt-5 max-w-[18ch]">
-              {copy.headline}
+              {copy.headline.split("\n").map((line, i) => (
+                <Fragment key={line}>
+                  {i > 0 && <br />}
+                  {line}
+                </Fragment>
+              ))}
             </h2>
             <p className="mt-5 max-w-[48ch] text-sm leading-6 text-white/60 sm:text-base sm:leading-7">
               {copy.support}

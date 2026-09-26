@@ -72,10 +72,9 @@ export default function EnglishHome() {
         <SystemGraphic copy={EN_SYSTEM} />
         <MiniMidPageCta
           copy={{
-            eyebrow: "NEXT STEP",
-            headline: "When the system is clear, the next step is easier.",
-            support:
-              "If you want to see where your page gets stuck, we can start with one concrete example.",
+            eyebrow: "IN PRACTICE",
+            headline: "One example is enough\nto get started.",
+            support: "What really matters becomes clear first.",
             cta: "Let’s talk",
           }}
         />

@@ -59,7 +59,7 @@ export const EN_DECISION_FLOW = {
 
 export const EN_APPROACH: ApproachCopy = {
   eyebrow: "Approach",
-  headline: "From uncertainty",
+  headline: "From ambiguity",
   headlineSecondary: "to a clear path.",
   steps: [
     {
@@ -74,23 +74,22 @@ export const EN_APPROACH: ApproachCopy = {
     },
     {
       number: "03",
-      title: "Each part gets its role",
+      title: "Every part needs a\u00a0reason\u00a0to\u00a0be\u00a0there.",
       text: "Visuals, details, and the feel of the page support understanding — not noise.",
     },
   ],
 };
 export const EN_SYSTEM = {
   eyebrow: "System layer",
-  headline: "Under the surface is a system.",
-  body: "Each part has a role. We bring them together into one clear whole.",
+  headline: "Beneath it all\nis a system.",
+  body: "It is not enough for things to be in the right place. They also need to work together.",
 } as const;
 
 export const EN_VISUAL = {
   eyebrow: "Visual layer",
   line1: "Form comes",
   line2: "after clarity.",
-  body: "When the path is clear, form, contrast, and motion show what matters — and add character without adding noise.",
-  trail: ["Clarity", "Form", "Feeling"] as const,
+  body: "Good form does not cover the structure. It gives it character.",
 } as const;
 
 export const EN_CONTACT = {

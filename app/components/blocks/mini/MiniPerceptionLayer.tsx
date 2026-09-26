@@ -5,16 +5,13 @@ export type MiniPerceptionCopy = {
   line1: string;
   line2: string;
   body: string;
-  trail: readonly [string, string, string];
 };
 
 const DEFAULT_COPY: MiniPerceptionCopy = {
   eyebrow: "Vizualna plast",
   line1: "Oblika pride",
   line2: "po jasnosti.",
-  body:
-    "Ko je pot jasna, oblika, kontrast in gibanje pokažejo, kaj je pomembno — ter sistemu dodajo značaj, ne hrupa.",
-  trail: ["Jasnost", "Oblika", "Občutek"],
+  body: "Dobra oblika ne prekriva strukture. Daje ji značaj.",
 };
 
 export default function MiniPerceptionLayer({
@@ -43,10 +40,6 @@ export default function MiniPerceptionLayer({
 
           <p className="mt-5 max-w-[52ch] text-sm leading-6 text-white/55 sm:text-base sm:leading-7">
             {copy.body}
-          </p>
-
-          <p className="mt-6 text-sm text-white/[0.48] lg:mt-7">
-            {copy.trail[0]} → {copy.trail[1]} → {copy.trail[2]}
           </p>
         </div>
 

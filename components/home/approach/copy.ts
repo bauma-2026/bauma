@@ -31,7 +31,7 @@ export const APPROACH_COPY: ApproachCopy = {
     },
     {
       number: "03",
-      title: "Vsak del dobi svojo vlogo",
+      title: "Vsak del mora imeti razlog, da\u00a0je\u00a0tam.",
       text: "Vizual in detajli podprejo razumevanje — ne hrup.",
     },
   ],

@@ -1,5 +1,7 @@
 "use client";
 
+import { Fragment } from "react";
+
 import SystemCubeObject from "./SystemCubeObject";
 
 export type SystemGraphicCopy = {
@@ -10,8 +12,8 @@ export type SystemGraphicCopy = {
 
 const DEFAULT_COPY: SystemGraphicCopy = {
   eyebrow: "Sistemska plast",
-  headline: "Pod površino je sistem.",
-  body: "Vsak del ima svojo vlogo. Povežemo jih v jasno celoto.",
+  headline: "Pod površino\nje sistem.",
+  body: "Ni dovolj, da so stvari na pravem mestu. Med sabo morajo tudi delovati.",
 };
 
 export default function SystemGraphic({
@@ -29,7 +31,12 @@ export default function SystemGraphic({
           </p>
 
           <h2 className="home-primary-heading mt-5 max-w-[11ch] max-sm:[&:lang(en)]:max-w-[15ch]">
-            {copy.headline}
+            {copy.headline.split("\n").map((line, i) => (
+              <Fragment key={line}>
+                {i > 0 && <br />}
+                {line}
+              </Fragment>
+            ))}
           </h2>
 
           <p className="mt-6 max-w-[48ch] text-base leading-7 text-white/55">
