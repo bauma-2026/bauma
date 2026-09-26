@@ -6,6 +6,8 @@ export type ApproachCopy = {
   headlineSecondary: string;
   /** Optional supporting line under the heading (review variants A–C). */
   support?: string;
+  /** Accessible name for the step navigation; defaults to "Approach steps". */
+  stepsAria?: string;
   steps: readonly {
     number: ApproachStepNumber;
     title: string;
@@ -16,22 +18,23 @@ export type ApproachCopy = {
 /** Production Approach copy — aligned to locked V2 sequence. No support line. */
 export const APPROACH_COPY: ApproachCopy = {
   eyebrow: "Pristop",
-  headline: "Od nejasnosti",
-  headlineSecondary: "do jasne poti.",
+  stepsAria: "Koraki pristopa",
+  headline: "Vsak del mora imeti",
+  headlineSecondary: "razlog, da je tam.",
   steps: [
     {
       number: "01",
-      title: "Odstranimo šum",
+      title: "Kar šteje, dobi prostor.",
       text: "Ponavljanje, nejasne CTA-je in sekcije brez naloge.",
     },
     {
       number: "02",
-      title: "Postavimo pot",
+      title: "Kar ne pomaga, odpade.",
       text: "Hierarhijo, vrstni red informacij in jasen naslednji korak.",
     },
     {
       number: "03",
-      title: "Vsak del mora imeti razlog, da\u00a0je\u00a0tam.",
+      title: "Vrstni red ni naključen.",
       text: "Vizual in detajli podprejo razumevanje — ne hrup.",
     },
   ],

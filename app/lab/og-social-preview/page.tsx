@@ -8,10 +8,11 @@ export const metadata: Metadata = {
 };
 
 /**
- * Temporary review:
+ * Review:
  * /lab/og-social-preview
  *
- * Production OG asset (public/og/bauma-og.png) locked to Variant A.
+ * Source for production OG assets:
+ * public/og/bauma-og-v2.png (SL) and public/og/bauma-og-en-v2.png (EN).
  */
 export default function OgSocialPreviewPage() {
   return <OgSocialPreviewClient />;

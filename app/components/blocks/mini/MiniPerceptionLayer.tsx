@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+
 import VisualLayerCube from "./VisualLayerCube";
 
 export type MiniPerceptionCopy = {
@@ -11,7 +13,7 @@ const DEFAULT_COPY: MiniPerceptionCopy = {
   eyebrow: "Vizualna plast",
   line1: "Oblika pride",
   line2: "po jasnosti.",
-  body: "Dobra oblika ne prekriva strukture. Daje ji značaj.",
+  body: "Dobra oblika ne prekriva strukture.\nDaje ji značaj.",
 };
 
 export default function MiniPerceptionLayer({
@@ -28,7 +30,7 @@ export default function MiniPerceptionLayer({
 
       <div className="mini-page-rail relative z-10 grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-10">
         <div className="max-w-[500px]">
-          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/[0.48]">
+          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
             {copy.eyebrow}
           </p>
 
@@ -39,7 +41,13 @@ export default function MiniPerceptionLayer({
           </h2>
 
           <p className="mt-5 max-w-[52ch] text-sm leading-6 text-white/55 sm:text-base sm:leading-7">
-            {copy.body}
+            {/* "\n" = intentional sentence break at every size. */}
+            {copy.body.split("\n").map((line, i) => (
+              <Fragment key={line}>
+                {i > 0 && <br />}
+                {line}
+              </Fragment>
+            ))}
           </p>
         </div>
 

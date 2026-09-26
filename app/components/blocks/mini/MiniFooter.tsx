@@ -2,7 +2,9 @@ import Link from "next/link";
 
 export type MiniFooterCopy = {
   homeHref: string;
-  tagline: string;
+  /** Accessible name for the logo link; defaults to "Bauma home". */
+  homeAria?: string;
+  tagline?: string;
   email: string;
   legalAria: string;
   legal: readonly { href: string; label: string }[];
@@ -10,8 +12,7 @@ export type MiniFooterCopy = {
 
 const DEFAULT_COPY: MiniFooterCopy = {
   homeHref: "/",
-  tagline:
-    "Struktura za strani, kjer mora uporabnik hitro razumeti, zaupati in narediti naslednji korak.",
+  homeAria: "Bauma — domov",
   email: "gregor@bauma.si",
   legalAria: "Pravne povezave",
   legal: [
@@ -31,7 +32,7 @@ export function MiniFooterBrand({
       <div>
         <Link
           href={copy.homeHref}
-          aria-label="Bauma home"
+          aria-label={copy.homeAria ?? "Bauma home"}
           className="inline-flex items-center opacity-70 transition-opacity duration-200 hover:opacity-100"
         >
           <img
@@ -43,9 +44,11 @@ export function MiniFooterBrand({
           />
         </Link>
 
-        <p className="mt-3 max-w-[38ch] text-sm leading-6 text-white/55 sm:mt-4">
-          {copy.tagline}
-        </p>
+        {copy.tagline ? (
+          <p className="mt-3 max-w-[38ch] text-sm leading-6 text-white/55 sm:mt-4">
+            {copy.tagline}
+          </p>
+        ) : null}
       </div>
 
       <div className="lg:justify-self-end">

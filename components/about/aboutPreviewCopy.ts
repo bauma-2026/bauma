@@ -236,7 +236,6 @@ export const ABOUT_HEADER_SL: MiniHeaderCopy = {
   headerCta: "Pogovorimo se",
   menuOpen: "Odpri meni",
   menuClose: "Zapri meni",
-  mobileBlurb: "Struktura, ki uporabnika vodi od razumevanja do odločitve.",
 };
 
 export const ABOUT_HEADER_EN: MiniHeaderCopy = {
@@ -251,7 +250,6 @@ export const ABOUT_HEADER_EN: MiniHeaderCopy = {
   headerCta: EN_HEADER.headerCta,
   menuOpen: EN_HEADER.menuOpen,
   menuClose: EN_HEADER.menuClose,
-  mobileBlurb: EN_HEADER.mobileBlurb,
 };
 
 export const ABOUT_FOOTER_SL: MiniFooterCopy = {
@@ -269,7 +267,6 @@ export const ABOUT_FOOTER_SL: MiniFooterCopy = {
 
 export const ABOUT_FOOTER_EN: MiniFooterCopy = {
   homeHref: "/en",
-  tagline: EN_FOOTER.tagline,
   email: EN_FOOTER.email,
   legalAria: EN_FOOTER.legalAria,
   legal: [...EN_FOOTER.legal],

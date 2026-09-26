@@ -5,7 +5,7 @@ export const metadata: Metadata = {
 
   title: "Bauma — Clear structure. Better decisions.",
   description:
-    "I structure websites so users understand faster, trust more easily, and take the next step with less friction.",
+    "Websites for companies with a strong offer that their current site doesn’t communicate clearly.",
 
   /**
    * Default for the EN subtree: noindex.
@@ -17,12 +17,12 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Bauma — Clear structure. Better decisions.",
     description:
-      "I structure websites so users understand faster, trust more easily, and take the next step with less friction.",
+      "Websites for companies with a strong offer that their current site doesn’t communicate clearly.",
     url: "https://bauma.si/en",
     siteName: "Bauma",
     images: [
       {
-        url: "/og/bauma-og.png",
+        url: "/og/bauma-og-en-v3.png",
         width: 1200,
         height: 630,
         alt: "Bauma — Clear structure. Better decisions.",
@@ -36,8 +36,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Bauma — Clear structure. Better decisions.",
     description:
-      "I structure websites so users understand faster, trust more easily, and take the next step with less friction.",
-    images: ["/og/bauma-og.png"],
+      "Websites for companies with a strong offer that their current site doesn’t communicate clearly.",
+    images: ["/og/bauma-og-en-v3.png"],
   },
 };
 

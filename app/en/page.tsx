@@ -5,7 +5,6 @@ import MiniHero from "../components/blocks/mini/MiniHero";
 import MiniDecisionFlow from "../components/blocks/mini/MiniDecisionFlow";
 import ApproachSection from "@/components/home/approach/ApproachSection";
 import SystemGraphic from "../components/blocks/mini/SystemGraphic";
-import MiniMidPageCta from "../components/blocks/mini/MiniMidPageCta";
 import MiniPerceptionLayer from "../components/blocks/mini/MiniPerceptionLayer";
 import MiniClosingBookend from "../components/blocks/mini/MiniClosingBookend";
 import RightObjectAxisDebugGate from "@/components/home/debug/RightObjectAxisDebugGate";
@@ -38,7 +37,17 @@ export const metadata: Metadata = {
   },
   openGraph: {
     url: "https://bauma.si/en",
+    siteName: "Bauma",
+    images: [
+      {
+        url: "/og/bauma-og-en-v3.png",
+        width: 1200,
+        height: 630,
+        alt: "Bauma — Clear structure. Better decisions.",
+      },
+    ],
     locale: "en_US",
+    type: "website",
   },
   robots: isProduction
     ? { index: true, follow: true }
@@ -61,7 +70,6 @@ export default function EnglishHome() {
           headerCta: EN_HEADER.headerCta,
           menuOpen: EN_HEADER.menuOpen,
           menuClose: EN_HEADER.menuClose,
-          mobileBlurb: EN_HEADER.mobileBlurb,
         }}
       />
 
@@ -70,14 +78,6 @@ export default function EnglishHome() {
         <MiniDecisionFlow copy={EN_DECISION_FLOW} />
         <ApproachSection copy={EN_APPROACH} />
         <SystemGraphic copy={EN_SYSTEM} />
-        <MiniMidPageCta
-          copy={{
-            eyebrow: "IN PRACTICE",
-            headline: "One example is enough\nto get started.",
-            support: "What really matters becomes clear first.",
-            cta: "Let’s talk",
-          }}
-        />
         <MiniPerceptionLayer copy={EN_VISUAL} />
       </main>
 
@@ -85,7 +85,6 @@ export default function EnglishHome() {
         ctaCopy={EN_CONTACT}
         footerCopy={{
           homeHref: "/en",
-          tagline: EN_FOOTER.tagline,
           email: EN_FOOTER.email,
           legalAria: EN_FOOTER.legalAria,
           legal: [...EN_FOOTER.legal],

@@ -17,12 +17,10 @@ export type MiniFinalCtaCopy = {
 };
 
 const DEFAULT_COPY: MiniFinalCtaCopy = {
-  eyebrow: "ZAČNIMO POGOVOR",
-  line1: "Za prvi stik je",
-  line2: "dovolj kratek opis.",
-  bodyLine1: "Na kratko opišite trenutno stanje in kaj želite spremeniti.",
-  bodyLine2: "Nato vam povem, kako je smiselno nadaljevati.",
-  cta: "Pošljite opis projekta",
+  eyebrow: "Kontakt",
+  line1: "Vsak projekt se začne",
+  line2: "s kratkim opisom.",
+  cta: "Pošljite opis",
   mailto: "mailto:gregor@bauma.si?subject=Povpra%C5%A1evanje%20za%20projekt",
 };
 
@@ -59,14 +57,14 @@ export default function MiniFinalCTA({
             <p className="mx-auto mt-5 max-w-[330px] text-pretty text-sm font-normal leading-[1.5] text-white/60 sm:max-w-[650px] sm:text-base sm:leading-[1.6]">
               {copy.body}
             </p>
-          ) : (
+          ) : copy.bodyLine1 ? (
             <p className="mx-auto mt-5 max-w-[18rem] text-sm leading-[1.45] text-white/60 sm:max-w-[32rem] sm:text-base sm:leading-[1.5]">
               {copy.bodyLine1}
               <br className="hidden sm:block" />
               <span className="sm:hidden"> </span>
               {copy.bodyLine2}
             </p>
-          )}
+          ) : null}
           <div className="mt-8 flex justify-center sm:mt-9">
             <a
               href={copy.mailto}

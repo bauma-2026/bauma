@@ -5,7 +5,6 @@ import MiniHero from "./components/blocks/mini/MiniHero";
 import MiniDecisionFlow from "./components/blocks/mini/MiniDecisionFlow";
 import ApproachSection from "@/components/home/approach/ApproachSection";
 import SystemGraphic from "./components/blocks/mini/SystemGraphic";
-import MiniMidPageCta from "./components/blocks/mini/MiniMidPageCta";
 import MiniPerceptionLayer from "./components/blocks/mini/MiniPerceptionLayer";
 import MiniClosingBookend from "./components/blocks/mini/MiniClosingBookend";
 import RightObjectAxisDebugGate from "@/components/home/debug/RightObjectAxisDebugGate";
@@ -45,7 +44,6 @@ export default function Home() {
         <MiniDecisionFlow />
         <ApproachSection />
         <SystemGraphic />
-        <MiniMidPageCta />
         <MiniPerceptionLayer />
       </main>
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { Fragment } from "react";
 import Image from "next/image";
 
 import {
@@ -8,23 +9,30 @@ import {
 } from "@/components/home/hero-system";
 
 export type MiniHeroCopy = {
-  eyebrow: string;
+  eyebrow?: string;
   line1: string;
   line2: string;
   support: string;
+  /** Viewport width (px) from which the "\n" in `support` breaks; narrower wraps naturally. */
+  supportBreakFrom?: 375 | 400;
   secondaryCta: string;
   primaryCta: string;
 };
 
 const DEFAULT_COPY: MiniHeroCopy = {
-  eyebrow: "Struktura pred obliko",
   line1: "Jasna struktura.",
   line2: "Več odločitev.",
   support:
-    "Podjetjem pomagam urediti ponudbo, vsebino in pot skozi spletno stran, da vse deluje kot jasna in povezana celota.",
-  secondaryCta: "Poglej pristop",
+    "Delam s podjetji, ki imajo dobro ponudbo,\na se to na njihovi spletni strani ne vidi.",
+  secondaryCta: "Poglejte pristop",
   primaryCta: "Opišite projekt",
 };
+
+/** Static class pairs so Tailwind generates them: [break, mobile space]. */
+const SUPPORT_BREAK_CLASSES = {
+  375: ["hidden min-[375px]:block", "min-[375px]:hidden"],
+  400: ["hidden min-[400px]:block", "min-[400px]:hidden"],
+} as const;
 
 function splitLastWord(line: string): [string, string] {
   const lastSpace = line.lastIndexOf(" ");
@@ -34,6 +42,8 @@ function splitLastWord(line: string): [string, string] {
 
 export default function MiniHero({ copy = DEFAULT_COPY }: { copy?: MiniHeroCopy }) {
   const [line2Lead, line2Emphasis] = splitLastWord(copy.line2);
+  const [supportBreakClass, supportSpaceClass] =
+    SUPPORT_BREAK_CLASSES[copy.supportBreakFrom ?? 375];
 
   return (
     <section
@@ -71,10 +81,12 @@ export default function MiniHero({ copy = DEFAULT_COPY }: { copy?: MiniHeroCopy 
       <HomeHeroProvider>
         <div className="mini-page-rail bauma-hero-rail relative z-10">
           <div className="relative z-10" data-hero-copy>
-            <div className="bauma-hero-eyebrow text-[11px] font-medium uppercase tracking-[0.105em]">
-              {copy.eyebrow}
-            </div>
-            <h1 className="mt-[11px] font-serif font-normal tracking-[-0.025em] text-white">
+            {copy.eyebrow ? (
+              <div className="bauma-hero-eyebrow text-[11px] font-medium uppercase tracking-[0.105em]">
+                {copy.eyebrow}
+              </div>
+            ) : null}
+            <h1 className={`${copy.eyebrow ? "mt-[11px] " : ""}font-serif font-normal tracking-[-0.025em] text-white`}>
               <span className="bauma-hero-h1-mobile font-normal tracking-[-0.025em]">
                 {copy.line1}
                 <br />
@@ -91,7 +103,18 @@ export default function MiniHero({ copy = DEFAULT_COPY }: { copy?: MiniHeroCopy 
             </h1>
 
             <p className="mt-6 max-w-[47ch] text-white/75 max-lg:text-white/[0.86]">
-              {copy.support}
+              {/* "\n" = intentional break from `supportBreakFrom` up; narrower phones wrap naturally. */}
+              {copy.support.split("\n").map((line, i) => (
+                <Fragment key={line}>
+                  {i > 0 && (
+                    <>
+                      <br className={supportBreakClass} />
+                      <span className={supportSpaceClass}> </span>
+                    </>
+                  )}
+                  {line}
+                </Fragment>
+              ))}
             </p>
 
             <div className="mt-7 flex flex-wrap items-center gap-3" data-hero-mobile-cta>

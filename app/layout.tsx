@@ -23,11 +23,11 @@ const dmSerif = DM_Serif_Display({
 export const metadata: Metadata = {
   title: "Bauma — Jasna struktura. Več odločitev.",
   description:
-    "Spletne strani postavim tako, da uporabnik hitreje razume, zaupa in naredi naslednji korak.",
+    "Spletne strani za podjetja, ki imajo dobro ponudbo, a se to na njihovi strani ne vidi.",
   metadataBase: new URL("https://bauma.si"),
 
   applicationName: "Bauma",
-  creator: "Bauma — Structure-first websites",
+  creator: "Bauma",
 
   icons: {
     icon: [
@@ -44,12 +44,12 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Bauma — Jasna struktura. Več odločitev.",
     description:
-      "Spletne strani postavim tako, da uporabnik hitreje razume, zaupa in naredi naslednji korak.",
+      "Spletne strani za podjetja, ki imajo dobro ponudbo, a se to na njihovi strani ne vidi.",
     url: "https://bauma.si",
     siteName: "Bauma",
     images: [
       {
-        url: "/og/bauma-og.png",
+        url: "/og/bauma-og-v3.png",
         width: 1200,
         height: 630,
         alt: "Bauma — Jasna struktura. Več odločitev.",
@@ -63,8 +63,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Bauma — Jasna struktura. Več odločitev.",
     description:
-      "Spletne strani postavim tako, da uporabnik hitreje razume, zaupa in naredi naslednji korak.",
-    images: ["/og/bauma-og.png"],
+      "Spletne strani za podjetja, ki imajo dobro ponudbo, a se to na njihovi strani ne vidi.",
+    images: ["/og/bauma-og-v3.png"],
   },
 
   // Default: non-indexable. Only `/` and `/en` opt into index,follow in production.

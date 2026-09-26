@@ -8,12 +8,15 @@ export type SystemGraphicCopy = {
   eyebrow: string;
   headline: string;
   body: string;
+  /** Screen-reader description of the cube; defaults to English. */
+  objectDescription?: string;
 };
 
 const DEFAULT_COPY: SystemGraphicCopy = {
   eyebrow: "Sistemska plast",
   headline: "Pod površino\nje sistem.",
-  body: "Ni dovolj, da so stvari na pravem mestu. Med sabo morajo tudi delovati.",
+  body: "Ni dovolj, da so stvari na pravem mestu.\nMed sabo morajo tudi delovati.",
+  objectDescription: "Kompaktna kocka iz povezanih delov, ki skupaj tvorijo en sistem.",
 };
 
 export default function SystemGraphic({
@@ -40,7 +43,13 @@ export default function SystemGraphic({
           </h2>
 
           <p className="mt-6 max-w-[48ch] text-base leading-7 text-white/55">
-            {copy.body}
+            {/* "\n" = intentional sentence break at every size. */}
+            {copy.body.split("\n").map((line, i) => (
+              <Fragment key={line}>
+                {i > 0 && <br />}
+                {line}
+              </Fragment>
+            ))}
           </p>
         </div>
 
@@ -49,7 +58,8 @@ export default function SystemGraphic({
           className="relative flex min-h-[220px] w-full min-w-0 items-center justify-center max-lg:min-h-[200px] lg:min-h-[280px]"
         >
           <figcaption id="system-view-title" className="sr-only">
-            A compact cube of interlocking parts forming one system.
+            {copy.objectDescription ??
+              "A compact cube of interlocking parts forming one system."}
           </figcaption>
           {/* Mobile: 159×132 at most, then shrinks with the column (Pocket Cube rule). */}
           <SystemCubeObject className="h-[200px] w-[240px] max-sm:aspect-[159/132] max-sm:h-auto max-sm:w-[min(159px,48.5%)]" />

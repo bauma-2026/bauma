@@ -7,11 +7,11 @@ import type { ApproachCopy } from "@/components/home/approach/copy";
  */
 
 export const EN_HERO = {
-  eyebrow: "Structure before form",
   line1: "Clear structure.",
   line2: "Better decisions.",
   support:
-    "I help companies organise their offer, content and path through the website so everything works as one clear, connected whole.",
+    "I work with companies that have a good offer,\nbut their website doesn’t show it.",
+  supportBreakFrom: 400,
   secondaryCta: "Explore the approach",
   primaryCta: "Let’s talk",
 } as const;
@@ -26,55 +26,46 @@ export const EN_HEADER = {
   langSwitchMobile: "Slovenian",
   menuOpen: "Open menu",
   menuClose: "Close menu",
-  mobileBlurb:
-    "Structure that guides the user from understanding to a decision.",
 } as const;
 
 export const EN_DECISION_FLOW = {
-  eyebrow: "Decision flow",
-  headlineLine1: "From structure to",
-  headlineLine2: "decision.",
-  body: "First, we set the direction.",
-  principles: [
+  eyebrow: "The visitor’s view",
+  headlineLine1: "What a first-time",
+  headlineLine2: "visitor wants to know.",
+  questions: [
     {
-      number: "01",
-      label: "Structure",
-      shape: "square" as const,
-      text: "We organise the content so it is immediately clear what is offered and to whom.",
+      label: "Is this for me?",
+      text: "They can tell before reading the details.",
     },
     {
-      number: "02",
-      label: "Clarity",
-      shape: "circle" as const,
-      text: "We highlight what matters and remove what distracts from it.",
+      label: "Why them?",
+      text: "They can see what sets them apart without looking for it.",
     },
     {
-      number: "03",
-      label: "What’s next",
-      shape: "triangle" as const,
-      text: "We guide the user forward so it is always clear what comes next.",
+      label: "What now?",
+      text: "Once they’ve decided, they know how to get in touch.",
     },
   ],
 } as const;
 
 export const EN_APPROACH: ApproachCopy = {
   eyebrow: "Approach",
-  headline: "From ambiguity",
-  headlineSecondary: "to a clear path.",
+  headline: "Every part needs a",
+  headlineSecondary: "reason to be there.",
   steps: [
     {
       number: "01",
-      title: "Remove the noise",
+      title: "What matters gets room.",
       text: "Repetition, unclear CTAs, and sections without a clear purpose.",
     },
     {
       number: "02",
-      title: "Set the path",
+      title: "What doesn’t help gets cut.",
       text: "Hierarchy, information order, and a clear transition to the next step.",
     },
     {
       number: "03",
-      title: "Every part needs a\u00a0reason\u00a0to\u00a0be\u00a0there.",
+      title: "The order isn’t accidental.",
       text: "Visuals, details, and the feel of the page support understanding — not noise.",
     },
   ],
@@ -82,29 +73,25 @@ export const EN_APPROACH: ApproachCopy = {
 export const EN_SYSTEM = {
   eyebrow: "System layer",
   headline: "Beneath it all\nis a system.",
-  body: "It is not enough for things to be in the right place. They also need to work together.",
+  body: "It is not enough for things to be in the right place.\nThey also need to work together.",
 } as const;
 
 export const EN_VISUAL = {
   eyebrow: "Visual layer",
   line1: "Form comes",
   line2: "after clarity.",
-  body: "Good form does not cover the structure. It gives it character.",
+  body: "Good form does not cover the structure.\nIt gives it character.",
 } as const;
 
 export const EN_CONTACT = {
-  eyebrow: "START A CONVERSATION",
-  line1: "A short description",
-  line2: "is enough to get started.",
-  bodyLine1: "Briefly describe the current situation and what you want to change.",
-  bodyLine2: "Then I’ll tell you what makes sense as the next step.",
-  cta: "Send a project description",
+  eyebrow: "Contact",
+  line1: "Every project starts",
+  line2: "with a short description.",
+  cta: "Send a description",
   mailto: "mailto:gregor@bauma.si?subject=Project%20inquiry",
 } as const;
 
 export const EN_FOOTER = {
-  tagline:
-    "Structure for pages where users need to understand quickly, trust what they see and take the next step.",
   email: "gregor@bauma.si",
   legalAria: "Legal links",
   legal: [

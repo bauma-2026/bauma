@@ -359,12 +359,12 @@ export default function ApproachV2Section({
           className="grid gap-10 lg:grid-cols-[minmax(0,0.44fr)_minmax(0,0.56fr)] lg:items-center lg:gap-12 xl:gap-16"
           onMouseLeave={leaveWholeField}
         >
-          <div className="min-w-0 max-w-[420px]">
+          <div className="min-w-0 max-w-[500px]">
             <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/60">
               {copy.eyebrow}
             </p>
 
-            <h2 className="mt-3 max-w-[20ch] text-3xl font-semibold leading-[0.98] tracking-[-0.035em] text-white sm:max-w-[24ch] sm:text-5xl sm:leading-[0.95] sm:tracking-[-0.045em] lg:max-w-[22ch] lg:text-[3.5rem]">
+            <h2 className="mt-3 max-w-[20ch] text-3xl font-semibold leading-[0.98] tracking-[-0.035em] text-white sm:max-w-[24ch] sm:text-5xl sm:leading-[0.95] sm:tracking-[-0.045em] lg:max-w-[22ch] lg:text-[length:clamp(2.875rem,calc(3.90625vw_+_0.375rem),3.5rem)] xl:text-[3.5rem]">
               {copy.headline}
               <br />
               <span className="text-white/88">{copy.headlineSecondary}</span>
@@ -377,7 +377,7 @@ export default function ApproachV2Section({
             ) : null}
 
             <nav
-              aria-label="Approach steps"
+              aria-label={copy.stepsAria ?? "Approach steps"}
               data-approach-nav="1"
               className="mt-7 sm:mt-8"
               onMouseLeave={() => {

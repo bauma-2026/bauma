@@ -16,7 +16,6 @@ export type MiniHeaderCopy = {
   headerCta: string;
   menuOpen: string;
   menuClose: string;
-  mobileBlurb: string;
 };
 
 const DEFAULT_COPY: MiniHeaderCopy = {
@@ -31,7 +30,6 @@ const DEFAULT_COPY: MiniHeaderCopy = {
   headerCta: "Kontakt",
   menuOpen: "Odpri meni",
   menuClose: "Zapri meni",
-  mobileBlurb: "Struktura, ki uporabnika vodi od razumevanja do odločitve.",
 };
 
 /** Must match nav targets (Approach / System / Contact). */
@@ -225,7 +223,7 @@ function HeaderInner({
     <div className="mini-page-rail flex h-[52px] items-center justify-between">
       <Link
         href={copy.homeHref}
-        aria-label="Bauma home"
+        aria-label={copy.homeHref === "/en" ? "Bauma home" : "Bauma — domov"}
         className="inline-flex items-center transition-opacity duration-200 hover:opacity-80"
         onClick={() => setIsMenuOpen(false)}
       >
@@ -240,7 +238,7 @@ function HeaderInner({
 
       <div className="flex items-center gap-6">
         <nav
-          aria-label="Page sections"
+          aria-label={copy.homeHref === "/en" ? "Page sections" : "Razdelki strani"}
           className="hidden items-center gap-6 md:flex"
         >
           {navItems.map((item) => {
@@ -326,7 +324,10 @@ function MobileMenu({
       className="fixed inset-0 z-[998] overflow-y-auto bg-[#080808] text-white md:hidden"
     >
       <div className="mini-page-rail flex min-h-full flex-col pt-[78px] pb-[max(24px,env(safe-area-inset-bottom))]">
-        <nav aria-label="Mobile navigation" className="flex flex-col">
+        <nav
+          aria-label={copy.homeHref === "/en" ? "Mobile navigation" : "Navigacija"}
+          className="flex flex-col"
+        >
           {navItems.map((item) => (
             <Link
               key={item.href}
