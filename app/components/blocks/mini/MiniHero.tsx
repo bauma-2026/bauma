@@ -8,22 +8,10 @@ import {
   HomeHeroProvider,
 } from "@/components/home/hero-system";
 
-type MiniHeroHeadline =
-  | {
-      /** Two fixed lines, broken after `line1`. Used by `/mini` and `/en/mini`. */
-      line1: string;
-      line2: string;
-      headline?: never;
-    }
-  | {
-      /** One sentence that wraps naturally (no forced break). Used by `/` and `/en`. */
-      headline: string;
-      line1?: never;
-      line2?: never;
-    };
-
-export type MiniHeroCopy = MiniHeroHeadline & {
+export type MiniHeroCopy = {
   eyebrow?: string;
+  line1: string;
+  line2: string;
   support: string;
   /** Viewport width (px) from which the "\n" in `support` breaks; narrower wraps naturally. */
   supportBreakFrom?: 375 | 400;
@@ -53,27 +41,7 @@ function splitLastWord(line: string): [string, string] {
 }
 
 export default function MiniHero({ copy = DEFAULT_COPY }: { copy?: MiniHeroCopy }) {
-  const headlineContent = (() => {
-    if (copy.headline !== undefined) {
-      const [lead, emphasis] = splitLastWord(copy.headline);
-      return (
-        <>
-          {lead ? `${lead} ` : null}
-          <span className="italic">{emphasis}</span>
-        </>
-      );
-    }
-    const [line2Lead, line2Emphasis] = splitLastWord(copy.line2);
-    return (
-      <>
-        {copy.line1}
-        <br />
-        {line2Lead ? `${line2Lead} ` : null}
-        <span className="italic">{line2Emphasis}</span>
-      </>
-    );
-  })();
-  const sentenceClass = copy.headline !== undefined ? " bauma-hero-h1-sentence" : "";
+  const [line2Lead, line2Emphasis] = splitLastWord(copy.line2);
   const [supportBreakClass, supportSpaceClass] =
     SUPPORT_BREAK_CLASSES[copy.supportBreakFrom ?? 375];
 
@@ -119,22 +87,22 @@ export default function MiniHero({ copy = DEFAULT_COPY }: { copy?: MiniHeroCopy 
               </div>
             ) : null}
             <h1 className={`${copy.eyebrow ? "mt-[11px] " : ""}font-serif font-normal tracking-[-0.025em] text-white`}>
-              <span
-                className={`bauma-hero-h1-mobile${sentenceClass} font-normal tracking-[-0.025em]`}
-              >
-                {headlineContent}
+              <span className="bauma-hero-h1-mobile font-normal tracking-[-0.025em]">
+                {copy.line1}
+                <br />
+                {line2Lead ? `${line2Lead} ` : null}
+                <span className="italic">{line2Emphasis}</span>
               </span>
 
-              <span className={`bauma-hero-h1-desktop${sentenceClass}`}>
-                {headlineContent}
+              <span className="bauma-hero-h1-desktop">
+                {copy.line1}
+                <br />
+                {line2Lead ? `${line2Lead} ` : null}
+                <span className="italic">{line2Emphasis}</span>
               </span>
             </h1>
 
-            <p
-              className={`mt-6 max-w-[47ch] text-white/75 max-lg:text-white/[0.86]${
-                copy.headline !== undefined ? " text-balance" : ""
-              }`}
-            >
+            <p className="mt-6 max-w-[47ch] text-white/75 max-lg:text-white/[0.86]">
               {/* "\n" = intentional break from `supportBreakFrom` up; narrower phones wrap naturally. */}
               {copy.support.split("\n").map((line, i) => (
                 <Fragment key={line}>

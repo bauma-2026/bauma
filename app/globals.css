@@ -76,16 +76,6 @@ body {
   line-height: 0.94;
 }
 
-/* One-sentence H1 (`/` and `/en`): balanced natural wrap, wider than the
-   16ch cap tuned for the two short fixed lines of the line-based H1. */
-[data-hero-copy] .bauma-hero-h1-sentence {
-  text-wrap: balance;
-}
-
-[data-hero-copy] .bauma-hero-h1-desktop.bauma-hero-h1-sentence {
-  max-width: 24ch;
-}
-
 [data-hero-copy] > p {
   font-size: 16px;
   line-height: 1.55;

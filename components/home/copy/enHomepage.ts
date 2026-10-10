@@ -16,17 +16,6 @@ export const EN_HERO = {
   primaryCta: "Let’s talk",
 } as const;
 
-/**
- * Hero copy for `/en` only. `EN_HERO` above is still used by `/en/mini`
- * and intentionally keeps the previous positioning.
- */
-export const EN_HOME_HERO = {
-  headline: "Websites that help you win customers.",
-  support: "From clear structure and content to design, development and launch.",
-  secondaryCta: "Explore the approach",
-  primaryCta: "Let’s talk",
-} as const;
-
 export const EN_HEADER = {
   navApproach: "Approach",
   navSystem: "System",
