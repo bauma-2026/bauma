@@ -14,12 +14,16 @@ import {
   EN_DECISION_FLOW,
   EN_FOOTER,
   EN_HEADER,
-  EN_HERO,
+  EN_HOME_HERO,
   EN_SYSTEM,
   EN_VISUAL,
 } from "@/components/home/copy/enHomepage";
 
 const isProduction = process.env.VERCEL_ENV === "production";
+
+const HOME_TITLE = "Bauma — Websites that help you win customers.";
+const HOME_DESCRIPTION =
+  "Websites that help you win customers. From clear structure and content to design, development and launch.";
 
 /**
  * EN homepage — structural parity with locked `/`.
@@ -27,6 +31,10 @@ const isProduction = process.env.VERCEL_ENV === "production";
  * Only `/` and `/en` are indexable in production.
  */
 export const metadata: Metadata = {
+  // Page-level so only `/en` changes; `/en/mini` and the legal pages keep
+  // inheriting the EN layout's current tags.
+  title: HOME_TITLE,
+  description: HOME_DESCRIPTION,
   alternates: {
     canonical: "https://bauma.si/en",
     languages: {
@@ -35,7 +43,11 @@ export const metadata: Metadata = {
       "x-default": "https://bauma.si",
     },
   },
+  // The OG image still shows the previous tagline (not regenerated in this
+  // pass), so its alt text keeps describing what the image actually says.
   openGraph: {
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
     url: "https://bauma.si/en",
     siteName: "Bauma",
     images: [
@@ -48,6 +60,12 @@ export const metadata: Metadata = {
     ],
     locale: "en_US",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
+    images: ["/og/bauma-og-en-v3.png"],
   },
   robots: isProduction
     ? { index: true, follow: true }
@@ -74,7 +92,7 @@ export default function EnglishHome() {
       />
 
       <main>
-        <MiniHero copy={EN_HERO} />
+        <MiniHero copy={EN_HOME_HERO} />
         <MiniDecisionFlow copy={EN_DECISION_FLOW} />
         <ApproachSection copy={EN_APPROACH} />
         <SystemGraphic copy={EN_SYSTEM} />
