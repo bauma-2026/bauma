@@ -7,3 +7,6 @@ public/raw
 public/production-transfer
 *.webm
 *.mp4
+
+# Required by /work/flexido (FlexidoHomeProof desktop hero video).
+!public/work/flexido/proof/hero-production.mp4
