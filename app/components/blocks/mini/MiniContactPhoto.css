@@ -1,0 +1,64 @@
+/* Selective dune Contact surface — `/` only (MiniClosingBookend `photoBackground`
+   on the graphite variant). Ported value for value from the approved lab
+   (photo.css, Concept 03 contact).
+
+   Layers: [data-contact-photo]::before = the original dune photograph;
+           [data-contact-photo]::after  = readability, one flat exposure step
+           deepening toward the footer row (BAUMA and the e-mail sit on the
+           photograph). The graphite variant's own layout, hairline and legal
+           strip are untouched. The CTA and footer rows are z-10 and stay above. */
+
+[data-mini-palette] [data-contact-variant][data-contact-photo] {
+  --ink: 5, 8, 15;
+  --dune: url("/images/atmosphere/atmosphere-dune-01.webp");
+  /* phones: height-fit, so only x moves; 72% puts the dune's shadow sweep
+     behind the message */
+  --c-pos: 72% 50%;
+  --c-a: 0.62;
+  --c-a-end: 0.8;
+  background-color: #080a0f;
+}
+
+@media (min-width: 768px) {
+  [data-mini-palette] [data-contact-variant][data-contact-photo] {
+    /* width-fit: y 70% puts the ridge and its shadow behind the type */
+    --c-pos: 50% 70%;
+    --c-a: 0.56;
+  }
+}
+
+@media (min-width: 1280px) {
+  [data-mini-palette] [data-contact-variant][data-contact-photo] {
+    --c-a: 0.5;
+    --c-a-end: 0.76;
+  }
+}
+
+/* beats the graphite variant's [data-contact-bg] scrim gradient */
+[data-mini-palette] [data-contact-variant][data-contact-photo] [data-contact-bg] {
+  background: none;
+}
+
+[data-mini-palette] [data-contact-variant][data-contact-photo]::before,
+[data-mini-palette] [data-contact-variant][data-contact-photo]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+[data-mini-palette] [data-contact-variant][data-contact-photo]::before {
+  background-image: var(--dune);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: var(--c-pos);
+}
+
+[data-mini-palette] [data-contact-variant][data-contact-photo]::after {
+  background-image: linear-gradient(
+    180deg,
+    rgba(var(--ink), var(--c-a)) 0,
+    rgba(var(--ink), var(--c-a)) 50%,
+    rgba(var(--ink), var(--c-a-end)) 100%
+  );
+}

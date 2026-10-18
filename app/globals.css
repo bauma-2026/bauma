@@ -14,6 +14,10 @@ body {
 
 html {
   text-rendering: geometricPrecision;
+  /* Inter ships with an optical-size axis. Keep every route at its default (opsz 14, the rendering used before the
+     axis was loaded); body text, UI, proof tiles and the other pages must not pick up the display cut. Only the
+     homepage headings opt back in, see app/homeTypography.css. */
+  font-optical-sizing: none;
 }
 
 body {
@@ -129,6 +133,26 @@ header[data-header-phase="gap"] {
   opacity: 0;
   pointer-events: none;
   transform: translateY(-8px);
+  /* Fully hidden after the fade: unfocusable and out of the accessibility tree.
+     Visibility flips instantly when the header returns, so it still fades in. */
+  visibility: hidden;
+  transition:
+    opacity 180ms ease-out,
+    transform 180ms ease-out,
+    visibility 0s linear 180ms;
+}
+
+/* Header + mobile menu focus ring. One ring for every header control (links,
+   hamburger, menu rows); the palette CTA rule in MiniButtons.css (higher
+   specificity) keeps its identical Light Royal ring on `/`. Fallback is white on
+   routes without the palette, dark over a pale hero photograph. */
+[data-header-focus]:focus-visible {
+  outline: 2px solid var(--mini-accent-text, #fff);
+  outline-offset: 3px;
+}
+
+header[data-header-ink="dark"] [data-header-focus]:focus-visible {
+  outline-color: #000;
 }
 
 /* Nav anchor markers (#approach, #system): zero-size spans pinned to the

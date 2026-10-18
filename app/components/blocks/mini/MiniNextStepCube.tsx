@@ -16,7 +16,11 @@ import {
   scrollNudgeQuiet,
   tickScrollNudge,
 } from "@/lib/pocketSpatialMotion";
-import { MINI_OBJECT_FILL } from "./miniObjectMaterial";
+import {
+  MINI_OBJECT_FILL,
+  MINI_OBJECT_FILL_NEUTRAL,
+  type MiniSurfaceTone,
+} from "./miniObjectMaterial";
 
 type Vec3 = { x: number; y: number; z: number };
 type Vec2 = { x: number; y: number; z: number };
@@ -110,19 +114,43 @@ const STROKE = {
   ghost: "rgba(255,255,255,0.06)",
 } as const;
 
+/** `/mini`: same white edges, lifted so they separate from the blue-black surface. */
+const STROKE_NEUTRAL = {
+  front: "rgba(255,255,255,0.46)",
+  mid: "rgba(255,255,255,0.38)",
+  rear: "rgba(255,255,255,0.29)",
+  ghost: "rgba(255,255,255,0.09)",
+} as const;
+const STROKES = { warm: STROKE, neutral: STROKE_NEUTRAL } as const;
+
 const FILL = {
-  near: MINI_OBJECT_FILL.front,
-  top: MINI_OBJECT_FILL.rear,
-  side: MINI_OBJECT_FILL.side,
+  warm: {
+    near: MINI_OBJECT_FILL.front,
+    top: MINI_OBJECT_FILL.rear,
+    side: MINI_OBJECT_FILL.side,
+  },
+  neutral: {
+    near: MINI_OBJECT_FILL_NEUTRAL.front,
+    top: MINI_OBJECT_FILL_NEUTRAL.rear,
+    side: MINI_OBJECT_FILL_NEUTRAL.side,
+  },
 } as const;
 
 /** Local-space: top-front, then front-right vertical. */
 const ACCENT_EDGE_INDICES = new Set([0, 1]);
-const ACCENT_RGB = [209, 164, 95] as const;
+const ACCENT_RGB: readonly number[] = [209, 164, 95];
+
+/** `/mini` sets `--mini-accent-line-rgb` (Light Royal); other routes keep the amber. */
+function readAccentRgb(el: Element): readonly number[] {
+  const raw = getComputedStyle(el).getPropertyValue("--mini-accent-line-rgb");
+  const parts = raw.split(",").map(Number);
+  return parts.length === 3 && parts.every(Number.isFinite) ? parts : ACCENT_RGB;
+}
 const ACCENT_HOVER = 0.72;
 const ACCENT_DRAG = 0.94;
 const ACCENT_TURN = 1;
-const ACCENT_ALPHA_PEAK = 0.66;
+/** Peak alpha of the accent edges. `/mini` Light Royal reads a step stronger on the blue-black surface. */
+const ACCENT_ALPHA_PEAK = { warm: 0.66, neutral: 0.8 } as const;
 const ACCENT_IDLE_MIN = 0.24;
 const ACCENT_IDLE_MAX = 0.44;
 
@@ -204,14 +232,14 @@ const EDGES: readonly [number, number][] = [
 
 const FACES: readonly {
   i: readonly [number, number, number, number];
-  fill: string;
+  fill: "near" | "top" | "side";
 }[] = [
-  { i: [0, 1, 2, 3], fill: FILL.near },
-  { i: [4, 5, 1, 0], fill: FILL.top },
-  { i: [1, 5, 6, 2], fill: FILL.side },
-  { i: [4, 0, 3, 7], fill: FILL.side },
-  { i: [5, 4, 7, 6], fill: FILL.near },
-  { i: [3, 2, 6, 7], fill: FILL.top },
+  { i: [0, 1, 2, 3], fill: "near" },
+  { i: [4, 5, 1, 0], fill: "top" },
+  { i: [1, 5, 6, 2], fill: "side" },
+  { i: [4, 0, 3, 7], fill: "side" },
+  { i: [5, 4, 7, 6], fill: "near" },
+  { i: [3, 2, 6, 7], fill: "top" },
 ];
 
 const EDGE_FACES: readonly number[][] = EDGES.map(([ia, ib]) =>
@@ -291,24 +319,24 @@ function edgeVisible(facing: boolean[], edgeIndex: number) {
   return EDGE_FACES[edgeIndex].some((faceIndex) => facing[faceIndex]);
 }
 
-function edgeWeight(a: Vec2, b: Vec2) {
+function edgeWeight(a: Vec2, b: Vec2, stroke: typeof STROKE | typeof STROKE_NEUTRAL) {
   const z = (a.z + b.z) / 2;
-  if (z < -0.1) return { stroke: STROKE.front, width: 1, opacity: 1 };
-  if (z < 0.18) return { stroke: STROKE.mid, width: 1, opacity: 1 };
-  return { stroke: STROKE.rear, width: 0.9, opacity: 1 };
+  if (z < -0.1) return { stroke: stroke.front, width: 1, opacity: 1 };
+  if (z < 0.18) return { stroke: stroke.mid, width: 1, opacity: 1 };
+  return { stroke: stroke.rear, width: 0.9, opacity: 1 };
 }
 
 /** Tint a white structural stroke toward Bauma amber without changing its alpha. */
-function withAccent(stroke: string, amount: number) {
+function withAccent(stroke: string, amount: number, rgb: readonly number[], peak: number) {
   if (amount <= 0.001) return stroke;
   const match = /^rgba\(255,255,255,([0-9.]+)\)$/.exec(stroke);
   if (!match) return stroke;
   const t = clamp(amount, 0, 1);
   const baseA = Number(match[1]);
-  const a = (baseA + (ACCENT_ALPHA_PEAK - baseA) * t).toFixed(3);
-  const r = Math.round(255 + (ACCENT_RGB[0] - 255) * t);
-  const g = Math.round(255 + (ACCENT_RGB[1] - 255) * t);
-  const b = Math.round(255 + (ACCENT_RGB[2] - 255) * t);
+  const a = (baseA + (peak - baseA) * t).toFixed(3);
+  const r = Math.round(255 + (rgb[0] - 255) * t);
+  const g = Math.round(255 + (rgb[1] - 255) * t);
+  const b = Math.round(255 + (rgb[2] - 255) * t);
   return `rgba(${r},${g},${b},${a})`;
 }
 
@@ -568,10 +596,13 @@ function hitBox(pts: Vec2[]) {
 
 type MiniNextStepCubeProps = {
   className?: string;
+  /** `neutral` uses the cool-neutral face fills (`/mini`). */
+  tone?: MiniSurfaceTone;
 };
 
 export default function MiniNextStepCube({
   className = "",
+  tone = "warm",
 }: MiniNextStepCubeProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const objectRef = useRef<SVGGElement>(null);
@@ -592,6 +623,9 @@ export default function MiniNextStepCube({
 
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     let reduced = media.matches;
+    const accentRgb = readAccentRgb(root);
+    const strokes = STROKES[tone];
+    const accentPeak = ACCENT_ALPHA_PEAK[tone];
 
     const faceEls = FACES.map((_, index) =>
       object.querySelector(`[data-face="${index}"]`),
@@ -682,9 +716,9 @@ export default function MiniNextStepCube({
         if (!(el instanceof SVGLineElement)) continue;
         const a = pts[ia];
         const b = pts[ib];
-        const w = edgeWeight(a, b);
+        const w = edgeWeight(a, b, strokes);
         const stroke = ACCENT_EDGE_INDICES.has(index)
-          ? withAccent(w.stroke, accent)
+          ? withAccent(w.stroke, accent, accentRgb, accentPeak)
           : w.stroke;
         el.setAttribute("x1", a.x.toFixed(2));
         el.setAttribute("y1", a.y.toFixed(2));
@@ -1858,7 +1892,7 @@ export default function MiniNextStepCube({
         decayRafRef.current = null;
       }
     };
-  }, []);
+  }, [tone]);
 
   const restPts = CORNERS.map((c) => project(c, REST_RX, REST_RY));
   const restFacing = FACES.map((face) => faceFacing(restPts, face.i));
@@ -1892,7 +1926,7 @@ export default function MiniNextStepCube({
               y1={restGhost[ia].y + 2.5}
               x2={restGhost[ib].x + 3}
               y2={restGhost[ib].y + 2.5}
-              stroke={STROKE.ghost}
+              stroke={STROKES[tone].ghost}
               strokeWidth={1}
             />
           ))}
@@ -1903,12 +1937,12 @@ export default function MiniNextStepCube({
               key={`f-${index}`}
               data-face={index}
               points={poly(face.i.map((i) => restPts[i]))}
-              fill={face.fill}
+              fill={FILL[tone][face.fill]}
               opacity={restFacing[index] ? 1 : 0}
             />
           ))}
           {EDGES.map(([ia, ib], index) => {
-            const w = edgeWeight(restPts[ia], restPts[ib]);
+            const w = edgeWeight(restPts[ia], restPts[ib], STROKES[tone]);
             return (
               <line
                 key={`e-${index}`}

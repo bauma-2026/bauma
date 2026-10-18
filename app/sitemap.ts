@@ -1,10 +1,14 @@
 import type { MetadataRoute } from "next";
+import { isStaging } from "@/lib/siteEnv";
 
 /**
  * Public indexable homepage URLs only.
  * Do not add About, Work, legal, lab, or preview routes.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
+  // Staging must not expose production URLs.
+  if (isStaging) return [];
+
   const lastModified = new Date();
 
   return [

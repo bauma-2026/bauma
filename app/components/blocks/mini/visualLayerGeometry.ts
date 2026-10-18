@@ -21,9 +21,18 @@ const RADIUS = 0.28;
 const SEGS = 8;
 const FACE_ALIGN = 0.94;
 
-const NEAR = "#38342f";
-const SIDE = "#181613";
-const TOP = "#2a2622";
+/**
+ * Warm bronze/taupe set (original) and the cool slate-graphite set used by `/mini`.
+ * `neutral` steps front > top > side by clear luminance gaps (~0.054 / 0.036 / 0.017
+ * relative) and keeps the side face off the cool Visual surface #131720, with a
+ * blue-red spread of only ~15 so it stays graphite, not blue.
+ */
+const MATERIAL = {
+  warm: { near: "#38342f", side: "#181613", top: "#2a2622" },
+  neutral: { near: "#3a3f49", side: "#1e222b", top: "#2e323c" },
+} as const;
+
+export type VisualLayerTone = keyof typeof MATERIAL;
 
 export const SILHOUETTE = "rgba(255,255,255,0.06)";
 
@@ -75,11 +84,12 @@ function mixHex(a: string, b: string, t: number): string {
 }
 
 /** Flat face, then a blend that stays between the two face tones, then the next face. */
-function fillFor(n: Vec3): string {
+function fillFor(n: Vec3, tone: VisualLayerTone): string {
+  const { near, side, top } = MATERIAL[tone];
   const parts = [
-    { v: Math.abs(n.x), color: SIDE },
-    { v: Math.abs(n.y), color: TOP },
-    { v: Math.abs(n.z), color: NEAR },
+    { v: Math.abs(n.x), color: side },
+    { v: Math.abs(n.y), color: top },
+    { v: Math.abs(n.z), color: near },
   ].sort((a, b) => b.v - a.v);
   const primary = parts[0];
   const secondary = parts[1];
@@ -264,7 +274,11 @@ export type VisualLayerDrawing = {
   silhouette: string;
 };
 
-export function drawVisualLayerCube(rx = REST_RX, ry = REST_RY): VisualLayerDrawing {
+export function drawVisualLayerCube(
+  rx = REST_RX,
+  ry = REST_RY,
+  tone: VisualLayerTone = "warm",
+): VisualLayerDrawing {
   const projected = POLYS.map((poly) => {
     const p2 = poly.pts.map((p) => fit(p, rx, ry));
     let area = 0;
@@ -311,7 +325,7 @@ export function drawVisualLayerCube(rx = REST_RX, ry = REST_RY): VisualLayerDraw
     .map((face) => ({
       id: face.poly.id,
       d: pathOf(face.p2),
-      fill: fillFor(newell(face.poly.pts)),
+      fill: fillFor(newell(face.poly.pts), tone),
     }));
 
   return { faces, silhouette };

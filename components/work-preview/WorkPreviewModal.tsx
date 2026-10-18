@@ -30,10 +30,20 @@ import { useModalStudyMode } from "./useModalStudyMode";
 import { useScrollLock } from "./useScrollLock";
 import { useWorkPreview } from "./WorkPreviewProvider";
 
-export default function WorkPreviewModal() {
+const CLOSE_LABEL: Record<"sl" | "en", string> = {
+  sl: "Zapri predogled projekta",
+  en: "Close project preview",
+};
+
+export default function WorkPreviewModal({
+  locale = "sl",
+}: {
+  /** Production callers never pass this — default keeps existing SL output. */
+  locale?: "sl" | "en";
+}) {
   const { activeId, openMeta, closePreview, getTriggerElement } = useWorkPreview();
   const studyMode = useModalStudyMode();
-  const project = activeId ? getWorkPreviewProject(activeId) : null;
+  const project = activeId ? getWorkPreviewProject(activeId, locale) : null;
 
   const [mounted, setMounted] = useState(false);
   const [rendered, setRendered] = useState(false);
@@ -355,7 +365,7 @@ export default function WorkPreviewModal() {
             type="button"
             onClick={handleClose}
             className="inline-flex h-11 w-11 items-center justify-center rounded-full text-white/55 transition hover:bg-white/[0.05] hover:text-white/88 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-white/60"
-            aria-label="Zapri predogled projekta"
+            aria-label={CLOSE_LABEL[locale]}
           >
             <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" aria-hidden>
               <path

@@ -40,9 +40,12 @@ export default function HomeHeroCta({
       href={href}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
+      data-cta={
+        variant === "amber" ? "primary" : variant === "ghost" ? "secondary" : undefined
+      }
       className={`bauma-focus-pill group inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-medium transition-[transform,background-color,color,border-color] duration-300 hover:-translate-y-[1px] active:translate-y-0 ${
         variant === "amber"
-          ? "border border-transparent bg-[#FCAC33] text-black hover:bg-[#FCAC33]/90"
+          ? "border border-transparent bg-[var(--mini-accent,#FCAC33)] text-[var(--mini-accent-fg,#000)] hover:bg-[var(--mini-accent,#FCAC33)]/90"
           : variant === "ghost"
             ? "border border-white/45 bg-white/[0.06] text-white hover:border-white/60 hover:bg-white/[0.12] max-lg:border-white/[0.65] max-lg:bg-white/[0.12]"
             : "bg-white text-black hover:bg-white/90"
@@ -51,7 +54,10 @@ export default function HomeHeroCta({
       {arrow ? (
         <span className="inline-flex items-center gap-2">
           {label}
-          <span className="transition duration-300 group-hover:translate-x-0.5">
+          <span
+            data-cta-glyph=""
+            className="transition duration-300 group-hover:translate-x-0.5"
+          >
             →
           </span>
         </span>

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { HIT_AREA, HIT_AREA_LOGO, MobileMenuTrigger, useLanguageSwitchHref, useMobileMenuChrome } from "./MiniHeader";
 
 const navItems = [
   { href: "/en/#approach", label: "Approach", id: "approach" },
@@ -14,17 +15,20 @@ function HeaderInner({
   activeId,
   isMenuOpen,
   setIsMenuOpen,
+  langSwitchHref,
 }: {
   activeId: string;
   isMenuOpen: boolean;
   setIsMenuOpen: (value: boolean) => void;
+  langSwitchHref: string;
 }) {
   return (
-    <div className="mx-auto flex h-[52px] max-w-[1100px] items-center justify-between px-5 sm:px-6 lg:px-8">
+    <div className="mini-page-rail flex h-[52px] items-center justify-between">
       <Link
         href="/en"
         aria-label="Bauma home"
-        className="inline-flex items-center transition-opacity duration-200 hover:opacity-80"
+        data-header-focus
+        className={`${HIT_AREA_LOGO} inline-flex items-center transition-opacity duration-200 hover:opacity-80`}
         onClick={() => setIsMenuOpen(false)}
       >
         <img
@@ -46,8 +50,9 @@ function HeaderInner({
               <Link
                 key={item.href}
                 href={item.href}
-                aria-current={isActive ? "page" : undefined}
-                className={`text-[12px] font-medium transition ${
+                aria-current={isActive ? "location" : undefined}
+                data-header-focus
+                className={`${HIT_AREA} text-[12px] font-medium transition ${
                   isActive ? "text-white" : "text-white/50 hover:text-white"
                 }`}
               >
@@ -58,16 +63,18 @@ function HeaderInner({
         </nav>
 
         <Link
-          href="/"
+          href={langSwitchHref}
           aria-label="Slovenian version"
-          className="hidden border-l border-white/10 pl-5 text-[12px] font-medium text-white/45 transition hover:text-white md:inline-flex"
+          data-header-focus
+          className={`${HIT_AREA} hidden border-l border-white/10 pl-5 text-[12px] font-medium text-white/45 transition hover:text-white md:inline-flex`}
         >
           SL
         </Link>
 
         <Link
           href="/en/#contact"
-          aria-current={activeId === "contact" ? "page" : undefined}
+          aria-current={activeId === "contact" ? "location" : undefined}
+          data-header-focus
           className={`hidden rounded-full px-3.5 py-1.5 text-[12px] font-medium transition sm:px-4 sm:py-1.5 sm:text-xs md:inline-flex ${
             activeId === "contact"
               ? "bg-white text-black ring-1 ring-white/30"
@@ -77,78 +84,63 @@ function HeaderInner({
           Contact
         </Link>
 
-        <button
-          type="button"
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          aria-expanded={isMenuOpen}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-[#080808] text-white transition hover:border-white/25 hover:bg-white/[0.04] md:hidden"
-        >
-          <span className="relative h-4 w-4">
-            <span
-              className={`absolute left-0 top-1/2 h-[1.5px] w-4 -translate-y-1/2 rounded-full bg-white transition ${
-                isMenuOpen ? "rotate-45" : "-translate-y-[4px]"
-              }`}
-            />
-            <span
-              className={`absolute left-0 top-1/2 h-[1.5px] w-4 -translate-y-1/2 rounded-full bg-white transition ${
-                isMenuOpen ? "opacity-0" : "opacity-100"
-              }`}
-            />
-            <span
-              className={`absolute left-0 top-1/2 h-[1.5px] w-4 -translate-y-1/2 rounded-full bg-white transition ${
-                isMenuOpen ? "-rotate-45" : "translate-y-[4px]"
-              }`}
-            />
-          </span>
-        </button>
+        <MobileMenuTrigger
+          open={isMenuOpen}
+          openLabel="Open menu"
+          closeLabel="Close menu"
+          onToggle={() => setIsMenuOpen(!isMenuOpen)}
+        />
       </div>
     </div>
   );
 }
 
-function MobileMenu({ onClose }: { onClose: () => void }) {
+function MobileMenu({
+  onClose,
+  langSwitchHref,
+}: {
+  onClose: () => void;
+  langSwitchHref: string;
+}) {
   return (
-    <div className="fixed inset-0 z-[998] bg-[#080808] text-white md:hidden">
-      <div className="mx-auto flex min-h-screen max-w-[1100px] flex-col px-5 pt-[78px] pb-8 sm:px-6">
-        <nav aria-label="Mobile navigation" className="space-y-0">
+    <div
+      id="bauma-mobile-menu"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Menu"
+      className="fixed inset-0 z-[998] overflow-y-auto bg-[#080808] text-white md:hidden"
+    >
+      <div className="mini-page-rail flex min-h-full flex-col pt-[78px] pb-[max(24px,env(safe-area-inset-bottom))]">
+        <nav aria-label="Mobile navigation" className="flex flex-col">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               onClick={onClose}
-              className="flex border-b border-white/10 py-4 text-[18px] font-normal tracking-[-0.01em] text-white transition hover:text-white/70"
+              data-header-focus
+              className="flex min-h-[52px] w-full items-center border-b border-white/10 text-[20px] font-normal tracking-[-0.02em] text-white transition-colors duration-200 hover:text-white/70"
             >
               {item.label}
             </Link>
           ))}
 
           <Link
-            href="/en/#contact"
+            href={langSwitchHref}
+            aria-label="Slovenian version"
             onClick={onClose}
-            className="flex border-b border-white/10 py-4 text-[18px] font-normal tracking-[-0.01em] text-white transition hover:text-white/70"
+            data-header-focus
+            className="mt-3 flex min-h-11 w-full items-center text-[13px] font-medium tracking-[0.04em] text-white/70 transition-colors duration-200 hover:text-white"
           >
-            Contact
-          </Link>
-
-          <Link
-            href="/"
-            onClick={onClose}
-            className="flex border-b border-white/10 py-4 text-[14px] font-medium tracking-[0.04em] text-white/45 transition hover:text-white"
-          >
-            Slovenian
+            SL
           </Link>
         </nav>
 
         <div className="mt-auto border-t border-white/10 pt-6">
-          <p className="max-w-[30ch] text-sm leading-6 text-white/45">
-            Structure that guides users from understanding to decision.
-          </p>
-
           <Link
             href="/en/#contact"
             onClick={onClose}
-            className="mt-5 inline-flex h-10 items-center justify-center rounded-full bg-white px-5 text-sm font-medium text-black transition hover:bg-white/90"
+            data-header-focus
+            className="flex h-14 w-full items-center justify-center rounded-full bg-[#FCAC33] text-sm font-medium text-black transition-colors duration-200 hover:bg-[#FCAC33]/90"
           >
             Contact
           </Link>
@@ -161,6 +153,8 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
 export default function MiniHeaderEn() {
   const [activeId, setActiveId] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const langSwitchHref = useLanguageSwitchHref("/");
+  useMobileMenuChrome(isMenuOpen, setIsMenuOpen);
 
   useEffect(() => {
     function updateActiveSection() {
@@ -192,28 +186,6 @@ export default function MiniHeaderEn() {
     };
   }, []);
 
-  useEffect(() => {
-    document.body.style.overflow = isMenuOpen ? "hidden" : "";
-
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isMenuOpen]);
-
-  useEffect(() => {
-    function closeOnEscape(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setIsMenuOpen(false);
-      }
-    }
-
-    window.addEventListener("keydown", closeOnEscape);
-
-    return () => {
-      window.removeEventListener("keydown", closeOnEscape);
-    };
-  }, []);
-
   return (
     <>
       <div aria-hidden="true" className="h-[52px]" />
@@ -223,10 +195,16 @@ export default function MiniHeaderEn() {
           activeId={activeId}
           isMenuOpen={isMenuOpen}
           setIsMenuOpen={setIsMenuOpen}
+          langSwitchHref={langSwitchHref}
         />
       </header>
 
-      {isMenuOpen ? <MobileMenu onClose={() => setIsMenuOpen(false)} /> : null}
+      {isMenuOpen ? (
+        <MobileMenu
+          onClose={() => setIsMenuOpen(false)}
+          langSwitchHref={langSwitchHref}
+        />
+      ) : null}
     </>
   );
 }

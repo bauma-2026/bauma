@@ -15,11 +15,26 @@
  * Strokes stay alpha — 0.06–0.35 is stable enough and must stay soft.
  */
 
+/** Surface tone. `warm` is the original charcoal; `neutral` is the cool-neutral set used by `/mini`. */
+export type MiniSurfaceTone = "warm" | "neutral";
+
 export const MINI_OBJECT_FILL = {
   front: "#1b1916",
   side: "#181613",
   rear: "#161411",
   inset: "#201e1c",
+} as const;
+
+/**
+ * `/mini` set: the same lift over the section surface as the previous graphite
+ * values (front 0.050, side 0.038, rear 0.029, inset 0.071 white over #0f0f10),
+ * re-composited onto the cool Mid CTA surface `#10131b` (16, 19, 27).
+ */
+export const MINI_OBJECT_FILL_NEUTRAL = {
+  front: "#1c1f26",
+  side: "#191c24",
+  rear: "#171a22",
+  inset: "#21242b",
 } as const;
 
 /** Slight lift matching the previous +0.006 / +0.008 white-alpha peaks. */

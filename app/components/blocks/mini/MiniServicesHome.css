@@ -1,0 +1,126 @@
+/*
+ * Homepage "Storitve" composition (from /lab/services-direction-c, option C2, with its structural decoration removed).
+ * Used only by `MiniServicesHome`; every selector is under `.msv`.
+ *
+ * The grid is the Selected Work grid: 1 column below md, 2 columns from md (gap 1.5rem), 3 columns from lg (gap 2.5rem,
+ * 3rem from xl). Title on column 1, description on column 2, column 3 empty on purpose. Horizontal rules run the full
+ * rail width, so the row ends land on the outer tile edges below. Four equal rows: no numbers, no order implied.
+ * Below md the rows stack title -> description.
+ *
+ * Typography baseline: app/homeTypography.css (Inter display optical size on headings, `text-wrap: pretty`, and the
+ * shared mono eyebrow). This file owns the Services title scale, weight (500, provisional) and tracking.
+ */
+
+.msv {
+  --msv-g: 1.5rem;
+  --msv-rule: var(--mini-border-section, #293244); /* outer frame rules */
+  --msv-hair: #1b2230; /* inner row rules (one tone below the frame, as before) */
+  --msv-h3: 1.625rem;
+}
+@media (min-width: 768px) {
+  .msv {
+    --msv-h3: 1.75rem;
+  }
+}
+@media (min-width: 1024px) {
+  .msv {
+    --msv-g: 2.5rem;
+    /* The longest title ("Oblikovanje in izvedba") is about 10.2em wide, so this keeps it inside column 1 at every width. */
+    --msv-h3: clamp(1.75rem, calc((100vw - 9rem) / 32.5), 2.25rem);
+  }
+}
+@media (min-width: 1280px) {
+  .msv {
+    --msv-g: 3rem;
+  }
+}
+
+/* ---------- list and rows ---------- */
+.msv .msv-list {
+  border-top: 1px solid var(--msv-rule);
+  border-bottom: 1px solid var(--msv-rule);
+}
+.msv .msv-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 20px;
+  align-items: start;
+  padding-block: 30px;
+}
+.msv .msv-list > li + li > .msv-row {
+  border-top: 1px solid var(--msv-hair);
+}
+.msv .msv-row h3,
+.msv .msv-row p {
+  margin: 0;
+  min-width: 0;
+}
+@media (min-width: 768px) {
+  .msv .msv-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--msv-g);
+    row-gap: 0;
+    padding-block: 34px;
+  }
+  .msv .msv-row h3 {
+    grid-column: 1;
+  }
+  .msv .msv-row p {
+    grid-column: 2;
+  }
+}
+@media (min-width: 1024px) {
+  .msv .msv-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding-block: 42px;
+  }
+  /* The description starts on column 2 (the tile edge below) and may run into the empty column 3, but never narrower
+     than a 340px measure: between 1024 and about 1180px a single column is only 293 to 330px, i.e. 35 characters or
+     fewer per line. From xl the column itself is 373px, so the right edge also lands on the tile edge. */
+  .msv .msv-row p {
+    grid-column: 2 / span 2;
+    max-width: max(340px, calc((100% - var(--msv-g)) / 2));
+  }
+}
+
+/* Optical alignment: trim both texts to their cap height / baseline, so `align-items: start` puts the cap-tops of the
+   title and the description on one line and the row padding is measured from the letters, not the line boxes.
+   Browsers without `text-box` (Firefox at the time of writing) fall back to the plain line boxes, a few px off. */
+@supports (text-box: trim-both cap alphabetic) {
+  .msv .msv-row h3 > span,
+  .msv .msv-row p {
+    text-box: trim-both cap alphabetic;
+  }
+}
+.msv .msv-row h3 > span {
+  display: block;
+  min-width: 0;
+}
+
+/* ---------- title: Inter display (opsz comes from the foundation), sized to the grid column ---------- */
+.msv .msv-row h3 {
+  font-size: var(--msv-h3);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* ---------- description: Inter ---------- */
+.msv .msv-row p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgb(255 255 255 / 0.6);
+  text-wrap: pretty;
+}
+@media (min-width: 768px) {
+  .msv .msv-row p {
+    font-size: 16px;
+    line-height: 28px;
+  }
+}
+@media (max-width: 767px) {
+  .msv .msv-row p {
+    margin-top: 2px;
+  }
+}

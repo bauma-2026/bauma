@@ -1,0 +1,188 @@
+/*
+ * Selected Work typographic surfaces: one-shot entry motion (homepage + lab).
+ *
+ * The approved surfaces (MiniSelectedWorkSurfaces) are rendered untouched and
+ * are the default state: with no `data-state` nothing in this file applies, so
+ * the static design is what the server renders, what no-JS / failed-JS /
+ * reduced-motion visitors get, and what the page shows until JS decides
+ * otherwise. Every rule below targets the surfaces' structure from the outside,
+ * scoped to `.swm`.
+ *
+ * States, set by SelectedWorkMotion.tsx on the `.swm` wrapper:
+ *   (none)   static, approved design
+ *   "armed"  only ever set while the surface is still below the viewport:
+ *            elements sit in the first pose of their animation. The pose is
+ *            deliberately readable (opacity never below .5, no element hidden)
+ *   "play"   one-shot animations from that same pose to the static design
+ *   "done"   nothing applies, identical to static
+ *
+ * Only transform and opacity animate (plus one colour on the question mark),
+ * so nothing reflows. Nothing here changes pointer events, selection or focus.
+ */
+
+.swm {
+  --swm-ease: cubic-bezier(0.25, 0.8, 0.25, 1); /* soft ease-out, no overshoot */
+  --swm-ease-rule: cubic-bezier(0.65, 0, 0.35, 1); /* even ease-in-out for ruled lines */
+  --swm-delay: 0ms; /* per-column offset, lg only */
+}
+
+@media (min-width: 1024px) {
+  .swm[data-col="2"] { --swm-delay: 120ms; }
+  .swm[data-col="3"] { --swm-delay: 240ms; }
+}
+
+/* First pose of every animation == its `from` keyframe, so armed -> play has no jump. */
+@keyframes swm-rise {
+  from { opacity: 0.5; transform: translateY(0.22em); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes swm-rise-small {
+  from { opacity: 0.55; transform: translateY(0.16em); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes swm-fade-index {
+  from { opacity: 0.5; }
+  to   { opacity: 1; }
+}
+@keyframes swm-mark {
+  from { transform: translateY(0.14em); color: #1b1612; }
+  to   { transform: none; color: #a8714a; }
+}
+@keyframes swm-draw {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes swm-from-left {
+  from { opacity: 0.55; transform: translateX(-0.32em); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes swm-from-right {
+  from { opacity: 0.55; transform: translateX(0.32em); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes swm-from-below {
+  from { opacity: 0.6; transform: translateY(0.42em); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* ---------- structure that exists only while armed / playing ---------- */
+
+  /* 01 · the question mark needs a box to move */
+  .swm[data-live][data-surface="odstrani"]:is([data-state="armed"], [data-state="play"]) p > span > span {
+    display: inline-block;
+  }
+
+  /* 02 · each rule is redrawn by a pseudo-element so it can scale; the real
+     border is made transparent for the duration and returns untouched. */
+  .swm[data-live][data-surface="dema"]:is([data-state="armed"], [data-state="play"]) > div > div > div {
+    position: relative;
+    border-top-color: transparent;
+  }
+  .swm[data-live][data-surface="dema"]:is([data-state="armed"], [data-state="play"]) > div > div > div:last-child {
+    border-bottom-color: transparent;
+  }
+  .swm[data-live][data-surface="dema"]:is([data-state="armed"], [data-state="play"]) > div > div > div::before,
+  .swm[data-live][data-surface="dema"]:is([data-state="armed"], [data-state="play"]) > div > div > div:last-child::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgb(34 33 31 / 0.35);
+    transform-origin: left center;
+    transform: scaleX(0);
+  }
+  .swm[data-live][data-surface="dema"]:is([data-state="armed"], [data-state="play"]) > div > div > div::before { top: -1px; }
+  .swm[data-live][data-surface="dema"]:is([data-state="armed"], [data-state="play"]) > div > div > div:last-child::after { bottom: -1px; }
+
+  /* ---------- armed: readable first pose (below the viewport only) ---------- */
+
+  .swm[data-live][data-surface="odstrani"][data-state="armed"] p > span {
+    opacity: 0.5;
+    transform: translateY(0.22em);
+  }
+  /* the sentence is complete (ink "?") until the "?" takes its accent */
+  .swm[data-live][data-surface="odstrani"][data-state="armed"] p > span > span {
+    color: #1b1612;
+    transform: translateY(0.14em);
+  }
+
+  .swm[data-live][data-surface="dema"][data-state="armed"] > div > div > div > p {
+    opacity: 0.55;
+    transform: translateY(0.16em);
+  }
+  .swm[data-live][data-surface="dema"][data-state="armed"] > div > div > div > span {
+    opacity: 0.5;
+  }
+
+  .swm[data-live][data-surface="flexido"][data-state="armed"] > div > div > p > span:nth-child(1) {
+    opacity: 0.55;
+    transform: translateX(-0.32em);
+  }
+  .swm[data-live][data-surface="flexido"][data-state="armed"] > div > div > p > span:nth-child(2) {
+    opacity: 0.55;
+    transform: translateX(0.32em);
+  }
+  .swm[data-live][data-surface="flexido"][data-state="armed"] > div > div > p:last-child {
+    opacity: 0.6;
+    transform: translateY(0.42em);
+  }
+
+  /* ---------- 01 · Odstrani: a question revealed (~1000ms) ---------- */
+  /* three lines rise 0.22em and settle to full ink in a 130ms cascade (520ms
+     each, done at 780ms); the question mark follows at 620ms and takes the one
+     colour accent */
+
+  .swm[data-live][data-surface="odstrani"][data-state="play"] p > span {
+    animation: swm-rise calc(520ms * var(--swm-t, 1)) var(--swm-ease) backwards;
+  }
+  .swm[data-live][data-surface="odstrani"][data-state="play"] p > span:nth-child(1) { animation-delay: calc((0ms + var(--swm-delay)) * var(--swm-t, 1)); }
+  .swm[data-live][data-surface="odstrani"][data-state="play"] p > span:nth-child(2) { animation-delay: calc((130ms + var(--swm-delay)) * var(--swm-t, 1)); }
+  .swm[data-live][data-surface="odstrani"][data-state="play"] p > span:nth-child(3) { animation-delay: calc((260ms + var(--swm-delay)) * var(--swm-t, 1)); }
+  .swm[data-live][data-surface="odstrani"][data-state="play"] p > span > span {
+    animation: swm-mark calc(380ms * var(--swm-t, 1)) var(--swm-ease) calc((620ms + var(--swm-delay)) * var(--swm-t, 1)) backwards;
+  }
+
+  /* ---------- 02 · Dema: a sequence assembled (~940ms) ---------- */
+  /* row n starts at n*170ms: rule draws left to right (460ms, even ease), the
+     sentence settles 120ms behind it, the index fades in 240ms behind; the
+     closing rule is drawn last */
+
+  .swm[data-live][data-surface="dema"][data-state="play"] > div > div > div::before,
+  .swm[data-live][data-surface="dema"][data-state="play"] > div > div > div:last-child::after {
+    animation: swm-draw calc(460ms * var(--swm-t, 1)) var(--swm-ease-rule) backwards;
+  }
+  .swm[data-live][data-surface="dema"][data-state="play"] > div > div > div > p {
+    animation: swm-rise-small calc(440ms * var(--swm-t, 1)) var(--swm-ease) backwards;
+  }
+  .swm[data-live][data-surface="dema"][data-state="play"] > div > div > div > span {
+    animation: swm-fade-index calc(360ms * var(--swm-t, 1)) ease-out backwards;
+  }
+  .swm[data-live][data-surface="dema"][data-state="play"] > div > div > div:nth-child(1)::before { animation-delay: calc((0ms + var(--swm-delay)) * var(--swm-t, 1)); }
+  .swm[data-live][data-surface="dema"][data-state="play"] > div > div > div:nth-child(2)::before { animation-delay: calc((170ms + var(--swm-delay)) * var(--swm-t, 1)); }
+  .swm[data-live][data-surface="dema"][data-state="play"] > div > div > div:nth-child(3)::before { animation-delay: calc((340ms + var(--swm-delay)) * var(--swm-t, 1)); }
+  .swm[data-live][data-surface="dema"][data-state="play"] > div > div > div:last-child::after { animation-delay: calc((460ms + var(--swm-delay)) * var(--swm-t, 1)); }
+  .swm[data-live][data-surface="dema"][data-state="play"] > div > div > div:nth-child(1) > p { animation-delay: calc((120ms + var(--swm-delay)) * var(--swm-t, 1)); }
+  .swm[data-live][data-surface="dema"][data-state="play"] > div > div > div:nth-child(2) > p { animation-delay: calc((290ms + var(--swm-delay)) * var(--swm-t, 1)); }
+  .swm[data-live][data-surface="dema"][data-state="play"] > div > div > div:nth-child(3) > p { animation-delay: calc((460ms + var(--swm-delay)) * var(--swm-t, 1)); }
+  .swm[data-live][data-surface="dema"][data-state="play"] > div > div > div:nth-child(1) > span { animation-delay: calc((240ms + var(--swm-delay)) * var(--swm-t, 1)); }
+  .swm[data-live][data-surface="dema"][data-state="play"] > div > div > div:nth-child(2) > span { animation-delay: calc((410ms + var(--swm-delay)) * var(--swm-t, 1)); }
+  .swm[data-live][data-surface="dema"][data-state="play"] > div > div > div:nth-child(3) > span { animation-delay: calc((580ms + var(--swm-delay)) * var(--swm-t, 1)); }
+
+  /* ---------- 03 · Flexido: separate elements, one system (~860ms) ---------- */
+  /* "Povežemo" and "tok med stroji." close in on each other from opposite
+     sides (700ms); the quieter sentence rises into the space between them
+     180ms later (680ms). All travel is under the surface padding (0.32em/0.42em
+     of a 0.61em margin), so nothing is clipped by the edges. */
+
+  .swm[data-live][data-surface="flexido"][data-state="play"] > div > div > p > span:nth-child(1) {
+    animation: swm-from-left calc(700ms * var(--swm-t, 1)) var(--swm-ease) calc((0ms + var(--swm-delay)) * var(--swm-t, 1)) backwards;
+  }
+  .swm[data-live][data-surface="flexido"][data-state="play"] > div > div > p > span:nth-child(2) {
+    animation: swm-from-right calc(700ms * var(--swm-t, 1)) var(--swm-ease) calc((60ms + var(--swm-delay)) * var(--swm-t, 1)) backwards;
+  }
+  .swm[data-live][data-surface="flexido"][data-state="play"] > div > div > p:last-child {
+    animation: swm-from-below calc(680ms * var(--swm-t, 1)) var(--swm-ease) calc((180ms + var(--swm-delay)) * var(--swm-t, 1)) backwards;
+  }
+}

@@ -1,0 +1,29 @@
+/* `/mini` palette. Variables are read by shared components with their previous
+   (amber) values as fallbacks, so every other route keeps its colours.
+   Royal Blue = primary accent; Light Royal = accent text and fine lines. */
+[data-mini-palette] {
+  display: contents;
+  --mini-accent: #4169e1;
+  --mini-accent-fg: #ffffff;
+  --mini-accent-text: #7c97f0;
+  --mini-accent-line: #7c97f0;
+  --mini-accent-line-rgb: 124, 151, 240;
+
+  /* Section surfaces below the hero: cool blue-black steps of the Midnight
+     Graphite base (#0A0D15). Read with their neutral values as fallbacks. */
+  --mini-surface-system: #0d0f15;
+  --mini-surface-flexido: #080a0f;
+  --mini-surface-cta: #10131b;
+  --mini-surface-visual: #131720;
+  --mini-surface-work: #080a0f;
+
+  /* Solid scrolled-state header (and the open mobile menu, so the two stay
+     seamless). Midnight Navy; the over-hero state stays transparent. */
+  --mini-surface-header: #0d1220;
+
+  /* Structural borders: cool graphite-blue steps instead of neutral white-alpha.
+     Never the saturated accent. Hover / focus-visible states keep their own rules. */
+  --mini-border-section: #293244;
+  --mini-border-subtle: #202938;
+  --mini-border-header: #303b50;
+}

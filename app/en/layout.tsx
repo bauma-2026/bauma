@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { isStaging } from "@/lib/siteEnv";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bauma.si"),
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
     title: "Bauma — Clear structure. Better decisions.",
     description:
       "Websites for companies with a strong offer that their current site doesn’t communicate clearly.",
-    url: "https://bauma.si/en",
+    ...(isStaging ? {} : { url: "https://bauma.si/en" }),
     siteName: "Bauma",
     images: [
       {

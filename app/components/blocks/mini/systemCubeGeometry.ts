@@ -63,6 +63,8 @@ export type DrawnFace = {
   z: number;
   fill: FaceFill;
   joint?: boolean;
+  /** Owning module — lets the refined drawing weight faces by subsystem. */
+  module?: string;
 };
 
 export type EdgeTier = "front" | "mid" | "rear";
@@ -233,6 +235,13 @@ function outlineTier(a: Vec3, b: Vec3, yaw: number, pitch: number, eps = 0.002):
   return "rear";
 }
 
+/** True when the whole edge lies in one face of the cube hull (shared axis at ±H). */
+function edgeOnHull(a: Vec3, b: Vec3, eps = 0.002): boolean {
+  return (["x", "y", "z"] as const).some(
+    (axis) => Math.abs(a[axis] - b[axis]) < eps && Math.abs(Math.abs(a[axis]) - CUBE_H) < eps,
+  );
+}
+
 function edgeKey(a: Vec3, b: Vec3): string {
   const fmt = (p: Vec3) => `${p.x.toFixed(3)},${p.y.toFixed(3)},${p.z.toFixed(3)}`;
   const ka = fmt(a);
@@ -249,12 +258,48 @@ export type SystemCubeDrawing = {
   silhouette: DrawnEdge[];
   seams: DrawnEdge[];
   links: DrawnEdge[];
+  /** Refined only: hidden construction seen through the faces. */
+  hidden: DrawnEdge[];
 };
+
+/** Rectangular cut planes of the A2.2 cube. Their interior edges are the hidden structure. */
+function cutPlanes(): Vec3[][] {
+  const H = CUBE_H;
+  return [
+    // x = X_FRONT, front slab
+    [v(X_FRONT, -H, -H), v(X_FRONT, H, -H), v(X_FRONT, H, Z_MID), v(X_FRONT, -H, Z_MID)],
+    // y = Y_FRONT, front-left
+    [v(-H, Y_FRONT, -H), v(X_FRONT, Y_FRONT, -H), v(X_FRONT, Y_FRONT, Z_MID), v(-H, Y_FRONT, Z_MID)],
+    // z = Z_MID, the slab boundary
+    [v(-H, -H, Z_MID), v(H, -H, Z_MID), v(H, H, Z_MID), v(-H, H, Z_MID)],
+    // y = Y_BACK, back slab
+    [v(-H, Y_BACK, Z_MID), v(H, Y_BACK, Z_MID), v(H, Y_BACK, H), v(-H, Y_BACK, H)],
+    // x = X_BACK, back-bottom
+    [v(X_BACK, -H, Z_MID), v(X_BACK, Y_BACK, Z_MID), v(X_BACK, Y_BACK, H), v(X_BACK, -H, H)],
+  ];
+}
+
+/** Hull edges that point away from the camera at rest — the far corner of the cube. */
+function farOutlineEdges(yaw: number, pitch: number): [Vec3, Vec3][] {
+  const H = CUBE_H;
+  const corners: Vec3[] = [];
+  for (const x of [-H, H]) for (const y of [-H, H]) for (const z of [-H, H]) corners.push(v(x, y, z));
+  const far = corners.reduce((a, b) =>
+    rotateYawPitch(a, yaw, pitch).z <= rotateYawPitch(b, yaw, pitch).z ? a : b,
+  );
+  const out: [Vec3, Vec3][] = [];
+  for (const axis of ["x", "y", "z"] as const) {
+    const end = { ...far, [axis]: -far[axis] } as Vec3;
+    out.push([far, end]);
+  }
+  return out;
+}
 
 export function systemCubeDrawing(
   yaw = BASE_YAW,
   pitch = BASE_PITCH,
   activation = 0,
+  refined = false,
 ): SystemCubeDrawing {
   const on = Math.min(1, Math.max(0, activation));
   const fills: DrawnFace[] = [];
@@ -272,6 +317,7 @@ export function systemCubeDrawing(
         z: averageZ(pts),
         fill: hull ? fillFromNormal(face.normal, yaw, pitch) : "rear",
         joint: !hull,
+        module: box.id,
       });
     }
   }
@@ -320,10 +366,34 @@ export function systemCubeDrawing(
     });
   }
 
+  const hidden: DrawnEdge[] = [];
+  if (refined) {
+    const seen = new Set<string>();
+    for (const plane of cutPlanes()) {
+      for (let i = 0; i < 4; i += 1) {
+        const a = plane[i];
+        const b = plane[(i + 1) % 4];
+        if (edgeOnHull(a, b)) continue;
+        const key = edgeKey(a, b);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        const pa = project(a, yaw, pitch);
+        const pb = project(b, yaw, pitch);
+        hidden.push({ id: `hid-${key}`, d: lineD(pa, pb), z: (pa.z + pb.z) / 2, role: "seam" });
+      }
+    }
+    for (const [a, b] of farOutlineEdges(yaw, pitch)) {
+      const pa = project(a, yaw, pitch);
+      const pb = project(b, yaw, pitch);
+      hidden.push({ id: `far-${edgeKey(a, b)}`, d: lineD(pa, pb), z: (pa.z + pb.z) / 2, role: "seam", tier: "rear" });
+    }
+  }
+
   return {
     fills,
     silhouette: [...silhouetteMap.values()],
     seams: [...seamMap.values()],
     links,
+    hidden,
   };
 }

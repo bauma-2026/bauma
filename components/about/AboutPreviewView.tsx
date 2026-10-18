@@ -58,12 +58,16 @@ export default function AboutPreviewView({
 
       <main className="bg-[#080808] text-white">
         {/* Hero */}
-        <section className="relative overflow-hidden border-b border-white/10 pb-20 pt-14 sm:py-24 lg:py-28">
+        <section className="relative overflow-hidden border-b border-white/10 pb-20 pt-24 sm:py-24 lg:py-28">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_72%_35%,rgba(182,138,76,0.055),transparent_32%)]" />
           <div className="bauma-page-rail relative">
             <div className="grid w-full gap-12 lg:grid-cols-[1fr_300px] lg:items-end lg:gap-24">
               <div className="max-w-[720px]">
-                <h1 className="text-white">
+                <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/55">
+                  {copy.hero.eyebrow}
+                </p>
+
+                <h1 className="mt-4 text-white">
                   <span className="block font-serif text-[3rem] font-normal leading-[0.94] tracking-[-0.025em] sm:hidden">
                     {copy.hero.mobileLines[0]}
                     <br />
@@ -257,7 +261,7 @@ export default function AboutPreviewView({
                     {step.label}
                   </h3>
 
-                  <p className="mt-3 text-sm leading-[1.55] text-white/46">
+                  <p className="mt-3 text-sm leading-[1.55] text-white/60">
                     {step.text}
                   </p>
                 </article>

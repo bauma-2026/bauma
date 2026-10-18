@@ -116,7 +116,7 @@ function deg(d: number) {
 }
 
 function rotateLocal(p: Vec3, yaw: number, pitch: number, roll: number): Vec3 {
-  let { x, y, z } = p;
+  const { x, y, z } = p;
   const cr = Math.cos(roll);
   const sr = Math.sin(roll);
   const x1 = x * cr - y * sr;

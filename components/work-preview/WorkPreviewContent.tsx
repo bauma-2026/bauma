@@ -12,16 +12,21 @@ function PreviewImage({
   priority?: boolean;
 }) {
   return (
-    <picture className="block w-full overflow-hidden rounded-[12px] border border-white/10 bg-[#0e0e0e] sm:rounded-[14px]">
-      <source media="(max-width: 767px)" srcSet={image.mobile} type="image/webp" />
-      <img
-        src={image.desktop}
-        alt={image.alt}
-        className="block h-auto w-full"
-        loading={priority ? "eager" : "lazy"}
-        decoding="async"
-      />
-    </picture>
+    <figure className="m-0">
+      <picture className="block w-full overflow-hidden rounded-[12px] border border-white/10 bg-[#0e0e0e] sm:rounded-[14px]">
+        <source media="(max-width: 767px)" srcSet={image.mobile} type="image/webp" />
+        <img
+          src={image.desktop}
+          alt={image.alt}
+          className="block h-auto w-full"
+          loading={priority ? "eager" : "lazy"}
+          decoding="async"
+        />
+      </picture>
+      <figcaption className="mt-2 text-sm leading-6 text-white/40">
+        {image.caption}
+      </figcaption>
+    </figure>
   );
 }
 

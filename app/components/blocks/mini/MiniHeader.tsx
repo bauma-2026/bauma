@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import "./MiniHeaderRefined.css";
+
 export type MiniHeaderCopy = {
   homeHref: string;
   langHref: string;
@@ -17,6 +19,9 @@ export type MiniHeaderCopy = {
   menuOpen: string;
   menuClose: string;
 };
+
+/** One primary navigation link. `id` is only used for the scroll-spy active state. */
+export type MiniHeaderNavItem = { href: string; label: string; id: string };
 
 const DEFAULT_COPY: MiniHeaderCopy = {
   homeHref: "/",
@@ -102,6 +107,17 @@ export function useLanguageSwitchHref(langHref: string) {
 
 const MOBILE_MENU_ID = "bauma-mobile-menu";
 const MOBILE_MENU_TRIGGER_ID = "bauma-mobile-menu-trigger";
+/** Tailwind `md` — where the mobile menu and its trigger are hidden. */
+const MENU_DESKTOP_QUERY = "(min-width: 768px)";
+
+/**
+ * Invisible 44px tall hit area for small text links, via a pseudo-element, so
+ * the visible size, layout and focus ring stay unchanged. Needs `relative`.
+ */
+export const HIT_AREA =
+  "relative before:absolute before:-inset-x-2 before:-inset-y-[13px] before:content-['']";
+export const HIT_AREA_LOGO =
+  "relative before:absolute before:-inset-x-1 before:-inset-y-[15px] before:content-['']";
 
 export function useMobileMenuChrome(
   isMenuOpen: boolean,
@@ -113,6 +129,18 @@ export function useMobileMenuChrome(
       document.body.style.overflow = "";
     };
   }, [isMenuOpen]);
+
+  // The menu is `md:hidden`; if the viewport grows past that breakpoint while it
+  // is open, close it so scroll lock, trap and the solid header don't outlive it.
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const query = window.matchMedia(MENU_DESKTOP_QUERY);
+    const onChange = (event: MediaQueryListEvent) => {
+      if (event.matches) setIsMenuOpen(false);
+    };
+    query.addEventListener("change", onChange);
+    return () => query.removeEventListener("change", onChange);
+  }, [isMenuOpen, setIsMenuOpen]);
 
   useEffect(() => {
     if (!isMenuOpen) return;
@@ -175,7 +203,8 @@ export function MobileMenuTrigger({
       aria-label={open ? closeLabel : openLabel}
       aria-expanded={open}
       onClick={onToggle}
-      className="inline-flex h-11 w-11 items-center justify-end bg-transparent text-white focus:outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-white/50 md:hidden"
+      data-header-focus
+      className="inline-flex h-11 w-11 items-center justify-end bg-transparent text-white md:hidden"
     >
       {open ? (
         <span aria-hidden="true" className="relative block h-[18px] w-[18px] overflow-visible">
@@ -203,6 +232,10 @@ function HeaderInner({
   isMenuOpen,
   setIsMenuOpen,
   overPhotoHero,
+  hideApproachNav,
+  refined,
+  primaryNav,
+  contactHref: contactHrefOverride,
 }: {
   copy: MiniHeaderCopy;
   langSwitchHref: string;
@@ -211,20 +244,27 @@ function HeaderInner({
   setIsMenuOpen: (value: boolean) => void;
   /** True only pre-scroll on the homepage, while the header sits over the light hero photo. */
   overPhotoHero: boolean;
+  hideApproachNav: boolean;
+  refined: boolean;
+  primaryNav?: MiniHeaderNavItem[];
+  contactHref?: string;
 }) {
   const base = copy.homeHref === "/" ? "" : copy.homeHref.replace(/\/$/, "");
-  const navItems = [
-    { href: `${base}/#approach`, label: copy.navApproach, id: "approach" },
-    { href: `${base}/#system`, label: copy.navSystem, id: "system" },
-  ];
-  const contactHref = `${base}/#contact`;
+  const navItems =
+    primaryNav ??
+    [
+      { href: `${base}/#approach`, label: copy.navApproach, id: "approach" },
+      { href: `${base}/#system`, label: copy.navSystem, id: "system" },
+    ].filter((item) => !(hideApproachNav && item.id === "approach"));
+  const contactHref = contactHrefOverride ?? `${base}/#contact`;
 
   return (
     <div className="mini-page-rail flex h-[52px] items-center justify-between">
       <Link
         href={copy.homeHref}
         aria-label={copy.homeHref === "/en" ? "Bauma home" : "Bauma — domov"}
-        className="inline-flex items-center transition-opacity duration-200 hover:opacity-80"
+        data-header-focus
+        className={`${HIT_AREA_LOGO} inline-flex items-center transition-opacity duration-200 hover:opacity-80`}
         onClick={() => setIsMenuOpen(false)}
       >
         <img
@@ -232,13 +272,19 @@ function HeaderInner({
           alt="Bauma"
           width={68}
           height={13}
-          className="h-auto w-[76px] invert sm:w-[78px]"
+          className={`h-auto invert ${refined ? "w-[76px] md:w-[90px]" : "w-[76px] sm:w-[78px]"}`}
         />
       </Link>
 
       <div className="flex items-center gap-6">
         <nav
-          aria-label={copy.homeHref === "/en" ? "Page sections" : "Razdelki strani"}
+          aria-label={
+            primaryNav
+              ? "Glavna navigacija"
+              : copy.homeHref === "/en"
+                ? "Page sections"
+                : "Razdelki strani"
+          }
           className="hidden items-center gap-6 md:flex"
         >
           {navItems.map((item) => {
@@ -248,8 +294,10 @@ function HeaderInner({
               <Link
                 key={item.href}
                 href={item.href}
-                aria-current={isActive ? "page" : undefined}
-                className={`text-[12px] font-medium transition-colors duration-300 ${
+                aria-current={isActive ? "location" : undefined}
+                data-header-focus
+                data-header-label={refined ? "" : undefined}
+                className={`${HIT_AREA} text-[12px] font-medium transition-colors duration-300 ${
                   overPhotoHero
                     ? isActive
                       ? "text-black/85"
@@ -268,10 +316,13 @@ function HeaderInner({
         <Link
           href={langSwitchHref}
           aria-label={copy.langAria}
-          className={`hidden border-l pl-5 text-[12px] font-medium transition-colors duration-300 md:inline-flex ${
+          data-header-focus
+          data-header-label={refined ? "" : undefined}
+          data-header-divider={refined ? "" : undefined}
+          className={`${HIT_AREA} hidden border-l pl-5 text-[12px] font-medium transition-colors duration-300 md:inline-flex ${
             overPhotoHero
               ? "border-black/15 text-black/50 hover:text-black/85"
-              : "border-white/10 text-white/[0.48] hover:text-white"
+              : "border-[color:var(--mini-border-header,color-mix(in_oklab,#fff_10%,transparent))] text-white/[0.48] hover:text-white"
           }`}
         >
           {copy.langLabel}
@@ -279,8 +330,11 @@ function HeaderInner({
 
         <Link
           href={contactHref}
-          aria-current={activeId === "contact" ? "page" : undefined}
-          className="hidden rounded-full bg-[#FCAC33] px-3.5 py-1.5 text-[12px] font-medium text-black transition hover:bg-[#FCAC33]/90 sm:px-4 sm:py-1.5 sm:text-xs md:inline-flex"
+          aria-current={activeId === "contact" ? "location" : undefined}
+          data-header-focus
+          data-cta="primary"
+          data-cta-size="compact"
+          className="hidden rounded-full bg-[var(--mini-accent,#FCAC33)] px-3.5 py-1.5 text-[12px] font-medium text-[var(--mini-accent-fg,#000)] transition hover:bg-[var(--mini-accent,#FCAC33)]/90 sm:px-4 sm:py-1.5 sm:text-xs md:inline-flex"
         >
           {copy.headerCta}
         </Link>
@@ -296,32 +350,40 @@ function HeaderInner({
   );
 }
 
-const menuFocusClass =
-  "focus:outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-white/50";
-
 function MobileMenu({
   copy,
   langSwitchHref,
   onClose,
+  hideApproachNav,
+  refined,
+  primaryNav,
+  contactHref: contactHrefOverride,
 }: {
   copy: MiniHeaderCopy;
   langSwitchHref: string;
   onClose: () => void;
+  hideApproachNav: boolean;
+  refined: boolean;
+  primaryNav?: MiniHeaderNavItem[];
+  contactHref?: string;
 }) {
   const base = copy.homeHref === "/" ? "" : copy.homeHref.replace(/\/$/, "");
-  const navItems = [
-    { href: `${base}/#approach`, label: copy.navApproach },
-    { href: `${base}/#system`, label: copy.navSystem },
-  ];
-  const contactHref = `${base}/#contact`;
+  const navItems =
+    primaryNav ??
+    [
+      { href: `${base}/#approach`, label: copy.navApproach, id: "approach" },
+      { href: `${base}/#system`, label: copy.navSystem, id: "system" },
+    ].filter((item) => !(hideApproachNav && item.id === "approach"));
+  const contactHref = contactHrefOverride ?? `${base}/#contact`;
 
   return (
     <div
       id={MOBILE_MENU_ID}
+      data-header-refined={refined ? "" : undefined}
       role="dialog"
       aria-modal="true"
       aria-label={copy.homeHref === "/en" ? "Menu" : "Meni"}
-      className="fixed inset-0 z-[998] overflow-y-auto bg-[#080808] text-white md:hidden"
+      className="fixed inset-0 z-[998] overflow-y-auto bg-[var(--mini-surface-header,#080808)] text-white md:hidden"
     >
       <div className="mini-page-rail flex min-h-full flex-col pt-[78px] pb-[max(24px,env(safe-area-inset-bottom))]">
         <nav
@@ -333,7 +395,8 @@ function MobileMenu({
               key={item.href}
               href={item.href}
               onClick={onClose}
-              className={`flex min-h-[52px] w-full items-center border-b border-white/10 text-[20px] font-normal tracking-[-0.02em] text-white transition-colors duration-200 hover:text-white/70 ${menuFocusClass}`}
+              data-header-focus
+              className="flex min-h-[52px] w-full items-center border-b border-white/10 text-[20px] font-normal tracking-[-0.02em] text-white transition-colors duration-200 hover:text-white/70"
             >
               {item.label}
             </Link>
@@ -343,7 +406,8 @@ function MobileMenu({
             href={langSwitchHref}
             aria-label={copy.langAria}
             onClick={onClose}
-            className={`mt-3 flex min-h-11 w-full items-center text-[13px] font-medium tracking-[0.04em] text-white/70 transition-colors duration-200 hover:text-white ${menuFocusClass}`}
+            data-header-focus
+            className="mt-3 flex min-h-11 w-full items-center text-[13px] font-medium tracking-[0.04em] text-white/70 transition-colors duration-200 hover:text-white"
           >
             {copy.langLabel}
           </Link>
@@ -353,7 +417,10 @@ function MobileMenu({
           <Link
             href={contactHref}
             onClick={onClose}
-            className={`flex h-14 w-full items-center justify-center rounded-full bg-[#FCAC33] text-sm font-medium text-black transition-colors duration-200 hover:bg-[#FCAC33]/90 ${menuFocusClass}`}
+            data-header-focus
+            data-cta="primary"
+            data-cta-size="menu"
+            className="flex h-14 w-full items-center justify-center rounded-full bg-[var(--mini-accent,#FCAC33)] text-sm font-medium text-[var(--mini-accent-fg,#000)] transition-colors duration-200 hover:bg-[var(--mini-accent,#FCAC33)]/90"
           >
             {copy.headerCta}
           </Link>
@@ -366,6 +433,11 @@ function MobileMenu({
 export default function MiniHeader({
   copy = DEFAULT_COPY,
   treatAsHomepage = false,
+  darkHero = false,
+  hideApproachNav = false,
+  refined = false,
+  primaryNav,
+  contactHref,
 }: {
   copy?: MiniHeaderCopy;
   /**
@@ -375,6 +447,26 @@ export default function MiniHeader({
    * their pathname-based behavior unchanged.
    */
   treatAsHomepage?: boolean;
+  /** Hero is dark (no pale photograph): keep light header text over it. `/mini` glow test only. */
+  darkHero?: boolean;
+  /** Page has no Approach section (the Royal Blue `/`): drop the Approach nav item. Default keeps every other route. */
+  hideApproachNav?: boolean;
+  /**
+   * Homepage art direction (Direction A). Scopes the graphite surface, 90px desktop wordmark and
+   * mono nav labels in `MiniHeaderRefined.css`; the hero-to-sticky lifecycle is the shared one.
+   * Only `/` passes it; every other route keeps its current header.
+   */
+  refined?: boolean;
+  /**
+   * Replaces the default Approach / System section anchors with explicit page links (desktop nav
+   * and mobile menu). Omit to keep each route's current navigation. Only the Slovenian `/` passes it.
+   */
+  primaryNav?: MiniHeaderNavItem[];
+  /**
+   * Overrides the Contact target (desktop CTA and mobile menu). Omit to keep `<home>/#contact`.
+   * Pages that render their own `#contact` section pass `"#contact"` so the link scrolls in place.
+   */
+  contactHref?: string;
 }) {
   const pathname = usePathname();
   const [activeId, setActiveId] = useState("");
@@ -385,6 +477,7 @@ export default function MiniHeader({
   const [hideHeroChrome, setHideHeroChrome] = useState(false);
   const langSwitchHref = useLanguageSwitchHref(copy.langHref);
   const overPhotoHero = isHomepage && isHeroVisible && !isMenuOpen;
+  const darkText = overPhotoHero && !darkHero;
   useMobileMenuChrome(isMenuOpen, setIsMenuOpen);
 
   useEffect(() => {
@@ -448,6 +541,11 @@ export default function MiniHeader({
   return (
     <>
       <header
+        data-header-ink={darkText ? "dark" : undefined}
+        data-header-refined={refined ? "" : undefined}
+        data-header-cta={
+          refined ? (isHomepage && isHeroVisible ? "ghost" : "solid") : undefined
+        }
         data-header-phase={
           hideHeroChrome && !isMenuOpen
             ? "gap"
@@ -466,18 +564,22 @@ export default function MiniHeader({
         />
         <div
           aria-hidden="true"
-          className={`pointer-events-none absolute inset-0 border-b border-white/10 bg-[#080808] transition-opacity duration-[180ms] ease-out ${
+          className={`pointer-events-none absolute inset-0 border-b border-[color:var(--mini-border-header,color-mix(in_oklab,#fff_10%,transparent))] bg-[var(--mini-surface-header,#080808)] transition-opacity duration-[180ms] ease-out ${
             overPhotoHero ? "opacity-0" : "opacity-100"
           }`}
         />
-        <div className={`relative z-10 ${overPhotoHero ? "text-black" : "text-white"}`}>
+        <div className={`relative z-10 ${darkText ? "text-black" : "text-white"}`}>
           <HeaderInner
             copy={copy}
             langSwitchHref={langSwitchHref}
             activeId={activeId}
             isMenuOpen={isMenuOpen}
             setIsMenuOpen={setIsMenuOpen}
-            overPhotoHero={overPhotoHero}
+            overPhotoHero={darkText}
+            hideApproachNav={hideApproachNav}
+            refined={refined}
+            primaryNav={primaryNav}
+            contactHref={contactHref}
           />
         </div>
       </header>
@@ -487,6 +589,10 @@ export default function MiniHeader({
           copy={copy}
           langSwitchHref={langSwitchHref}
           onClose={() => setIsMenuOpen(false)}
+          hideApproachNav={hideApproachNav}
+          refined={refined}
+          primaryNav={primaryNav}
+          contactHref={contactHref}
         />
       ) : null}
     </>

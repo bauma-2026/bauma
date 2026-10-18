@@ -1,0 +1,45 @@
+/* /mini hero background test: midnight graphite field with a soft right-side glow.
+   --glow scales the muted blue-grey glow (#465C79), --depth the deep navy
+   lift (#182B55). Base is #0A0D15. Amber stays reserved for the CTA. */
+.bauma-hero-glow {
+  --glow: 0.46;
+  --depth: 0.36;
+  background-color: #080808;
+  background-image:
+    /* bottom fade into the next section (#080808) */
+    linear-gradient(180deg, rgba(8, 8, 8, 0) 62%, #080808 100%),
+    /* main soft glow, right of centre */
+    radial-gradient(
+      ellipse 52% 78% at 80% 46%,
+      rgba(70, 92, 121, var(--glow)) 0%,
+      rgba(70, 92, 121, calc(var(--glow) * 0.45)) 38%,
+      rgba(70, 92, 121, 0) 100%
+    ),
+    /* wide low-contrast lift for depth */
+    radial-gradient(
+      ellipse 90% 110% at 92% 30%,
+      rgba(24, 43, 85, var(--depth)) 0%,
+      rgba(24, 43, 85, 0) 100%
+    ),
+    /* midnight graphite base, slightly lighter to the right */
+    linear-gradient(100deg, #070910 0%, #0a0d15 48%, #0d1220 100%);
+}
+
+@media (max-width: 1023px) {
+  .bauma-hero-glow {
+    background-image:
+      linear-gradient(180deg, rgba(8, 8, 8, 0) 66%, #080808 100%),
+      radial-gradient(
+        ellipse 95% 48% at 88% 36%,
+        rgba(70, 92, 121, var(--glow)) 0%,
+        rgba(70, 92, 121, calc(var(--glow) * 0.45)) 42%,
+        rgba(70, 92, 121, 0) 100%
+      ),
+      radial-gradient(
+        ellipse 140% 70% at 100% 22%,
+        rgba(24, 43, 85, var(--depth)) 0%,
+        rgba(24, 43, 85, 0) 100%
+      ),
+      linear-gradient(180deg, #070910 0%, #0a0d15 100%);
+  }
+}

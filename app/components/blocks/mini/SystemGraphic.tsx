@@ -3,6 +3,7 @@
 import { Fragment } from "react";
 
 import SystemCubeObject from "./SystemCubeObject";
+import type { MiniSurfaceTone } from "./miniObjectMaterial";
 
 export type SystemGraphicCopy = {
   eyebrow: string;
@@ -21,11 +22,31 @@ const DEFAULT_COPY: SystemGraphicCopy = {
 
 export default function SystemGraphic({
   copy = DEFAULT_COPY,
+  tone = "warm",
+  joinsNextSection = false,
+  refined = false,
+  topRule = true,
 }: {
   copy?: SystemGraphicCopy;
+  /** `neutral` drops the warm undertone from the cube faces (`/mini`). */
+  tone?: MiniSurfaceTone;
+  /** Shortens the bottom padding when the next section shares this surface and continues the idea (`/mini`). */
+  joinsNextSection?: boolean;
+  /** Refined System cube with visible hidden structure (`/` only). */
+  refined?: boolean;
+  /**
+   * The 1px rule on the section's top edge (default `true`). `false` keeps the 1px but
+   * makes it transparent (height unchanged) where the section above already ends in its
+   * own hairline (`/`: the hero's bottom border).
+   */
+  topRule?: boolean;
 }) {
   return (
-    <section className="relative overflow-hidden border-t border-white/10 bg-[#0e0e0f] py-20 text-white sm:py-24 lg:py-28">
+    <section
+      className={`relative overflow-hidden border-t ${topRule ? "border-[color:var(--mini-border-section,color-mix(in_oklab,#fff_10%,transparent))]" : "border-transparent"} bg-[var(--mini-surface-system,#0e0e0f)] pt-20 text-white sm:pt-24 lg:pt-28 ${
+        joinsNextSection ? "pb-16 sm:pb-20 lg:pb-24" : "pb-20 sm:pb-24 lg:pb-28"
+      }`}
+    >
       <span id="system" data-anchor-marker aria-hidden="true" />
       <div className="mini-page-rail grid min-w-0 gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
         <div className="min-w-0">
@@ -62,7 +83,7 @@ export default function SystemGraphic({
               "A compact cube of interlocking parts forming one system."}
           </figcaption>
           {/* Mobile: 159×132 at most, then shrinks with the column (Pocket Cube rule). */}
-          <SystemCubeObject className="h-[200px] w-[240px] max-sm:aspect-[159/132] max-sm:h-auto max-sm:w-[min(159px,48.5%)]" />
+          <SystemCubeObject tone={tone} refined={refined} className="h-[200px] w-[240px] max-sm:aspect-[159/132] max-sm:h-auto max-sm:w-[min(159px,48.5%)]" />
         </figure>
       </div>
     </section>

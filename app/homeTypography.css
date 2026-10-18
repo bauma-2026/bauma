@@ -1,0 +1,83 @@
+/*
+ * Homepage typography foundation (promoted from /lab/typography-foundation, variant B).
+ *
+ * Scope: everything below is keyed to `[data-home-typography]`, which only `app/page.tsx` sets. The heading
+ * utilities and several components are shared with /mini, /en, /en/mini and /work/*, so nothing here may apply
+ * outside the homepage. Layouts, copy, colours, animation and the project cards are not touched.
+ *
+ * The same lab flags, in the same order:
+ *   opsz       Inter display optical size for headings only (the global default stays opsz 14, see globals.css)
+ *   tracking   display tracking for the display cut (only valid together with opsz)
+ *   h-services (moved) the Services title scale, weight (500, provisional) and tracking now live with the Services
+ *              composition in app/components/blocks/mini/MiniServicesHome.css
+ *   h-work     Selected Work H2: same size, weight 500 (project titles and thumbnails stay dominant)
+ *   eyebrow    one shared eyebrow treatment: IBM Plex Mono 500, one size, tracking and Royal Blue (#7c97f0); Contact is white
+ *   wrap       text-wrap: pretty on running copy
+ * The genuine DM Serif Display italic needs no rule: it comes from the font loading in app/layout.tsx.
+ *
+ * Weight rule: the dominant level in a section is 600, the supporting heading is 500.
+ * Selectors are attribute + class so they outrank the Tailwind utilities they refine, including responsive variants.
+ */
+
+[data-home-typography] {
+  /* Previous values in comments. */
+  --ht-tr-primary: -0.022em; /* System / Services H2: -0.035em base, -0.045em from sm */
+  --ht-tr-bridge: -0.02em; /* Work / Your Project / Contact H2: -0.035em */
+  --ht-tr-h3: -0.018em; /* Work H3: -0.03em (the Services titles set their own tracking, see MiniServicesHome.css) */
+}
+
+/* ---------- opsz: headings only. Body, UI, labels and the proof tiles stay at opsz 14 (see globals.css). ---------- */
+[data-home-typography] :is(h2, h3) {
+  font-optical-sizing: auto;
+}
+
+/* ---------- tracking ---------- */
+[data-home-typography] .home-primary-heading {
+  letter-spacing: var(--ht-tr-primary);
+}
+[data-home-typography] .home-bridge-heading {
+  letter-spacing: var(--ht-tr-bridge);
+}
+[data-home-typography] [data-section="selected-work"] h3 {
+  letter-spacing: var(--ht-tr-h3);
+}
+
+/* Services H3 size, weight and line height: see MiniServicesHome.css (C2 composition). */
+
+/* ---------- Selected Work H2: quieter by weight, not by shrinking; phones 20px -> 22px ---------- */
+[data-home-typography] #msw-home-heading {
+  font-weight: 500;
+}
+@media (max-width: 639px) {
+  [data-home-typography] #msw-home-heading {
+    font-size: 1.375rem;
+  }
+}
+
+/* ---------- eyebrow: the one shared treatment for every homepage eyebrow ----------
+   SISTEMSKA PLAST, KAJ DELAMO, IZBRANO DELO, VAŠ PROJEKT, KONTAKT: IBM Plex Mono 500 (`homeMono.ts`), uppercase, one
+   size, one tracking, one Royal Blue. The line height keeps the previous 16.5px line box (11px x 1.5), so the heading
+   below each eyebrow does not move. The components keep their own classes (three are shared with /mini, /en and /work/*
+   and must not change); this homepage-scoped rule overrides them only here. */
+[data-home-typography] p.uppercase {
+  font-family: var(--font-mono-home), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.375;
+  letter-spacing: 0.08em;
+  color: var(--mini-accent-text, #7c97f0);
+}
+
+/* The Contact eyebrow sits on the photograph: it is white instead of Royal Blue (blue measured 1.8 to 4.2:1 there).
+   Everything else about it, including IBM Plex Mono, comes from the shared rule above. */
+[data-home-typography] [data-closing-bookend] p.uppercase {
+  color: #ffffff;
+}
+
+/* ---------- wrap: running copy only. The intentional "\n" breaks are untouched. ---------- */
+[data-home-typography] [data-section="services"] article p,
+[data-home-typography] [data-home-section="system"] p:not(.uppercase),
+[data-home-typography] [data-home-section="project"] p:not(.uppercase),
+[data-home-typography] [data-closing-bookend] section p:not(.uppercase) {
+  text-wrap: pretty;
+}

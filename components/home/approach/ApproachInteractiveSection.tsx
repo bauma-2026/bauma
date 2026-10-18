@@ -365,13 +365,13 @@ export default function ApproachInteractiveSection({
             Desktop: optical-axis lock vs System/Visual (ASK right-object axis).
             Shift full motion field (hit + graphic + ambient) — not SVG alone.
             Prior +64 sat ~40px right of System optical; +24 aligns the broken object.
-            Mobile: keep field size; only soft end-align.
+            Mobile: crop empty viewBox margin and center under copy.
           */}
-          <div className="relative flex min-w-0 items-center justify-end lg:pl-4 lg:pr-0">
+          <div className="relative flex min-w-0 items-center justify-end max-lg:justify-center lg:pl-4 lg:pr-0">
             <div
               data-approach-object-hit
               data-approach-field-shift="desktop-right"
-              className="relative w-full max-w-[480px] md:max-w-[520px] lg:max-w-[560px] lg:translate-x-[24px] xl:max-w-[600px]"
+              className="relative w-full max-w-[480px] max-lg:mx-auto max-lg:aspect-[304/236] max-lg:w-[86%] max-lg:overflow-visible md:max-w-[520px] lg:max-w-[560px] lg:translate-x-[24px] xl:max-w-[600px]"
               onPointerEnter={(e) => {
                 setNavOwns(false);
                 onPointerEnter(e);

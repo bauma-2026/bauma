@@ -1,0 +1,73 @@
+/* Blue Hour road hero background — `/` only (MiniHero `photoBackground`).
+   Ported value for value from the approved lab (photo.css, Concept 02 hero).
+
+   Layers: .bauma-hero-photo::before = the original road photograph, graded;
+           .bauma-hero-photo::after  = readability (graduated sky filter + one
+           flat exposure step). The hero section's own background sits below.
+
+   Crops are deliberate per width. The road photo's horizon sits at 47% of its
+   height; the pale sky behind a white headline is unreadable, so every tier
+   zooms and bottom-aligns until the horizon is near the top and the headline
+   sits on asphalt. --p-size is the image height relative to the hero.
+   The header's dim nav links ("EN" at 48% white) need the top darkening to
+   keep the current ~4.9:1 contrast. */
+
+.bauma-hero-photo {
+  --road: url("/_next/image?url=%2Fimages%2Fatmosphere%2Froad-evening-01.jpg&w=2048&q=75");
+  --navy: 4, 10, 28;
+  --p-size: 135%;
+  --p-pos: 40% 100%;
+  --nd-h: 230px; /* graduated sky darkening, from the top edge */
+}
+
+@media (max-width: 359px) {
+  .bauma-hero-photo {
+    --p-size: 175%;
+    --p-pos: 36% 100%;
+    --nd-h: 110px;
+  }
+}
+
+@media (min-width: 768px) {
+  .bauma-hero-photo {
+    --road: url("/_next/image?url=%2Fimages%2Fatmosphere%2Froad-evening-01.jpg&w=3840&q=75");
+    --p-size: 168%;
+    --p-pos: 34% 100%;
+    --nd-h: 260px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .bauma-hero-photo {
+    --p-size: 154%;
+    --p-pos: 38% 100%;
+    --nd-h: 300px;
+  }
+}
+
+.bauma-hero-photo::before,
+.bauma-hero-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.bauma-hero-photo::before {
+  background-image: var(--road);
+  background-repeat: no-repeat;
+  background-size: auto var(--p-size);
+  background-position: var(--p-pos);
+  filter: url(#bauma-hero-bluehour);
+}
+
+.bauma-hero-photo::after {
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(var(--navy), 0.92) 0,
+      rgba(var(--navy), 0.74) 72px,
+      rgba(var(--navy), 0) var(--nd-h)
+    ),
+    linear-gradient(rgba(var(--navy), 0.24), rgba(var(--navy), 0.24));
+}

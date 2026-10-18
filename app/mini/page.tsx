@@ -1,11 +1,14 @@
+import MiniPalette from "../components/blocks/mini/MiniPalette";
 import MiniHeader from "../components/blocks/mini/MiniHeader";
 import MiniHero from "../components/blocks/mini/MiniHero";
-import MiniDecisionFlow from "../components/blocks/mini/MiniDecisionFlow";
-import ApproachSection from "@/components/home/approach/ApproachSection";
 import SystemGraphic from "../components/blocks/mini/SystemGraphic";
+import MiniFlexidoProofSection from "../components/blocks/mini/MiniFlexidoProofSection";
+import { MINI_HERO } from "../components/blocks/mini/miniHomeCopy";
+import MiniMidPageCta from "../components/blocks/mini/MiniMidPageCta";
 import MiniPerceptionLayer from "../components/blocks/mini/MiniPerceptionLayer";
 import HomeWorkPreview from "@/components/work-preview/HomeWorkPreview";
 import MiniClosingBookend from "../components/blocks/mini/MiniClosingBookend";
+import RightObjectAxisDebugGate from "@/components/home/debug/RightObjectAxisDebugGate";
 
 import type { Metadata } from "next";
 
@@ -18,18 +21,27 @@ export const metadata: Metadata = {
 
 export default function MiniHome() {
   return (
-    <>
-      <MiniHeader />
+    <MiniPalette>
+      <MiniHeader treatAsHomepage darkHero />
 
       <main>
-        <MiniHero />
-        <MiniDecisionFlow />
-        <ApproachSection />
-        <SystemGraphic />
-        <MiniPerceptionLayer />
+        <MiniHero
+          copy={MINI_HERO}
+          secondaryHref="#system"
+          secondaryLabel="Poglejte sistem"
+          glowBackground
+        />
+        <SystemGraphic tone="neutral" joinsNextSection />
+
+        <MiniFlexidoProofSection />
+
+        <MiniMidPageCta tone="neutral" />
+        <MiniPerceptionLayer tone="neutral" />
         <HomeWorkPreview />
       </main>
-      <MiniClosingBookend />
-    </>
+      <MiniClosingBookend variant="royal" />
+      {/* ?axis=1 only — module loads only when that query is present */}
+      <RightObjectAxisDebugGate />
+    </MiniPalette>
   );
 }

@@ -1,8 +1,23 @@
 import type { NextConfig } from "next";
+import { isStaging } from "./lib/siteEnv";
 
 const nextConfig: NextConfig = {
+  // Staging only (SITE_ENV=staging): keep unfinished lab routes out of reach.
+  async redirects() {
+    return isStaging
+      ? [{ source: "/lab/:path*", destination: "/", permanent: false }]
+      : [];
+  },
   async headers() {
     return [
+      ...(isStaging
+        ? [
+            {
+              source: "/:path*",
+              headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+            },
+          ]
+        : []),
       {
         source: "/images/gregor/:path*",
         headers: [

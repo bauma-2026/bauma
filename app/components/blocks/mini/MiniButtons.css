@@ -1,0 +1,146 @@
+/* `/mini` button language (approved in /lab/button-language).
+   Primary = A (Refined Radius), secondary = C (Minimal Outline).
+
+   Scoped to [data-mini-palette], which only `/mini` renders, so `/`, `/en` and
+   `/en/mini` keep their original pills. The shared components only expose the
+   inert hooks `data-cta="primary|secondary"` (+ `data-cta-size`); this sheet is
+   unlayered, so it wins over their Tailwind utilities without !important.
+   Label sizes are left to the components. White CTAs elsewhere on the page
+   (Flexido proof, final contact) carry no hook and are untouched. */
+
+[data-mini-palette] [data-cta] {
+  --cta-h: 48px;
+  --cta-px: 20px;
+  --cta-arrow: 14px;
+  --cta-hover: #3b60d2; /* 5.5:1 with white */
+  --cta-press: #3558c4; /* 6.3:1 with white */
+  --cta-border: #56648a; /* 3.4:1 on #080808 */
+
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  height: var(--cta-h);
+  padding-block: 0;
+  padding-inline: var(--cta-px);
+  border-radius: 10px;
+  color: var(--mini-accent-fg, #fff);
+  line-height: 1;
+  white-space: nowrap;
+  translate: none;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease;
+}
+
+@media (max-width: 639px) {
+  [data-mini-palette] [data-cta] {
+    --cta-h: 52px;
+  }
+}
+
+/* Header Kontakt lives in a 52px bar; mobile menu CTA is full width by design. */
+[data-mini-palette] [data-cta-size="compact"] {
+  --cta-h: 36px;
+  --cta-px: 14px;
+  --cta-arrow: 11px;
+}
+
+[data-mini-palette] [data-cta-size="menu"] {
+  --cta-h: 52px;
+}
+
+/* ---------- Primary ---------- */
+[data-mini-palette] [data-cta="primary"] {
+  gap: 10px;
+  border-width: 0;
+  background: var(--mini-accent, #4169e1);
+}
+
+[data-mini-palette] [data-cta-size="compact"][data-cta="primary"] {
+  gap: 6px;
+}
+
+/* Arrow up-right: a mask, so it follows the label colour and adds no DOM. */
+[data-mini-palette] [data-cta="primary"]::after {
+  content: "";
+  flex: none;
+  width: var(--cta-arrow);
+  height: var(--cta-arrow);
+  background: currentColor;
+  -webkit-mask: var(--cta-arrow-mask) center / contain no-repeat;
+  mask: var(--cta-arrow-mask) center / contain no-repeat;
+  transition: translate 180ms ease;
+}
+
+[data-mini-palette] [data-cta="primary"] {
+  --cta-arrow-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 11.5 11.5 4.5'/%3E%3Cpath d='M5.5 4.5h6v6'/%3E%3C/svg%3E");
+}
+
+/* The mid-page CTA already renders a "→" glyph; the mask arrow replaces it. */
+[data-mini-palette] [data-cta="primary"] [data-cta-glyph] {
+  display: none;
+}
+
+@media (hover: hover) {
+  [data-mini-palette] [data-cta="primary"]:hover {
+    background: var(--cta-hover);
+  }
+  [data-mini-palette] [data-cta="primary"]:hover::after {
+    translate: 2px -2px;
+  }
+}
+
+[data-mini-palette] [data-cta="primary"]:active {
+  background: var(--cta-press);
+}
+
+/* ---------- Secondary: outline, no arrow, quieter than primary ---------- */
+[data-mini-palette] [data-cta="secondary"] {
+  border: 1px solid var(--cta-border);
+  background: transparent;
+}
+
+@media (hover: hover) {
+  [data-mini-palette] [data-cta="secondary"]:hover {
+    border-color: var(--mini-accent-text, #7c97f0);
+    background: rgb(65 105 225 / 0.1);
+  }
+}
+
+[data-mini-palette] [data-cta="secondary"]:active {
+  background: rgb(65 105 225 / 0.18);
+}
+
+/* ---------- Focus (both) ----------
+   Beats a.bauma-focus-pill:focus-visible from globals.css by specificity. */
+[data-mini-palette] [data-cta]:focus-visible {
+  outline: 2px solid var(--mini-accent-text, #7c97f0);
+  outline-offset: 3px;
+}
+
+[data-mini-palette] [data-cta]:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ---------- Reduced motion: keep colour states, drop transitions + nudge ---------- */
+@media (prefers-reduced-motion: reduce) {
+  [data-mini-palette] [data-cta],
+  [data-mini-palette] [data-cta]::after {
+    transition: none;
+  }
+  [data-mini-palette] [data-cta="primary"]:hover::after {
+    translate: none;
+  }
+}
+
+/* ---------- Forced colors: mask backgrounds are dropped, so restore the arrow ---------- */
+@media (forced-colors: active) {
+  [data-mini-palette] [data-cta="primary"] {
+    border: 1px solid ButtonText;
+  }
+  [data-mini-palette] [data-cta="primary"]::after {
+    background: ButtonText;
+    forced-color-adjust: none;
+  }
+}

@@ -3,18 +3,28 @@ import type { Metadata } from "next";
 import { Inter, DM_Serif_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { HASH_LANDING_SCRIPT } from "@/lib/hashLandingScript";
+import { isStaging } from "@/lib/siteEnv";
 
-/** latin-ext covers Slovenian č/š/ž in the same next/font preload path as latin. */
+/**
+ * latin-ext covers Slovenian č/š/ž in the same next/font preload path as latin.
+ *
+ * `axes: ["opsz"]` adds Inter's optical-size axis (14..32, default 14). It is inert everywhere unless a rule opts in:
+ * `globals.css` pins `font-optical-sizing: none` on `html` (= the previous opsz 14 rendering) and only the homepage
+ * headings re-enable it (`app/homeTypography.css`). Lab reference: /lab/typography-foundation.
+ */
 const inter = Inter({
   subsets: ["latin", "latin-ext"],
+  axes: ["opsz"],
   variable: "--font-sans",
   display: "swap",
   preload: true,
 });
 
+/** `style` loads the genuine italic (the Hero emphasis was a browser-slanted roman before). */
 const dmSerif = DM_Serif_Display({
   subsets: ["latin", "latin-ext"],
   weight: "400",
+  style: ["normal", "italic"],
   variable: "--font-serif",
   display: "swap",
   preload: true,
@@ -45,7 +55,7 @@ export const metadata: Metadata = {
     title: "Bauma — Jasna struktura. Več odločitev.",
     description:
       "Spletne strani za podjetja, ki imajo dobro ponudbo, a se to na njihovi strani ne vidi.",
-    url: "https://bauma.si",
+    ...(isStaging ? {} : { url: "https://bauma.si" }),
     siteName: "Bauma",
     images: [
       {
@@ -75,6 +85,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // For those who look beyond the surface. — GB
   return (
     <html lang="sl" className={`${inter.variable} ${dmSerif.variable}`}>
       <head>

@@ -16,21 +16,33 @@ export type MiniFinalCtaCopy = {
   mailto: string;
 };
 
+/** Homepage contact method, reused by case-study CTAs. */
+export const MINI_CONTACT_MAILTO =
+  "mailto:gregor@bauma.si?subject=Povpra%C5%A1evanje%20za%20projekt";
+
 const DEFAULT_COPY: MiniFinalCtaCopy = {
   eyebrow: "Kontakt",
   line1: "Vsak projekt se začne",
   line2: "s kratkim opisom.",
   cta: "Pošljite opis",
-  mailto: "mailto:gregor@bauma.si?subject=Povpra%C5%A1evanje%20za%20projekt",
+  mailto: MINI_CONTACT_MAILTO,
 };
 
 export default function MiniFinalCTA({
   copy = DEFAULT_COPY,
   embedded = false,
+  buttonStyle = "default",
 }: {
   copy?: MiniFinalCtaCopy;
   embedded?: boolean;
+  /**
+   * `primary` opts into the approved Refined Radius button (styled by the
+   * `/mini` palette via `data-cta`). Default keeps the white pill for every
+   * other route.
+   */
+  buttonStyle?: "default" | "primary";
 }) {
+  const primary = buttonStyle === "primary";
   return (
     <section
       className={
@@ -68,12 +80,18 @@ export default function MiniFinalCTA({
           <div className="mt-8 flex justify-center sm:mt-9">
             <a
               href={copy.mailto}
-              className="bauma-focus-pill group inline-flex min-h-[48px] items-center justify-center whitespace-nowrap rounded-full bg-white px-7 py-3.5 text-sm font-medium text-black transition-[background-color,color] duration-300 hover:bg-white/90"
+              data-cta={primary ? "primary" : undefined}
+              className={
+                primary
+                  ? "bauma-focus-pill group inline-flex items-center justify-center whitespace-nowrap text-sm font-medium"
+                  : "bauma-focus-pill group inline-flex min-h-[48px] items-center justify-center whitespace-nowrap rounded-full bg-white px-7 py-3.5 text-sm font-medium text-black transition-[background-color,color] duration-300 hover:bg-white/90"
+              }
             >
               <span className="inline-flex items-center gap-2">
                 {copy.cta}
                 <span
                   aria-hidden
+                  data-cta-glyph={primary ? "" : undefined}
                   className="transition duration-300 group-hover:translate-x-0.5"
                 >
                   →

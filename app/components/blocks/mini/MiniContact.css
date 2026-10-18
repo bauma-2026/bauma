@@ -1,0 +1,182 @@
+/* `/mini` Contact/Footer surface (Royal Blue Moment).
+   Opt-in via MiniClosingBookend `variant="royal"`; every other route keeps the
+   photograph. CSS only: no images, no animation. The desert asset stays in the
+   repo for the shared default. Colours reuse the hero glow recipe
+   (MiniHeroGlowBackground.css) and the Royal Blue accent; nothing here changes a
+   global token.
+
+   One background layer spans the CTA and the footer brand row, so Contact and
+   Footer read as a single surface; the legal strip below matches its bottom edge.
+
+   Graphite field with a controlled Royal Blue light rising from below the CTA,
+   and a hairline of Light Royal along the top edge as the separation from Work.
+   The glow stays well under the button's own luminance so the CTA keeps its lead. */
+
+[data-mini-palette] [data-contact-variant="royal"] [data-contact-bg] {
+  /* Footer quieting: the first layer is a scrim anchored to the bottom edge by
+     height (footer row + a short feather), so it starts at the CTA/footer join
+     at every width and leaves the glow around and below the button untouched. */
+  --contact-scrim-h: 170px;
+  background-color: #080a0f; /* = Work surface, so the join to the section above is seamless */
+  background-repeat: no-repeat;
+  background-position: bottom, 0 0, 0 0, 0 0;
+  background-size: 100% var(--contact-scrim-h), auto, auto, auto;
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(8, 10, 15, 0) 0%,
+      rgba(8, 10, 15, 0.55) 40%,
+      rgba(8, 10, 15, 0.9) 75%,
+      #080a0f 100%
+    ),
+    radial-gradient(
+      ellipse 58% 62% at 50% 74%,
+      rgba(65, 105, 225, 0.42) 0%,
+      rgba(65, 105, 225, 0.2) 38%,
+      rgba(65, 105, 225, 0) 74%
+    ),
+    radial-gradient(
+      ellipse 120% 50% at 50% 100%,
+      rgba(24, 43, 85, 0.5) 0%,
+      rgba(24, 43, 85, 0) 100%
+    ),
+    linear-gradient(180deg, #080a0f 0%, #0a0d15 100%);
+}
+
+/* The box is tall and narrow on phones: widen the field so it stays a horizon of
+   light under the CTA instead of a circular spot behind the footer row. */
+@media (max-width: 639px) {
+  [data-mini-palette] [data-contact-variant="royal"] [data-contact-bg] {
+    background-image:
+      linear-gradient(
+        180deg,
+        rgba(8, 10, 15, 0) 0%,
+        rgba(8, 10, 15, 0.55) 40%,
+        rgba(8, 10, 15, 0.9) 75%,
+        #080a0f 100%
+      ),
+      radial-gradient(
+        ellipse 115% 40% at 50% 66%,
+        rgba(65, 105, 225, 0.42) 0%,
+        rgba(65, 105, 225, 0.2) 40%,
+        rgba(65, 105, 225, 0) 78%
+      ),
+      radial-gradient(
+        ellipse 140% 34% at 50% 100%,
+        rgba(24, 43, 85, 0.5) 0%,
+        rgba(24, 43, 85, 0) 100%
+      ),
+      linear-gradient(180deg, #080a0f 0%, #0a0d15 100%);
+  }
+}
+
+/* Stacked footer (below lg) is taller, so the scrim gets a longer run. */
+@media (max-width: 1023px) {
+  [data-mini-palette] [data-contact-variant="royal"] [data-contact-bg] {
+    --contact-scrim-h: 200px;
+  }
+}
+
+/* `/` Contact/Footer surface (Midnight Graphite). Opt-in via MiniClosingBookend
+   `variant="graphite"`; `/mini` keeps the royal glow above.
+
+   A calm, mostly uniform field: Contact starts at #0d1019 (one step above the
+   Work surface #080a0f, so the three bands stay distinguishable) and the footer
+   row settles toward #080a0f, the legal strip colour. The only gradient is the
+   bottom scrim by height (footer row + feather), eased so no seam shows. No
+   radial light: the Royal Blue CTA is the only accent in this area. */
+[data-mini-palette] [data-contact-variant="graphite"] [data-contact-bg] {
+  --contact-scrim-h: 170px;
+  background-color: #0d1019;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-size: 100% var(--contact-scrim-h);
+  background-image: linear-gradient(
+    180deg,
+    rgba(8, 10, 15, 0) 0%,
+    rgba(8, 10, 15, 0.35) 40%,
+    rgba(8, 10, 15, 0.75) 75%,
+    #080a0f 100%
+  );
+}
+
+@media (max-width: 1023px) {
+  [data-mini-palette] [data-contact-variant="graphite"] [data-contact-bg] {
+    --contact-scrim-h: 200px;
+  }
+}
+
+/* Footer row spacing, scoped to the royal closing surface only (the shared
+   MiniFooterBrand defaults stay as they are for every other route).
+   Baseline -> now: lg+ 64px -> 48px block padding; sm 64px -> 48px, stack gap
+   40px -> 28px; <sm 56px -> 40px, stack gap 40px -> 28px. */
+[data-mini-palette] :is([data-contact-variant="royal"], [data-contact-variant="graphite"]) [data-contact-footer] > .mini-page-rail {
+  padding-block: 2.5rem;
+  row-gap: 1.75rem;
+}
+
+@media (min-width: 640px) {
+  [data-mini-palette] :is([data-contact-variant="royal"], [data-contact-variant="graphite"]) [data-contact-footer] > .mini-page-rail {
+    padding-block: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  [data-mini-palette] :is([data-contact-variant="royal"], [data-contact-variant="graphite"]) [data-contact-footer] > .mini-page-rail {
+    row-gap: 3rem;
+  }
+}
+
+[data-mini-palette] :is([data-contact-variant="royal"], [data-contact-variant="graphite"]) [data-contact-bg]::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(124, 151, 240, 0) 0%,
+    rgba(124, 151, 240, 0.5) 50%,
+    rgba(124, 151, 240, 0) 100%
+  );
+}
+
+/* Contact/Footer dividing lines (structural borders; same tones as the page). */
+[data-mini-palette] :is([data-contact-variant="royal"], [data-contact-variant="graphite"]) {
+  border-top-color: var(--mini-border-section);
+}
+
+[data-mini-palette] :is([data-contact-variant="royal"], [data-contact-variant="graphite"]) [data-contact-footer],
+[data-mini-palette] [data-contact-legal] > div {
+  border-top-color: var(--mini-border-subtle);
+}
+
+/* `/` closing composition: Contact and the BAUMA/email row read as one
+   continuous surface, so the footer row drops its top divider (1px) and sits in
+   one compact row at every width (BAUMA left, email right). The legal strip keeps
+   its divider at about half strength. Graphite only; `/mini` keeps the royal
+   spacing and borders below. */
+[data-mini-palette] [data-contact-variant="graphite"] [data-contact-footer] {
+  border-top-width: 0;
+}
+
+[data-mini-palette] [data-contact-variant="graphite"] [data-contact-footer] > .mini-page-rail {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 1rem;
+  row-gap: 0;
+  padding-block: 1.25rem;
+}
+
+[data-mini-palette] [data-contact-variant="graphite"] [data-contact-footer] > .mini-page-rail > :last-child {
+  justify-self: end;
+}
+
+@media (min-width: 640px) {
+  [data-mini-palette] [data-contact-variant="graphite"] [data-contact-footer] > .mini-page-rail {
+    padding-block: 1.75rem;
+  }
+}
+
+[data-mini-palette] [data-legal-quiet] > div {
+  border-top-color: color-mix(in srgb, var(--mini-border-subtle) 55%, transparent);
+}

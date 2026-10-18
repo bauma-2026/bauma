@@ -19,7 +19,14 @@ import {
   tickScrollNudge,
 } from "@/lib/pocketSpatialMotion";
 
-import { drawVisualLayerCube, REST_RX, REST_RY, SILHOUETTE, VIEWBOX } from "./visualLayerGeometry";
+import {
+  drawVisualLayerCube,
+  REST_RX,
+  REST_RY,
+  SILHOUETTE,
+  VIEWBOX,
+  type VisualLayerTone,
+} from "./visualLayerGeometry";
 
 /** System-level follow. Calmer than the Pocket Cube. Pose only. */
 const FOLLOW_YAW = 0.055;
@@ -32,9 +39,9 @@ const SCROLL_IMPULSE_PER_PX = 0.000055;
 const SCROLL_VEL_CLAMP_YAW = 0.006;
 const SCROLL_VEL_CLAMP_PITCH = 0.0036;
 
-type Props = { className?: string };
+type Props = { className?: string; tone?: VisualLayerTone };
 
-export default function VisualLayerCube({ className = "" }: Props) {
+export default function VisualLayerCube({ className = "", tone = "warm" }: Props) {
   const reducedMotion = useReducedMotion();
   const [pose, setPose] = useState({ rx: REST_RX, ry: REST_RY });
   const hoveringRef = useRef(false);
@@ -49,7 +56,7 @@ export default function VisualLayerCube({ className = "" }: Props) {
   const scrollRef = useRef(createScrollNudge());
   const pointerFollowRef = useRef(false);
 
-  const drawn = useMemo(() => drawVisualLayerCube(pose.rx, pose.ry), [pose.rx, pose.ry]);
+  const drawn = useMemo(() => drawVisualLayerCube(pose.rx, pose.ry, tone), [pose.rx, pose.ry, tone]);
 
   useEffect(() => {
     const tick = (now: number) => {

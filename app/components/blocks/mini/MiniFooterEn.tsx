@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function MiniFooterEn() {
   return (
     <footer className="border-t border-white/10 bg-[#080808] text-white">
-      <div className="mx-auto grid max-w-[1100px] gap-10 px-6 py-14 sm:py-16 lg:grid-cols-[1fr_1fr] lg:gap-12 lg:px-8">
+      <div className="mini-page-rail grid gap-10 py-14 sm:py-16 lg:grid-cols-[1fr_1fr] lg:gap-12">
         <div>
           <Link
             href="/en"
@@ -44,7 +44,7 @@ export default function MiniFooterEn() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-[1100px] flex-col gap-4 px-6 py-5 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between lg:px-8">
+        <div className="mini-page-rail flex flex-col gap-4 py-5 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between">
           <p>© 2026 Bauma</p>
 
           <nav

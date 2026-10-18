@@ -59,7 +59,7 @@ export default function MiniHeroEn() {
       <div className="relative mx-auto grid max-w-[1100px] gap-10 px-6 pt-20 pb-20 sm:pt-20 sm:pb-24 lg:min-h-[calc(100vh-52px)] lg:grid-cols-[1fr_0.78fr] lg:items-center lg:gap-14 lg:px-8 lg:py-24">
         <div>
           <div className="inline-flex items-center rounded-full border border-[#B68A4C]/25 bg-[#B68A4C]/[0.04] px-3 py-1 text-[11px] font-medium text-white/72 shadow-[0_0_24px_rgba(182,138,76,0.07)]">
-            Structure-first websites
+            Structure before form
           </div>
 
        <h1 className="mt-8 font-serif font-semibold leading-[0.9] tracking-[-0.035em] text-white sm:leading-[0.94] sm:tracking-[-0.025em]">
@@ -82,8 +82,7 @@ export default function MiniHeroEn() {
 </h1>
 
           <p className="mt-8 max-w-[52ch] text-base leading-7 text-white/55 sm:text-lg">
-            I structure websites so users understand faster, trust more easily,
-            and take the next step with less friction.
+            I help companies organise their offer, content and path through the website so everything works as one clear, connected whole.
           </p>
 
           <div className="mt-9">
@@ -92,7 +91,7 @@ export default function MiniHeroEn() {
               className="group inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition duration-300 hover:-translate-y-[1px] hover:bg-white/90 active:translate-y-0"
             >
               <span className="inline-flex items-center gap-2">
-                How a clear path is built
+              How the page leads to a decision
                 <span className="transition duration-300 group-hover:translate-x-0.5">
                   →
                 </span>

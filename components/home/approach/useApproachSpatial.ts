@@ -158,7 +158,7 @@ export function useApproachSpatial({
   );
 
   const tick = useCallback(
-    (ts: number) => {
+    function tick(ts: number) {
       const last = lastTsRef.current ?? ts;
       const dt = Math.min(0.05, (ts - last) / 1000);
       lastTsRef.current = ts;

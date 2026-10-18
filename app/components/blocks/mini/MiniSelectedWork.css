@@ -1,0 +1,150 @@
+/*
+ * Homepage "Izbrano delo" (MiniSelectedWork), compact editorial layout.
+ *
+ * The Odstrani Tattoo and Dema Plus proofs are imported unchanged. They size
+ * themselves with container queries (>=640 / >=1024), so `.msw-proof` decides
+ * which layout they get. Instead of clipping at a pixel height, the wrappers
+ * hide the proofs' trailing blocks (display:none), so the preview ends exactly
+ * where the content ends, whatever the text wrapping or fallback font:
+ *   Odstrani: the 3-step block, plus (below 1024, where it sits under the
+ *             photo) the second paragraph. Ends at the photo's bottom edge.
+ *   Dema:     the "Vse reference" line, the third card when it would sit alone
+ *             on a second row (640-1023), and each card's excerpt and link.
+ * Selectors are structural (child positions and the proofs' own utility
+ * classes); both proofs are frozen reconstructions of finished client sites.
+ *
+ * The negative margins on `.msw-clip > div` remove part of each proof's own outer
+ * padding, leaving an even margin around the visible content.
+ */
+
+/* ---- Proof width --------------------------------------------------------- */
+/* Same logic as the Flexido proof above: edge to edge below sm, then the rail. */
+.msw-proof {
+  container-type: inline-size;
+  width: 100%;
+  margin-inline: auto;
+}
+@media (min-width: 640px) {
+  .msw-proof {
+    width: calc(100% - 3rem);
+    max-width: 1216px;
+  }
+}
+@media (min-width: 768px) {
+  .msw-proof {
+    width: calc(100% - 4rem);
+  }
+}
+/*
+ * 1024-1087px viewports: the rail is only 960-1023px, below the proofs' 1024px
+ * container breakpoint. Use the full viewport width so both keep their desktop
+ * layout (the proof is then edge to edge, so no radius).
+ */
+@media (min-width: 1024px) and (max-width: 1087px) {
+  .msw-proof {
+    width: 100%;
+    max-width: none;
+  }
+  .msw-proof .msw-clip {
+    border-radius: 0;
+  }
+}
+/*
+ * Odstrani's stacked tablet layout puts a full-width 4:3 photograph under the
+ * text, which grows to ~700px tall near 1023px. Cap its width in that range.
+ */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .msw-proof--odstrani {
+    max-width: 640px;
+    margin-inline: 1.5rem auto; /* left edge on the rail, like the caption */
+  }
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .msw-proof--odstrani {
+    margin-inline-start: 2rem;
+  }
+}
+
+/* ---- Clip ---------------------------------------------------------------- */
+.msw-clip {
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 6px;
+}
+@media (min-width: 640px) {
+  .msw-clip {
+    border-radius: 8px;
+  }
+}
+.msw-clip > div {
+  margin-top: calc(-1 * var(--msw-trim-top, 0px));
+  margin-bottom: calc(-1 * var(--msw-trim-bottom, 0px));
+}
+
+/* ---- Odstrani Tattoo ----------------------------------------------------- */
+/* Section padding is 48 / 56 / 64px; half is trimmed top and bottom. */
+.msw-clip--odstrani {
+  --msw-trim-top: 24px;
+  --msw-trim-bottom: 24px;
+}
+@container (min-width: 640px) {
+  .msw-clip--odstrani {
+    --msw-trim-top: 28px;
+    --msw-trim-bottom: 28px;
+  }
+}
+@container (min-width: 1024px) {
+  .msw-clip--odstrani {
+    --msw-trim-top: 32px;
+    --msw-trim-bottom: 32px;
+  }
+}
+/* The process steps (last block of the proof's content column). */
+.msw-clip--odstrani section > div > div > div:last-child {
+  display: none;
+}
+/* Below 1024 the second paragraph follows the photo; from 1024 it sits beside it. */
+@container (max-width: 1023.98px) {
+  .msw-clip--odstrani p.order-3 {
+    display: none;
+  }
+}
+
+/* ---- Dema Plus ----------------------------------------------------------- */
+/* Section padding is 48/40 (top/bottom), 64/56 from 640 and 80/64 from 1024. */
+.msw-clip--dema {
+  --msw-trim-top: 24px;
+  --msw-trim-bottom: 16px;
+}
+@container (min-width: 640px) {
+  .msw-clip--dema {
+    --msw-trim-top: 32px;
+    --msw-trim-bottom: 32px;
+  }
+}
+@container (min-width: 1024px) {
+  .msw-clip--dema {
+    --msw-trim-top: 48px;
+    --msw-trim-bottom: 40px;
+  }
+}
+/* "Vse reference": a static line, not a link. */
+.msw-clip--dema section > div > div > div:last-child {
+  display: none;
+}
+/* Cards (640+): the images and titles stay, excerpt and "Poglej projekt" go. */
+.msw-clip--dema section > div > div > div:nth-child(3) .line-clamp-1,
+.msw-clip--dema section > div > div > div:nth-child(3) .line-clamp-1 + div {
+  display: none;
+}
+/* 640-1023: two columns, so the third card would sit alone on a second row. */
+@container (max-width: 1023.98px) {
+  .msw-clip--dema section > div > div > div:nth-child(3) > div:nth-child(n + 3) {
+    display: none;
+  }
+}
+/* The slider ships `touch-pan-x`, which would stop vertical page scrolling from
+   starting on it. Allow both axes; the slider itself is unchanged. */
+.msw-clip .touch-pan-x {
+  touch-action: pan-x pan-y;
+}

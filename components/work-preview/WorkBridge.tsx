@@ -19,29 +19,69 @@ type BridgeRow =
       href: string;
     };
 
-const rows: BridgeRow[] = [
-  {
-    kind: "modal",
-    id: "flexido",
-    name: "Flexido",
-    meta: "Industrijski B2B",
+type WorkBridgeCopy = {
+  eyebrow: string;
+  heading: string;
+  cta: string;
+  rows: BridgeRow[];
+};
+
+const COPY: Record<"sl" | "en", WorkBridgeCopy> = {
+  sl: {
+    eyebrow: "Iz prakse",
+    heading: "Kako jasna struktura izgleda v praksi.",
+    cta: "Poglej izbrano delo",
+    rows: [
+      {
+        kind: "link",
+        name: "Flexido",
+        meta: "Industrijski B2B",
+        href: "/work/flexido",
+      },
+      {
+        kind: "link",
+        name: "Odstrani Tattoo",
+        meta: "Zaupanje in konverzija",
+        href: "/work/odstrani-tattoo",
+      },
+      {
+        kind: "link",
+        name: "Dema Plus",
+        meta: "Reference in jasnost",
+        href: "/work/dema-plus",
+      },
+    ],
   },
-  {
-    kind: "link",
-    name: "Odstrani Tattoo",
-    meta: "Zaupanje in konverzija",
-    href: "/work/odstrani-tattoo",
+  en: {
+    eyebrow: "In practice",
+    heading: "What clear structure looks like in practice.",
+    cta: "See selected work",
+    rows: [
+      {
+        kind: "link",
+        name: "Flexido",
+        meta: "Industrial B2B",
+        href: "/work/flexido",
+      },
+      {
+        kind: "link",
+        name: "Odstrani Tattoo",
+        meta: "Trust and conversion",
+        href: "/work/odstrani-tattoo",
+      },
+      {
+        kind: "link",
+        name: "Dema Plus",
+        meta: "References and clarity",
+        href: "/work/dema-plus",
+      },
+    ],
   },
-  {
-    kind: "link",
-    name: "Dema Plus",
-    meta: "Reference in jasnost",
-    href: "/work/dema-plus",
-  },
-];
+};
 
 const EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
-const AMBER = "rgba(209, 164, 95, 0.55)";
+const AMBER =
+  "color-mix(in srgb, var(--mini-accent-line, rgb(209, 164, 95)) 55%, transparent)";
 
 function RowArrow() {
   return (
@@ -84,7 +124,7 @@ function BridgeRowButton({
       onClick={() => {
         if (ref.current) openPreview(id, ref.current);
       }}
-      className="work-bridge-row group grid min-h-[44px] w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-b border-white/10 py-4 text-left sm:py-[18px]"
+      className="work-bridge-row group grid min-h-[44px] w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-b border-[color:var(--mini-border-subtle,color-mix(in_oklab,#fff_10%,transparent))] py-4 text-left sm:py-[18px]"
     >
       <span className="min-w-0">
         <span className="work-bridge-row-name block text-base font-semibold tracking-[-0.02em] text-white/88">
@@ -111,7 +151,7 @@ function BridgeRowLink({
   return (
     <Link
       href={href}
-      className="work-bridge-row group grid min-h-[44px] grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-b border-white/10 py-4 sm:py-[18px]"
+      className="work-bridge-row group grid min-h-[44px] grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-b border-[color:var(--mini-border-subtle,color-mix(in_oklab,#fff_10%,transparent))] py-4 sm:py-[18px]"
     >
       <span className="min-w-0">
         <span className="work-bridge-row-name block text-base font-semibold tracking-[-0.02em] text-white/88">
@@ -126,7 +166,7 @@ function BridgeRowLink({
   );
 }
 
-function WorkBridgeEyebrow() {
+function WorkBridgeEyebrow({ eyebrow }: { eyebrow: string }) {
   return (
     <Link
       href="/work"
@@ -137,7 +177,7 @@ function WorkBridgeEyebrow() {
         className="work-bridge-eyebrow-accent pointer-events-none absolute bottom-0 right-[34px] h-px w-[18px] rounded-full"
         style={{ backgroundColor: AMBER }}
       />
-      <span>Iz prakse</span>
+      <span>{eyebrow}</span>
       <span
         aria-hidden
         className="work-bridge-eyebrow-arrow text-[11px] leading-none text-white/40"
@@ -148,12 +188,19 @@ function WorkBridgeEyebrow() {
   );
 }
 
-export default function WorkBridge() {
+export default function WorkBridge({
+  locale = "sl",
+}: {
+  /** Production callers never pass this — default keeps existing SL output. */
+  locale?: "sl" | "en";
+}) {
+  const copy = COPY[locale];
+
   return (
     <section
       id="work-bridge"
       data-section="work-bridge"
-      className="scroll-mt-13 border-t border-white/10 bg-[#080808] py-10 text-white sm:py-12 lg:py-14"
+      className="scroll-mt-13 border-t border-[color:var(--mini-border-section,color-mix(in_oklab,#fff_10%,transparent))] bg-[var(--mini-surface-work,#080808)] py-10 text-white sm:py-12 lg:py-14"
     >
       <style>{`
         .work-bridge-eyebrow,
@@ -231,7 +278,7 @@ export default function WorkBridge() {
           }
 
           .work-bridge-row:hover .work-bridge-row-arrow-dot {
-            background-color: rgba(209, 164, 95, 0.55);
+            background-color: color-mix(in srgb, var(--mini-accent-line, rgb(209, 164, 95)) 55%, transparent);
           }
 
           .work-bridge-cta:hover {
@@ -268,7 +315,7 @@ export default function WorkBridge() {
         }
 
         .work-bridge-row:focus-visible .work-bridge-row-arrow-dot {
-          background-color: rgba(209, 164, 95, 0.55);
+          background-color: color-mix(in srgb, var(--mini-accent-line, rgb(209, 164, 95)) 55%, transparent);
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -296,15 +343,15 @@ export default function WorkBridge() {
 
       <div className="mini-page-rail">
         <header className="max-w-[540px]">
-          <WorkBridgeEyebrow />
+          <WorkBridgeEyebrow eyebrow={copy.eyebrow} />
 
           <h2 className="home-bridge-heading mt-6 max-w-[18ch] sm:mt-7 sm:max-w-[20ch] lg:max-w-[16ch]">
-            Kako jasna struktura izgleda v praksi.
+            {copy.heading}
           </h2>
         </header>
 
-        <div className="mt-11 border-t border-white/10 sm:mt-12 lg:mt-14">
-          {rows.map((row) =>
+        <div className="mt-11 border-t border-[color:var(--mini-border-subtle,color-mix(in_oklab,#fff_10%,transparent))] sm:mt-12 lg:mt-14">
+          {copy.rows.map((row) =>
             row.kind === "modal" ? (
               <BridgeRowButton
                 key={row.id}
@@ -328,7 +375,7 @@ export default function WorkBridge() {
             href="/work"
             className="work-bridge-cta group inline-flex items-center gap-1.5 text-sm font-medium text-white/65 focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-white/50"
           >
-            Poglej izbrano delo
+            {copy.cta}
             <span
               aria-hidden
               className="work-bridge-cta-arrow inline-block transition-transform"

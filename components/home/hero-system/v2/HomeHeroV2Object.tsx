@@ -136,7 +136,10 @@ export default function HomeHeroV2Object({
       data-activation={activation.toFixed(3)}
       data-shift-blend={snap.blend.toFixed(3)}
       style={{
-        touchAction: "none",
+        // Mobile: allow vertical page scroll when the gesture starts on the
+        // shape field. Desktop fine-pointer keeps touch-action:none so X/Y
+        // proximity ownership is unchanged.
+        touchAction: mobile ? "pan-y" : "none",
         cursor: mobile || reduced ? "default" : "crosshair",
       }}
     >

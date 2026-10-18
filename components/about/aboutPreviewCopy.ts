@@ -14,6 +14,7 @@ export type HowShape = "square" | "circle" | "triangle";
 export type AboutPreviewCopy = {
   portraitAlt: string;
   hero: {
+    eyebrow: string;
     /** Mobile intentional 3-line composition */
     mobileLines: readonly [string, string, string];
     /** Desktop/tablet intentional 2-line composition */
@@ -59,6 +60,7 @@ export type AboutPreviewCopy = {
 export const ABOUT_PREVIEW_COPY_SL: AboutPreviewCopy = {
   portraitAlt: "Gregor Baumgartner",
   hero: {
+    eyebrow: "Gregor Baumgartner",
     mobileLines: ["Struktura", "naredi celoto", "jasnejšo."],
     desktopLines: ["Struktura naredi", "celoto jasnejšo."],
     support1:
@@ -149,6 +151,7 @@ export const ABOUT_PREVIEW_COPY_SL: AboutPreviewCopy = {
 export const ABOUT_PREVIEW_COPY_EN: AboutPreviewCopy = {
   portraitAlt: "Gregor Baumgartner",
   hero: {
+    eyebrow: "Gregor Baumgartner",
     mobileLines: ["Structure", "makes the whole", "clearer."],
     desktopLines: ["Structure makes", "the whole clearer."],
     support1:

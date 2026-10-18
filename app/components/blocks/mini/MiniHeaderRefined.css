@@ -1,0 +1,79 @@
+/* Homepage header art direction (Direction A, step 2).
+   Everything is scoped to `[data-header-refined]`, which only `MiniHeader refined`
+   (the Royal Blue `/`) sets, so /mini, /en, /en/mini, /work/* and the legal pages
+   keep their current header. No global token is changed. */
+
+/* Graphite surface: the homepage's own base tone and subtle hairline instead of the
+   shared Midnight Navy (`--mini-surface-header`). The open mobile menu carries the
+   same attribute, so the bar and the menu stay seamless. */
+[data-header-refined] {
+  --mini-surface-header: var(--mini-surface-flexido, #080a0f);
+  --mini-border-header: var(--mini-border-subtle, #202938);
+}
+
+/* Desktop nav labels (Sistem, EN): IBM Plex Mono 500 from the homepage wrapper
+   (`--font-mono-home`), sentence case as authored, with light tracking. */
+header[data-header-refined] [data-header-label] {
+  font-family: var(--font-mono-home), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+/* Kontakt CTA hierarchy. While the Hero is in view (`data-header-cta="ghost"`: the
+   transparent state and the fade-out that follows) the header Kontakt is an outline, so
+   "Opišite projekt" is the only solid Royal Blue button in the first viewport. Once the
+   Hero is out of view it is the existing solid Royal pill. The outline is an inset
+   box-shadow, not a border, so size, padding and layout are identical in both states.
+   Outline is neutral white at 42% (about 4:1 on the dark top of the Hero), stronger than the
+   Hero's grey-blue secondary so it reads as an action, but unfilled. Hover/press mirror the
+   secondary variant in MiniButtons.css. Specificity beats the palette primary rules. */
+header[data-header-cta="ghost"] [data-cta="primary"][data-cta-size="compact"] {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.42);
+  /* Optical padding: the arrow mask has ~3px of empty space inside its 11px box, so the
+     visible gap to the right edge is larger than to the left. 15 / 13 keeps the 89px width
+     and balances the ink (about 15.5px left, 16px right). */
+  padding-inline: 15px 13px;
+  transition:
+    background-color 180ms ease,
+    box-shadow 180ms ease,
+    color 180ms ease;
+}
+
+header[data-header-cta="solid"] [data-cta="primary"][data-cta-size="compact"] {
+  box-shadow: inset 0 0 0 1px transparent;
+  transition:
+    background-color 180ms ease,
+    box-shadow 180ms ease,
+    color 180ms ease;
+}
+
+/* Divider between Sistem and EN: the shared secondary-border grey-blue (#56648a) at 70%,
+   about 2.2:1 on graphite and 2:1 on the dark top of the Hero photograph, up from 1.35:1.
+   Never Royal Blue. 22px each side (was 24 / 21) at the same total width. */
+header[data-header-refined] [data-header-divider] {
+  border-left-color: rgb(86 100 138 / 0.7);
+  margin-left: -2px;
+  padding-left: 22px;
+}
+
+@media (hover: hover) {
+  header[data-header-cta="ghost"] [data-cta="primary"][data-cta-size="compact"]:hover {
+    background: rgb(65 105 225 / 0.1);
+    box-shadow: inset 0 0 0 1px var(--mini-accent-text, #7c97f0);
+  }
+}
+
+header[data-header-cta="ghost"] [data-cta="primary"][data-cta-size="compact"]:active {
+  background: rgb(65 105 225 / 0.18);
+}
+
+/* Reduced motion: the 180ms hero-to-sticky fade becomes an instant state change.
+   Phase logic is untouched, so hidden controls still leave the Tab order. */
+@media (prefers-reduced-motion: reduce) {
+  header[data-header-refined],
+  header[data-header-refined] > div,
+  header[data-header-refined] [data-cta] {
+    transition: none !important;
+  }
+}

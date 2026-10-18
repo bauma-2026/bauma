@@ -1,266 +1,456 @@
-import Link from "next/link";
-import MiniHeader from "../../components/blocks/mini/MiniHeader";
-import MiniFooter from "../../components/blocks/mini/MiniFooter";
-
 import type { Metadata } from "next";
+import { isStaging } from "@/lib/siteEnv";
+import type { ReactNode } from "react";
 
+import MiniPalette from "../../components/blocks/mini/MiniPalette";
+import MiniHeader from "../../components/blocks/mini/MiniHeader";
+import MiniClosingBookend from "../../components/blocks/mini/MiniClosingBookend";
+import {
+  MINI_CONTACT_MAILTO,
+  type MiniFinalCtaCopy,
+} from "../../components/blocks/mini/MiniFinalCTA";
+import DemaPlusHeroProof from "../../components/blocks/mini/DemaPlusHeroProof";
+import DemaPlusReferencesProof from "../../components/blocks/mini/DemaPlusReferencesProof";
+
+// Proof width and clip (`.msw-proof` / `.msw-clip`): same rail logic as the homepage.
+import "../../components/blocks/mini/MiniSelectedWork.css";
+
+const TITLE = "Dema Plus: najprej projekti, nato področja dela — Bauma";
+const DESCRIPTION =
+  "Dema Plus: domača stran se začne z arhitekturnim projektom, reference so pred področji dela. Primer iz prakse.";
+
+/** `noindex` stays until the case studies launch. */
 export const metadata: Metadata = {
+  title: TITLE,
+  description: DESCRIPTION,
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    ...(isStaging ? {} : { url: "https://bauma.si/work/dema-plus" }),
+    siteName: "Bauma",
+    images: [
+      {
+        url: "/og/bauma-og-v3.png",
+        width: 1200,
+        height: 630,
+        alt: TITLE,
+      },
+    ],
+    locale: "sl_SI",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ["/og/bauma-og-v3.png"],
+  },
   robots: {
     index: false,
     follow: false,
   },
 };
 
-const sections = [
+/* ---------------------------------------------------------------------------
+ * Every fact below was checked against the live demaplus.si (which serves the
+ * new Next.js site) and the local demaplus-next source (src/app/page.tsx,
+ * src/components/home/*, src/content/home.ts, src/content/projects.generated.ts,
+ * next.config.ts). No brief, metrics, dates or results are claimed, and the
+ * reason for the order of the sections is not documented, so none is given.
+ * Counts: 6 homepage projects, 46 in the reference index (= 46 detail routes),
+ * 19 legacy redirect rules.
+ * ------------------------------------------------------------------------- */
+
+const SITE_URL = "https://demaplus.si/";
+
+const FOCUS =
+  "focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-white/50";
+
+const FACTS: { label: string; value: ReactNode }[] = [
   {
-    eyebrow: "Problem",
-    title: "Predstavitev ni dovolj hitro zgradila zaupanja.",
-    text: "Dema Plus je imel reference in realne projekte, ampak stran uporabniku ni dovolj hitro pokazala, kaj podjetje dela, zakaj mu lahko zaupa in kateri projekti so pomembni.",
-    points: [
-      "uporabnik je moral sam sestavljati kontekst",
-      "reference niso imele dovolj jasne vloge",
-      "ponudba ni bila predstavljena dovolj direktno",
-    ],
+    label: "Dejavnost",
+    value: "Rekonstrukcije, novogradnje in inženiring",
   },
   {
-    eyebrow: "Struktura",
-    title: "Najprej jasna ponudba, potem dokaz.",
-    text: "Stran je bila postavljena tako, da uporabnik najprej razume podjetje, nato vidi projekte in šele potem dobi jasen razlog za kontakt.",
-    points: [
-      "jasnejši hero z direktno predstavitvijo",
-      "reference kot dokaz zaupanja",
-      "bolj pregleden flow skozi stran",
-      "manj šuma med pomembnimi informacijami",
-    ],
+    label: "Obseg dela",
+    value: "Struktura, oblikovanje in razvoj spletne strani",
   },
   {
-    eyebrow: "Reference flow",
-    title: "Projekti niso samo galerija.",
-    text: "Reference morajo uporabniku pomagati razumeti izkušnje, področje dela in resnost podjetja. Zato niso samo vizualni dodatek, ampak del zaupanja.",
-    points: [
-      "projekti dobijo bolj jasno hierarhijo",
-      "uporabnik hitreje razume obseg dela",
-      "reference podpirajo odločitev",
-      "stran deluje bolj kredibilno",
-    ],
+    label: "Reference",
+    value: "46 projektov, vsak s svojo stranjo",
   },
   {
-    eyebrow: "Rezultat",
-    title: "Podjetje je predstavljeno bolj jasno in direktno.",
-    text: "Uporabnik hitreje razume, s čim se podjetje ukvarja, zakaj so reference pomembne in kaj je naslednji korak.",
-    points: [
-      "hitrejše razumevanje ponudbe",
-      "več zaupanja skozi reference",
-      "jasnejša pot do kontakta",
-    ],
+    label: "Spletna stran",
+    value: (
+      <a
+        href={SITE_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`text-white/85 underline decoration-white/25 underline-offset-4 transition-colors duration-300 hover:text-white hover:decoration-white/50 ${FOCUS}`}
+      >
+        demaplus.si
+        <span aria-hidden="true"> ↗</span>
+        <span className="sr-only"> (odpre se v novem zavihku)</span>
+      </a>
+    ),
   },
 ];
 
-export default function DemaPlusCasePage() {
-  return (
-    <div className="min-h-screen bg-[#080808] text-white">
-            <MiniHeader />
-      {/* HERO */}
-      <section className="border-b border-white/10">
-        <div className="mx-auto w-full max-w-[1120px] px-5 pb-16 pt-24 sm:px-6 sm:pb-20 sm:pt-28 lg:px-8 lg:pb-24 lg:pt-32">
-          <div className="max-w-[820px]">
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
-              Case / Dema Plus
-            </p>
+/** The 6 sections of the client homepage, in their real order. */
+const PAGE_ORDER: { title: string; note: string; shown?: string }[] = [
+  {
+    title: "Gradimo. Po načrtu. Do izvedbe.",
+    note: "Uvod: fotografija objekta in gumb „Izbrani projekti“",
+    shown: "Prikazano zgoraj",
+  },
+  {
+    title: "Projekti, ki govorijo namesto nas.",
+    note: "Reference: šest izbranih projektov",
+    shown: "Prikazano spodaj",
+  },
+  {
+    title: "Rekonstrukcije, novogradnje in inženiring.",
+    note: "Področja delovanja: tri področja",
+  },
+  {
+    title: "Jasna struktura. Nadzor kakovosti. Predvidljiv potek.",
+    note: "Fotografija in povezava na postopek",
+  },
+  {
+    title: "Jasen potek od ogleda do predaje.",
+    note: "Postopek: pet korakov",
+  },
+  {
+    title: "Načrtujete projekt?",
+    note: "Povezava na kontakt",
+  },
+];
 
-            <h1 className="mt-4 max-w-[16ch] text-5xl font-semibold leading-[0.96] tracking-[-0.04em] text-white sm:text-6xl">
-              Kako smo predstavitev podjetja naredili bolj jasno in direktno.
-            </h1>
+const HOME_PROJECTS = [
+  "Vila Rožna dolina",
+  "Hotel Nox Ljubljana",
+  "Hotel Cubo",
+  "Vila Madeleine",
+  "Vila Zlatica",
+  "Švicarija",
+];
 
-            <p className="mt-6 max-w-[56ch] text-base leading-[1.65] text-white/58">
-              Dema Plus je imel realne projekte in reference. Naloga ni bila
-              samo polepšati strani, ampak jo strukturirati tako, da uporabnik
-              hitreje razume podjetje, ponudbo in razlog za zaupanje.
-            </p>
-          </div>
-        </div>
-      </section>
+const PORTFOLIO: { label: string; value: ReactNode }[] = [
+  {
+    label: "Domača stran",
+    value: `Šest projektov, po vrsti: ${HOME_PROJECTS.join(", ")}.`,
+  },
+  {
+    label: "Vse reference",
+    value: "Stran Reference ima 46 projektov.",
+  },
+  {
+    label: "Posamezen projekt",
+    value: "Vsak ima svojo stran, na primer /reference/hotel-cubo.",
+  },
+  {
+    label: "Namizje",
+    value: "Kartice so v dveh stolpcih, od 1024 px v treh.",
+  },
+  {
+    label: "Telefon",
+    value:
+      "Kartice se pomikajo vodoravno. Vsaka zavzame 86 % širine, zato je naslednja že delno vidna.",
+  },
+];
 
-      {/* SUMMARY */}
-      <section className="border-b border-white/10">
-        <div className="mx-auto w-full max-w-[1120px] px-5 py-14 sm:px-6 sm:py-16 lg:px-8">
-          <div className="grid gap-4 sm:grid-cols-3">
-            {[
-              ["Problem", "Nejasen kontekst"],
-              ["Sprememba", "Jasnejša predstavitev"],
-              ["Rezultat", "Več zaupanja"],
-            ].map(([label, value]) => (
-              <div
-                key={label}
-                className="rounded-2xl border border-white/10 bg-white/[0.04] p-6"
-              >
-                <p className="text-[11px] uppercase tracking-[0.18em] text-white/60">
-                  {label}
-                </p>
+const IMPLEMENTATION: { title: string; text: string }[] = [
+  {
+    title: "Področja so kratka in brez podstrani",
+    text: "Rekonstrukcije, novogradnje in inženiring so trije stolpci z enim stavkom. Področja nimajo lastnih strani: razdelek se konča z gumbom „Povpraševanje“, ki vodi na kontakt.",
+  },
+  {
+    title: "Postopek ima dve postavitvi",
+    text: "Pet korakov je na telefonu seznam, od 640 px v dveh stolpcih, od 1024 px v petih. Imena in besedila so v obeh enaka.",
+  },
+  {
+    title: "Vsak projekt ima svojo stran",
+    text: "Vseh 46 referenc ima naslov /reference/ime-projekta in svojo naslovno sliko, shranjeno skupaj s stranjo.",
+  },
+  {
+    title: "Stari naslovi delujejo naprej",
+    text: "Za stare naslove je 19 trajnih preusmeritev, na primer /pokopalisce-vic na stran projekta. Naslov z www vodi na demaplus.si.",
+  },
+];
 
-                <p className="mt-3 text-lg font-semibold leading-[1.15] tracking-[-0.01em] text-white">
-                  {value}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+const closingCopy: MiniFinalCtaCopy = {
+  eyebrow: "NASLEDNJI KORAK",
+  line1: "Najprej delo,",
+  line2: "nato razlaga.",
+  body: "Pri Dema Plus stran začnejo projekti, področja dela pa sledijo. Če imaš izvedene projekte, ki jih je treba pokazati, jih lahko postaviva na začetek.",
+  cta: "Pogovoriva se o projektu",
+  mailto: MINI_CONTACT_MAILTO,
+};
 
-      {/* CONTENT */}
-      <section>
-        <div className="mx-auto w-full max-w-[1120px] px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
-          <div className="grid gap-6">
-            {sections.map((section) => (
-              <article
-                key={section.eyebrow}
-                className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 sm:p-8 lg:p-10"
-              >
-                <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
-                  <div>
-                    <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
-                      {section.eyebrow}
-                    </p>
+/* --------------------------------- tokens -------------------------------- */
 
-                    <h2 className="mt-4 max-w-[15ch] text-3xl font-semibold leading-[1.05] tracking-[-0.02em] text-white sm:text-4xl">
-                      {section.title}
-                    </h2>
-                  </div>
+const HAIRLINE =
+  "border-[color:var(--mini-border-subtle,color-mix(in_oklab,#fff_10%,transparent))]";
+const SECTION_LINE =
+  "border-[color:var(--mini-border-section,color-mix(in_oklab,#fff_10%,transparent))]";
 
-                  <div>
-                    <p className="max-w-[58ch] text-base leading-[1.65] text-white/56">
-                      {section.text}
-                    </p>
+const EYEBROW =
+  "text-[11px] font-medium uppercase tracking-[0.22em] text-white/60";
+const BODY = "text-base leading-[1.7] text-white/56 sm:text-lg sm:leading-[1.7]";
+const ACCENT = "text-[color:var(--mini-accent-text,#7c97f0)]";
 
-                    <ul className="mt-6 grid gap-3">
-                      {section.points.map((point) => (
-                        <li
-                          key={point}
-                          className="flex gap-3 text-sm leading-6 text-white/52"
-                        >
-                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-white/30" />
-                          <span>{point}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <ReferenceProofPlaceholder />
-
-      {/* KEY CHANGE */}
-      <section className="border-y border-white/10 bg-[#111214]">
-        <div className="mx-auto w-full max-w-[1120px] px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
-          <div className="max-w-[760px]">
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
-              Ključna sprememba
-            </p>
-
-            <h2 className="mt-4 max-w-[18ch] text-4xl font-semibold leading-[1.03] tracking-[-0.025em] text-white sm:text-5xl">
-              Problem ni bil v tem, da podjetje nima dokazov. Problem je bil v
-              tem, da dokazi niso dovolj hitro ustvarili konteksta.
-            </h2>
-
-            <p className="mt-6 max-w-[56ch] text-base leading-[1.65] text-white/56">
-              Ko so ponudba, projekti in reference postavljeni v jasen flow,
-              uporabnik hitreje razume podjetje in lažje zaupa naslednjemu
-              koraku.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section>
-        <div className="mx-auto w-full max-w-[1120px] px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-8 text-center sm:p-10">
-            <h2 className="text-3xl font-semibold leading-[1.1] tracking-[-0.02em] text-white">
-              Imaš reference, ki še ne gradijo dovolj zaupanja?
-            </h2>
-
-            <p className="mx-auto mt-4 max-w-[44ch] text-sm leading-6 text-white/50">
-              Poglejva, kje uporabnik izgubi kontekst in kako lahko predstavitev
-              podjetja postavimo bolj jasno.
-            </p>
-
-            <Link
-              href="/contact"
-              className="mt-8 inline-flex items-center justify-center rounded-full border border-white bg-white px-6 py-3 text-sm font-medium text-black transition hover:bg-white/90"
-            >
-              Poglejva primer →
-            </Link>
-          </div>
-        </div>
-      </section> <MiniFooter />
-    </div>
-  );
-}
-
-function ReferenceProofPlaceholder() {
-  return (
-    <section className="border-y border-white/10 bg-[#080808]">
-      <div className="mx-auto w-full max-w-[1120px] px-5 py-16 sm:px-6 sm:py-20 lg:px-8">
-        <div className="max-w-[720px]">
-          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
-            Reference layer
-          </p>
-
-          <h2 className="mt-4 max-w-[16ch] text-4xl font-semibold leading-[1.03] tracking-[-0.025em] text-white sm:text-5xl">
-            Reference morajo pomagati uporabniku razumeti podjetje.
-          </h2>
-
-          <p className="mt-5 max-w-[56ch] text-base leading-[1.65] text-white/56">
-            Pri predstavitveni strani reference niso samo seznam projektov.
-            Njihova naloga je, da uporabniku hitro pokažejo izkušnje, resnost in
-            širino dela.
-          </p>
-        </div>
-
-        <div className="mt-12 grid gap-5 lg:grid-cols-2">
-          <ProofPlaceholderCard
-            label="Pred"
-            title="Uporabnik vidi projekte"
-            desc="Projekti obstajajo, ampak uporabnik mora sam razumeti, kaj pomenijo in zakaj so pomembni."
-          />
-
-          <ProofPlaceholderCard
-            label="Po"
-            title="Reference gradijo zaupanje"
-            desc="Ko imajo reference jasno vlogo v flowu, pomagajo uporabniku hitreje razumeti podjetje."
-          />
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function ProofPlaceholderCard({
-  label,
-  title,
-  desc,
+function SectionHeading({
+  eyebrow,
+  children,
+  id,
 }: {
-  label: string;
-  title: string;
-  desc: string;
+  eyebrow: string;
+  children: ReactNode;
+  id: string;
 }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 sm:p-7">
-      <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-white/60">
-        {label}
-      </p>
+    <>
+      <p className={EYEBROW}>{eyebrow}</p>
+      <h2
+        id={id}
+        className="home-bridge-heading mt-5 max-w-[22ch] text-balance sm:mt-6"
+      >
+        {children}
+      </h2>
+    </>
+  );
+}
 
-      <h3 className="mt-4 text-xl font-semibold leading-[1.15] tracking-[-0.01em] text-white">
-        {title}
-      </h3>
+export default function DemaPlusCasePage() {
+  return (
+    <MiniPalette>
+      <div className="bg-[var(--mini-surface-work,#080a0f)] text-white">
+        <MiniHeader hideApproachNav />
 
-      <p className="mt-3 max-w-[46ch] text-sm leading-6 text-white/50">
-        {desc}
-      </p>
-    </div>
+        <main>
+          {/* 01 — INTRODUCTION: type only, then the facts of the project */}
+          <section
+            aria-labelledby="dp-hero"
+            className="pb-14 pt-28 sm:pb-16 sm:pt-32 lg:pb-20 lg:pt-36"
+          >
+            <div className="mini-page-rail">
+              <p className={EYEBROW}>Case / Dema Plus</p>
+
+              <h1
+                id="dp-hero"
+                className="home-primary-heading mt-5 max-w-[20ch] text-balance sm:mt-6"
+              >
+                Kako smo domačo stran začeli s projekti, ne z obljubo.
+              </h1>
+
+              <p className="mt-6 max-w-[58ch] text-base leading-[1.65] text-white/58 sm:text-lg sm:leading-[1.7]">
+                Dema Plus izvaja rekonstrukcije, novogradnje in inženiring.
+                Domača stran se začne s fotografijo objekta. Prvi gumb vodi k
+                izbranim referencam, tri področja dela pa sledijo šele za
+                njimi.
+              </p>
+
+              <dl
+                className={`mt-12 grid border-t ${HAIRLINE} sm:mt-14 sm:grid-cols-2 lg:grid-cols-4`}
+              >
+                {FACTS.map((fact) => (
+                  <div
+                    key={fact.label}
+                    className={`border-b ${HAIRLINE} py-4 sm:pr-8 lg:border-b-0 lg:py-5`}
+                  >
+                    <dt className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/40">
+                      {fact.label}
+                    </dt>
+                    <dd className="mt-2 text-sm leading-6 text-white/75 sm:text-[15px]">
+                      {fact.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </section>
+
+          {/* 02 — FIRST PROOF: the opening screen (static copy of the real hero) */}
+          <section
+            aria-label="Dokaz: uvodni razdelek domače strani demaplus.si"
+            className={`border-t ${SECTION_LINE} pt-12 sm:pt-16 lg:pt-20`}
+          >
+            {/* Nothing inside is interactive and the proof carries its own
+                title, so it is exposed as a single labelled image. */}
+            <div
+              role="img"
+              aria-label="Dema Plus: uvodni razdelek domače strani s fotografijo objekta, naslovom „Gradimo. Po načrtu. Do izvedbe.“ in gumbom „Izbrani projekti“"
+              className="msw-proof"
+            >
+              <div className="msw-clip">
+                <div aria-hidden="true">
+                  <DemaPlusHeroProof headingLevel={3} />
+                </div>
+              </div>
+            </div>
+
+            <div className="mini-page-rail pb-12 pt-6 sm:pb-14 lg:pb-16">
+              <p className="mx-auto max-w-[760px] text-balance text-center text-sm leading-relaxed text-white/40">
+                Rekonstrukcija uvodnega razdelka Dema Plus z dejansko
+                fotografijo Švicarije, tipografijo in pozivom do izbranih
+                projektov.
+              </p>
+            </div>
+          </section>
+
+          {/* 03 — STRUCTURAL DECISION: the order of the page */}
+          <section
+            aria-labelledby="dp-order"
+            className={`border-t ${SECTION_LINE} py-16 sm:py-20 lg:py-24`}
+          >
+            <div className="mini-page-rail grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+              <div className="lg:sticky lg:top-24 lg:self-start">
+                <SectionHeading eyebrow="Strukturna odločitev" id="dp-order">
+                  Najprej projekti. Nato področja dela.
+                </SectionHeading>
+
+                <div className={`mt-8 max-w-[46ch] space-y-5 ${BODY}`}>
+                  <p>
+                    Gumb v uvodu, „Izbrani projekti“, ne vodi na kontakt ali
+                    storitve, ampak na razdelek Reference.
+                  </p>
+                  <p>
+                    Reference so drugi razdelek strani, tri področja dela
+                    tretji, postopek peti.
+                  </p>
+                </div>
+              </div>
+
+              <ol aria-label="Razdelki domače strani po vrstnem redu">
+                {PAGE_ORDER.map((item, index) => (
+                  <li
+                    key={item.title}
+                    className={`grid grid-cols-[2.25rem_minmax(0,1fr)] gap-x-3 border-t ${HAIRLINE} py-4 last:border-b sm:grid-cols-[2.75rem_minmax(0,1fr)_auto] sm:items-baseline`}
+                  >
+                    <span
+                      className={`text-[13px] font-medium tabular-nums ${
+                        item.shown ? ACCENT : "text-white/35"
+                      }`}
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="text-[15px] font-medium leading-6 text-white/88 sm:text-base">
+                      {item.title}
+                    </span>
+                    <span
+                      className={`col-start-2 text-sm leading-6 sm:col-start-3 sm:text-right ${
+                        item.shown ? ACCENT : "text-white/45"
+                      }`}
+                    >
+                      {item.shown ? `${item.shown}. ` : ""}
+                      <span className={item.shown ? "text-white/45" : ""}>
+                        {item.note}
+                      </span>
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </section>
+
+          {/* 04 — SECOND PROOF: the Reference section */}
+          <section
+            aria-labelledby="dp-refs"
+            className={`border-t ${SECTION_LINE} pt-16 sm:pt-20 lg:pt-24`}
+          >
+            <div className="mini-page-rail pb-8 sm:pb-10">
+              <p id="dp-refs" className={EYEBROW}>
+                Iz strani
+              </p>
+              <p className="mt-5 max-w-[58ch] text-base leading-7 text-white/55">
+                Takoj za uvodom so reference. Prikazani so prvi projekti od
+                šestih, v vrstnem redu z domače strani.
+              </p>
+            </div>
+
+            {/* Holds a focusable, swipeable slider on mobile, so it is not hidden. */}
+            <div className="msw-proof">
+              <div
+                role="group"
+                aria-label="Dema Plus: razdelek «Reference» na domači strani"
+                className="msw-clip"
+              >
+                <div>
+                  <DemaPlusReferencesProof showHeader={false} headingLevel={3} />
+                </div>
+              </div>
+            </div>
+
+            <div className="mini-page-rail pb-16 pt-6 sm:pb-20 lg:pb-24">
+              <p className="mx-auto max-w-[720px] text-center text-sm leading-relaxed text-white/40">
+                Rekonstrukcija razdelka „Reference“ z domače strani demaplus.si:
+                isti naslov, vrstni red, kartice in drsnik na telefonu. Slika
+                Vile Rožna dolina je 3D vizualizacija, drugi dve sta
+                fotografiji. Vrstice „Poglej projekt“ in „Vse reference“ so tu
+                besedilo, tam so povezave.
+              </p>
+            </div>
+          </section>
+
+          {/* 05 — FROM SELECTED WORK TO THE FULL PORTFOLIO */}
+          <section
+            aria-labelledby="dp-portfolio"
+            className={`border-t ${SECTION_LINE} py-16 sm:py-20 lg:py-24`}
+          >
+            <div className="mini-page-rail grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+              <div>
+                <SectionHeading eyebrow="Izbor in celota" id="dp-portfolio">
+                  Šest izbranih projektov. Šestinštirideset referenc.
+                </SectionHeading>
+              </div>
+
+              <dl>
+                {PORTFOLIO.map((row) => (
+                  <div
+                    key={row.label}
+                    className={`grid gap-1 border-t ${HAIRLINE} py-4 last:border-b sm:grid-cols-[9rem_minmax(0,1fr)] sm:gap-x-6`}
+                  >
+                    <dt className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/40 sm:pt-1">
+                      {row.label}
+                    </dt>
+                    <dd className="max-w-[52ch] text-[15px] leading-6 text-white/75">
+                      {row.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </section>
+
+          {/* 06 — DELIVERY AND IMPLEMENTATION */}
+          <section
+            aria-labelledby="dp-impl"
+            className={`border-t ${SECTION_LINE} py-16 sm:py-20 lg:py-24`}
+          >
+            <div className="mini-page-rail">
+              <SectionHeading eyebrow="Izvedba" id="dp-impl">
+                Štiri odločitve v kodi.
+              </SectionHeading>
+
+              <div className="mt-12 grid gap-x-12 gap-y-10 md:grid-cols-2">
+                {IMPLEMENTATION.map((item) => (
+                  <div key={item.title} className={`border-t ${HAIRLINE} pt-5`}>
+                    <h3 className="text-lg font-semibold tracking-[-0.01em] text-white/90">
+                      {item.title}
+                    </h3>
+                    <p className="mt-3 max-w-[46ch] text-base leading-7 text-white/55">
+                      {item.text}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        </main>
+
+        {/* 07 — GRAPHITE CLOSING */}
+        <MiniClosingBookend variant="graphite" ctaCopy={closingCopy} />
+      </div>
+    </MiniPalette>
   );
 }

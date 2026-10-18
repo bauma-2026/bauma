@@ -8,6 +8,7 @@ import SystemGraphic from "../components/blocks/mini/SystemGraphic";
 import MiniPerceptionLayer from "../components/blocks/mini/MiniPerceptionLayer";
 import MiniClosingBookend from "../components/blocks/mini/MiniClosingBookend";
 import RightObjectAxisDebugGate from "@/components/home/debug/RightObjectAxisDebugGate";
+import { isStaging } from "@/lib/siteEnv";
 import {
   EN_APPROACH,
   EN_CONTACT,
@@ -19,7 +20,7 @@ import {
   EN_VISUAL,
 } from "@/components/home/copy/enHomepage";
 
-const isProduction = process.env.VERCEL_ENV === "production";
+const isProduction = process.env.VERCEL_ENV === "production" && !isStaging;
 
 /**
  * EN homepage — structural parity with locked `/`.
@@ -27,16 +28,21 @@ const isProduction = process.env.VERCEL_ENV === "production";
  * Only `/` and `/en` are indexable in production.
  */
 export const metadata: Metadata = {
-  alternates: {
-    canonical: "https://bauma.si/en",
-    languages: {
-      sl: "https://bauma.si",
-      en: "https://bauma.si/en",
-      "x-default": "https://bauma.si",
-    },
-  },
+  // Staging omits canonical/hreflang so it never advertises production URLs.
+  ...(isStaging
+    ? {}
+    : {
+        alternates: {
+          canonical: "https://bauma.si/en",
+          languages: {
+            sl: "https://bauma.si",
+            en: "https://bauma.si/en",
+            "x-default": "https://bauma.si",
+          },
+        },
+      }),
   openGraph: {
-    url: "https://bauma.si/en",
+    ...(isStaging ? {} : { url: "https://bauma.si/en" }),
     siteName: "Bauma",
     images: [
       {

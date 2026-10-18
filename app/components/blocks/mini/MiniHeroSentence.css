@@ -1,0 +1,24 @@
+/* One-sentence H1 (`/mini`): balanced natural wrap, wider than the 16ch cap
+   tuned for the two short fixed lines of the line-based H1. Every selector
+   needs `.bauma-hero-h1-sentence`, so the line-based hero is unaffected. */
+[data-hero-copy] .bauma-hero-h1-sentence {
+  text-wrap: balance;
+}
+
+/* Sized in em so the cap tracks the font, not the width of its "0" glyph. "Spletne
+   strani, ki pomagajo" is about 11.4em and adding "pridobivati" about 16.3em, so
+   14em sits mid-range: balanced wrapping yields the two target lines with margin
+   on both sides. Below ~840px the rail itself is narrower than line 1 needs. */
+[data-hero-copy] .bauma-hero-h1-desktop.bauma-hero-h1-sentence,
+[data-hero-copy] .bauma-hero-h1-mobile.bauma-hero-h1-sentence {
+  max-width: 14em;
+}
+
+/* Narrow phones only: the sentence wraps to five lines at 48px and pushes the
+   copy block under the header collision line (64px), which hides the logo and
+   menu. A slightly smaller size keeps it to four lines. */
+@media (max-width: 359px) {
+  [data-hero-copy] .bauma-hero-h1-mobile.bauma-hero-h1-sentence {
+    font-size: 40px;
+  }
+}

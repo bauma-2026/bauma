@@ -1,13 +1,30 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { Ref } from "react";
+import { useEffect, useState, type Ref } from "react";
 
 import {
   SELECTION_STATES,
   SELECTION_VIEWBOX,
   type SelectionScene,
 } from "@/components/home/approach/approachStates";
+
+/** Crop empty viewBox margin so the existing network fills ~80% of the mobile rail. */
+const SELECTION_VIEWBOX_MOBILE = "32 6 304 236";
+
+function useBelowLg() {
+  const [belowLg, setBelowLg] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 1023px)");
+    const update = () => setBelowLg(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  return belowLg;
+}
 
 import {
   isFiniteCircle,
@@ -72,13 +89,15 @@ export default function ApproachInteractiveGraphic({
   void authority;
   void reducedMotion;
 
+  const belowLg = useBelowLg();
+
   return (
     <svg
       ref={svgRef}
-      viewBox={SELECTION_VIEWBOX}
+      viewBox={belowLg ? SELECTION_VIEWBOX_MOBILE : SELECTION_VIEWBOX}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="h-auto w-full max-w-[480px] md:max-w-[520px] lg:max-w-[560px] xl:max-w-[600px]"
+      className="h-auto w-full max-w-[480px] max-lg:absolute max-lg:inset-0 max-lg:h-full max-lg:max-w-none md:max-w-[520px] lg:max-w-[560px] xl:max-w-[600px]"
       aria-hidden
       data-authority={authority}
     >
@@ -163,6 +182,7 @@ export default function ApproachInteractiveGraphic({
               strokeLinecap="round"
               opacity={opacity}
               strokeDasharray={strokeDasharray}
+              data-edge-kind={edge.kind}
             />
           );
         }
@@ -186,6 +206,7 @@ export default function ApproachInteractiveGraphic({
                 : Math.min(1, Math.max(0, edge.opacity * mul))
             }
             strokeDasharray={strokeDasharray}
+            data-edge-kind={edge.kind}
           />
         );
       })}
