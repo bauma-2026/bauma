@@ -110,13 +110,13 @@ export const metadata: Metadata = {
  * `/mini` stays as the reference. DecisionFlow and Approach are not part of this
  * flow, so the header drops its Approach item (`hideApproachNav`).
  *
- * The `data-home-typography` wrapper (`display: contents`, no layout effect) scopes the typography foundation in
+ * The `data-home-typography` wrapper (a plain block, no layout effect; never `display: contents`, which Next.js skips as the scroll target) scopes the typography foundation in
  * `homeTypography.css` to this page, because the heading utilities and several components are shared with other routes.
  * The same wrapper carries the IBM Plex Mono font variable (`homeMono.ts`) used by the eyebrows.
  */
 export default function Home() {
   return (
-    <div data-home-typography className={homeMono.variable} style={{ display: "contents" }}>
+    <div data-home-typography className={homeMono.variable}>
       <MiniPalette>
         <MiniHeader treatAsHomepage darkHero hideApproachNav refined primaryNav={HOME_NAV} />
 

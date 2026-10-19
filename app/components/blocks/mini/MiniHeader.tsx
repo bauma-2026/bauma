@@ -438,6 +438,8 @@ export default function MiniHeader({
   refined = false,
   primaryNav,
   contactHref,
+  transparentAtTop = false,
+  borderColor,
 }: {
   copy?: MiniHeaderCopy;
   /**
@@ -467,6 +469,17 @@ export default function MiniHeader({
    * Pages that render their own `#contact` section pass `"#contact"` so the link scrolls in place.
    */
   contactHref?: string;
+  /**
+   * Transparent over the page's own dark hero while the page is at scroll 0, then the usual solid
+   * surface as soon as it scrolls. Light text, the solid Kontakt button and no hero lifecycle (no
+   * hidden gap). Default `false` keeps every other route unchanged.
+   */
+  transparentAtTop?: boolean;
+  /**
+   * Overrides the colour of the header's 1px bottom border (the solid surface only). Default
+   * `undefined` keeps the shared `--mini-border-header` colour on every other route.
+   */
+  borderColor?: string;
 }) {
   const pathname = usePathname();
   const [activeId, setActiveId] = useState("");
@@ -475,9 +488,12 @@ export default function MiniHeader({
     treatAsHomepage || pathname === "/" || pathname === "/en";
   const [isHeroVisible, setIsHeroVisible] = useState(isHomepage);
   const [hideHeroChrome, setHideHeroChrome] = useState(false);
+  const [atTop, setAtTop] = useState(true);
   const langSwitchHref = useLanguageSwitchHref(copy.langHref);
-  const overPhotoHero = isHomepage && isHeroVisible && !isMenuOpen;
-  const darkText = overPhotoHero && !darkHero;
+  const overPhotoHero = transparentAtTop
+    ? atTop && !isMenuOpen
+    : isHomepage && isHeroVisible && !isMenuOpen;
+  const darkText = overPhotoHero && !darkHero && !transparentAtTop;
   useMobileMenuChrome(isMenuOpen, setIsMenuOpen);
 
   useEffect(() => {
@@ -496,6 +512,7 @@ export default function MiniHeader({
         : false;
       const scrolledPast = window.scrollY >= 100;
       setHideHeroChrome(heroInView && (scrolledPast || colliding));
+      setAtTop(window.scrollY < 8);
 
       sectionIds.forEach((id) => {
         // Nav ids may sit on a zero-height anchor marker; track its section.
@@ -544,7 +561,11 @@ export default function MiniHeader({
         data-header-ink={darkText ? "dark" : undefined}
         data-header-refined={refined ? "" : undefined}
         data-header-cta={
-          refined ? (isHomepage && isHeroVisible ? "ghost" : "solid") : undefined
+          refined
+            ? isHomepage && isHeroVisible && !transparentAtTop
+              ? "ghost"
+              : "solid"
+            : undefined
         }
         data-header-phase={
           hideHeroChrome && !isMenuOpen
@@ -553,17 +574,22 @@ export default function MiniHeader({
               ? "hero"
               : "content"
         }
-        className="fixed left-0 top-0 z-[999] w-full transition-[opacity,transform] duration-[180ms] ease-out"
+        className={`fixed left-0 top-0 z-[999] w-full transition-[opacity,transform] duration-[180ms] ease-out${
+          transparentAtTop && overPhotoHero
+            ? " shadow-[inset_0_-1px_0_rgba(255,255,255,0.10)]"
+            : ""
+        }`}
       >
         <div
           aria-hidden="true"
           data-header-scrim
           className={`pointer-events-none absolute inset-x-0 top-0 z-0 h-[88px] bg-gradient-to-b from-black/[0.28] via-black/10 to-transparent sm:hidden ${
-            overPhotoHero ? "opacity-100" : "opacity-0"
+            overPhotoHero && !transparentAtTop ? "opacity-100" : "opacity-0"
           }`}
         />
         <div
           aria-hidden="true"
+          style={borderColor ? { borderBottomColor: borderColor } : undefined}
           className={`pointer-events-none absolute inset-0 border-b border-[color:var(--mini-border-header,color-mix(in_oklab,#fff_10%,transparent))] bg-[var(--mini-surface-header,#080808)] transition-opacity duration-[180ms] ease-out ${
             overPhotoHero ? "opacity-0" : "opacity-100"
           }`}

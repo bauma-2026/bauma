@@ -205,13 +205,13 @@ const PROJECTS: readonly Project[] = [
 
 /**
  * `/work`: the homepage Selected Work compositions, grid and cards, without the section heading.
- * The `data-home-typography` wrapper (`display: contents`, no layout effect) applies the homepage
+ * The `data-home-typography` wrapper (a plain block, no layout effect; never `display: contents`, which Next.js skips as the scroll target) applies the homepage
  * typography foundation and IBM Plex Mono eyebrow, as on `app/page.tsx`. The motion wrapper cycles its
  * column stagger (1-3) so the grid can grow to 6-9 projects with the same three-column rhythm.
  */
 export default function WorkPage() {
   return (
-    <div data-home-typography className={homeMono.variable} style={{ display: "contents" }}>
+    <div data-home-typography className={homeMono.variable}>
       <MiniPalette>
         <MiniHeader hideApproachNav refined primaryNav={HOME_NAV} contactHref="#contact" />
 

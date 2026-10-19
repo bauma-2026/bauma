@@ -2,7 +2,7 @@
    (amber) values as fallbacks, so every other route keeps its colours.
    Royal Blue = primary accent; Light Royal = accent text and fine lines. */
 [data-mini-palette] {
-  display: contents;
+  display: block;
   --mini-accent: #4169e1;
   --mini-accent-fg: #ffffff;
   --mini-accent-text: #7c97f0;
