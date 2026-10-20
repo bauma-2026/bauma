@@ -84,8 +84,6 @@ type Project = {
   name: string;
   descriptor: string;
   Art: () => ReactNode;
-  /** Defaults to the case study route `/work/<slug>`. Set for projects without one (opens in a new tab). */
-  externalHref?: string;
 };
 
 /**
@@ -148,7 +146,7 @@ function UlteriorSurface() {
 function ArtBiteSurface() {
   return (
     <div
-      className={`${artbiteAccent.variable} relative aspect-square overflow-hidden rounded-[3px] md:aspect-auto md:h-[19rem] lg:h-[21.25rem] bg-[#17110d] text-[#f5f0e8] [container-type:size]`}
+      className={`${artbiteAccent.variable} relative aspect-square overflow-hidden rounded-[3px] md:aspect-auto md:h-[19rem] lg:h-[21.25rem] bg-[#291917] text-[#f5f0e8] [container-type:size]`}
       style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
     >
       <div className="flex h-full flex-col p-[7cqw] pb-[calc(7cqw+12px)]">
@@ -182,11 +180,50 @@ function ArtBiteSurface() {
               fill
               sizes="110px"
               quality={85}
-              className="object-cover object-[44%_center] opacity-85"
+              className="object-cover object-[44%_center]"
             />
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+/**
+ * Hardshelljacket: dark, atmospheric editorial. The original photograph of the site's "Everyday use" band
+ * (`hardshell-atmosphere-02.webp`, 1967 x 800, unedited, no gradient) covers the surface; `object-position` puts the
+ * green hood and upper torso in the right three quarters of the card, with a strip of the rainy street at the left.
+ * The line is the site's own, "Made for the way the day moves.", set in three lines ("Made for / the way / the day
+ * moves.") in Arial bold, white, at the bottom left over the dark road and the dark shell. The two short upper lines
+ * stay left of the face and only the long last line runs under it, so the face and hood stay clear. It is sized in
+ * `cqw` (7cqw, 26px on the 373px desktop card), so the desktop and square mobile cards keep the same composition. The
+ * photograph's own darkness carries the contrast. A flat `rgba(8, 10, 15, 0.12)` layer (Bauma's Base) sits between the
+ * photograph and the type: it takes the lighter blue-grey city background down about 20% in luminance, so it stays
+ * quieter than the other cards, without a gradient or a visible tint.
+ */
+function HardshelljacketSurface() {
+  return (
+    <div
+      className="relative aspect-square overflow-hidden rounded-[3px] md:aspect-auto md:h-[19rem] lg:h-[21.25rem] bg-[#0b0d10] text-white [container-type:size]"
+      style={{ fontFamily: "Arial, Helvetica, sans-serif" }}
+    >
+      <Image
+        src="/work/hardshelljacket/hardshell-atmosphere-02.webp"
+        alt="Moški v zeleni kapuci hardshell jakne na deževni mestni ulici"
+        fill
+        sizes="520px"
+        quality={85}
+        className="object-cover object-[46%_50%]"
+      />
+      <div aria-hidden="true" className="absolute inset-0 bg-[rgba(8,10,15,0.12)]" />
+      <p
+        className="absolute bottom-[9cqh] left-[7cqw] font-bold leading-[1.04] tracking-[-0.035em]"
+        style={{ fontSize: "clamp(1.25rem, 7cqw, 1.95rem)" }}
+      >
+        <span className="block">Made for</span>
+        <span className="block">the way</span>
+        <span className="block">the day moves.</span>
+      </p>
     </div>
   );
 }
@@ -199,8 +236,9 @@ const PROJECTS: readonly Project[] = [
   { slug: "odstrani-tattoo", motion: "odstrani", name: "Odstrani Tattoo", descriptor: "Zaupanje in konverzija", Art: OdstraniSurface },
   { slug: "dema-plus", motion: "dema", name: "Dema Plus", descriptor: "Reference in jasnost", Art: DemaSurface },
   { slug: "flexido", motion: "flexido", name: "Flexido", descriptor: "Industrijski B2B", Art: FlexidoSurface },
-  { slug: "ulterior", name: "Ulterior", descriptor: "Spletna zasnova in razvoj", Art: UlteriorSurface, externalHref: "https://ulterior.es/" },
-  { slug: "artbite", name: "ArtBite", descriptor: "Spletna zasnova in razvoj", Art: ArtBiteSurface, externalHref: "https://artbite-tattoo.com/" },
+  { slug: "ulterior", name: "Ulterior", descriptor: "Produktna predstavitev in nakupni sistem", Art: UlteriorSurface },
+  { slug: "artbite", name: "ArtBite", descriptor: "Spletna stran tattoo studia", Art: ArtBiteSurface },
+  { slug: "hardshelljacket", name: "Hardshelljacket", descriptor: "Izdelek na eni strani", Art: HardshelljacketSurface },
 ];
 
 /**
@@ -270,15 +308,9 @@ export default function WorkPage() {
                   return (
                     <li key={p.slug}>
                       <article>
-                        {p.externalHref ? (
-                          <a href={p.externalHref} target="_blank" rel="noopener noreferrer" {...linkProps}>
-                            {card}
-                          </a>
-                        ) : (
-                          <Link href={`/work/${p.slug}`} {...linkProps}>
-                            {card}
-                          </Link>
-                        )}
+                        <Link href={`/work/${p.slug}`} {...linkProps}>
+                          {card}
+                        </Link>
                       </article>
                     </li>
                   );

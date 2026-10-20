@@ -64,7 +64,7 @@ export default function OdstraniTattooCasePage() {
           refined
           primaryNav={HOME_NAV}
           contactHref="#contact"
-          borderColor="#161a21"
+          borderColor="#1e2530"
         />
 
         <main>

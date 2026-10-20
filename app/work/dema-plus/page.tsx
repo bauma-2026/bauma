@@ -95,7 +95,7 @@ export default function DemaPlusCasePage() {
           refined
           primaryNav={HOME_NAV}
           contactHref="#contact"
-          borderColor="#0f141c"
+          borderColor="#1c2431"
         />
 
         <main>

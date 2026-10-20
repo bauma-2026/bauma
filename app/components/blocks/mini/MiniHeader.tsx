@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 
 import "./MiniHeaderRefined.css";
 
@@ -558,6 +558,11 @@ export default function MiniHeader({
   return (
     <>
       <header
+        style={
+          borderColor
+            ? ({ "--mini-divider-header": borderColor } as CSSProperties)
+            : undefined
+        }
         data-header-ink={darkText ? "dark" : undefined}
         data-header-refined={refined ? "" : undefined}
         data-header-cta={

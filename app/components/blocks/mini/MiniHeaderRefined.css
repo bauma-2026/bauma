@@ -50,9 +50,12 @@ header[data-header-cta="solid"] [data-cta="primary"][data-cta-size="compact"] {
 
 /* Divider between Sistem and EN: the shared secondary-border grey-blue (#56648a) at 70%,
    about 2.2:1 on graphite and 2:1 on the dark top of the Hero photograph, up from 1.35:1.
-   Never Royal Blue. 22px each side (was 24 / 21) at the same total width. */
+   Never Royal Blue. 22px each side (was 24 / 21) at the same total width.
+   Pages that pass `borderColor` to MiniHeader (the case studies) set
+   `--mini-divider-header` on the header, so the divider takes the same opaque
+   colour as the header's bottom border; without it the shared colour applies. */
 header[data-header-refined] [data-header-divider] {
-  border-left-color: rgb(86 100 138 / 0.7);
+  border-left-color: var(--mini-divider-header, rgb(86 100 138 / 0.7));
   margin-left: -2px;
   padding-left: 22px;
 }
