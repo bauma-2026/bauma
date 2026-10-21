@@ -145,14 +145,16 @@ export default function ArtBiteCasePage() {
               className="pt-8 sm:pt-10"
             >
               {/* Nothing inside is interactive, so it is exposed as a single labelled image. */}
-              <div
-                role="img"
-                aria-label="ArtBite: uvodni razdelek domače strani z napisom „Tetovaže z osebnim pristopom.“ in fotografijami tetovaž"
-                className="msw-proof"
-              >
-                <div className="msw-clip">
-                  <div aria-hidden="true">
-                    <ArtBiteHeroProof />
+              <div className="px-5 sm:px-0">
+                <div
+                  role="img"
+                  aria-label="ArtBite: uvodni razdelek domače strani z napisom „Tetovaže z osebnim pristopom.“ in fotografijami tetovaž"
+                  className="msw-proof"
+                >
+                  <div className="msw-clip">
+                    <div aria-hidden="true">
+                      <ArtBiteHeroProof />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -186,14 +188,16 @@ export default function ArtBiteCasePage() {
               className="pt-0"
             >
               {/* Nothing inside is interactive, so it is exposed as a single labelled image. */}
-              <div
-                role="img"
-                aria-label="ArtBite: uvodni razdelek strani „Prekrivanje starih tetovaž“ z naslovom, povabilom k pošiljanju fotografije in fotografijo v ozkih navpičnih odsekih"
-                className="msw-proof"
-              >
-                <div className="msw-clip">
-                  <div aria-hidden="true">
-                    <ArtBiteCoverupProof />
+              <div className="px-5 sm:px-0">
+                <div
+                  role="img"
+                  aria-label="ArtBite: uvodni razdelek strani „Prekrivanje starih tetovaž“ z naslovom, povabilom k pošiljanju fotografije in fotografijo v ozkih navpičnih odsekih"
+                  className="msw-proof"
+                >
+                  <div className="msw-clip">
+                    <div aria-hidden="true">
+                      <ArtBiteCoverupProof />
+                    </div>
                   </div>
                 </div>
               </div>

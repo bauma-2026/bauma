@@ -146,14 +146,16 @@ export default function UlteriorCasePage() {
               className="pt-6 sm:pt-8"
             >
               {/* Nothing inside is interactive, so it is exposed as a single labelled image. */}
-              <div
-                role="img"
-                aria-label="Ulterior: uvodni razdelek domače strani s fotografijo zelene jakne na plaži in naslovom „Technical protection for normal life.“"
-                className="msw-proof"
-              >
-                <div className="msw-clip">
-                  <div aria-hidden="true">
-                    <UlteriorHeroProof />
+              <div className="px-5 sm:px-0">
+                <div
+                  role="img"
+                  aria-label="Ulterior: uvodni razdelek domače strani s fotografijo zelene jakne na plaži in naslovom „Technical protection for normal life.“"
+                  className="msw-proof"
+                >
+                  <div className="msw-clip">
+                    <div aria-hidden="true">
+                      <UlteriorHeroProof />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -167,13 +169,15 @@ export default function UlteriorCasePage() {
 
             {/* 03 — TECHNICAL PROOF: interactive */}
             <section aria-label="Dokaz: razdelek Technical Proof na strani izdelka ulterior.es">
-              <div
-                role="group"
-                aria-label="Ulterior: interaktivni razdelek Technical Proof (rekonstrukcija)"
-                className="msw-proof"
-              >
-                <div className="msw-clip">
-                  <UlteriorTechnicalProof />
+              <div className="px-5 sm:px-0">
+                <div
+                  role="group"
+                  aria-label="Ulterior: interaktivni razdelek Technical Proof (rekonstrukcija)"
+                  className="msw-proof"
+                >
+                  <div className="msw-clip">
+                    <UlteriorTechnicalProof />
+                  </div>
                 </div>
               </div>
 
@@ -205,13 +209,15 @@ export default function UlteriorCasePage() {
               className="pt-0"
             >
               {/* The heading and description belong to the proof; the product UI inside it is exposed as one labelled image. */}
-              <div
-                role="group"
-                aria-label="Ulterior: namenski nakupni sistem (rekonstrukcija nakupnega dela strani izdelka)"
-                className="msw-proof"
-              >
-                <div className="msw-clip">
-                  <UlteriorPurchaseProof />
+              <div className="px-5 sm:px-0">
+                <div
+                  role="group"
+                  aria-label="Ulterior: namenski nakupni sistem (rekonstrukcija nakupnega dela strani izdelka)"
+                  className="msw-proof"
+                >
+                  <div className="msw-clip">
+                    <UlteriorPurchaseProof />
+                  </div>
                 </div>
               </div>
 

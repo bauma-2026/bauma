@@ -146,14 +146,16 @@ export default function DemaPlusCasePage() {
             >
               {/* Nothing inside is interactive and the proof carries its own
                   title, so it is exposed as a single labelled image. */}
-              <div
-                role="img"
-                aria-label="Dema Plus: uvodni razdelek domače strani s fotografijo objekta, naslovom „Gradimo. Po načrtu. Do izvedbe.“ in gumbom „Izbrani projekti“"
-                className="msw-proof"
-              >
-                <div className="msw-clip">
-                  <div aria-hidden="true">
-                    <DemaPlusHeroProof headingLevel={2} />
+              <div className="px-5 sm:px-0">
+                <div
+                  role="img"
+                  aria-label="Dema Plus: uvodni razdelek domače strani s fotografijo objekta, naslovom „Gradimo. Po načrtu. Do izvedbe.“ in gumbom „Izbrani projekti“"
+                  className="msw-proof"
+                >
+                  <div className="msw-clip">
+                    <div aria-hidden="true">
+                      <DemaPlusHeroProof headingLevel={2} />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -168,14 +170,16 @@ export default function DemaPlusCasePage() {
             {/* 03 — REFERENCES: the Reference section (real content, static) */}
             <section aria-label="Dokaz: razdelek Reference na domači strani demaplus.si">
               {/* Holds a focusable, swipeable slider on mobile, so it is not hidden. */}
-              <div className="msw-proof">
-                <div
-                  role="group"
-                  aria-label="Dema Plus: razdelek «Reference» na domači strani"
-                  className="msw-clip"
-                >
-                  <div>
-                    <DemaPlusReferencesProof showHeader={false} headingLevel={2} />
+              <div className="px-5 sm:px-0">
+                <div className="msw-proof">
+                  <div
+                    role="group"
+                    aria-label="Dema Plus: razdelek «Reference» na domači strani"
+                    className="msw-clip"
+                  >
+                    <div>
+                      <DemaPlusReferencesProof showHeader={false} headingLevel={2} />
+                    </div>
                   </div>
                 </div>
               </div>

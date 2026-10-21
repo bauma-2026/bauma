@@ -83,9 +83,9 @@ const SURFACE_WORK = {
 const EYEBROW =
   "text-[11px] font-medium uppercase tracking-[0.22em] text-white/60";
 
-/** Same rail as the homepage Flexido proof: edge to edge below sm, then 1216px with a small clip radius. */
+/** Same framing as Hardshelljacket: 20px gutters and a 6px radius below sm, then the rail (1216px max) with an 8px radius. */
 const PROOF_FRAME =
-  "mx-auto w-full isolate overflow-hidden rounded-none sm:w-[calc(100%-3rem)] sm:max-w-[1216px] sm:rounded-[8px] md:w-[calc(100%-4rem)]";
+  "mx-auto w-full isolate overflow-hidden rounded-none max-sm:w-[calc(100%-2.5rem)] max-sm:rounded-[6px] sm:w-[calc(100%-3rem)] sm:max-w-[1216px] sm:rounded-[8px] md:w-[calc(100%-4rem)]";
 
 const CAPTION =
   "mx-auto max-w-[760px] text-center text-sm leading-relaxed text-white/40";

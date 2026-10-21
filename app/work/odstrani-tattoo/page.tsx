@@ -122,9 +122,11 @@ export default function OdstraniTattooCasePage() {
                 </p>
               </div>
 
-              <div className="msw-proof">
-                <div className="msw-clip">
-                  <OdstraniTattooProcessProof headingLevel={2} />
+              <div className="px-5 sm:px-0">
+                <div className="msw-proof">
+                  <div className="msw-clip">
+                    <OdstraniTattooProcessProof headingLevel={2} />
+                  </div>
                 </div>
               </div>
 
