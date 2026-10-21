@@ -1,0 +1,134 @@
+/*
+ * Homepage Typography V1.1 + vertical rhythm (promoted from /lab/home-typography-v1/v1-1).
+ *
+ * Scope: every selector is keyed to `[data-home-typography][data-home-v11]`, both set on the wrapper in `app/page.tsx`
+ * only. The two attributes outrank the `[data-home-typography] ...` rules in `homeTypography.css` and the Tailwind
+ * utilities they refine, so no other route changes: `home-primary-heading`, `home-bridge-heading` and the shared
+ * components (MiniSystemHome, MiniSelectedWorkHome, MiniMidPageCta, MiniClosingBookend) are untouched and still render
+ * their old scale on /mini, /en/mini and every lab. Hero, eyebrows, descriptor, buttons and the client artwork are not
+ * touched. The Services Boxes' own title / description scale lives in `MiniServicesBoxes.css`.
+ *
+ * Heading roles, px / weight 600 (mobile <640 / tablet 640-1023 / 1024-1279 / >=1280):
+ *   primary    System + Services H2           32 / 40 / 56 / 56
+ *   secondary  Selected Work + Project CTA H2  26 / 34 / 32 / 36
+ *   teaser     Selected Work project names     22 / 24 / 24 / 24
+ *   body-2     Project CTA support             15/24 / 16/26
+ *   contact    Contact H2 (editorial exception) 28 / 36 / 36 / 36
+ *
+ * Spacing (mobile / tablet / desktop, px), padding only:
+ *   System bottom 56 / 64 / 64 (was 64 / 80 / 96)       Work bottom 64 / 72 / 64 (was 64 / 80 / 96)
+ *   Work eyebrow -> H2 20 (was 20, 24 from sm)
+ *   Project CTA top 56 / 64 / 32 (was 64 / 80 / 80)     Project CTA bottom 48 / 64 / 32 (was 64 / 80 / 80)
+ *   Project CTA text -> cube below lg: 16 / 24 (was 40). The 400px cube stage carries about 110px of empty canvas above
+ *   and below the visible cube, which is why the desktop bridge padding is small.
+ */
+
+[data-home-typography][data-home-v11] {
+  --h11-primary: 2rem;
+  --h11-secondary: 1.625rem;
+  --h11-teaser: 1.375rem;
+  --h11-contact: 1.75rem;
+  --h11-sys-exit: 3.5rem;
+  --h11-work-exit: 4rem;
+  --h11-bridge-in: 3.5rem;
+  --h11-bridge-out: 3rem;
+  --h11-stack-gap: 1rem;
+}
+@media (min-width: 640px) {
+  [data-home-typography][data-home-v11] {
+    --h11-primary: 2.5rem;
+    --h11-secondary: 2.125rem;
+    --h11-teaser: 1.5rem;
+    --h11-contact: 2.25rem;
+    --h11-sys-exit: 4rem;
+    --h11-work-exit: 4.5rem;
+    --h11-bridge-in: 4rem;
+    --h11-bridge-out: 4rem;
+    --h11-stack-gap: 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  [data-home-typography][data-home-v11] {
+    --h11-primary: 3.5rem;
+    --h11-secondary: 2rem;
+    --h11-work-exit: 4rem;
+    --h11-bridge-in: 2rem;
+    --h11-bridge-out: 2rem;
+  }
+}
+@media (min-width: 1280px) {
+  [data-home-typography][data-home-v11] {
+    --h11-secondary: 2.25rem;
+  }
+}
+
+/* ---------- primary: System + Services ---------- */
+[data-home-typography][data-home-v11] [data-home-section="system"] h2,
+[data-home-typography][data-home-v11] [data-section="services"] h2 {
+  font-size: var(--h11-primary);
+  font-weight: 600;
+  line-height: 1;
+}
+@media (min-width: 1024px) {
+  [data-home-typography][data-home-v11] [data-home-section="system"] h2,
+  [data-home-typography][data-home-v11] [data-section="services"] h2 {
+    line-height: 0.98;
+  }
+}
+
+/* ---------- secondary: Selected Work + Project CTA ---------- */
+[data-home-typography][data-home-v11] #msw-home-heading,
+[data-home-typography][data-home-v11] [data-home-section="project"] h2 {
+  font-size: var(--h11-secondary);
+  font-weight: 600;
+  line-height: 1.08;
+}
+@media (min-width: 640px) {
+  [data-home-typography][data-home-v11] #msw-home-heading,
+  [data-home-typography][data-home-v11] [data-home-section="project"] h2 {
+    line-height: 1.05;
+  }
+}
+
+/* ---------- project names (the client artwork is not touched) ---------- */
+[data-home-typography][data-home-v11] [data-section="selected-work"] h3 {
+  font-size: var(--h11-teaser);
+  font-weight: 600;
+}
+
+/* ---------- Project CTA support ---------- */
+[data-home-typography][data-home-v11] [data-home-section="project"] section p:not(.uppercase) {
+  font-size: 15px;
+  line-height: 24px;
+}
+@media (min-width: 640px) {
+  [data-home-typography][data-home-v11] [data-home-section="project"] section p:not(.uppercase) {
+    font-size: 16px;
+    line-height: 26px;
+  }
+}
+
+/* ---------- Contact: editorial exception, size only ---------- */
+[data-home-typography][data-home-v11] [data-closing-bookend] h2 {
+  font-size: var(--h11-contact);
+}
+
+/* ---------- vertical rhythm ---------- */
+[data-home-typography][data-home-v11] [data-home-section="system"] > section {
+  padding-bottom: var(--h11-sys-exit);
+}
+[data-home-typography][data-home-v11] [data-section="selected-work"] {
+  padding-bottom: var(--h11-work-exit);
+}
+[data-home-typography][data-home-v11] #msw-home-heading {
+  margin-top: 1.25rem;
+}
+[data-home-typography][data-home-v11] [data-home-section="project"] > section {
+  padding-top: var(--h11-bridge-in);
+  padding-bottom: var(--h11-bridge-out);
+}
+@media (max-width: 1023px) {
+  [data-home-typography][data-home-v11] [data-home-section="project"] .mini-page-rail {
+    row-gap: var(--h11-stack-gap);
+  }
+}

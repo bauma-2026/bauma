@@ -11,13 +11,15 @@ import { MINI_HERO } from "./components/blocks/mini/miniHomeCopy";
 import MiniMidPageCta, {
   type MiniMidPageCtaCopy,
 } from "./components/blocks/mini/MiniMidPageCta";
-import MiniServicesHome from "./components/blocks/mini/MiniServicesHome";
+import MiniServicesBoxes from "./components/blocks/mini/MiniServicesBoxes";
 import MiniSelectedWorkHome from "./components/blocks/mini/MiniSelectedWorkHome";
 import MiniClosingBookend from "./components/blocks/mini/MiniClosingBookend";
 import RightObjectAxisDebugGate from "@/components/home/debug/RightObjectAxisDebugGate";
 
 /** Homepage-only typography foundation (scoped to `[data-home-typography]`, set below). */
 import "./homeTypography.css";
+/** Typography V1.1 + vertical rhythm, scoped to `[data-home-v11]` (set below). */
+import "./homeTypographyV11.css";
 import { homeMono } from "./homeMono";
 import { isStaging } from "@/lib/siteEnv";
 
@@ -116,7 +118,7 @@ export const metadata: Metadata = {
  */
 export default function Home() {
   return (
-    <div data-home-typography className={homeMono.variable}>
+    <div data-home-typography data-home-v11 className={homeMono.variable}>
       <MiniPalette>
         <MiniHeader treatAsHomepage darkHero hideApproachNav refined primaryNav={HOME_NAV} />
 
@@ -131,7 +133,7 @@ export default function Home() {
             <MiniSystemHome />
           </div>
           <div style={SURFACE_SERVICES}>
-            <MiniServicesHome />
+            <MiniServicesBoxes />
           </div>
           <div style={SURFACE_WORK}>
             <MiniSelectedWorkHome topRule={false} />

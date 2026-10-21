@@ -2,6 +2,7 @@ import MiniFinalCTA, {
   type MiniFinalCtaCopy,
 } from "./MiniFinalCTA";
 import "./MiniContactPhoto.css";
+import "./MiniContactNaturalMidnight.css";
 import {
   MiniFooterBrand,
   MiniFooterLegal,
@@ -26,6 +27,8 @@ export default function MiniClosingBookend({
   variant,
   photoBackground = false,
   topRule = true,
+  tone,
+  spacing,
 }: {
   ctaCopy?: MiniFinalCtaCopy;
   footerCopy?: MiniFooterCopy;
@@ -42,6 +45,16 @@ export default function MiniClosingBookend({
    * layers sit inside the border box, so a transparent border would show a stripe.
    */
   topRule?: boolean;
+  /**
+   * `natural-midnight` regrades the dune photograph (MiniContactNaturalMidnight.css) for the Work
+   * section. Needs `variant="graphite"` and `photoBackground`; otherwise it has no effect.
+   */
+  tone?: "natural-midnight";
+  /**
+   * `roomy` adds block padding to the CTA (MiniContactNaturalMidnight.css) for copy with no
+   * supporting paragraph (`/work`), so its photographic box matches the case-study closings.
+   */
+  spacing?: "roomy";
 }) {
   if (variant) {
     return (
@@ -51,6 +64,12 @@ export default function MiniClosingBookend({
           data-contact-variant={variant}
           {...(variant === "graphite" && photoBackground
             ? { "data-contact-photo": "" }
+            : {})}
+          {...(variant === "graphite" && photoBackground && tone
+            ? { "data-contact-tone": tone }
+            : {})}
+          {...(variant === "graphite" && spacing
+            ? { "data-contact-spacing": spacing }
             : {})}
           className={`relative overflow-hidden${topRule ? " border-t border-white/10" : ""}`}
         >

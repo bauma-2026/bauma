@@ -1,0 +1,139 @@
+/*
+ * Homepage "Storitve" as four equal framed blocks. Used only by `MiniServicesBoxes`; every selector is under `.msx`.
+ * Promoted from /lab/services-editorial/spread/boxes (layout) with the Typography V1.1 service scale from
+ * /lab/home-typography-v1/v1-1.
+ *
+ * Grid = the Selected Work grid: 1 column below md, 2 from md (gap 1.5rem), 3 from lg (gap 2.5rem, 3rem from xl).
+ * The heading is in column 1 from lg; the 2x2 spans columns 2-3 with the same gap in both directions, so the block edges
+ * land on the tile edges below. Border is tone-on-tone (one step above the section surface), no fill, no radius.
+ * The H2 size and weight are set by the homepage scope (`app/homeTypographyV11.css`), not here.
+ */
+
+.msx {
+  --msx-g: 1.5rem;
+  --msx-line: #212a3a;
+  --msx-pad: 24px;
+  --msx-h3: 1.375rem; /* 22px */
+}
+@media (min-width: 640px) {
+  .msx {
+    --msx-h3: 1.625rem; /* 26px */
+  }
+}
+@media (min-width: 768px) {
+  .msx {
+    --msx-pad: 26px;
+  }
+}
+@media (min-width: 1024px) {
+  .msx {
+    --msx-g: 2.5rem;
+    --msx-pad: 24px; /* 293px blocks */
+    /* Inner block width is only about 245px at 1024 and the longest title ("Oblikovanje in izvedba") is about 10.5em
+       wide, so the size follows the width (about 23px at 1024) up to the 28px cap. */
+    --msx-h3: clamp(1.375rem, calc(((100vw - 9rem) / 3 - 48px) / 10.5), 1.75rem);
+  }
+}
+@media (min-width: 1280px) {
+  .msx {
+    --msx-g: 3rem;
+    --msx-pad: 30px;
+    --msx-h3: 1.75rem; /* 28px */
+  }
+}
+
+.msx .msx-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 40px;
+}
+@media (min-width: 768px) {
+  .msx .msx-grid {
+    row-gap: 48px;
+  }
+}
+@media (min-width: 1024px) {
+  .msx .msx-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: var(--msx-g);
+    row-gap: 0;
+  }
+  .msx .msx-matrix {
+    grid-column: 2 / span 2;
+  }
+}
+
+.msx .msx-head p {
+  margin: 0;
+}
+.msx .msx-head h2 {
+  margin: 20px 0 0;
+}
+@media (min-width: 1024px) {
+  /* Eyebrow cap-top = block top; heading cap-top = block title cap-top (border 1px + padding). */
+  .msx .msx-head h2 {
+    margin-top: calc(var(--msx-pad) - 7px);
+    max-width: 8.5em;
+  }
+}
+
+.msx .msx-matrix {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+}
+@media (min-width: 768px) {
+  .msx .msx-matrix {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--msx-g);
+  }
+}
+.msx .msx-matrix > li {
+  border: 1px solid var(--msx-line);
+  padding: var(--msx-pad);
+}
+.msx .msx-matrix h3,
+.msx .msx-matrix p {
+  margin: 0;
+  min-width: 0;
+}
+.msx .msx-matrix h3 {
+  font-size: var(--msx-h3);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+.msx .msx-matrix h3 > span {
+  display: block;
+}
+.msx .msx-matrix p {
+  margin-top: 18px;
+  font-size: 15px;
+  line-height: 24px;
+  color: rgb(255 255 255 / 0.6);
+  text-wrap: pretty;
+}
+@media (min-width: 640px) {
+  .msx .msx-matrix p {
+    font-size: 16px;
+    line-height: 26px;
+  }
+}
+/* 293px blocks: the compact 15/24 description stays (a 16px measure would be about 31 characters). */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .msx .msx-matrix p {
+    font-size: 15px;
+    line-height: 24px;
+  }
+}
+@supports (text-box: trim-both cap alphabetic) {
+  .msx .msx-head p.uppercase,
+  .msx .msx-head h2,
+  .msx .msx-matrix h3 > span,
+  .msx .msx-matrix p {
+    text-box: trim-both cap alphabetic;
+  }
+}

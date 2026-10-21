@@ -76,8 +76,8 @@ const closingCopy: MiniFinalCtaCopy = {
   eyebrow: "NASLEDNJI KORAK",
   line1: "Najprej delo,",
   line2: "nato razlaga.",
-  body: "Pri Dema Plus stran začnejo projekti, področja dela pa sledijo. Če imaš izvedene projekte, ki jih je treba pokazati, jih lahko postaviva na začetek.",
-  cta: "Pogovoriva se o projektu",
+  body: "Pri Dema Plus stran začnejo projekti, področja dela pa sledijo. Če imate izvedene projekte, ki jih je treba pokazati, jih lahko skupaj postavimo na začetek.",
+  cta: "Pogovorimo se o projektu",
   mailto: MINI_CONTACT_MAILTO,
 };
 
@@ -197,6 +197,7 @@ export default function DemaPlusCasePage() {
           variant="graphite"
           photoBackground
           topRule={false}
+          tone="natural-midnight"
           ctaCopy={closingCopy}
         />
       </div>

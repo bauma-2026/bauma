@@ -78,8 +78,8 @@ const closingCopy: MiniFinalCtaCopy = {
   eyebrow: "NASLEDNJI KORAK",
   line1: "Delo naj govori samo,",
   line2: "pristop naj vodi.",
-  body: "Pri ArtBite stran najprej pokaže fotografije del in osebni pristop studia. Če imaš delo, ki ga je treba pokazati, ga lahko postaviva v ospredje.",
-  cta: "Pogovoriva se o projektu",
+  body: "Pri ArtBite stran najprej pokaže fotografije del in osebni pristop studia. Če imate delo, ki ga želite predstaviti, ga lahko skupaj postavimo v ospredje.",
+  cta: "Pogovorimo se o projektu",
   mailto: MINI_CONTACT_MAILTO,
 };
 
@@ -216,6 +216,7 @@ export default function ArtBiteCasePage() {
           variant="graphite"
           photoBackground
           topRule={false}
+          tone="natural-midnight"
           ctaCopy={closingCopy}
         />
       </div>

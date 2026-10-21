@@ -1,0 +1,98 @@
+/* "Natural Midnight" dune treatment — opt-in via MiniClosingBookend `tone="natural-midnight"`
+   (graphite variant with `photoBackground`). Used by `/work` and the six case studies; the
+   homepage and every other consumer keep the warm photograph from MiniContactPhoto.css.
+
+   Same photograph, same crop, same layout. Only its grade changes, as natural colour correction
+   (no grayscale, no hue rotation): lower saturation and exposure with extra midtone contrast so
+   the dune contours stay defined, and cooler shadows from the hero's own navy (4, 10, 28).
+
+   Layers: ::before  the photograph with the grade below.
+           ::after   (1) an eased, multi-stop navy step from the top edge, so the graphite section
+                         above melts into the sky instead of meeting a visible band; (2) one flat
+                         navy step deepening toward the footer row.
+   The extra [data-contact-tone] attribute outranks the MiniContactPhoto.css rules. */
+
+[data-mini-palette] [data-contact-variant][data-contact-photo][data-contact-tone="natural-midnight"] {
+  --navy: 4, 10, 28;
+  --nm-filter: saturate(0.6) brightness(0.88) contrast(1.18);
+  --nm-flat: 0.24;
+  --nm-flat-end: 0.62;
+}
+
+[data-mini-palette] [data-contact-variant][data-contact-photo][data-contact-tone="natural-midnight"]::before {
+  filter: var(--nm-filter);
+}
+
+[data-mini-palette] [data-contact-variant][data-contact-photo][data-contact-tone="natural-midnight"]::after {
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(var(--navy), 0.86) 0,
+      rgba(var(--navy), 0.74) 28px,
+      rgba(var(--navy), 0.55) 72px,
+      rgba(var(--navy), 0.34) 120px,
+      rgba(var(--navy), 0.16) 170px,
+      rgba(var(--navy), 0.05) 215px,
+      rgba(var(--navy), 0) 250px
+    ),
+    linear-gradient(
+      180deg,
+      rgba(var(--navy), var(--nm-flat)) 0,
+      rgba(var(--navy), var(--nm-flat)) 50%,
+      rgba(var(--navy), var(--nm-flat-end)) 100%
+    );
+}
+
+/* Supporting paragraph (second <p> of MiniFinalCTA; the first is the eyebrow). Raised from the
+   default white/60 so it keeps 4.5:1 over the brightest dune area behind it. Natural Midnight
+   only; paragraph size, width and line-height are untouched. */
+[data-mini-palette] [data-contact-tone="natural-midnight"] > section p:nth-of-type(2) {
+  color: rgb(255 255 255 / 0.86);
+}
+
+/* `/work` closes with no supporting paragraph, so its CTA is about 70px (desktop) to 85px (phone)
+   shorter than the case studies', and the dune crop lands the type near the top. `roomy` adds the
+   difference as equal block padding, giving the same overall height and an even margin above the
+   eyebrow and below the button. */
+[data-mini-palette] [data-contact-spacing="roomy"] > section {
+  padding-block: 6rem;
+}
+
+@media (min-width: 640px) {
+  [data-mini-palette] [data-contact-spacing="roomy"] > section {
+    padding-block: 6.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  [data-mini-palette] [data-contact-spacing="roomy"] > section {
+    padding-block: 7.25rem;
+  }
+}
+
+/* Below 1280px the crop puts the pale sky corner behind the supporting paragraph. The top step is
+   held longer there so the corner is deep enough for 4.5:1 text. Same navy and same ramp shape;
+   at 1280px and up the paragraph sits on the dune body and the original step is enough. */
+@media (max-width: 1279px) {
+  [data-mini-palette] [data-contact-variant][data-contact-photo][data-contact-tone="natural-midnight"]::after {
+    background-image:
+      linear-gradient(
+        180deg,
+        rgba(var(--navy), 0.86) 0,
+        rgba(var(--navy), 0.78) 28px,
+        rgba(var(--navy), 0.68) 72px,
+        rgba(var(--navy), 0.58) 130px,
+        rgba(var(--navy), 0.48) 190px,
+        rgba(var(--navy), 0.36) 250px,
+        rgba(var(--navy), 0.22) 310px,
+        rgba(var(--navy), 0.08) 370px,
+        rgba(var(--navy), 0) 420px
+      ),
+      linear-gradient(
+        180deg,
+        rgba(var(--navy), var(--nm-flat)) 0,
+        rgba(var(--navy), var(--nm-flat)) 50%,
+        rgba(var(--navy), var(--nm-flat-end)) 100%
+      );
+  }
+}

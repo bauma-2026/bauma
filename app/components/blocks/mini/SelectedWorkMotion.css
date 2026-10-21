@@ -151,7 +151,7 @@
 
   .swm[data-live][data-surface="dema"][data-state="play"] > div > div > div::before,
   .swm[data-live][data-surface="dema"][data-state="play"] > div > div > div:last-child::after {
-    animation: swm-draw calc(460ms * var(--swm-t, 1)) var(--swm-ease-rule) backwards;
+    animation: swm-draw calc(460ms * var(--swm-t, 1)) var(--swm-ease-rule) both;
   }
   .swm[data-live][data-surface="dema"][data-state="play"] > div > div > div > p {
     animation: swm-rise-small calc(440ms * var(--swm-t, 1)) var(--swm-ease) backwards;

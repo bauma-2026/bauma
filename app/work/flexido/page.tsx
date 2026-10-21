@@ -62,8 +62,8 @@ const closingCopy: MiniFinalCtaCopy = {
   eyebrow: "NASLEDNJI KORAK",
   line1: "Nekdo išče rešitev za problem,",
   line2: "drugi že pozna izdelek.",
-  body: "Pri Flexidu stran podpira oba vstopa in ju poveže. Če ima tvoja ponudba več vstopov, jih lahko urediva skupaj.",
-  cta: "Pogovoriva se o projektu",
+  body: "Pri Flexidu stran podpira oba vstopa in ju poveže. Če ima vaša ponudba več vstopov, jih lahko skupaj uredimo.",
+  cta: "Pogovorimo se o projektu",
   mailto: MINI_CONTACT_MAILTO,
 };
 
@@ -196,6 +196,7 @@ export default function FlexidoCasePage() {
           variant="graphite"
           photoBackground
           topRule={false}
+          tone="natural-midnight"
           ctaCopy={closingCopy}
         />
       </div>

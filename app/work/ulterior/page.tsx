@@ -79,8 +79,8 @@ const closingCopy: MiniFinalCtaCopy = {
   eyebrow: "NASLEDNJI KORAK",
   line1: "Izdelek naj vodi,",
   line2: "nakup naj sledi.",
-  body: "Pri Ulterior stran najprej pokaže izdelek, nato njegove podrobnosti, nakupni sistem pa deluje za njima. Če imaš izdelek, ki ga je treba predstaviti in prodati, ga lahko postaviva skupaj.",
-  cta: "Pogovoriva se o projektu",
+  body: "Pri Ulterior stran najprej pokaže izdelek, nato njegove podrobnosti, nakupni sistem pa deluje za njima. Če imate izdelek, ki ga je treba predstaviti in prodati, ga lahko skupaj postavimo.",
+  cta: "Pogovorimo se o projektu",
   mailto: MINI_CONTACT_MAILTO,
 };
 
@@ -236,6 +236,7 @@ export default function UlteriorCasePage() {
           variant="graphite"
           photoBackground
           topRule={false}
+          tone="natural-midnight"
           ctaCopy={closingCopy}
         />
       </div>

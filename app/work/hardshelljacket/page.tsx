@@ -78,8 +78,8 @@ const closingCopy: MiniFinalCtaCopy = {
   eyebrow: "NASLEDNJI KORAK",
   line1: "En izdelek.",
   line2: "Jasna pot naprej.",
-  body: "Pri Hardshelljacket stran izdelek predstavi na enem mestu in vodi do jasnega naslednjega koraka. Če imaš izdelek, ki potrebuje tak fokus, ga lahko postaviva skupaj.",
-  cta: "Pogovoriva se o projektu",
+  body: "Pri Hardshelljacket stran izdelek predstavi na enem mestu in vodi do jasnega naslednjega koraka. Če imate izdelek, ki potrebuje tak fokus, ga lahko skupaj postavimo.",
+  cta: "Pogovorimo se o projektu",
   mailto: MINI_CONTACT_MAILTO,
 };
 
@@ -228,6 +228,7 @@ export default function HardshelljacketCasePage() {
           variant="graphite"
           photoBackground
           topRule={false}
+          tone="natural-midnight"
           ctaCopy={closingCopy}
         />
       </div>

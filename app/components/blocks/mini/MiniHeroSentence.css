@@ -22,3 +22,18 @@
     font-size: 40px;
   }
 }
+
+/* 768-840px: the rail is 10.4-11.4em wide, just under line 1 ("Spletne strani, ki pomagajo",
+   11.4em), so the wrap depended on the browser's balancing and could leave "ki" at the end of
+   line 1 and "pomagajo" alone on line 2. "ki pomagajo" is kept together and the cap sits just
+   above the widest target line ("pridobivati stranke.", 8.1em), so any wrapping engine breaks as:
+   Spletne strani, / ki pomagajo / pridobivati stranke. Only headlines that set `headlineKeep`. */
+@media (min-width: 768px) and (max-width: 840px) {
+  [data-hero-copy] .bauma-hero-h1-desktop.bauma-hero-h1-sentence {
+    max-width: 8.2em;
+  }
+
+  [data-hero-copy] .bauma-hero-h1-desktop .bauma-hero-keep {
+    white-space: nowrap;
+  }
+}

@@ -21,6 +21,11 @@ type MiniHeroHeadline =
   | {
       /** One sentence that wraps naturally (no forced break). Used by `/` and `/en`. */
       headline: string;
+      /**
+       * Phrase inside `headline` that must not wrap apart in the desktop headline (kept together
+       * with `white-space: nowrap`, applied only from 768 to 840px in MiniHeroSentence.css).
+       */
+      headlineKeep?: string;
       line1?: never;
       line2?: never;
     };
@@ -94,9 +99,21 @@ export default function MiniHero({
       const [lead, emphasis] = splitLastWord(
         comma === -1 ? copy.headline : copy.headline.slice(comma + 2),
       );
+      const keep = !phoneBreak ? copy.headlineKeep : undefined;
+      const at = keep && lead ? lead.indexOf(keep) : -1;
+      const leadNode =
+        at === -1 ? (
+          lead
+        ) : (
+          <>
+            {lead.slice(0, at)}
+            <span className="bauma-hero-keep">{keep}</span>
+            {lead.slice(at + keep!.length)}
+          </>
+        );
       const tail = (
         <>
-          {lead ? `${lead} ` : null}
+          {lead ? <>{leadNode} </> : null}
           <span className="italic">{emphasis}</span>
         </>
       );

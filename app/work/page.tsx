@@ -22,9 +22,13 @@ import {
 } from "../components/blocks/mini/MiniSelectedWorkSurfaces";
 
 /**
- * ArtBite's own accent face (Fraunces italic, opsz + WONK axes as on artbite-tattoo.com), used only for the one
- * accent word on the ArtBite surface. Latin subset is enough ("Osebni" has no diacritics). Scoped to this route.
+ * `/work`: three rows of two 4:3 surfaces, in the reading order Flexido, Ulterior / Odstrani Tattoo, Dema Plus /
+ * ArtBite, Hardshelljacket. At 1440px the rail is 1216px: two 584px columns, a 48px gap, 438px surfaces, 60px between rows.
+ * 4:3 holds from an 898px viewport (a card width of 405px); from 640 to there the surfaces are 19rem (304px) high; below 640
+ * one column of squares. The shared surfaces (Flexido, Odstrani, Dema Plus) are also used by the homepage and are not
+ * modified: their fixed heights, Flexido's line width and size are overridden from the link, here only.
  */
+
 const artbiteAccent = Fraunces({
   subsets: ["latin"],
   style: "italic",
@@ -42,66 +46,121 @@ export const metadata: Metadata = {
   },
 };
 
-/** Same primary navigation as the homepage (`app/page.tsx`). */
 const HOME_NAV: MiniHeaderNavItem[] = [
   { href: "/approach", label: "Pristop", id: "pristop" },
   { href: "/work", label: "Work", id: "work" },
 ];
 
-/** Same Work surface as the homepage Selected Work section. */
 const SURFACE_WORK = {
   "--mini-surface-work": "#0f141c",
 } as CSSProperties;
 
-/**
- * Below `md` the grid is one column of any width (272px to 719px), so the fixed 18rem / 19rem surface height gave cards
- * with aspect ratios from 0.94 to 2.4, which no composition is designed for. There the surface is square instead
- * (`aspect-square`, height auto); from `md` the approved heights apply unchanged. The shared surfaces (Odstrani, Dema,
- * Flexido) carry their fixed heights in `MiniSelectedWorkSurfaces`, used by the homepage and left untouched, so this
- * overrides them from the link (higher specificity than their single height classes); the local Ulterior and ArtBite
- * surfaces apply the same rule themselves.
- */
-const MOBILE_SQUARE = "max-md:[&_.swm>div]:aspect-square max-md:[&_.swm>div]:h-auto";
+/** Square below `sm`. The shared surfaces carry fixed heights, so they are overridden from the link. */
+const MOBILE_SQUARE = "max-sm:[&_.swm>div]:aspect-square max-sm:[&_.swm>div]:h-auto";
 
 /**
- * Flexido's first paragraph is justified edge to edge, which is right at its design widths (7.5em wide on every grid
- * card) but spreads the words across a 600px line on a wide single-column card, where its type has stopped growing
- * (3.1rem cap). Limiting it to 7.6em changes nothing at 373px and below and keeps the line compact when wider.
+ * 4:3 from a 898px viewport (a card width of 405px); from `sm` (640px) to there the surfaces keep the approved 19rem
+ * (304px) height, as on `/work`. Below 405px wide 4:3 is shorter than that: Flexido's two statements end up 12px apart at
+ * 340 x 255 and the Hardshelljacket headline reaches the hood, where 304px keeps 61px between the statements and clears
+ * it. (A `min-height` of 19rem does not work: with an aspect ratio it widens the card instead.) The shared surfaces
+ * (Flexido, Odstrani, Dema Plus) take the ratio from the link, overriding their fixed heights.
  */
-const FLEXIDO_LINE = "[&_[data-surface=flexido]>div>div>p:first-child]:max-w-[7.6em]";
+const SHARED_43 = "min-[898px]:[&_.swm>div]:h-auto min-[898px]:[&_.swm>div]:aspect-[4/3]";
+
+/**
+ * Responsive size caps for Flexido's two statements (the `!` beats the surface's inline font-size): they keep about 1.4em
+ * between the statements at intermediate widths. The caps do not bind at 1440px, and nothing applies below 640px.
+ */
+const FLEXIDO_SIZE =
+  "min-[898px]:[&_[data-surface=flexido]_p]:[font-size:min(3.1rem,9.5cqw)]! sm:max-[898px]:[&_[data-surface=flexido]_p]:[font-size:min(11.5cqw,2.45rem)]!";
+/**
+ * Flexido's first paragraph is justified edge to edge. Limited to 6.85em, its two word gaps are about 2.2 times a normal
+ * space (the homepage's 7.5em gives about 3.7 times).
+ */
+const FLEXIDO_LINE = "[&_[data-surface=flexido]>div>div>p:first-child]:max-w-[6.85em]";
 
 const LINK_FOCUS =
   "focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-white/50";
 
-/** Arrow nudge, as on the homepage cards. */
 const ARROW =
   "inline-block transition-transform duration-300 group-hover:translate-x-[3px]";
 
-type Project = {
-  slug: string;
-  /** Entry motion exists only for the three typographic surfaces; others render static. */
-  motion?: MotionSurfaceId;
-  name: string;
-  descriptor: string;
-  Art: () => ReactNode;
-};
+const ARIAL = "Arial, Helvetica, sans-serif";
+
+/* --------------------------------------------- local surfaces --------------------------------------------- */
 
 /**
- * Ulterior: product editorial. The original jacket photograph (unedited) fills the surface; it is cropped just under
- * the truss so the black hanger bar hangs from the top edge of the card, and sized so the jacket is about 70% of the
- * surface height with its right edge near the 7cqw padding the other surfaces use. That leaves the photograph's own
- * pale wall as negative space at the left, where the copy sits, its last line on the jacket's hem line. Copy is
- * Ulterior's own line "Technical protection for normal life": the lead-in is quiet, "Normal life." (the thesis of the
- * brand) carries the weight. Type is Arial bold: ink #33333e for the headline, a restrained #505058 for the lead-in.
- * The headline size is derived from the free column left of the jacket, so it holds from the 293px card (1024px grid)
- * to 373px without touching the sleeve. Below `md` the surface is square, where that formula leaves only a 3% gap to
- * the sleeve, so the headline is a fixed 9.8cqw there (about 5% gap).
+ * Ulterior below 898px (and the base of the surface above it): the photograph's `left` puts the jacket's right edge at 92cqw
+ * (the 7cqw margin the other surfaces use) and its left edge fades in over 14%. Scale, crop and the headline's size formula
+ * are the originals. From 640 to 719px the jacket moves further right by up to 0.35 x (324px - card width), 14px at 640, so
+ * "Normal" keeps about 18px from the sleeve cuff (6px without it); the shift is zero from 720px. Below 640px the card is a
+ * square, where the headline is a fixed 9.8cqw.
  */
 function UlteriorSurface() {
   return (
     <div
-      className="relative aspect-square overflow-hidden rounded-[3px] md:aspect-auto md:h-[19rem] lg:h-[21.25rem] bg-[#eef2f5] text-[#33333e] [container-type:size]"
-      style={{ fontFamily: "Arial, Helvetica, sans-serif" }}
+      className="relative aspect-square overflow-hidden rounded-[3px] sm:max-[898px]:aspect-auto sm:max-[898px]:h-[19rem] bg-[#eef2f5] text-[#33333e] [container-type:size]"
+      style={{ fontFamily: ARIAL }}
+    >
+      <Image
+        src="/work/ulterior/hardshell-white-hanging.webp"
+        alt="Bela hardshell jakna na obešalniku"
+        width={1706}
+        height={1924}
+        sizes="520px"
+        quality={85}
+        className="absolute max-w-none sm:max-[720px]:left-[calc(92cqw_-_101.8cqh_+_max(0px,(324px_-_100cqw)_*_0.35))]!"
+        style={{
+          height: "172.7cqh",
+          width: "auto",
+          top: "-66.9cqh",
+          left: "calc(92cqw - 101.8cqh)",
+          maskImage: "linear-gradient(to right, transparent, #000 14%)",
+          WebkitMaskImage: "linear-gradient(to right, transparent, #000 14%)",
+        }}
+      />
+      <div className="absolute left-[7cqw]" style={{ bottom: "11cqh" }}>
+        <p
+          className="text-balance font-normal leading-[1.25] text-[#505058]"
+          style={{ fontSize: "clamp(0.75rem, 3.6cqw, 0.9375rem)", maxWidth: "8em" }}
+        >
+          Technical protection for
+        </p>
+        <p className="mt-[0.5em] font-bold leading-[0.95] tracking-[-0.055em] [font-size:min(10.8cqw,calc((min(0px,92cqw-101.8cqh)+53.8cqh-10cqw)/3.1))] max-sm:[font-size:9.8cqw]">
+          <span className="block">Normal</span>
+          <span className="block">life.</span>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/** Below 898px the surface above, from 898px the selected composition below (the hidden one does not load its image). */
+function UlteriorApproved() {
+  return (
+    <>
+      <div className="min-[898px]:hidden">
+        <UlteriorSurface />
+      </div>
+      <div className="hidden min-[898px]:block">
+        <UlteriorDesktop />
+      </div>
+    </>
+  );
+}
+
+/**
+ * Ulterior from 898px: the selected "B refined" composition, text group lowered by 6% of the card height. The headline is
+ * pinned (12.2cqw, two lines): its top is `69cqh - 10.736cqw + 0.6 * eyebrow`, i.e. 63cqh as first set plus the 6cqh lowering,
+ * so it sits against the jacket's lower mass (hem at 88.5cqh). The eyebrow hangs above the pinned headline instead of taking
+ * part in that calculation: 2.65cqw (13px floor), graphite, 1.2cqw above the headline's box. Jacket centre 73cqw, photograph
+ * unchanged, left edge faded over 14%.
+ */
+function UlteriorDesktop() {
+  return (
+    <div
+      className="relative aspect-[4/3] overflow-hidden rounded-[3px] bg-[#eef2f5] text-[#33333e] [container-type:size]"
+      style={{ fontFamily: ARIAL }}
     >
       <Image
         src="/work/ulterior/hardshell-white-hanging.webp"
@@ -111,16 +170,26 @@ function UlteriorSurface() {
         sizes="520px"
         quality={85}
         className="absolute max-w-none"
-        style={{ height: "172.7cqh", width: "auto", top: "-66.9cqh", left: "min(0px, calc(92cqw - 101.8cqh))" }}
+        style={{
+          height: "172.7cqh",
+          width: "auto",
+          top: "-66.9cqh",
+          left: "calc(73cqw - 78.1cqh)",
+          maskImage: "linear-gradient(to right, transparent, #000 14%)",
+          WebkitMaskImage: "linear-gradient(to right, transparent, #000 14%)",
+        }}
       />
-      <div className="absolute left-[7cqw]" style={{ bottom: "11cqh" }}>
+      <div
+        className="absolute"
+        style={{ left: "8cqw", top: `calc(69cqh - 10.736cqw + 0.6 * clamp(0.8125rem, 3.1cqw, 1.125rem))` }}
+      >
         <p
-          className="text-balance font-normal leading-[1.25] text-[#505058]"
-          style={{ fontSize: "clamp(0.75rem, 3.6cqw, 0.9375rem)", maxWidth: "8em" }}
+          className="absolute bottom-full left-0 whitespace-nowrap font-normal tracking-[-0.005em] text-[#35363c]"
+          style={{ fontSize: "clamp(0.8125rem, 2.65cqw, 0.97rem)", lineHeight: 1.2, marginBottom: "1.2cqw" }}
         >
           Technical protection for
         </p>
-        <p className="mt-[0.5em] font-bold leading-[0.95] tracking-[-0.055em] [font-size:min(10.8cqw,calc((min(0px,92cqw-101.8cqh)+53.8cqh-10cqw)/3.1))] max-md:[font-size:9.8cqw]">
+        <p className="-ml-[0.04em] font-bold tracking-[-0.055em]" style={{ fontSize: "12.2cqw", lineHeight: 0.94 }}>
           <span className="block">Normal</span>
           <span className="block">life.</span>
         </p>
@@ -130,24 +199,17 @@ function UlteriorSurface() {
 }
 
 /**
- * ArtBite: the composition principle of ArtBite's own mobile hero (artbite-tattoo.com), translated to the card.
- * There: a large H1 (48px, leading .96, tracking -.04em), then below it a bottom-aligned row of two 0.74 portrait
- * tiles, hero-2 (40% wide, 18px radius) and hero-3 (27% wide, 16px radius, dropped 8px, dimmed to .85), with the
- * right third left empty. Here: "Osebni pristop." large at the top-left on one line (the line is about 6.3em long, so
- * 12.2cqw fits from the 293px card to 373px without a break), and the same two original photographs (`hero-2/3.webp`,
- * unedited) low on the surface, the horses dominant and the watch at 2/3 of its size, dimmed and shifted as in the hero.
- * Optical refinements: "pristop." is medium (500), not semibold, so it sits beside the lighter Fraunces italic
- * (terracotta, as on artbite-tattoo.com) without outweighing it; the word gap is opened by 0.07em; the headline is
- * pulled left by the italic O's 0.06em side-bearing so its ink lines up with the horses' left edge; the photographs
- * are lifted 12px above the bottom padding; the watch sits a 6cqw gap from the horses (its right edge lands about
- * level with the end of the headline) and is dropped 4.4cqw, which makes the diagonal and leaves 20px+ beneath it.
- * The photographs take the height left under the line, so one arrangement holds at every card width.
+ * ArtBite below 898px: a one-line headline over the pair of photographs, the composition of ArtBite's own mobile hero
+ * (artbite-tattoo.com): large "Osebni pristop." top left in Fraunces italic and medium sans, the original photographs
+ * (`hero-2/3.webp`, unedited) low on the surface, the horses dominant, the watch smaller and dropped 4.4cqw. The headline is
+ * pulled left by the italic O's side-bearing so its ink lines up with the horses. From `md` the pair is centred, because
+ * at these ratios the photographs are limited by height and would leave the right third empty.
  */
 function ArtBiteSurface() {
   return (
     <div
-      className={`${artbiteAccent.variable} relative aspect-square overflow-hidden rounded-[3px] md:aspect-auto md:h-[19rem] lg:h-[21.25rem] bg-[#291917] text-[#f5f0e8] [container-type:size]`}
-      style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
+      className={`${artbiteAccent.variable} relative aspect-square overflow-hidden rounded-[3px] sm:max-[898px]:aspect-auto sm:max-[898px]:h-[19rem] min-[898px]:aspect-[4/3] text-[#f5f0e8] [container-type:size]`}
+      style={{ backgroundColor: "#291917", fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
     >
       <div className="flex h-full flex-col p-[7cqw] pb-[calc(7cqw+12px)]">
         <p
@@ -162,7 +224,7 @@ function ArtBiteSurface() {
           </span>{" "}
           pristop.
         </p>
-        <div className="flex min-h-0 flex-1 items-end gap-[6cqw]">
+        <div className="flex min-h-0 flex-1 items-end gap-[6cqw] md:justify-center">
           <div className="relative aspect-[0.74/1] h-full max-w-[46cqw] overflow-hidden rounded-[18px] shadow-[0_14px_40px_rgba(0,0,0,0.28)]">
             <Image
               src="/work/artbite/hero-2.webp"
@@ -190,63 +252,157 @@ function ArtBiteSurface() {
 }
 
 /**
- * Hardshelljacket: dark, atmospheric editorial. The original photograph of the site's "Everyday use" band
- * (`hardshell-atmosphere-02.webp`, 1967 x 800, unedited, no gradient) covers the surface; `object-position` puts the
- * green hood and upper torso in the right three quarters of the card, with a strip of the rainy street at the left.
- * The line is the site's own, "Made for the way the day moves.", set in three lines ("Made for / the way / the day
- * moves.") in Arial bold, white, at the bottom left over the dark road and the dark shell. The two short upper lines
- * stay left of the face and only the long last line runs under it, so the face and hood stay clear. It is sized in
- * `cqw` (7cqw, 26px on the 373px desktop card), so the desktop and square mobile cards keep the same composition. The
- * photograph's own darkness carries the contrast. A flat `rgba(8, 10, 15, 0.12)` layer (Bauma's Base) sits between the
- * photograph and the type: it takes the lighter blue-grey city background down about 20% in luminance, so it stays
- * quieter than the other cards, without a gradient or a visible tint.
+ * ArtBite, composed for the 4:3 surface (from 898px; below it the approved surface above is shown). The approved
+ * arrangement is a one-line headline over a small pair of photographs, which at 4:3 reads as a big headline and a
+ * disconnected little group. Same wording, Fraunces italic and photographs, three decisions:
+ *  - the headline breaks after "Osebni" (two lines, same size), a compact block top left;
+ *  - the horses photograph (31cqw wide: 181px at 1440, within its 326px source as before) takes the headline's top line
+ *    at the right margin, so the two heaviest things share a line and balance each other across the card;
+ *  - the watch photograph (24cqw) steps down and left of it, as the approved watch is dropped, on the bottom margin, 4cqw
+ *    from the horses and 31px under the headline's last line, so the pair reads as one stepped group tied to the headline.
+ * Everything is in cqw / cqh, so it holds from 898px up (the 4:3 ratio is constant). Margins are the approved 7cqw
+ * (9.4cqh vertically, the same 41px at 1440).
+ */
+function ArtBiteComposed() {
+  return (
+    <div
+      className={`${artbiteAccent.variable} relative aspect-[4/3] overflow-hidden rounded-[3px] text-[#f5f0e8] [container-type:size]`}
+      style={{ backgroundColor: "#291917", fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
+    >
+      <p
+        className="absolute -ml-[0.06em] font-medium leading-[0.96] tracking-[-0.035em]"
+        style={{ left: "7cqw", top: "9.4cqh", fontSize: "12.2cqw" }}
+      >
+        <span
+          className="block font-normal italic tracking-[-0.02em] text-[#c9624a]"
+          style={{ fontFamily: "var(--font-artbite-accent), Georgia, serif" }}
+        >
+          Osebni
+        </span>
+        <span className="block">pristop.</span>
+      </p>
+      <div
+        className="absolute overflow-hidden rounded-[18px] shadow-[0_14px_40px_rgba(0,0,0,0.28)]"
+        style={{ width: "31cqw", aspectRatio: "0.74 / 1", top: "9.4cqh", right: "7cqw" }}
+      >
+        <Image
+          src="/work/artbite/hero-2.webp"
+          alt="Tetovaža dveh konj z lovilcem sanj"
+          fill
+          sizes="190px"
+          quality={85}
+          className="object-cover object-[50%_24%]"
+        />
+      </div>
+      <div
+        className="absolute overflow-hidden rounded-[16px]"
+        style={{ width: "24cqw", aspectRatio: "0.74 / 1", bottom: "9.4cqh", right: "calc(7cqw + 31cqw + 4cqw)" }}
+      >
+        <Image
+          src="/work/artbite/hero-3.webp"
+          alt=""
+          fill
+          sizes="150px"
+          quality={85}
+          className="object-cover object-[44%_center]"
+        />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Hardshelljacket: the original photograph (`hardshell-atmosphere-02.webp`, unedited) covers the surface, `object-position`
+ * putting the hood in the right three quarters. The line is the site's own: two lines from 898px ("Made for the way" /
+ * "the day moves."), three below ("Made for / the way / the day moves."), where the long line would reach the hood. Arial
+ * bold, white, bottom left; 7cqw capped at 2.25rem (36px at 1440; cards narrower than 514px are limited by 7cqw). A flat
+ * `rgba(8, 10, 15, 0.12)` layer takes the city background down without a visible tint.
  */
 function HardshelljacketSurface() {
   return (
     <div
-      className="relative aspect-square overflow-hidden rounded-[3px] md:aspect-auto md:h-[19rem] lg:h-[21.25rem] bg-[#0b0d10] text-white [container-type:size]"
-      style={{ fontFamily: "Arial, Helvetica, sans-serif" }}
+      className="relative aspect-square overflow-hidden rounded-[3px] sm:max-[898px]:aspect-auto sm:max-[898px]:h-[19rem] min-[898px]:aspect-[4/3] bg-[#0b0d10] text-white [container-type:size]"
+      style={{ fontFamily: ARIAL }}
     >
       <Image
         src="/work/hardshelljacket/hardshell-atmosphere-02.webp"
         alt="Moški v zeleni kapuci hardshell jakne na deževni mestni ulici"
         fill
-        sizes="520px"
+        sizes="640px"
         quality={85}
         className="object-cover object-[46%_50%]"
       />
       <div aria-hidden="true" className="absolute inset-0 bg-[rgba(8,10,15,0.12)]" />
       <p
         className="absolute bottom-[9cqh] left-[7cqw] font-bold leading-[1.04] tracking-[-0.035em]"
-        style={{ fontSize: "clamp(1.25rem, 7cqw, 1.95rem)" }}
+        style={{ fontSize: "clamp(1.25rem, 7cqw, 2.25rem)" }}
       >
-        <span className="block">Made for</span>
-        <span className="block">the way</span>
-        <span className="block">the day moves.</span>
+        <span className="block whitespace-nowrap">
+          Made for<span className="max-[898px]:block"> the way</span>
+        </span>
+        <span className="block whitespace-nowrap">the day moves.</span>
       </p>
     </div>
   );
 }
 
-/**
- * Homepage order, names and descriptors (`MiniSelectedWorkHome`). The homepage list is not exported
- * and that file is left untouched; keep the two in step until a fourth project makes sharing worthwhile.
- */
+/* ---------------------------------------------------- page ---------------------------------------------------- */
+
+type Project = {
+  slug: string;
+  motion?: MotionSurfaceId;
+  name: string;
+  descriptor: string;
+  /** Shared surfaces take the common ratio from the link. */
+  shared?: boolean;
+  Art: () => ReactNode;
+  /** Composition shown from 898px instead of `Art`. */
+  Wide?: () => ReactNode;
+};
+
+/** DOM order is the reading order: rows of two. Names, descriptors and destinations as on the homepage's Selected Work. */
 const PROJECTS: readonly Project[] = [
-  { slug: "odstrani-tattoo", motion: "odstrani", name: "Odstrani Tattoo", descriptor: "Zaupanje in konverzija", Art: OdstraniSurface },
-  { slug: "dema-plus", motion: "dema", name: "Dema Plus", descriptor: "Reference in jasnost", Art: DemaSurface },
-  { slug: "flexido", motion: "flexido", name: "Flexido", descriptor: "Industrijski B2B", Art: FlexidoSurface },
-  { slug: "ulterior", name: "Ulterior", descriptor: "Produktna predstavitev in nakupni sistem", Art: UlteriorSurface },
-  { slug: "artbite", name: "ArtBite", descriptor: "Spletna stran tattoo studia", Art: ArtBiteSurface },
+  { slug: "flexido", motion: "flexido", name: "Flexido", descriptor: "Industrijski B2B", shared: true, Art: FlexidoSurface },
+  { slug: "ulterior", name: "Ulterior", descriptor: "Produktna predstavitev in nakupni sistem", Art: UlteriorApproved },
+  { slug: "odstrani-tattoo", motion: "odstrani", name: "Odstrani Tattoo", descriptor: "Zaupanje in konverzija", shared: true, Art: OdstraniSurface },
+  { slug: "dema-plus", motion: "dema", name: "Dema Plus", descriptor: "Reference in jasnost", shared: true, Art: DemaSurface },
+  { slug: "artbite", name: "ArtBite", descriptor: "Spletna stran tattoo studia", Art: ArtBiteSurface, Wide: ArtBiteComposed },
   { slug: "hardshelljacket", name: "Hardshelljacket", descriptor: "Izdelek na eni strani", Art: HardshelljacketSurface },
 ];
 
-/**
- * `/work`: the homepage Selected Work compositions, grid and cards, without the section heading.
- * The `data-home-typography` wrapper (a plain block, no layout effect; never `display: contents`, which Next.js skips as the scroll target) applies the homepage
- * typography foundation and IBM Plex Mono eyebrow, as on `app/page.tsx`. The motion wrapper cycles its
- * column stagger (1-3) so the grid can grow to 6-9 projects with the same three-column rhythm.
- */
+/** Wraps a typographic surface in the shared entry motion; photographic ones render static. */
+function Motion({ p, col, children }: { p: Project; col: 1 | 2; children: ReactNode }) {
+  return p.motion ? (
+    <SelectedWorkMotion id={p.motion} col={col}>
+      {children}
+    </SelectedWorkMotion>
+  ) : (
+    children
+  );
+}
+
+/** Quiet Editorial caption: name 20px / 500, descriptor 15px / 22px at 70%, no numbering. */
+function Caption({ id, name, descriptor }: { id: string; name: string; descriptor: string }) {
+  return (
+    <div className="mt-2">
+      <div className="flex min-h-[44px] items-center justify-between gap-4">
+        <h2 id={id} className="text-[1.25rem] font-medium leading-[1.1] tracking-[var(--ht-tr-h3)] text-white">
+          {name}
+        </h2>
+        <span
+          aria-hidden="true"
+          className="text-sm font-medium text-white/48 transition-colors duration-300 group-hover:text-white/92"
+        >
+          <span className={ARROW}>→</span>
+        </span>
+      </div>
+      <p id={`${id}-desc`} className="-mt-1 text-pretty text-[15px] font-normal leading-[22px] text-white/70">
+        {descriptor}
+      </p>
+    </div>
+  );
+}
+
 export default function WorkPage() {
   return (
     <div data-home-typography className={homeMono.variable}>
@@ -257,7 +413,7 @@ export default function WorkPage() {
           <section
             data-section="selected-work"
             aria-labelledby="work-heading"
-            className="bg-[var(--mini-surface-work,#080a0f)] pb-16 pt-28 text-white sm:pb-20 sm:pt-32 lg:pb-24 lg:pt-36"
+            className="bg-[var(--mini-surface-work,#080a0f)] pb-9 pt-28 text-white sm:pb-12 sm:pt-32 lg:pb-[3.25rem] lg:pt-36"
           >
             <div className="mini-page-rail">
               <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/60">Work</p>
@@ -268,48 +424,39 @@ export default function WorkPage() {
                 Izbrani projekti
               </h1>
 
-              <ol className="mt-10 grid list-none gap-x-6 gap-y-10 sm:mt-12 md:grid-cols-2 lg:mt-14 lg:grid-cols-3 lg:gap-x-10 xl:gap-x-12">
+              <ol className="mt-10 grid list-none grid-cols-1 gap-x-6 gap-y-10 sm:mt-12 sm:grid-cols-2 sm:gap-y-12 lg:mt-14 lg:gap-x-10 lg:gap-y-[60px] xl:gap-x-12">
                 {PROJECTS.map((p, i) => {
                   const id = `work-${p.slug}`;
                   const { Art } = p;
-                  const linkProps = {
-                    "aria-labelledby": id,
-                    "aria-describedby": `${id}-desc`,
-                    className: `group block ${MOBILE_SQUARE} ${p.slug === "flexido" ? FLEXIDO_LINE : ""} ${LINK_FOCUS}`,
-                  };
-                  const card = (
-                    <>
-                      {p.motion ? (
-                        <SelectedWorkMotion id={p.motion} col={((i % 3) + 1) as 1 | 2 | 3}>
-                          <Art />
-                        </SelectedWorkMotion>
-                      ) : (
-                        <Art />
-                      )}
-                      <div className="mt-2 grid grid-cols-[minmax(0,1fr)_auto] grid-rows-[minmax(44px,auto)_auto] items-center">
-                        <h2
-                          id={id}
-                          className="col-start-1 row-start-1 text-[1.5rem] font-semibold leading-[1.05] tracking-[var(--ht-tr-h3)] text-white"
-                        >
-                          {p.name}
-                        </h2>
-                        <span
-                          aria-hidden="true"
-                          className="col-start-2 row-start-1 justify-self-end text-sm font-medium text-white/65 transition-colors duration-300 group-hover:text-white/92"
-                        >
-                          <span className={ARROW}>→</span>
-                        </span>
-                        <p id={`${id}-desc`} className="col-span-2 row-start-2 -mt-1 text-[13px] leading-5 text-white/60">
-                          {p.descriptor}
-                        </p>
-                      </div>
-                    </>
-                  );
+                  const col = (i % 2 === 0 ? 1 : 2) as 1 | 2;
                   return (
                     <li key={p.slug}>
                       <article>
-                        <Link href={`/work/${p.slug}`} {...linkProps}>
-                          {card}
+                        <Link
+                          href={`/work/${p.slug}`}
+                          aria-labelledby={id}
+                          aria-describedby={`${id}-desc`}
+                          className={`group block ${MOBILE_SQUARE} ${p.shared ? SHARED_43 : ""} ${FLEXIDO_LINE} ${FLEXIDO_SIZE} ${LINK_FOCUS}`}
+                        >
+                          {p.Wide ? (
+                            <>
+                              <div className="min-[898px]:hidden">
+                                <Motion p={p} col={col}>
+                                  <Art />
+                                </Motion>
+                              </div>
+                              <div className="hidden min-[898px]:block">
+                                <Motion p={p} col={col}>
+                                  <p.Wide />
+                                </Motion>
+                              </div>
+                            </>
+                          ) : (
+                            <Motion p={p} col={col}>
+                              <Art />
+                            </Motion>
+                          )}
+                          <Caption id={id} name={p.name} descriptor={p.descriptor} />
                         </Link>
                       </article>
                     </li>
@@ -318,9 +465,36 @@ export default function WorkPage() {
               </ol>
             </div>
           </section>
+
+          {/* Editorial conclusion. The grid section's bottom padding is the only gap above the hairline, so this one has no top padding. */}
+          <section
+            aria-labelledby="work-approach-heading"
+            className="bg-[var(--mini-surface-work,#080a0f)] pb-16 text-white sm:pb-20 lg:pb-24"
+          >
+            <div className="mini-page-rail">
+              <div className="grid border-t border-[color:var(--mini-border-subtle,rgb(255_255_255/0.08))] pt-7 sm:pt-8 lg:grid-cols-2 lg:gap-x-10 lg:pt-11 xl:gap-x-12">
+                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[var(--mini-accent-text,#7c97f0)] lg:col-span-2">
+                  Od zasnove do izvedbe
+                </p>
+                <h2
+                  id="work-approach-heading"
+                  className="home-bridge-heading mt-5 max-w-[16ch] text-balance text-[1.25rem] font-medium [font-optical-sizing:auto] sm:text-[1.5rem] lg:self-start"
+                >
+                  Različni projekti. Skupen pristop.
+                </h2>
+                <p className="mt-4 max-w-[56ch] text-pretty text-[15px] leading-[1.7] text-white/70 sm:text-base lg:mt-5 lg:self-start">
+                  Pri Baumi načrtujemo, oblikujemo in razvijamo spletne strani za
+                  podjetja, izdelke in storitve. Vsak projekt začnemo z
+                  razumevanjem vsebine, potreb naročnika in poti obiskovalca. Tako
+                  nastajajo jasne, pregledne in premišljeno zasnovane digitalne
+                  predstavitve.
+                </p>
+              </div>
+            </div>
+          </section>
         </main>
 
-        <MiniClosingBookend variant="graphite" photoBackground topRule={false} />
+        <MiniClosingBookend variant="graphite" photoBackground topRule={false} tone="natural-midnight" spacing="roomy" />
       </MiniPalette>
     </div>
   );

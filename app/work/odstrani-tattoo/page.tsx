@@ -48,8 +48,8 @@ const closingCopy: MiniFinalCtaCopy = {
   eyebrow: "NASLEDNJI KORAK",
   line1: "Obiskovalec ima vprašanje.",
   line2: "Stran naj začne z njim.",
-  body: "Pri Odstrani Tattoo se stran začne z vprašanjem in konča s posvetom. Če ima tvoja storitev podobno pot do odločitve, jo lahko urediva skupaj.",
-  cta: "Pogovoriva se o projektu",
+  body: "Pri Odstrani Tattoo se stran začne z vprašanjem in konča s posvetom. Če ima vaša storitev podobno pot do odločitve, jo lahko skupaj uredimo.",
+  cta: "Pogovorimo se o projektu",
   mailto: MINI_CONTACT_MAILTO,
 };
 
@@ -144,6 +144,7 @@ export default function OdstraniTattooCasePage() {
           variant="graphite"
           photoBackground
           topRule={false}
+          tone="natural-midnight"
           ctaCopy={closingCopy}
         />
       </div>
