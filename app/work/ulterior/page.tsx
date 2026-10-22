@@ -66,8 +66,9 @@ const FOCUS =
 
 /** Same primary navigation as `/` and `/work`. */
 const HOME_NAV: MiniHeaderNavItem[] = [
-  { href: "/approach", label: "Pristop", id: "pristop" },
+  { href: "/pristop", label: "Pristop", id: "pristop" },
   { href: "/work", label: "Work", id: "work" },
+  { href: "/o-nas", label: "O nas", id: "o-nas" },
 ];
 
 /** A quiet neutral Work surface, not tied to Ulterior's own palette: the proofs bring their whites and charcoal. */

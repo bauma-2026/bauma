@@ -27,8 +27,9 @@ const isProduction = process.env.VERCEL_ENV === "production" && !isStaging;
 
 /** Primary navigation: standalone pages, not homepage sections. Contact stays the header CTA. */
 const HOME_NAV: MiniHeaderNavItem[] = [
-  { href: "/approach", label: "Pristop", id: "pristop" },
+  { href: "/pristop", label: "Pristop", id: "pristop" },
   { href: "/work", label: "Work", id: "work" },
+  { href: "/o-nas", label: "O nas", id: "o-nas" },
 ];
 
 /** "\n" in the headline is the component's existing forced break (keeps the two-line height). */

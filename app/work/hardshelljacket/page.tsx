@@ -65,8 +65,9 @@ const FOCUS =
 
 /** Same primary navigation as `/` and `/work`. */
 const HOME_NAV: MiniHeaderNavItem[] = [
-  { href: "/approach", label: "Pristop", id: "pristop" },
+  { href: "/pristop", label: "Pristop", id: "pristop" },
   { href: "/work", label: "Work", id: "work" },
+  { href: "/o-nas", label: "O nas", id: "o-nas" },
 ];
 
 /** Neutral graphite behind the proofs; the introduction stays on Base. */

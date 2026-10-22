@@ -1,0 +1,371 @@
+/*
+ * Pristop V3, composition V2. Everything is under `.apw`.
+ * Two horizontal axes. Page rail: hero, process numbers, written-first statement, flexible scope. Indented axis: only the
+ * process titles and descriptions (after the number column). Each chapter outside the process starts on the rail.
+ */
+
+.apw {
+  --apw-line: var(--mini-border-subtle, #202938);
+  --apw-num: 2.75rem; /* number column */
+  --apw-gap: 0.75rem;
+  --apw-title: 1.75rem;
+  --apw-step-y: 2rem;
+  --apw-measure: 36rem;
+  /* Process surface: the homepage Services tone (`#0d1119`, set inline in app/page.tsx; not a palette token), kept local. */
+  --apw-surface-process: #0d1119;
+  color: #fff;
+}
+@media (min-width: 640px) {
+  .apw {
+    --apw-num: 4.25rem;
+    --apw-gap: 1rem;
+    --apw-title: 2.25rem;
+    --apw-step-y: 2.5rem;
+  }
+}
+@media (min-width: 768px) {
+  .apw {
+    --apw-step-y: 2.25rem;
+  }
+}
+@media (min-width: 1024px) {
+  .apw {
+    --apw-num: 7.5rem;
+    --apw-gap: 1.5rem;
+    --apw-title: 2.875rem;
+    --apw-step-y: 2.6875rem;
+  }
+}
+@media (min-width: 1280px) {
+  .apw {
+    --apw-num: 9rem;
+    --apw-title: 3.25rem;
+    --apw-step-y: 2.875rem;
+  }
+}
+
+.apw p,
+.apw h1,
+.apw h2,
+.apw h3 {
+  margin: 0;
+  min-width: 0;
+}
+.apw .apw-serif,
+.apw .apw-h1,
+.apw .apw-num,
+.apw .apw-step-title,
+.apw .apw-note-h {
+  font-family: var(--font-serif), ui-serif, Georgia, serif;
+  font-weight: 400;
+}
+
+/* ---------- hero: eyebrow, H1 and lead are one group on one edge ---------- */
+.apw .apw-hero {
+  background: var(--mini-surface-flexido, #080a0f);
+  /* Top and bottom are balanced so the lead sits clearly closer to the H1 (32px) than to the surface edge below it. */
+  padding: 6.5rem 0 2.25rem;
+}
+@media (min-width: 640px) {
+  .apw .apw-hero {
+    padding: 8rem 0 2rem;
+  }
+}
+@media (min-width: 1024px) {
+  .apw .apw-hero {
+    padding: 9rem 0 3rem;
+  }
+}
+.apw .apw-h1 {
+  margin-top: 1.25rem;
+  max-width: 14ch;
+  font-size: clamp(2.25rem, 1.2rem + 4.6vw, 4.5rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+  color: #fff;
+}
+@media (min-width: 640px) {
+  .apw .apw-h1 {
+    max-width: 22ch;
+  }
+}
+.apw .apw-lead {
+  margin-top: 1.5rem;
+  max-width: 32rem;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  color: rgb(255 255 255 / 0.74);
+  text-wrap: balance;
+}
+@media (min-width: 1024px) {
+  .apw .apw-lead {
+    margin-top: 2rem;
+    font-size: 1.25rem;
+  }
+}
+
+/* ---------- process: number and title on one baseline, description directly under the title ---------- */
+.apw .apw-process {
+  background: var(--apw-surface-process);
+  /* The top padding is the share of the old hero bottom padding that now sits inside the lighter surface. */
+  padding: 2rem 0 4.5rem;
+}
+@media (min-width: 640px) {
+  .apw .apw-process {
+    padding: 3rem 0 5.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .apw .apw-process {
+    padding: 3.5rem 0 5.5rem;
+  }
+}
+/* "Potek sodelovanja" is a section label (mono, like the other eyebrows); the serif titles carry the weight. */
+.apw .apw-label {
+  margin-bottom: 1.25rem;
+  font-family: var(--font-mono-home), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.375;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mini-accent-text, #7c97f0);
+}
+.apw .apw-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid var(--apw-line);
+}
+.apw .apw-step {
+  display: grid;
+  grid-template-columns: var(--apw-num) minmax(0, 1fr);
+  column-gap: var(--apw-gap);
+  align-items: baseline;
+  padding-block: var(--apw-step-y);
+  border-top: 1px solid var(--apw-line);
+}
+.apw .apw-num {
+  font-size: var(--apw-title);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: rgb(255 255 255 / 0.28);
+}
+.apw .apw-step-title {
+  font-size: var(--apw-title);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  color: #fff;
+}
+.apw .apw-desc {
+  grid-column: 2;
+  margin-top: 1rem;
+  max-width: var(--apw-measure);
+  font-size: 0.96875rem;
+  line-height: 1.7;
+  color: rgb(255 255 255 / 0.68);
+  text-wrap: pretty;
+}
+@media (min-width: 1024px) {
+  .apw .apw-desc {
+    margin-top: 1.25rem;
+    max-width: 32rem; /* fewer short last lines than 36rem; line counts stay 4/3/4/3 */
+    font-size: 1.0625rem;
+  }
+}
+
+/* ---------- written-first: a statement, second only to the H1; on the page rail like the hero ---------- */
+.apw .apw-note {
+  background: var(--mini-surface-visual, #131720);
+  padding: 4.5rem 0 4.75rem;
+}
+@media (min-width: 640px) {
+  .apw .apw-note {
+    padding: 6rem 0 6.25rem;
+  }
+}
+@media (min-width: 1024px) {
+  .apw .apw-note {
+    padding: 6.5rem 0 6.75rem;
+  }
+}
+.apw .apw-note-rule {
+  display: block;
+  width: 3rem;
+  height: 1px;
+  background: var(--mini-accent-line, #7c97f0);
+}
+.apw .apw-note-h {
+  margin-top: 1.75rem;
+  max-width: 18ch;
+  font-size: clamp(2.125rem, 1rem + 4.2vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+  color: #fff;
+}
+.apw .apw-note-body {
+  margin-top: 1.75rem;
+  max-width: 34rem;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: rgb(255 255 255 / 0.72);
+  text-wrap: pretty;
+}
+@media (min-width: 1024px) {
+  .apw .apw-note-body {
+    margin-top: 2.25rem;
+    font-size: 1.125rem;
+  }
+}
+
+/* ---------- scope: heading, intro, then three ruled text columns ---------- */
+.apw .apw-scope {
+  background: var(--mini-surface-flexido, #080a0f);
+  padding: 4.25rem 0 4.5rem;
+}
+@media (min-width: 640px) {
+  .apw .apw-scope {
+    padding: 5rem 0 5.25rem;
+  }
+}
+@media (min-width: 1024px) {
+  .apw .apw-scope {
+    padding: 6rem 0 6.5rem;
+  }
+}
+.apw .apw-scope-h {
+  max-width: 20ch;
+  font-size: clamp(1.625rem, 1.15rem + 2vw, 2.375rem);
+  font-weight: 600;
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+  color: #fff;
+}
+.apw .apw-scope-intro {
+  margin-top: 1rem;
+  max-width: 40rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgb(255 255 255 / 0.68);
+  text-wrap: pretty;
+}
+.apw .apw-scope-list {
+  margin: 2rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+}
+.apw .apw-scope-list > div {
+  padding-top: 1.125rem;
+  border-top: 1px solid var(--apw-line);
+}
+.apw .apw-scope-list dt {
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+  color: #fff;
+}
+.apw .apw-scope-list dd {
+  margin: 0.5rem 0 0;
+  max-width: 36rem;
+  font-size: 0.96875rem;
+  line-height: 1.65;
+  color: rgb(255 255 255 / 0.68);
+  text-wrap: pretty;
+}
+@media (min-width: 640px) {
+  .apw .apw-scope-list {
+    margin-top: 2.5rem;
+  }
+  .apw .apw-scope-list dt {
+    font-size: 1.25rem;
+  }
+}
+
+/* Tablet: title and description sit side by side in one ruled row (three columns would be ~210px each). */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .apw .apw-scope-list > div {
+    display: grid;
+    grid-template-columns: 14rem minmax(0, 1fr);
+    column-gap: 2rem;
+    align-items: baseline;
+  }
+  .apw .apw-scope-list dd {
+    margin: 0;
+  }
+}
+
+/*
+ * From lg the section is one three-column grid: the heading spans all three, the intro the first two (so it ends where
+ * the second column ends), and the list reuses the same columns via subgrid, so heading, intro and columns share
+ * every edge. The block stays on the page rail, like the hero and the written-first statement: only the process titles
+ * use the indented axis. Below lg the options stack (mobile) or become
+ * title/description rows (tablet).
+ * The title row is shared by the three items, so descriptions start on one line even when the third title wraps.
+ */
+@media (min-width: 1024px) {
+  .apw .apw-scope-in {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 2.5rem;
+  }
+  .apw .apw-scope-h {
+    grid-column: 1 / -1;
+  }
+  .apw .apw-scope-intro {
+    grid-column: 1 / span 2;
+    max-width: 40rem; /* two even lines, with the break after "izvedbo," */
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+  .apw .apw-scope-list {
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    grid-template-rows: auto 1fr;
+    margin-top: 2.5rem;
+    column-gap: 2.5rem; /* a subgrid sets its own gap, so it is repeated here */
+    row-gap: 0;
+  }
+  .apw .apw-scope-list > div {
+    display: grid;
+    grid-row: span 2;
+    grid-template-rows: subgrid;
+    row-gap: 0.75rem;
+    padding-top: 1.25rem;
+  }
+  .apw .apw-scope-list dt {
+    font-size: 1.375rem;
+  }
+  .apw .apw-scope-list dd {
+    margin: 0; /* the subgrid row gap carries the title-to-description space */
+    max-width: none;
+    font-size: 1rem;
+  }
+}
+
+/*
+ * Closing CTA (shared `MiniClosingBookend`, unchanged). Lab-only opt-in via `data-pristop-v2` on the page root.
+ * This CTA is the heading and the button only: the shared component always renders the eyebrow paragraph, so the
+ * empty one is hidden, and the heading loses the margin that sat below it. The heading is 44px from 640px and balances
+ * naturally (one line while it fits, otherwise two even lines).
+ */
+[data-pristop-v2] [data-closing-bookend] section p.uppercase:empty {
+  display: none;
+}
+[data-pristop-v2] [data-closing-bookend] section h2 {
+  margin-top: 0;
+  text-wrap: balance;
+}
+@media (min-width: 640px) {
+  [data-pristop-v2] [data-closing-bookend] section h2 {
+    font-size: 2.75rem;
+    line-height: 1.1;
+  }
+}
