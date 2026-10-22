@@ -11,7 +11,7 @@ import { MINI_HERO } from "./components/blocks/mini/miniHomeCopy";
 import MiniMidPageCta, {
   type MiniMidPageCtaCopy,
 } from "./components/blocks/mini/MiniMidPageCta";
-import MiniServicesBoxes from "./components/blocks/mini/MiniServicesBoxes";
+import MiniServicesGrid from "./components/blocks/mini/MiniServicesGrid";
 import MiniSelectedWorkHome from "./components/blocks/mini/MiniSelectedWorkHome";
 import MiniClosingBookend from "./components/blocks/mini/MiniClosingBookend";
 import RightObjectAxisDebugGate from "@/components/home/debug/RightObjectAxisDebugGate";
@@ -134,7 +134,7 @@ export default function Home() {
             <MiniSystemHome />
           </div>
           <div style={SURFACE_SERVICES}>
-            <MiniServicesBoxes />
+            <MiniServicesGrid />
           </div>
           <div style={SURFACE_WORK}>
             <MiniSelectedWorkHome topRule={false} />

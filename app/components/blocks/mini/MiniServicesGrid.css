@@ -1,0 +1,151 @@
+/*
+ * Homepage "Storitve" as one editorial 2x2 grid (Editorial Grid B V1.2, promoted from /lab/services-grid). Used only by `MiniServicesGrid`; every selector is under `.msg`.
+ * Heading above the grid; the four cells share one frame and thin internal dividers (no gaps, no radius, no fill steps).
+ * Number top-left, then a fixed open room, then title and description. The room is fixed (not bottom-anchoring) so the two
+ * titles in a row start at the same height whatever the description length; cell heights are natural.
+ */
+
+.msg {
+  --msg-line: #212a3a;
+  --msg-pad: 22px;
+  --msg-room: 56px; /* number -> title, mobile */
+  --msg-h3: 1.5rem;
+  --msg-hd: 18px;
+}
+@media (min-width: 640px) {
+  .msg {
+    --msg-pad: 28px;
+    --msg-room: 72px;
+    --msg-h3: 1.625rem;
+    --msg-hd: 20px;
+  }
+}
+@media (min-width: 768px) {
+  .msg {
+    --msg-room: 56px;
+  }
+}
+@media (min-width: 1024px) {
+  .msg {
+    --msg-pad: 32px;
+    --msg-room: 84px;
+    --msg-h3: 1.875rem;
+    --msg-hd: 22px;
+  }
+}
+@media (min-width: 1280px) {
+  .msg {
+    --msg-pad: 40px;
+    --msg-room: 104px;
+    --msg-h3: 1.875rem; /* 30px, approved */
+    --msg-hd: 24px;
+  }
+}
+
+.msg .msg-head p {
+  margin: 0;
+}
+.msg .msg-head h2 {
+  margin: 20px 0 0;
+  max-width: 14ch;
+}
+
+.msg .msg-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 40px 0 0;
+  padding: 0;
+  border: 1px solid var(--msg-line);
+  background: rgb(255 255 255 / 0.012);
+}
+@media (min-width: 768px) {
+  .msg .msg-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 48px;
+  }
+}
+@media (min-width: 1024px) {
+  .msg .msg-grid {
+    margin-top: 56px;
+  }
+}
+
+.msg .msg-cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--msg-room); /* fixed room: titles start at the same height across a row */
+  padding: var(--msg-pad);
+  border-top: 1px solid var(--msg-line);
+}
+.msg .msg-cell:first-child {
+  border-top: 0;
+}
+@media (min-width: 768px) {
+  .msg .msg-cell:nth-child(2) {
+    border-top: 0;
+  }
+  .msg .msg-cell:nth-child(even) {
+    border-left: 1px solid var(--msg-line);
+  }
+}
+
+.msg .msg-num {
+  margin: 0;
+  font-family: var(--font-mono-home), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: rgb(255 255 255 / 0.4);
+}
+
+.msg .msg-body h3,
+.msg .msg-body p {
+  margin: 0;
+  min-width: 0;
+}
+.msg .msg-body h3 {
+  font-size: var(--msg-h3);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  text-wrap: balance;
+  color: #fff;
+}
+.msg .msg-body h3 > span {
+  display: block;
+}
+.msg .msg-nb {
+  white-space: nowrap;
+}
+.msg .msg-body p {
+  margin-top: var(--msg-hd);
+  max-width: 34em;
+  font-size: 15px;
+  line-height: 24px;
+  color: rgb(255 255 255 / 0.6);
+  text-wrap: pretty;
+}
+@media (min-width: 640px) {
+  .msg .msg-body p {
+    font-size: 16px;
+    line-height: 26px;
+  }
+}
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .msg .msg-body p {
+    font-size: 15px;
+    line-height: 24px;
+  }
+}
+@supports (text-box: trim-both cap alphabetic) {
+  .msg .msg-head p.uppercase,
+  .msg .msg-head h2,
+  .msg .msg-body h3 > span,
+  .msg .msg-body p {
+    text-box: trim-both cap alphabetic;
+  }
+  .msg .msg-num {
+    text-box: trim-both cap alphabetic;
+  }
+}

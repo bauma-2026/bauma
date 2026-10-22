@@ -35,7 +35,6 @@ import {
   REST_RX,
   REST_RY,
   TARGET_HEIGHT,
-  VIEWBOX,
   VIEWBOX_H,
   VIEWBOX_W,
 } from "./miniProjectCubeGeometry";
@@ -102,9 +101,17 @@ function getFinePointerServer() {
   return false;
 }
 
-type Props = { className?: string };
+/**
+ * The mesh is drawn in the 520x400 stage, but the cube only occupies y 113–285. The viewBox is cropped to
+ * that band (same scale, centred on the stage midline y=200 so the lg position is unchanged) so the SVG box is the artwork's own height, not a taller stage.
+ */
+const CROP_Y = 98;
+const CROP_H = 204;
+const CROP_VIEWBOX = `0 ${CROP_Y} ${VIEWBOX_W} ${CROP_H}`;
 
-export default function MiniProjectCube({ className = "" }: Props) {
+type Props = { className?: string; svgClassName?: string };
+
+export default function MiniProjectCube({ className = "", svgClassName = "h-full w-full overflow-visible" }: Props) {
   const reducedMotion = useReducedMotion();
   const [pose, setPose] = useState({ rx: REST_RX, ry: REST_RY });
   const hoveringRef = useRef(false);
@@ -238,7 +245,7 @@ export default function MiniProjectCube({ className = "" }: Props) {
     const svg = svgRef.current;
     if (!svg) return;
     const rect = svg.getBoundingClientRect();
-    const scale = Math.min(rect.width / VIEWBOX_W, rect.height / VIEWBOX_H);
+    const scale = Math.min(rect.width / VIEWBOX_W, rect.height / CROP_H);
     const half = FIELD_HALF * scale;
     const field = new DOMRect(
       rect.left + rect.width / 2 - half,
@@ -292,12 +299,12 @@ export default function MiniProjectCube({ className = "" }: Props) {
     >
       <svg
         ref={svgRef}
-        viewBox={VIEWBOX}
+        viewBox={CROP_VIEWBOX}
         fill="none"
         aria-hidden="true"
         shapeRendering="geometricPrecision"
         strokeLinejoin="round"
-        className="h-full w-full overflow-visible"
+        className={svgClassName}
       >
         <defs>
           <radialGradient

@@ -32,7 +32,7 @@
   --h11-work-exit: 4rem;
   --h11-bridge-in: 3.5rem;
   --h11-bridge-out: 3rem;
-  --h11-stack-gap: 1rem;
+  --h11-stack-gap: 2.5rem;
 }
 @media (min-width: 640px) {
   [data-home-typography][data-home-v11] {
@@ -44,7 +44,7 @@
     --h11-work-exit: 4.5rem;
     --h11-bridge-in: 4rem;
     --h11-bridge-out: 4rem;
-    --h11-stack-gap: 1.5rem;
+    --h11-stack-gap: 2.5rem;
   }
 }
 @media (min-width: 1024px) {
@@ -127,8 +127,20 @@
   padding-top: var(--h11-bridge-in);
   padding-bottom: var(--h11-bridge-out);
 }
+/* Project cube band (tablet): the cropped cube box carries only ~16px of margin, so the spacing is set here, not by a clipping wrapper. */
+@media (min-width: 640px) and (max-width: 1023px) {
+  [data-home-typography][data-home-v11] [data-home-section="project"] > section {
+    padding-bottom: 3rem;
+  }
+}
 @media (max-width: 1023px) {
   [data-home-typography][data-home-v11] [data-home-section="project"] .mini-page-rail {
     row-gap: var(--h11-stack-gap);
+  }
+}
+/* Mobile: the solid cube reads as its own object below the strong CTA button (~80px optical gap to the artwork). */
+@media (max-width: 639px) {
+  [data-home-typography][data-home-v11] [data-home-section="project"] .mini-page-rail {
+    row-gap: 4.375rem;
   }
 }

@@ -78,20 +78,23 @@ export default function MiniMidPageCta({
           </div>
 
           {/*
-            Material cube: below lg the layout box is compact and clips the full-size
-            stage, which is centred inside it. The cube keeps its stage-derived scale;
-            only the footprint shrinks, and the clipped stage cannot catch pointer events
-            meant for the CTA. From lg the box is the original 400px stage, unclipped.
+            Material cube: the SVG viewBox is cropped to the cube's own band (MiniProjectCube), so the
+            box below lg is the artwork's height and needs no clipping window. The cube keeps the
+            scale it had inside the old 260/400px stage. From lg the wrapper is the original 400px
+            stage, with the cube centred in it.
           */}
           <div
             className={
               cube === "material"
-                ? "relative flex h-36 items-center overflow-hidden sm:h-52 lg:h-[400px] lg:overflow-visible"
+                ? "relative flex items-center lg:h-[400px]"
                 : "relative h-[260px] max-sm:-mt-6 sm:h-[400px]"
             }
           >
             {cube === "material" ? (
-              <MiniProjectCube className="relative h-[260px] w-full shrink-0 sm:h-[400px] lg:h-full" />
+              <MiniProjectCube
+                className="relative flex w-full items-center lg:h-full"
+                svgClassName="h-[133px] w-full shrink-0 overflow-visible sm:h-[204px]"
+              />
             ) : (
               <MiniNextStepCube tone={tone} className="relative h-full w-full" />
             )}
