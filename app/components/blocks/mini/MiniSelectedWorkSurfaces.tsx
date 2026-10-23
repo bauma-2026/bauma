@@ -102,11 +102,15 @@ export function FlexidoSurface() {
         <span className="block">Povežemo</span>
         <span className="block text-justify [text-align-last:justify]">tok med stroji.</span>
       </p>
+      {/* Below sm the surface is a fixed 18rem while the type grows with its width: three lines here ran into the
+          bottom padding from ~430px. Two set lines keep the cluster compact without the narrow measure. A <br>, not
+          spans, so SelectedWorkMotion's `p > span` selectors are unaffected. */}
       <p
-        className="max-w-[5.4em] font-medium leading-[1] tracking-[-0.04em] text-[#7F91B9]"
+        className="max-w-[5.4em] font-medium leading-[1] tracking-[-0.04em] text-[#7F91B9] max-sm:max-w-none"
         style={size}
       >
-        Ne samo robot ob stroju.
+        Ne samo robot
+        <br className="sm:hidden" /> ob stroju.
       </p>
     </Surface>
   );

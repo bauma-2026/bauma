@@ -39,6 +39,25 @@ const LINK_FOCUS =
 const ARROW =
   "inline-block transition-transform duration-300 group-hover:translate-x-[3px]";
 
+/**
+ * Flexido in the single column (below md): the surface keeps its fixed 18/19rem height while it widens to ~720px, its
+ * type caps at 3.1rem and its 7cqw padding keeps growing, so from 640px "Ne samo robot ob stroju." (3 lines) met the
+ * first sentence and the bottom edge. Here only, below md: the mobile two-line set ("Ne samo robot / ob stroju.") and the
+ * vertical padding capped at 1.75rem (it does not bind below ~400px wide, so phones are unchanged). `/work` and the
+ * three-column cards keep the surface as it is.
+ */
+const FLEXIDO_SINGLE_COLUMN =
+  "max-md:[&_[data-surface=flexido]>div>div]:py-[min(7cqw,1.75rem)] max-md:[&_[data-surface=flexido]_p:last-child]:max-w-none max-md:[&_[data-surface=flexido]_br]:inline";
+
+/**
+ * Dema in the single column (below md), same cause: the three equal rows shrink to ~68px while the type caps at 3rem, so
+ * from ~600px each sentence met the rule above it (1px at 767) and read as hanging from it. Here only, below md: the
+ * surface's vertical padding and each row's gap above its rule capped at 1.75rem and 0.625rem, one rule for all three
+ * rows. Neither binds below ~400px wide, so phones are unchanged.
+ */
+const DEMA_SINGLE_COLUMN =
+  "max-md:[&_[data-surface=dema]>div>div]:py-[min(7cqw,1.75rem)] max-md:[&_[data-surface=dema]>div>div>div]:pb-[min(2.6cqw,0.625rem)]";
+
 type Project = {
   slug: string;
   motion: MotionSurfaceId;
@@ -105,7 +124,7 @@ export default function MiniSelectedWorkHome({
                     href={`/work/${p.slug}`}
                     aria-labelledby={id}
                     aria-describedby={`${id}-desc`}
-                    className={`group block ${LINK_FOCUS}`}
+                    className={`group block ${FLEXIDO_SINGLE_COLUMN} ${DEMA_SINGLE_COLUMN} ${LINK_FOCUS}`}
                   >
                     <SelectedWorkMotion id={p.motion} col={(i + 1) as 1 | 2 | 3}>
                       <Art />
