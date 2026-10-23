@@ -1,0 +1,236 @@
+/*
+ * Lab: Art Direction A, "one statement, then an index" (`/lab/art-direction/middle-a`). Every selector is under `.amid`.
+ * System and Services sit on one surface. System is the single display statement; the cube is a small object on the right
+ * edge of the rail, its drawn bottom aligned to the paragraph's last line. Services is a ruled four-row index (no frame, no
+ * vertical rules): number, title and description share one first baseline from 1024px; between 640 and 1023px the description
+ * drops under the title on the number's axis; below 640px the number sits above the title.
+ * Type: Inter via the page (opsz auto on headings, as `homeTypography.css`), weight 600 for the statement and the section
+ * heading, 500 for the row titles. Colours and the divider (#212a3a) are the existing ones.
+ */
+
+.amid {
+  --amid-line: #212a3a;
+  /* Cube box: the footprint of the original MiniSystemHome (159x132 below 640px, 240x200 from 640px). */
+  --amid-cw: 159px;
+  --amid-ch: 132px;
+  --amid-h1: clamp(2rem, 11vw, 2.5rem);
+  --amid-h2: 1.75rem;
+  --amid-row-pad: 28px;
+  --amid-title: 1.5rem;
+  --amid-desc: 15px;
+  --amid-desc-lh: 24px;
+  color: #fff;
+}
+@media (min-width: 640px) {
+  .amid {
+    --amid-cw: 240px;
+    --amid-ch: 200px;
+    --amid-h1: 3rem;
+    --amid-h2: 2rem;
+    --amid-row-pad: 32px;
+    --amid-title: 1.625rem;
+    --amid-desc: 16px;
+    --amid-desc-lh: 26px;
+  }
+}
+@media (min-width: 768px) {
+  .amid {
+    --amid-h1: 3.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .amid {
+    --amid-h1: 4rem;
+    --amid-h2: 2.125rem;
+    --amid-title: 1.75rem;
+    --amid-desc: 15px;
+    --amid-desc-lh: 24px;
+  }
+}
+@media (min-width: 1280px) {
+  .amid {
+    /* 72px: the hero H1 is 72px serif at this width, and a heavier 600 sans statement must not outsize it (80px was tried first and read larger than the hero). */
+    --amid-h1: 4.5rem;
+    --amid-title: 1.875rem;
+    --amid-desc: 16px;
+    --amid-desc-lh: 26px;
+  }
+}
+
+/* ---------- System: the statement ---------- */
+.amid .amid-sys {
+  position: relative;
+  overflow: hidden;
+  padding: 80px 0 72px;
+}
+@media (min-width: 640px) {
+  .amid .amid-sys {
+    padding: 96px 0 88px;
+  }
+}
+@media (min-width: 1024px) {
+  .amid .amid-sys {
+    padding: 112px 0 112px;
+  }
+}
+.amid .amid-sys-rail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 40px;
+  min-width: 0;
+}
+.amid .amid-text {
+  min-width: 0;
+}
+.amid .amid-statement {
+  margin: 20px 0 0;
+  font-size: var(--amid-h1);
+  font-weight: 600;
+  line-height: 0.98;
+  letter-spacing: var(--ht-tr-primary, -0.022em);
+  color: #fff;
+}
+.amid .amid-statement span {
+  display: block;
+  white-space: nowrap;
+}
+.amid .amid-body {
+  margin: 28px 0 0;
+  max-width: 40ch;
+  font-size: 16px;
+  line-height: 28px;
+  color: rgb(255 255 255 / 0.55);
+  text-wrap: pretty;
+}
+@media (min-width: 1024px) {
+  .amid .amid-body {
+    margin-top: 32px;
+  }
+}
+
+/* The cube: original box size, on the rail's right edge. The drawing sits 15.9% of the box width inside the box on the
+   right and 6.8% of its height above the bottom, so the box is nudged by exactly that to put the drawn edge on the rail
+   and the drawn bottom on the paragraph's last line (a few px above the line box, where the text baseline sits). */
+.amid .amid-figure {
+  display: flex;
+  justify-content: flex-end;
+  min-width: 0;
+}
+.amid .amid-cube {
+  width: var(--amid-cw);
+  aspect-ratio: 6 / 5;
+  flex: none;
+  margin-right: calc(var(--amid-cw) * -0.159);
+}
+@media (max-width: 639.98px) {
+  .amid .amid-cube {
+    aspect-ratio: 159 / 132;
+  }
+}
+@media (min-width: 768px) {
+  .amid .amid-sys-rail {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 48px;
+    align-items: end;
+  }
+  .amid .amid-figure {
+    margin-bottom: calc(var(--amid-ch) * -0.068 + 6px);
+  }
+}
+
+/* ---------- Services: the index ---------- */
+.amid .amid-svc {
+  padding: 0 0 72px;
+}
+@media (min-width: 640px) {
+  .amid .amid-svc {
+    padding-bottom: 88px;
+  }
+}
+@media (min-width: 1024px) {
+  .amid .amid-svc {
+    padding-bottom: 112px;
+  }
+}
+.amid .amid-svc-head h2 {
+  margin: 20px 0 0;
+  font-size: var(--amid-h2);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: var(--ht-tr-primary, -0.022em);
+  color: #fff;
+}
+.amid .amid-list {
+  margin: 36px 0 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid var(--amid-line);
+}
+@media (min-width: 1024px) {
+  .amid .amid-list {
+    margin-top: 48px;
+  }
+}
+.amid .amid-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 10px;
+  padding: var(--amid-row-pad) 0;
+  border-top: 1px solid var(--amid-line);
+}
+.amid .amid-num {
+  margin: 0;
+  font-family: var(--font-mono-home), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: rgb(255 255 255 / 0.4);
+}
+.amid .amid-row h3 {
+  margin: 0;
+  font-size: var(--amid-title);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  text-wrap: balance;
+  color: #fff;
+}
+.amid .amid-row p.amid-desc {
+  margin: 0;
+  max-width: 34em;
+  font-size: var(--amid-desc);
+  line-height: var(--amid-desc-lh);
+  color: rgb(255 255 255 / 0.6);
+  text-wrap: pretty;
+}
+.amid .amid-nb {
+  white-space: nowrap;
+}
+/* 640-1023: number axis on the left, title and description stacked on the next axis. */
+@media (min-width: 640px) {
+  .amid .amid-row {
+    grid-template-columns: 64px minmax(0, 1fr);
+    column-gap: 0;
+    row-gap: 12px;
+    align-items: baseline;
+  }
+  .amid .amid-row > h3,
+  .amid .amid-row > p.amid-desc {
+    grid-column: 2;
+  }
+}
+/* From 1024: number, title and description in three columns on one first baseline. */
+@media (min-width: 1024px) {
+  .amid .amid-row {
+    grid-template-columns: 80px 352px minmax(0, 1fr);
+    column-gap: 32px;
+    row-gap: 0;
+  }
+  .amid .amid-row > h3 {
+    grid-column: 2;
+  }
+  .amid .amid-row > p.amid-desc {
+    grid-column: 3;
+  }
+}

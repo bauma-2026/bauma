@@ -1,0 +1,216 @@
+/*
+ * Lab: Art Direction B, "principle + services" (`/lab/art-direction/middle-b`). Every selector is under `.bmid`.
+ * One dark surface, two columns from 768px: System (eyebrow, H2, paragraph, then the cube as a restrained counterweight) on
+ * the left, Services (eyebrow, secondary H2, four ruled rows) on the right, columns about 5/12 and 7/12 with an open gutter.
+ * Below 768px one column in reading order: System, cube, Services 01-04. Type scale is the ORIGINAL System scale (H2 32/40/56px,
+ * body 16/28); Services keeps its existing row scale. The cube is the unchanged SystemCubeB51 at the original MiniSystemHome
+ * box sizes (159x132 below 640px, 240x200 from 640px), nudged left by the drawing's inset so its drawn edge sits on the text axis.
+ */
+
+.bmid {
+  --bmid-line: #212a3a;
+  --bmid-cw: 159px;
+  --bmid-h1: 2rem;
+  --bmid-h2: 1.75rem;
+  --bmid-row-pad: 28px;
+  --bmid-title: 1.5rem;
+  --bmid-desc: 15px;
+  --bmid-desc-lh: 24px;
+  color: #fff;
+}
+@media (min-width: 640px) {
+  .bmid {
+    --bmid-cw: 240px;
+    --bmid-h1: 2.5rem;
+    --bmid-h2: 2rem;
+    --bmid-row-pad: 32px;
+    --bmid-title: 1.625rem;
+    --bmid-desc: 16px;
+    --bmid-desc-lh: 26px;
+  }
+}
+@media (min-width: 768px) {
+  .bmid {
+    --bmid-desc: 15px;
+    --bmid-desc-lh: 24px;
+  }
+}
+@media (min-width: 1024px) {
+  .bmid {
+    --bmid-h1: 3.5rem;
+    --bmid-h2: 2.125rem;
+    --bmid-title: 1.75rem;
+  }
+}
+@media (min-width: 1280px) {
+  .bmid {
+    --bmid-title: 1.875rem;
+    --bmid-desc: 16px;
+    --bmid-desc-lh: 26px;
+  }
+}
+
+.bmid .bmid-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 72px;
+  padding-top: 80px;
+  padding-bottom: 72px;
+  min-width: 0;
+}
+@media (min-width: 640px) {
+  .bmid .bmid-grid {
+    padding-top: 96px;
+    padding-bottom: 88px;
+  }
+}
+@media (min-width: 768px) {
+  .bmid .bmid-grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: 40px;
+    align-items: start;
+    padding-top: 104px;
+    padding-bottom: 104px;
+  }
+}
+@media (min-width: 1024px) {
+  .bmid .bmid-grid {
+    grid-template-columns: minmax(416px, 5fr) minmax(0, 7fr);
+    column-gap: 56px;
+    padding-top: 112px;
+    padding-bottom: 112px;
+  }
+}
+@media (min-width: 1280px) {
+  .bmid .bmid-grid {
+    column-gap: 96px;
+  }
+}
+
+/* ---------- left: System ---------- */
+.bmid .bmid-sys {
+  position: relative;
+  min-width: 0;
+}
+.bmid .bmid-h1 {
+  margin: 20px 0 0;
+  font-size: var(--bmid-h1);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: var(--ht-tr-primary, -0.022em);
+  color: #fff;
+}
+@media (min-width: 1024px) {
+  .bmid .bmid-h1 {
+    line-height: 0.98;
+  }
+}
+.bmid .bmid-h1 span {
+  display: block;
+  white-space: nowrap;
+}
+.bmid .bmid-body {
+  margin: 24px 0 0;
+  max-width: 40ch;
+  font-size: 16px;
+  line-height: 28px;
+  color: rgb(255 255 255 / 0.55);
+  text-wrap: pretty;
+}
+/* The cube: under the explanation, on the text's left axis (its drawing sits 15.9% of the box width inside the box). */
+.bmid .bmid-figure {
+  margin: 48px 0 0;
+  min-width: 0;
+}
+@media (min-width: 768px) {
+  .bmid .bmid-figure {
+    margin-top: 64px;
+  }
+}
+.bmid .bmid-cube {
+  width: var(--bmid-cw);
+  aspect-ratio: 6 / 5;
+  margin-left: calc(var(--bmid-cw) * -0.159);
+}
+@media (max-width: 639.98px) {
+  .bmid .bmid-cube {
+    aspect-ratio: 159 / 132;
+  }
+}
+
+/* ---------- right: Services ---------- */
+.bmid .bmid-svc {
+  min-width: 0;
+}
+.bmid .bmid-svc-h {
+  margin: 20px 0 0;
+  font-size: var(--bmid-h2);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: var(--ht-tr-primary, -0.022em);
+  color: #fff;
+}
+.bmid .bmid-list {
+  margin: 36px 0 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid var(--bmid-line);
+}
+@media (min-width: 768px) {
+  .bmid .bmid-list {
+    margin-top: 40px;
+  }
+}
+.bmid .bmid-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 10px;
+  padding: var(--bmid-row-pad) 0;
+  border-top: 1px solid var(--bmid-line);
+}
+.bmid .bmid-num {
+  margin: 0;
+  font-family: var(--font-mono-home), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: rgb(255 255 255 / 0.4);
+}
+.bmid .bmid-row h3 {
+  margin: 0;
+  font-size: var(--bmid-title);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  text-wrap: balance;
+  color: #fff;
+}
+.bmid .bmid-row p.bmid-desc {
+  margin: 0;
+  max-width: 34em;
+  font-size: var(--bmid-desc);
+  line-height: var(--bmid-desc-lh);
+  color: rgb(255 255 255 / 0.6);
+  text-wrap: pretty;
+}
+.bmid .bmid-nb {
+  white-space: nowrap;
+}
+/* From 640: the number has its own narrow axis; title and description share the content column, description under the title. */
+@media (min-width: 640px) {
+  .bmid .bmid-row {
+    grid-template-columns: 64px minmax(0, 1fr);
+    row-gap: 12px;
+    align-items: baseline;
+  }
+  .bmid .bmid-row > h3,
+  .bmid .bmid-row > p.bmid-desc {
+    grid-column: 2;
+  }
+}
+@media (min-width: 768px) {
+  .bmid .bmid-row {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+}

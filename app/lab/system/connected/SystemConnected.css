@@ -1,0 +1,58 @@
+/*
+ * Lab: System section, connected composition (`/lab/system/connected`). Every selector is under `.sysc`.
+ * Text and cube are one composition: from 768px two columns (text up to 456px, cube column at least 288px), both centred on the same
+ * horizontal axis; below 768px text first, cube centred under it at natural height. The cube is scaled only by sizing its
+ * host box (`.sysc-cube`); SystemCubeB51 and its scene are untouched, and its viewBox is 240:200 so a 6:5 box fits it exactly.
+ * Type, colour and the section's vertical padding come from the homepage's existing classes and `homeTypographyV11.css`.
+ */
+
+.sysc .sysc-rail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px;
+  min-width: 0;
+}
+.sysc .sysc-text {
+  min-width: 0;
+}
+.sysc .sysc-text p.sysc-body {
+  max-width: 44ch;
+}
+
+/* Below 768: natural height, no min-height. The cube is centred under the left-aligned text. */
+.sysc .sysc-figure {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+.sysc .sysc-cube {
+  width: min(232px, 66%);
+  aspect-ratio: 6 / 5;
+}
+
+@media (min-width: 768px) {
+  .sysc .sysc-rail {
+    /* Text column: as wide as it can be up to 456px (the 44ch paragraph plus a little), the cube column never narrower
+       than the 288px cube. At 768 that is about 1fr / 0.8fr; wider, the text stops growing so the cube stays close to it. */
+    grid-template-columns: minmax(0, 456px) minmax(288px, 1fr);
+    align-items: center;
+    column-gap: 32px;
+  }
+  .sysc .sysc-figure {
+    justify-content: flex-start; /* the cube sits against the text column, not in the middle of a wide cell */
+  }
+  .sysc .sysc-cube {
+    width: min(100%, 288px);
+  }
+}
+@media (min-width: 1024px) {
+  .sysc .sysc-cube {
+    width: min(100%, 372px);
+  }
+}
+@media (min-width: 1280px) {
+  .sysc .sysc-cube {
+    width: min(100%, 456px);
+  }
+}
