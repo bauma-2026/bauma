@@ -37,6 +37,18 @@ const DEFAULT_COPY: MiniHeaderCopy = {
   menuClose: "Zapri meni",
 };
 
+/**
+ * `aria-current` for a page link (semantics only, no visual state): "page" on its own route, "true" on a route
+ * nested under it (`/work/ulterior` → Work). Section anchors (`#…`) never match; scroll-spy covers those.
+ */
+function pageCurrent(href: string, pathname: string): "page" | "true" | undefined {
+  if (href.includes("#")) return undefined;
+  const path = pathname.replace(/\/$/, "") || "/";
+  if (path === href) return "page";
+  if (href !== "/" && path.startsWith(`${href}/`)) return "true";
+  return undefined;
+}
+
 /** Must match nav targets (Approach / System / Contact). */
 const sectionIds = ["approach", "system", "contact"] as const;
 const PRESERVED_HOME_HASHES = new Set(["#approach", "#system", "#contact"]);
@@ -229,6 +241,7 @@ function HeaderInner({
   copy,
   langSwitchHref,
   activeId,
+  pathname,
   isMenuOpen,
   setIsMenuOpen,
   overPhotoHero,
@@ -240,6 +253,7 @@ function HeaderInner({
   copy: MiniHeaderCopy;
   langSwitchHref: string;
   activeId: string;
+  pathname: string;
   isMenuOpen: boolean;
   setIsMenuOpen: (value: boolean) => void;
   /** True only pre-scroll on the homepage, while the header sits over the light hero photo. */
@@ -294,7 +308,7 @@ function HeaderInner({
               <Link
                 key={item.href}
                 href={item.href}
-                aria-current={isActive ? "location" : undefined}
+                aria-current={isActive ? "location" : pageCurrent(item.href, pathname)}
                 data-header-focus
                 data-header-label={refined ? "" : undefined}
                 className={`${HIT_AREA} text-[12px] font-medium transition-colors duration-300 ${
@@ -353,6 +367,7 @@ function HeaderInner({
 function MobileMenu({
   copy,
   langSwitchHref,
+  pathname,
   onClose,
   hideApproachNav,
   refined,
@@ -361,6 +376,7 @@ function MobileMenu({
 }: {
   copy: MiniHeaderCopy;
   langSwitchHref: string;
+  pathname: string;
   onClose: () => void;
   hideApproachNav: boolean;
   refined: boolean;
@@ -394,6 +410,7 @@ function MobileMenu({
             <Link
               key={item.href}
               href={item.href}
+              aria-current={pageCurrent(item.href, pathname)}
               onClick={onClose}
               data-header-focus
               className="flex min-h-[52px] w-full items-center border-b border-white/10 text-[20px] font-normal tracking-[-0.02em] text-white transition-colors duration-200 hover:text-white/70"
@@ -604,6 +621,7 @@ export default function MiniHeader({
             copy={copy}
             langSwitchHref={langSwitchHref}
             activeId={activeId}
+            pathname={pathname}
             isMenuOpen={isMenuOpen}
             setIsMenuOpen={setIsMenuOpen}
             overPhotoHero={darkText}
@@ -619,6 +637,7 @@ export default function MiniHeader({
         <MobileMenu
           copy={copy}
           langSwitchHref={langSwitchHref}
+          pathname={pathname}
           onClose={() => setIsMenuOpen(false)}
           hideApproachNav={hideApproachNav}
           refined={refined}

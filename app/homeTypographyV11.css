@@ -64,14 +64,16 @@
 
 /* ---------- primary: System + Services ---------- */
 [data-home-typography][data-home-v11] [data-home-section="system"] h2,
-[data-home-typography][data-home-v11] [data-section="services"] h2 {
+[data-home-typography][data-home-v11] [data-section="services"] h2,
+[data-home-typography][data-home-v11] [data-section="services-grid"] h2 {
   font-size: var(--h11-primary);
   font-weight: 600;
   line-height: 1;
 }
 @media (min-width: 1024px) {
   [data-home-typography][data-home-v11] [data-home-section="system"] h2,
-  [data-home-typography][data-home-v11] [data-section="services"] h2 {
+  [data-home-typography][data-home-v11] [data-section="services"] h2,
+  [data-home-typography][data-home-v11] [data-section="services-grid"] h2 {
     line-height: 0.98;
   }
 }

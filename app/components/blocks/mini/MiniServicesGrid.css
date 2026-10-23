@@ -148,4 +148,9 @@
   .msg .msg-num {
     text-box: trim-both cap alphabetic;
   }
+  /* Trimmed, the margin is the whole optical gap (eyebrow baseline -> H2 cap top). 29px matches System, Work and
+     Project (28-30px). Without text-box the 20px margin above sits between untrimmed boxes and already reads ~29px. */
+  .msg .msg-head h2 {
+    margin-top: 29px;
+  }
 }

@@ -17,8 +17,8 @@ import {
  * all inside it); the arrow is a visual affordance, not a second link. `MiniSelectedWork` (reconstruction layout) is left as it was for
  * the labs and case studies that still use it.
  *
- * Grid: 3 equal columns from lg. At md the surfaces keep their approved ~336px
- * width (2 columns); three columns would make them ~219px. Name and arrow share
+ * Grid: 3 equal columns from md (Visual QA Pass 2, option C). Two columns left the third card alone at 768-1023, and
+ * the fixed-height surfaces crowded Flexido at ~468px wide; at 219-304px they read as portraits. Name and arrow share
  * a row at every width (the arrow is a glyph, so even "Odstrani Tattoo" fits the
  * 272px surface width at 320px). The row keeps the 44px height the old text link
  * gave it, so card height is unchanged.
@@ -31,8 +31,9 @@ import {
  * file). The wrapper is a plain block and does not change layout.
  */
 
+/** Same ring as the header controls (`[data-header-focus]` in globals.css). */
 const LINK_FOCUS =
-  "focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-white/50";
+  "focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[color:var(--mini-accent-text,#fff)]";
 
 /** Arrow glyph shared by the section link and the cards: calm 3px nudge + contrast on hover of `.group`. */
 const ARROW =
@@ -93,7 +94,7 @@ export default function MiniSelectedWorkHome({
           </div>
         </div>
 
-        <ol className="mt-10 grid list-none gap-x-6 gap-y-10 sm:mt-12 md:grid-cols-2 lg:mt-14 lg:grid-cols-3 lg:gap-x-10 xl:gap-x-12">
+        <ol className="mt-10 grid list-none gap-x-6 gap-y-10 sm:mt-12 md:grid-cols-3 lg:mt-14 lg:gap-x-10 xl:gap-x-12">
           {PROJECTS.map((p, i) => {
             const id = `msw-home-${p.slug}`;
             const { Art } = p;

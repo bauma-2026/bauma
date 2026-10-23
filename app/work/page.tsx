@@ -80,8 +80,9 @@ const FLEXIDO_SIZE =
  */
 const FLEXIDO_LINE = "[&_[data-surface=flexido]>div>div>p:first-child]:max-w-[6.85em]";
 
+/** Same ring as the header controls (`[data-header-focus]` in globals.css). */
 const LINK_FOCUS =
-  "focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-white/50";
+  "focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[color:var(--mini-accent-text,#fff)]";
 
 const ARROW =
   "inline-block transition-transform duration-300 group-hover:translate-x-[3px]";
@@ -420,7 +421,7 @@ export default function WorkPage() {
               <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/60">Work</p>
               <h1
                 id="work-heading"
-                className="home-bridge-heading mt-5 text-balance text-[1.375rem] font-medium [font-optical-sizing:auto] sm:mt-6 sm:text-3xl"
+                className="home-bridge-heading mt-5 text-balance text-[1.625rem] font-medium [font-optical-sizing:auto] sm:mt-6 sm:text-3xl"
               >
                 Izbrani projekti
               </h1>

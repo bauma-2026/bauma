@@ -10,6 +10,10 @@ export type MiniFooterCopy = {
   legal: readonly { href: string; label: string }[];
 };
 
+/** Same ring as the header controls (`[data-header-focus]` in globals.css); white where no palette accent is set. */
+const LINK_FOCUS =
+  "focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[color:var(--mini-accent-text,#fff)]";
+
 const DEFAULT_COPY: MiniFooterCopy = {
   homeHref: "/",
   homeAria: "Bauma — domov",
@@ -33,7 +37,7 @@ export function MiniFooterBrand({
         <Link
           href={copy.homeHref}
           aria-label={copy.homeAria ?? "Bauma home"}
-          className="inline-flex items-center opacity-70 transition-opacity duration-200 hover:opacity-100"
+          className={`inline-flex items-center opacity-70 transition-opacity duration-200 hover:opacity-100 focus-visible:opacity-100 ${LINK_FOCUS}`}
         >
           <img
             src="/logo/bauma-logo.svg"
@@ -54,7 +58,7 @@ export function MiniFooterBrand({
       <div className="lg:justify-self-end">
         <Link
           href={`mailto:${copy.email}`}
-          className="inline-flex whitespace-nowrap text-sm font-medium text-white/65 transition hover:text-white"
+          className={`inline-flex whitespace-nowrap text-sm font-medium text-white/65 transition hover:text-white ${LINK_FOCUS}`}
         >
           {copy.email}
         </Link>
@@ -81,7 +85,7 @@ export function MiniFooterLegal({
             <Link
               key={item.href}
               href={item.href}
-              className="transition hover:text-white"
+              className={`transition hover:text-white ${LINK_FOCUS}`}
             >
               {item.label}
             </Link>

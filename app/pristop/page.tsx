@@ -89,7 +89,7 @@ export default function PristopPage() {
             <div className="mini-page-rail">
               <p className="uppercase">PRISTOP</p>
               <h1 id="apw-h1" className="apw-h1">
-                Vsak projekt se začne s kratkim opisom.
+                Vsak projekt se začne s&nbsp;kratkim opisom.
               </h1>
               <p className="apw-lead">
                 Pošljite nam kratek opis projekta. Pregledamo vaše potrebe in predlagamo smiseln naslednji korak. Za
