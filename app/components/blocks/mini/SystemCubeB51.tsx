@@ -4,10 +4,15 @@ import { useEffect, useId, useRef } from "react";
 
 import { BASE_PITCH, BASE_YAW, VIEWBOX } from "./systemCubeGeometry";
 import {
+  applyScrollImpulse,
+  createScrollNudge,
   followToward,
   pocketFollowTarget,
   pocketHoverFollowK,
   pointerNormFromRect,
+  resetScrollNudge,
+  scrollNudgeQuiet,
+  tickScrollNudge,
 } from "@/lib/pocketSpatialMotion";
 
 import {
@@ -19,7 +24,8 @@ import {
 } from "./systemCubeB51Scene";
 
 /**
- * Homepage System cube (B5.1 natural reveal & return), used only by `MiniSystemHome`.
+ * Homepage System cube (B5.1 natural reveal & return), used by `MiniSystemHome` and, with `homeMotion`, by
+ * `MiniSystemPocket` on `/`.
  * Verbatim from the approved lab (`app/lab/system-cube/NaturalMotionCube.tsx`); motion constants and
  * logic are unchanged. The lab inspection props (`forcedReveal`, `progress`, `interior`) are kept
  * so the homepage can be compared against the lab frame for frame; the homepage passes none.
@@ -70,6 +76,20 @@ const SCROLL_ENGAGE = 28;
 const SCROLL_QUIET = 10;
 const FLING_PX_S = 900;
 
+/**
+ * Homepage opt-in (`homeMotion`, set by `MiniSystemPocket`). Scroll no longer engages the reveal; it nudges the
+ * orientation with the shared Pocket-family velocity nudge (the model `MiniProjectCube` uses), at most ±2.6° yaw /
+ * ±1.7° pitch, settling within about a second once the page stops. The pointer area is the cube's own box (normalised against a field
+ * HOME_FIELD box-widths across), not the whole figure. After a real pointer leave the cube waits LEAVE_DELAY_MS and then
+ * closes from its current state over LEAVE_RETURN_S, instead of finishing the reveal and the auto hold first.
+ * That close uses `leaveFade`, so the interior starts moving when the delay ends; ease-in-out stayed near fully open.
+ * The auto reveal on arrival, its hold and its RETURN_S are unchanged.
+ */
+const HOME_SCROLL = { yaw: 0.045, pitch: 0.03, impulsePerPx: 0.00011, velYaw: 0.012, velPitch: 0.008 };
+const HOME_FIELD = 2.3;
+const LEAVE_DELAY_MS = 200;
+const LEAVE_RETURN_S = 1.4;
+
 const SKIN_MIN = { front: 0.36, right: 0.5 };
 
 const INK = "184,196,218";
@@ -110,6 +130,27 @@ export function smootherstep(x: number) {
   return u * u * u * (u * (u * 6 - 15) + 10);
 }
 
+/**
+ * Homepage leave close. Monotonic on 0–1, slope at 1, flat at 0, so the interior
+ * starts closing when the delay ends and settles instead of snapping shut.
+ */
+function leaveFade(u: number) {
+  const t = clamp01(u);
+  return t * t * (1.5 - 0.5 * t);
+}
+
+/** The u at which `curve(u)` equals `value` (both fade curves rise monotonically on 0–1): keeps the drawn opacity across a phase switch. */
+function matchCurve(curve: (u: number) => number, value: number) {
+  let lo = 0;
+  let hi = 1;
+  for (let i = 0; i < 24; i++) {
+    const mid = (lo + hi) / 2;
+    if (curve(mid) < value) lo = mid;
+    else hi = mid;
+  }
+  return (lo + hi) / 2;
+}
+
 export function clampOffsets(yaw: number, pitch: number) {
   return {
     yaw: Math.min(ORIENT_CAP.yaw, Math.max(ORIENT_FLOOR.yaw, yaw)),
@@ -137,11 +178,14 @@ export default function SystemCubeB51({
   progress,
   forcedReveal,
   interior = "full",
+  homeMotion = false,
 }: {
   className: string;
   progress?: number;
   forcedReveal?: number;
   interior?: InteriorMode;
+  /** Homepage pocket behaviour (see HOME_SCROLL above). Off by default, so every other caller is unchanged. */
+  homeMotion?: boolean;
 }) {
   const uid = useId().replace(/:/g, "");
   const clipBody = `b51-body-${uid}`;
@@ -282,6 +326,10 @@ export default function SystemCubeB51({
       let pointerOn = false;
       let scrollEngaged = false;
       let sequenceArmed = true;
+      /** homeMotion: scroll orientation nudge, and the pending close after a pointer leave (0 = none). */
+      const nudge = createScrollNudge();
+      let pointerLeftAt = 0;
+      let leaveReturn = false;
       apply(0, 0, 0, "rest");
 
       const undo: (() => void)[] = [];
@@ -304,6 +352,12 @@ export default function SystemCubeB51({
           return;
         }
         if (phase === "returning" || phase === "rest") {
+          /* homeMotion: the fade-in curve differs from the fade-out one; restart where the drawn opacity is. */
+          if (homeMotion && phase === "returning") {
+            const drawn = leaveReturn ? leaveFade(revealU) : easeInOut(revealU);
+            revealU = matchCurve(smootherstep, drawn);
+          }
+          leaveReturn = false;
           phase = "revealing";
           holdLeft = 0;
         }
@@ -324,7 +378,8 @@ export default function SystemCubeB51({
         last = now;
 
         const y = window.scrollY;
-        const dy = Math.abs(y - lastScroll);
+        const rawDy = y - lastScroll;
+        const dy = Math.abs(rawDy);
         lastScroll = y;
         travel = travel * Math.exp(-dt / 0.22) + dy;
         const speed = travel / 0.22;
@@ -344,14 +399,20 @@ export default function SystemCubeB51({
           holdLeft = 0;
           scrollEngaged = false;
           sequenceArmed = true;
+          resetScrollNudge(nudge);
+          pointerLeftAt = 0;
+          leaveReturn = false;
           apply(0, 0, 0, "rest");
           raf = 0;
           last = 0;
           return;
         }
 
-        if (travel > SCROLL_ENGAGE && speed < FLING_PX_S) scrollEngaged = true;
-        if (travel < SCROLL_QUIET && !pointerOn) scrollEngaged = false;
+        /* homeMotion: scroll drives orientation only (the nudge below), never the reveal. */
+        if (!homeMotion) {
+          if (travel > SCROLL_ENGAGE && speed < FLING_PX_S) scrollEngaged = true;
+          if (travel < SCROLL_QUIET && !pointerOn) scrollEngaged = false;
+        }
 
         /* Viewport arrival: one autonomous sequence when armed. */
         if (sequenceArmed && phase === "rest" && vis > 0.45 && speed < FLING_PX_S) {
@@ -360,6 +421,16 @@ export default function SystemCubeB51({
         }
         if (engaged() && (phase === "rest" || phase === "returning" || phase === "holding")) {
           beginReveal();
+        }
+        /* homeMotion: a real pointer leave closes from the current state after a short delay, without the auto hold. */
+        if (homeMotion && pointerLeftAt && !pointerOn && now - pointerLeftAt >= LEAVE_DELAY_MS) {
+          pointerLeftAt = 0;
+          if (phase === "revealing" || phase === "open" || phase === "holding") {
+            if (phase === "revealing") revealU = matchCurve(leaveFade, smootherstep(revealU));
+            phase = "returning";
+            leaveReturn = true;
+            holdLeft = 0;
+          }
         }
 
         if (phase === "revealing") {
@@ -389,7 +460,7 @@ export default function SystemCubeB51({
             phase = "returning";
           }
         } else if (phase === "returning") {
-          revealU = Math.max(0, revealU - dt / RETURN_S);
+          revealU = Math.max(0, revealU - dt / (leaveReturn ? LEAVE_RETURN_S : RETURN_S));
           orientU = Math.max(0, orientU - dt / ORIENT_RETURN_S);
           /* Pocket leave: ease pointer offsets home; hold kept the last aim frozen. */
           if (!pointerOn) {
@@ -402,15 +473,18 @@ export default function SystemCubeB51({
             revealU = 0;
             orientU = 0;
             phase = "rest";
+            leaveReturn = false;
             sequenceArmed = vis < 0.2;
           }
         }
 
         /* Fade-in: softer ease so opacity rises more gradually at the start. */
         const fade =
-          phase === "revealing" || (phase === "open" && revealU >= 1)
-            ? smootherstep(revealU)
-            : easeInOut(revealU);
+          leaveReturn && phase === "returning"
+            ? leaveFade(revealU)
+            : phase === "revealing" || (phase === "open" && revealU >= 1)
+              ? smootherstep(revealU)
+              : easeInOut(revealU);
         const arc = phase === "rest" ? 0 : easeInOut(orientU);
 
         /* Hold freezes pointer aim (target stays); return eases target to 0 above. */
@@ -425,7 +499,14 @@ export default function SystemCubeB51({
         const k = 1 - Math.exp(-dt / tau);
         yaw += (base.yaw - yaw) * k;
         pitch += (base.pitch - pitch) * k;
-        const posed = clampOffsets(yaw + ptrYaw * arc, pitch + ptrPitch * arc);
+        /* homeMotion: scroll nudge (all devices); the pointer, while on the cube, takes over and the nudge eases home. */
+        if (homeMotion) {
+          if (rawDy !== 0 && !pointerOn) {
+            applyScrollImpulse(nudge, rawDy, HOME_SCROLL.impulsePerPx, HOME_SCROLL.velYaw, HOME_SCROLL.velPitch);
+          }
+          tickScrollNudge(nudge, dt, pointerOn, HOME_SCROLL.yaw, HOME_SCROLL.pitch);
+        }
+        const posed = clampOffsets(yaw + ptrYaw * arc + nudge.yaw, pitch + ptrPitch * arc + nudge.pitch);
 
         /* Stay alive while an armed viewport entry is waiting for scroll speed to settle. */
         const waitingAuto = sequenceArmed && vis > 0.45;
@@ -437,6 +518,8 @@ export default function SystemCubeB51({
           Math.abs(posed.pitch) < 0.0004 &&
           Math.abs(ptrYaw) < 0.0004 &&
           Math.abs(ptrPitch) < 0.0004 &&
+          scrollNudgeQuiet(nudge) &&
+          pointerLeftAt === 0 &&
           !engaged() &&
           !waitingAuto;
         if (settled) {
@@ -444,6 +527,7 @@ export default function SystemCubeB51({
           pitch = 0;
           ptrYaw = 0;
           ptrPitch = 0;
+          resetScrollNudge(nudge);
           apply(0, 0, 0, "rest");
           raf = 0;
           last = 0;
@@ -460,11 +544,19 @@ export default function SystemCubeB51({
       };
 
       if (finePointer) {
-        const area = host.closest("figure") ?? host;
+        /* homeMotion: only the cube's own box counts as "on the cube", so a leave is a real leave. */
+        const area = homeMotion ? host : (host.closest("figure") ?? host);
+        const fieldRect = () => {
+          const r = area.getBoundingClientRect();
+          if (!homeMotion) return r;
+          const half = (r.width * HOME_FIELD) / 2;
+          return new DOMRect(r.left + r.width / 2 - half, r.top + r.height / 2 - half, half * 2, half * 2);
+        };
         const aim = (ev: PointerEvent) => {
           if (ev.pointerType === "touch") return;
           pointerOn = true;
-          const { nx, ny } = pointerNormFromRect(ev.clientX, ev.clientY, area.getBoundingClientRect());
+          pointerLeftAt = 0;
+          const { nx, ny } = pointerNormFromRect(ev.clientX, ev.clientY, fieldRect());
           const follow = pocketFollowTarget(nx, ny, POINTER_MAX.yaw, POINTER_MAX.pitch);
           ptrTargetYaw = follow.yaw;
           ptrTargetPitch = follow.pitch;
@@ -473,6 +565,7 @@ export default function SystemCubeB51({
         };
         const leave = () => {
           pointerOn = false;
+          if (homeMotion && phase !== "rest") pointerLeftAt = performance.now();
           /* Hold keeps last ptrTarget; returning zeros it in tick. */
           ensure();
         };
@@ -526,7 +619,7 @@ export default function SystemCubeB51({
       teardown?.();
       cleanups.forEach((fn) => fn());
     };
-  }, [progress, forcedReveal, interior, full]);
+  }, [progress, forcedReveal, interior, full, homeMotion]);
 
   const stroke = (alpha: number, w: number) => ({ stroke: `rgba(${INK},${alpha})`, strokeWidth: w, vectorEffect: "non-scaling-stroke" as const });
   const hidden = { opacity: 0, display: "none" } as const;

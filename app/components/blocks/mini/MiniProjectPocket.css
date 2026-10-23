@@ -1,0 +1,105 @@
+/*
+ * Homepage "Za začetek" in the pocket pattern of `MiniSystemPocket` (Celota), used only by `MiniProjectPocket`; every
+ * selector is under `.mpp`. Same composition: text on the rail's left axis with the Celota type scale and 44ch measure,
+ * the cube on Celota's right axis (centred in the right column of a 0.9fr / 1.1fr split from 1024px; drawn right edge on the
+ * rail edge at 768-1023px; under the text on the left axis below 768px). The cube is the unchanged MiniProjectCube with
+ * `cropWidth={220}`: its SVG box is the cube's own footprint (rest silhouette about 171 of 220 units, so the drawing sits
+ * 11.1% of the box width inside each side edge, which the edge nudges below cancel). Drawn width about 86 / 94 / 99px,
+ * a little under Celota's 93 / 98 / 104px wireframe, because the filled blue mass reads heavier than an outline.
+ */
+
+.mpp {
+  --mpp-h: 1.5rem;
+  --mpp-svg-h: 103px;
+  position: relative;
+  padding: 80px 0;
+  background-color: var(--mini-surface-system, #0b0e15);
+  color: #fff;
+}
+@media (min-width: 640px) {
+  .mpp {
+    --mpp-h: 1.625rem;
+    --mpp-svg-h: 112px;
+    padding: 96px 0;
+  }
+}
+@media (min-width: 1024px) {
+  .mpp {
+    --mpp-h: 1.75rem;
+    --mpp-svg-h: 119px;
+    padding: 112px 0;
+  }
+}
+
+.mpp .mpp-rail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 40px;
+}
+.mpp .mpp-text {
+  min-width: 0;
+}
+.mpp .mpp-h {
+  margin: 14px 0 0;
+  font-size: var(--mpp-h);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: var(--ht-tr-primary, -0.022em);
+  text-wrap: balance;
+  color: #fff;
+}
+.mpp .mpp-body {
+  margin: 12px 0 0;
+  max-width: 44ch;
+  font-size: 16px;
+  line-height: 28px;
+  color: rgb(255 255 255 / 0.55);
+  text-wrap: pretty;
+}
+.mpp .mpp-action {
+  /* the link's 44px hit area centres the 14px label, so 12px here reads as about 26px under the paragraph */
+  margin-top: 12px;
+}
+.mpp .mpp-figure {
+  display: flex;
+  justify-content: flex-start;
+  margin: 0;
+  min-width: 0;
+}
+.mpp .mpp-cube {
+  width: calc(var(--mpp-svg-h) * 220 / 204);
+  height: var(--mpp-svg-h);
+  flex: none;
+  /* below 768: the drawing's left edge on the text axis */
+  margin-left: calc(var(--mpp-svg-h) * 220 / 204 * -0.111);
+}
+.mpp .mpp-cube-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+@media (min-width: 768px) {
+  .mpp .mpp-rail {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 48px;
+    align-items: center;
+  }
+  .mpp .mpp-figure {
+    justify-content: flex-end;
+  }
+  .mpp .mpp-cube {
+    margin-left: 0;
+    margin-right: calc(var(--mpp-svg-h) * 220 / 204 * -0.111);
+  }
+}
+@media (min-width: 1024px) {
+  .mpp .mpp-rail {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  }
+  .mpp .mpp-figure {
+    justify-content: center;
+  }
+  .mpp .mpp-cube {
+    margin-right: 0;
+  }
+}

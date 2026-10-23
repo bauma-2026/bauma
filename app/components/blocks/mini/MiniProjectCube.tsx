@@ -85,6 +85,19 @@ const SEAM_SOFT_SHARE = 0.22;
  */
 const GLOW_RGB = "74,108,236";
 
+/** `palette="royal"`: the inner light in Royal Blue's own hue (#4169E1), not the default's slightly violet one. */
+const ROYAL_GLOW = { core: "#5a7fe6", rgb: "65,105,225" } as const;
+
+/**
+ * `cue` (homepage pocket): the "Kako sodelujemo" link drives the cube. While the link is hovered or focused the cube
+ * turns a little (CUE) and lifts its material (lum +CUE.lift); a press adds a short extra tilt (PRESS) that eases in fast
+ * and out softly. Both ease from wherever the cube is and add on top of the pointer follow and the scroll nudge.
+ * Reduced motion: no turn, only the material lift, applied directly.
+ */
+const CUE = { yaw: 0.06, pitch: 0.025, lift: 0.05, tauIn: 0.28, tauOut: 0.4 } as const;
+const PRESS = { yaw: 0.04, pitch: 0.02, lift: 0.04, tauIn: 0.06, tauOut: 0.22 } as const;
+const CUE_EPS = 0.002;
+
 const FINE_POINTER_QUERY = "(hover: hover) and (pointer: fine)";
 
 function subscribeFinePointer(onChange: () => void) {
@@ -109,11 +122,43 @@ const CROP_Y = 98;
 const CROP_H = 204;
 const CROP_VIEWBOX = `0 ${CROP_Y} ${VIEWBOX_W} ${CROP_H}`;
 
-type Props = { className?: string; svgClassName?: string };
+type Props = {
+  className?: string;
+  svgClassName?: string;
+  /**
+   * Multiplies the scroll nudge (impulse, velocity clamps and maximum angle). Default 1 keeps every caller as it was;
+   * the homepage pocket passes 2.2 (at most about ±2.6° yaw / ±1.7° pitch), in step with the pocket System cube.
+   */
+  scrollGain?: number;
+  /**
+   * Narrows the cropped viewBox to this many stage units around the cube's centre (default: the full 520-unit stage
+   * width). The rest silhouette is about 171 units wide and the pointer + scroll range changes it by about 2%, so 220
+   * leaves ~24 units each side: the SVG box is then the cube's own footprint, with no wide empty canvas to overflow.
+   */
+  cropWidth?: number;
+  /** `royal`: the opt-in Royal Blue ramp and inner light (homepage pocket). Default keeps the slate-blue material. */
+  palette?: "default" | "royal";
+  /** Link-driven response (see CUE above). Omitted: no change for any other caller. */
+  cue?: { active: boolean; pressed: boolean };
+};
 
-export default function MiniProjectCube({ className = "", svgClassName = "h-full w-full overflow-visible" }: Props) {
+export default function MiniProjectCube({
+  className = "",
+  svgClassName = "h-full w-full overflow-visible",
+  scrollGain = 1,
+  cropWidth = VIEWBOX_W,
+  palette = "default",
+  cue,
+}: Props) {
+  const royal = palette === "royal";
+  const cueActive = cue?.active ?? false;
+  const cuePressed = cue?.pressed ?? false;
+  const viewBox =
+    cropWidth === VIEWBOX_W ? CROP_VIEWBOX : `${CENTER.x - cropWidth / 2} ${CROP_Y} ${cropWidth} ${CROP_H}`;
   const reducedMotion = useReducedMotion();
-  const [pose, setPose] = useState({ rx: REST_RX, ry: REST_RY });
+  const [pose, setPose] = useState({ rx: REST_RX, ry: REST_RY, lift: 0 });
+  const cueRef = useRef({ active: false, pressed: false });
+  const cueAmtRef = useRef({ hover: 0, press: 0 });
   const hoveringRef = useRef(false);
   const targetRef = useRef({ yaw: 0, pitch: 0 });
   const offsetRef = useRef({ yaw: 0, pitch: 0 });
@@ -126,8 +171,17 @@ export default function MiniProjectCube({ className = "", svgClassName = "h-full
   const wakeHoldUntilRef = useRef(0);
   const scrollRef = useRef(createScrollNudge());
   const pointerFollowRef = useRef(false);
+  const scrollGainRef = useRef(scrollGain);
+  useEffect(() => {
+    scrollGainRef.current = scrollGain;
+  }, [scrollGain]);
 
-  const faces = useMemo(() => drawProjectCube(pose.rx, pose.ry), [pose.rx, pose.ry]);
+  /* Reduced motion: no loop runs, so the cue's material lift is applied directly (one tone step, no tilt). */
+  const lift = reducedMotion ? (cueActive || cuePressed ? CUE.lift : 0) : pose.lift;
+  const faces = useMemo(
+    () => (royal || lift ? drawProjectCube(pose.rx, pose.ry, { royal, lift }) : drawProjectCube(pose.rx, pose.ry)),
+    [pose.rx, pose.ry, royal, lift],
+  );
   const structure = useMemo(() => drawProjectStructure(pose.rx, pose.ry), [pose.rx, pose.ry]);
   const uid = useId().replace(/:/g, "");
   const finePointer = useSyncExternalStore(
@@ -156,27 +210,39 @@ export default function MiniProjectCube({ className = "", svgClassName = "h-full
       }
 
       const scroll = scrollRef.current;
-      tickScrollNudge(scroll, dt, hovering, SCROLL_YAW_MAX, SCROLL_PITCH_MAX);
+      const gain = scrollGainRef.current;
+      tickScrollNudge(scroll, dt, hovering, SCROLL_YAW_MAX * gain, SCROLL_PITCH_MAX * gain);
+
+      const cue = cueRef.current;
+      const amt = cueAmtRef.current;
+      amt.hover = followToward(amt.hover, cue.active ? 1 : 0, 1 - Math.exp(-dt / (cue.active ? CUE.tauIn : CUE.tauOut)));
+      amt.press = followToward(amt.press, cue.pressed ? 1 : 0, 1 - Math.exp(-dt / (cue.pressed ? PRESS.tauIn : PRESS.tauOut)));
+      const cueQuiet = !cue.active && !cue.pressed && amt.hover < CUE_EPS && amt.press < CUE_EPS;
+
       const atRest =
         !hovering &&
         wakeHoldUntilRef.current === 0 &&
         Math.abs(offset.yaw) < POCKET_HOVER_REST_EPS &&
         Math.abs(offset.pitch) < POCKET_HOVER_REST_EPS &&
-        scrollNudgeQuiet(scroll);
+        scrollNudgeQuiet(scroll) &&
+        cueQuiet;
 
       if (atRest) {
         offset.yaw = 0;
         offset.pitch = 0;
+        amt.hover = 0;
+        amt.press = 0;
         resetScrollNudge(scroll);
-        setPose({ rx: REST_RX, ry: REST_RY });
+        setPose({ rx: REST_RX, ry: REST_RY, lift: 0 });
         rafRef.current = 0;
         lastTickRef.current = 0;
         return;
       }
 
       setPose({
-        rx: REST_RX + offset.pitch + scroll.pitch,
-        ry: REST_RY + offset.yaw + scroll.yaw,
+        rx: REST_RX + offset.pitch + scroll.pitch + CUE.pitch * amt.hover + PRESS.pitch * amt.press,
+        ry: REST_RY + offset.yaw + scroll.yaw + CUE.yaw * amt.hover + PRESS.yaw * amt.press,
+        lift: CUE.lift * amt.hover + PRESS.lift * amt.press,
       });
       rafRef.current = window.requestAnimationFrame(tick);
     };
@@ -198,6 +264,13 @@ export default function MiniProjectCube({ className = "", svgClassName = "h-full
       tickRef.current();
     });
   }, []);
+
+  /* The cue only writes its target; the loop eases toward it from the current state (no restart, no jump). */
+  useEffect(() => {
+    cueRef.current = { active: cueActive, pressed: cuePressed };
+    const amt = cueAmtRef.current;
+    if (!reducedMotion && (cueActive || cuePressed || amt.hover > 0 || amt.press > 0)) ensureLoop();
+  }, [cueActive, cuePressed, reducedMotion, ensureLoop]);
 
   const startWake = useCallback(() => {
     if (hoveringRef.current) return;
@@ -229,12 +302,13 @@ export default function MiniProjectCube({ className = "", svgClassName = "h-full
         }
       },
       onScrollImpulse: (dy) => {
+        const gain = scrollGainRef.current;
         applyScrollImpulse(
           scrollRef.current,
           dy,
-          SCROLL_IMPULSE_PER_PX,
-          SCROLL_VEL_CLAMP_YAW,
-          SCROLL_VEL_CLAMP_PITCH,
+          SCROLL_IMPULSE_PER_PX * gain,
+          SCROLL_VEL_CLAMP_YAW * gain,
+          SCROLL_VEL_CLAMP_PITCH * gain,
         );
         ensureLoop();
       },
@@ -245,7 +319,7 @@ export default function MiniProjectCube({ className = "", svgClassName = "h-full
     const svg = svgRef.current;
     if (!svg) return;
     const rect = svg.getBoundingClientRect();
-    const scale = Math.min(rect.width / VIEWBOX_W, rect.height / CROP_H);
+    const scale = Math.min(rect.width / cropWidth, rect.height / CROP_H);
     const half = FIELD_HALF * scale;
     const field = new DOMRect(
       rect.left + rect.width / 2 - half,
@@ -256,7 +330,7 @@ export default function MiniProjectCube({ className = "", svgClassName = "h-full
     const { nx, ny } = pointerNormFromRect(event.clientX, event.clientY, field);
     wakeHoldUntilRef.current = 0;
     targetRef.current = pocketFollowTarget(nx, ny, FOLLOW_YAW, FOLLOW_PITCH);
-  }, []);
+  }, [cropWidth]);
 
   const canFollow = !reducedMotion;
 
@@ -299,7 +373,7 @@ export default function MiniProjectCube({ className = "", svgClassName = "h-full
     >
       <svg
         ref={svgRef}
-        viewBox={CROP_VIEWBOX}
+        viewBox={viewBox}
         fill="none"
         aria-hidden="true"
         shapeRendering="geometricPrecision"
@@ -314,9 +388,9 @@ export default function MiniProjectCube({ className = "", svgClassName = "h-full
             cy={CENTER.y + 26}
             r={TARGET_HEIGHT * 0.78}
           >
-            <stop offset="0" stopColor="#6f8cf5" stopOpacity={0.26} />
-            <stop offset="0.5" stopColor={`rgb(${GLOW_RGB})`} stopOpacity={0.09} />
-            <stop offset="1" stopColor={`rgb(${GLOW_RGB})`} stopOpacity={0} />
+            <stop offset="0" stopColor={royal ? ROYAL_GLOW.core : "#6f8cf5"} stopOpacity={0.26} />
+            <stop offset="0.5" stopColor={`rgb(${royal ? ROYAL_GLOW.rgb : GLOW_RGB})`} stopOpacity={0.09} />
+            <stop offset="1" stopColor={`rgb(${royal ? ROYAL_GLOW.rgb : GLOW_RGB})`} stopOpacity={0} />
           </radialGradient>
           {/* Mask, not clipPath: the 1px stroke closes the anti-aliased facet seams. */}
           <mask id={`${uid}-body`} maskUnits="userSpaceOnUse" x={0} y={0} width={VIEWBOX_W} height={VIEWBOX_H}>

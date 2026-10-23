@@ -1,0 +1,95 @@
+/*
+ * Homepage "Celota" closing block (pocket System, after the register-pocket lab), used only by `MiniSystemPocket`; every
+ * selector is under `.msp`. It sits under `MiniServicesList` on the same surface and closes that chapter: text on the rail's
+ * left axis (the "Kaj lahko uredimo za vas." axis), the unchanged SystemCubeB51 at pocket size on the right. From 1024px the
+ * rail splits 0.9fr / 1.1fr with a 48px gap, as the former System section did, and the cube is centred in the right
+ * column, so it sits on the former System cube's axis. 768-1023px: the cube's drawn right edge sits on the rail's right
+ * edge. Below 768px the cube follows the text on the same left axis. Box widths 136 / 144 / 152px give about 93 / 98 / 104px
+ * of drawn cube (the drawing is 68% of the box width).
+ */
+
+.msp {
+  --msp-h: 1.5rem;
+  --msp-cw: 136px;
+  position: relative;
+  padding: 72px 0 80px;
+  background-color: var(--mini-surface-work, #080a0f);
+  color: #fff;
+}
+@media (min-width: 640px) {
+  .msp {
+    --msp-h: 1.625rem;
+    --msp-cw: 144px;
+    padding: 88px 0 96px;
+  }
+}
+@media (min-width: 1024px) {
+  .msp {
+    --msp-h: 1.75rem;
+    --msp-cw: 152px;
+    padding: 104px 0 112px;
+  }
+}
+
+.msp .msp-rail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 32px;
+}
+.msp .msp-text {
+  min-width: 0;
+}
+.msp .msp-h {
+  margin: 14px 0 0;
+  font-size: var(--msp-h);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: var(--ht-tr-primary, -0.022em);
+  color: #fff;
+}
+.msp .msp-body {
+  margin: 12px 0 0;
+  max-width: 44ch;
+  font-size: 16px;
+  line-height: 28px;
+  color: rgb(255 255 255 / 0.55);
+  text-wrap: pretty;
+}
+.msp .msp-figure {
+  display: flex;
+  justify-content: flex-start;
+  margin: 0;
+  min-width: 0;
+}
+.msp .msp-cube {
+  width: var(--msp-cw);
+  aspect-ratio: 6 / 5;
+  flex: none;
+  /* below 768: the drawing's left edge on the text axis (it sits 15.9% of the box width inside the box) */
+  margin-left: calc(var(--msp-cw) * -0.159);
+}
+@media (min-width: 768px) {
+  .msp .msp-rail {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 48px;
+    align-items: center;
+  }
+  .msp .msp-figure {
+    justify-content: flex-end;
+  }
+  .msp .msp-cube {
+    margin-left: 0;
+    margin-right: calc(var(--msp-cw) * -0.159);
+  }
+}
+@media (min-width: 1024px) {
+  .msp .msp-rail {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  }
+  .msp .msp-figure {
+    justify-content: center;
+  }
+  .msp .msp-cube {
+    margin-right: 0;
+  }
+}

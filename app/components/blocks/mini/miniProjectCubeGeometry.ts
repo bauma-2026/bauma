@@ -279,14 +279,36 @@ function hexToRgb(hex: string): [number, number, number] {
   return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
 }
 
-const RAMP_RGB = RAMP.map((stop) => ({ at: stop.at, rgb: hexToRgb(stop.hex) }));
+export type ProjectCubeRampStop = { at: number; hex: string };
 
-function colorAt(lum: number): string {
+/**
+ * Opt-in Royal Blue ramp (homepage pocket, `MiniProjectCube palette="royal"`). Same value positions as `RAMP`, hue held
+ * at about 223° (Royal Blue #4169E1 is 225°) with more saturation, darker shadows, and a rim that stays below #4169E1 so
+ * the cube reads darker than the primary buttons. Front faces land between #20356e and #28438a.
+ */
+export const ROYAL_RAMP: readonly ProjectCubeRampStop[] = [
+  { at: 0.0, hex: "#111b31" },
+  { at: 0.06, hex: "#141f3a" },
+  { at: 0.3, hex: "#19284d" },
+  { at: 0.66, hex: "#20356e" },
+  { at: 0.85, hex: "#28438a" },
+  { at: 1.0, hex: "#3554a6" },
+];
+
+type RampRgb = { at: number; rgb: [number, number, number] }[];
+
+const toRgbRamp = (ramp: readonly ProjectCubeRampStop[]): RampRgb =>
+  ramp.map((stop) => ({ at: stop.at, rgb: hexToRgb(stop.hex) }));
+
+const RAMP_RGB = toRgbRamp(RAMP);
+const ROYAL_RAMP_RGB = toRgbRamp(ROYAL_RAMP);
+
+function colorAt(lum: number, ramp: RampRgb = RAMP_RGB): string {
   const t = Math.min(Math.max(lum, 0), 1);
-  let hi = RAMP_RGB.findIndex((stop) => stop.at >= t);
+  let hi = ramp.findIndex((stop) => stop.at >= t);
   if (hi <= 0) hi = 1;
-  const lo = RAMP_RGB[hi - 1];
-  const up = RAMP_RGB[hi];
+  const lo = ramp[hi - 1];
+  const up = ramp[hi];
   const u = (t - lo.at) / (up.at - lo.at);
   const ch = (i: number) =>
     Math.round(lo.rgb[i] + (up.rgb[i] - lo.rgb[i]) * u)
@@ -304,8 +326,16 @@ export type ProjectCubeFace = { id: string; d: string; fill: string };
 /**
  * Visible facets, far to near. `lum` mixes wrapped Lambert (one light) with a
  * gentle falloff across the surface; the colour comes from the ramp.
+ * Opt-in `opts`: `royal` uses `ROYAL_RAMP`; `lift` raises every facet's lum by that amount (a discreet, even
+ * brightening that keeps the facet order). Without `opts` the result is exactly as before.
  */
-export function drawProjectCube(rx = REST_RX, ry = REST_RY): ProjectCubeFace[] {
+export function drawProjectCube(
+  rx = REST_RX,
+  ry = REST_RY,
+  opts?: { royal?: boolean; lift?: number },
+): ProjectCubeFace[] {
+  const ramp = opts?.royal ? ROYAL_RAMP_RGB : RAMP_RGB;
+  const lift = opts?.lift ?? 0;
   const out: { face: ProjectCubeFace; depth: number }[] = [];
 
   for (const poly of MESH) {
@@ -327,7 +357,7 @@ export function drawProjectCube(rx = REST_RX, ry = REST_RY): ProjectCubeFace[] {
 
     out.push({
       depth,
-      face: { id: poly.id, d: pathOf(p2), fill: colorAt(lambert + fall) },
+      face: { id: poly.id, d: pathOf(p2), fill: colorAt(lambert + fall + lift, ramp) },
     });
   }
 

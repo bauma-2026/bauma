@@ -168,7 +168,7 @@ export default function MiniSelectedWorkHome({
           })}
         </ol>
 
-        <div className="mt-6 flex justify-end">
+        <div className="mt-2 flex justify-end lg:mt-6">
           <TextLink href="/work">Vsi projekti</TextLink>
         </div>
       </div>

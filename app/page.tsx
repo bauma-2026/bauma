@@ -6,12 +6,10 @@ import MiniHeader, {
   type MiniHeaderNavItem,
 } from "./components/blocks/mini/MiniHeader";
 import MiniHero from "./components/blocks/mini/MiniHero";
-import MiniSystemHome from "./components/blocks/mini/MiniSystemHome";
 import { MINI_HERO } from "./components/blocks/mini/miniHomeCopy";
-import MiniMidPageCta, {
-  type MiniMidPageCtaCopy,
-} from "./components/blocks/mini/MiniMidPageCta";
-import MiniServicesGrid from "./components/blocks/mini/MiniServicesGrid";
+import MiniServicesList from "./components/blocks/mini/MiniServicesList";
+import MiniSystemPocket from "./components/blocks/mini/MiniSystemPocket";
+import MiniProjectPocket from "./components/blocks/mini/MiniProjectPocket";
 import MiniSelectedWorkHome from "./components/blocks/mini/MiniSelectedWorkHome";
 import MiniClosingBookend from "./components/blocks/mini/MiniClosingBookend";
 import RightObjectAxisDebugGate from "@/components/home/debug/RightObjectAxisDebugGate";
@@ -32,24 +30,15 @@ const HOME_NAV: MiniHeaderNavItem[] = [
   { href: "/o-nas", label: "O nas", id: "o-nas" },
 ];
 
-/** "\n" in the headline is the component's existing forced break (keeps the two-line height). */
-const MID_CTA_COPY: MiniMidPageCtaCopy = {
-  eyebrow: "VAŠ PROJEKT",
-  headline: "Kaj pa vaša\nspletna stran?",
-  support: "Dobra ponudba potrebuje jasno predstavitev.",
-  cta: "Pogovorimo se",
-};
-
 /**
  * Homepage surface tones (Surface Tone D, approved from /lab/surface-tone/d). Each section is wrapped in a
  * plain block that re-declares the surface custom property its component already reads, so the shared
  * `MiniPalette.css` tokens (still used by /mini, /en/mini, /work/* and legal pages) are not changed.
- * System is the darkest; Services and Selected Work step up gently; Your Project settles slightly below
- * them. The header (`--mini-surface-header`) and the photographic Hero / Contact are not involved.
+ * Services (with the "Celota" block) and Selected Work step up gently from the hero; Your Project settles
+ * slightly below them. The header (`--mini-surface-header`) and the photographic Hero / Contact are not involved.
  */
 const surface = (token: "--mini-surface-system" | "--mini-surface-work", value: string) =>
   ({ [token]: value }) as CSSProperties;
-const SURFACE_SYSTEM = surface("--mini-surface-system", "#080a0f");
 const SURFACE_SERVICES = surface("--mini-surface-work", "#0d1119");
 const SURFACE_WORK = surface("--mini-surface-work", "#0f141c");
 const SURFACE_PROJECT = surface("--mini-surface-system", "#0b0e15");
@@ -130,17 +119,16 @@ export default function Home() {
             secondaryLabel="Poglejte sistem"
             photoBackground
           />
-          <div style={SURFACE_SYSTEM} data-home-section="system">
-            <MiniSystemHome />
-          </div>
+          {/* One chapter on the Services surface: the services, then "Celota" (#system) as its closing thought. */}
           <div style={SURFACE_SERVICES}>
-            <MiniServicesGrid />
+            <MiniServicesList joined />
+            <MiniSystemPocket />
           </div>
           <div style={SURFACE_WORK}>
             <MiniSelectedWorkHome topRule={false} />
           </div>
-          <div style={SURFACE_PROJECT} data-home-section="project">
-            <MiniMidPageCta tone="neutral" copy={MID_CTA_COPY} cube="material" topRule={false} surface="system" />
+          <div style={SURFACE_PROJECT}>
+            <MiniProjectPocket />
           </div>
         </main>
         <MiniClosingBookend variant="graphite" photoBackground topRule={false} />

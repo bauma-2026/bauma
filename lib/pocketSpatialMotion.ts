@@ -142,11 +142,32 @@ export function subscribePocketFamilyMotion(args: {
   let inView = false;
   let wakeUsed = false;
 
+  const onScroll = () => {
+    const y = window.scrollY;
+    const dy = y - lastScrollY;
+    lastScrollY = y;
+    if (args.getHovering() || !inView || dy === 0) return;
+    args.onScrollImpulse(dy);
+  };
+  /** The scroll listener exists only while the root intersects the viewport. */
+  let listening = false;
+  const listen = (on: boolean) => {
+    if (on === listening) return;
+    listening = on;
+    if (on) {
+      lastScrollY = window.scrollY;
+      window.addEventListener("scroll", onScroll, { passive: true });
+    } else {
+      window.removeEventListener("scroll", onScroll);
+    }
+  };
+
   const io = new IntersectionObserver(
     (entries) => {
       const entry = entries[entries.length - 1];
       if (!entry) return;
       const ratio = entry.intersectionRatio;
+      listen(entry.isIntersecting);
       inView = entry.isIntersecting && ratio > POCKET_FAMILY_IN_VIEW;
       if (ratio >= POCKET_FAMILY_WAKE_VISIBLE && !wakeUsed) {
         wakeUsed = true;
@@ -161,18 +182,9 @@ export function subscribePocketFamilyMotion(args: {
   );
   io.observe(args.root);
 
-  const onScroll = () => {
-    const y = window.scrollY;
-    const dy = y - lastScrollY;
-    lastScrollY = y;
-    if (args.getHovering() || !inView || dy === 0) return;
-    args.onScrollImpulse(dy);
-  };
-  window.addEventListener("scroll", onScroll, { passive: true });
-
   return () => {
     io.disconnect();
     pointerMq.removeEventListener("change", syncPointer);
-    window.removeEventListener("scroll", onScroll);
+    listen(false);
   };
 }

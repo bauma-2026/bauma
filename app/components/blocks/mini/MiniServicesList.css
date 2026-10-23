@@ -1,0 +1,121 @@
+/*
+ * Homepage "Kaj delamo" as a vertical index (promoted from /lab/art-direction/register-pocket, Services part only).
+ * Used only by `MiniServicesList`; every selector is under `.msl`. A left-anchored column capped at 820px: eyebrow, H2, then
+ * four ruled rows (number on a narrow axis from 640px, the title with its description under it). No frame, no vertical rules.
+ * The surface is the homepage's Services tone (`--mini-surface-work`, set by the wrapper in app/page.tsx). The eyebrow takes the homepage's shared
+ * `p.uppercase` treatment from homeTypography.css; nothing in homeTypographyV11.css targets this section.
+ */
+
+.msl {
+  --msl-line: #212a3a;
+  --msl-h2: 1.75rem;
+  --msl-row-pad: 28px;
+  --msl-title: 1.5rem;
+  --msl-desc: 15px;
+  --msl-desc-lh: 24px;
+  padding: 80px 0;
+  background-color: var(--mini-surface-work, #080a0f);
+  color: #fff;
+}
+@media (min-width: 640px) {
+  .msl {
+    --msl-h2: 2rem;
+    --msl-row-pad: 32px;
+    --msl-title: 1.625rem;
+    --msl-desc: 16px;
+    --msl-desc-lh: 26px;
+    padding: 96px 0;
+  }
+}
+@media (min-width: 1024px) {
+  .msl {
+    --msl-h2: 2.125rem;
+    --msl-title: 1.75rem;
+    padding: 112px 0;
+  }
+}
+@media (min-width: 1280px) {
+  .msl {
+    --msl-title: 1.875rem;
+  }
+}
+
+/* A closing block follows on the same surface; it owns the space after the last row. */
+.msl.msl--joined {
+  padding-bottom: 0;
+}
+
+.msl .msl-col {
+  max-width: 820px;
+}
+.msl .msl-h2 {
+  margin: 20px 0 0;
+  font-size: var(--msl-h2);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: var(--ht-tr-primary, -0.022em);
+  color: #fff;
+}
+.msl .msl-list {
+  margin: 36px 0 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid var(--msl-line);
+}
+@media (min-width: 768px) {
+  .msl .msl-list {
+    margin-top: 40px;
+  }
+}
+.msl .msl-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 10px;
+  padding: var(--msl-row-pad) 0;
+  border-top: 1px solid var(--msl-line);
+}
+.msl .msl-num {
+  margin: 0;
+  font-family: var(--font-mono-home), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  color: rgb(255 255 255 / 0.4);
+}
+.msl .msl-row h3 {
+  margin: 0;
+  font-size: var(--msl-title);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  text-wrap: balance;
+  color: #fff;
+}
+.msl .msl-row p.msl-desc {
+  margin: 0;
+  max-width: 34em;
+  font-size: var(--msl-desc);
+  line-height: var(--msl-desc-lh);
+  color: rgb(255 255 255 / 0.6);
+  text-wrap: pretty;
+}
+.msl .msl-nb {
+  white-space: nowrap;
+}
+@media (min-width: 640px) {
+  .msl .msl-row {
+    grid-template-columns: 64px minmax(0, 1fr);
+    row-gap: 12px;
+    align-items: baseline;
+  }
+  .msl .msl-row > h3,
+  .msl .msl-row > p.msl-desc {
+    grid-column: 2;
+  }
+}
+@media (min-width: 768px) {
+  .msl .msl-row {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+}
