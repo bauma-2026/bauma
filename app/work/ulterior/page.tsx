@@ -7,6 +7,7 @@ import MiniHeader, {
   type MiniHeaderNavItem,
 } from "../../components/blocks/mini/MiniHeader";
 import MiniClosingBookend from "../../components/blocks/mini/MiniClosingBookend";
+import CaseStudyNav from "../../components/work/CaseStudyNav";
 import {
   MINI_CONTACT_MAILTO,
   type MiniFinalCtaCopy,
@@ -231,6 +232,9 @@ export default function UlteriorCasePage() {
               </div>
             </section>
           </div>
+
+          {/* Previous / next case study and the way back to /work, on the page's base surface. */}
+          <CaseStudyNav current="ulterior" />
         </main>
 
         <MiniClosingBookend
