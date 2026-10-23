@@ -88,6 +88,11 @@ const EYEBROW =
 const CAPTION =
   "mx-auto max-w-[760px] text-balance text-center text-sm leading-relaxed text-white/40";
 
+/** Trims the References proof's own 48/40, 64/56 and 80/64px section padding (`.msw-clip > div`) to an even
+ *  ~36px around the content below 1024 and ~48px from 1024, the same as the Ulterior proofs. Container widths, as in the proof. */
+const REFERENCES_TRIM =
+  "[--msw-trim-top:12px] [--msw-trim-bottom:4px] @min-[640px]:[--msw-trim-top:28px] @min-[640px]:[--msw-trim-bottom:20px] @min-[1024px]:[--msw-trim-top:32px] @min-[1024px]:[--msw-trim-bottom:16px]";
+
 export default function DemaPlusCasePage() {
   return (
     <MiniPalette>
@@ -176,7 +181,7 @@ export default function DemaPlusCasePage() {
                   <div
                     role="group"
                     aria-label="Dema Plus: razdelek «Reference» na domači strani"
-                    className="msw-clip"
+                    className={`msw-clip ${REFERENCES_TRIM}`}
                   >
                     <div>
                       <DemaPlusReferencesProof showHeader={false} headingLevel={2} />

@@ -66,7 +66,7 @@ export default function MiniFinalCTA({
           </h2>
 
           {copy.body ? (
-            <p className="mx-auto mt-5 max-w-[330px] text-pretty text-sm font-normal leading-[1.5] text-white/60 sm:max-w-[650px] sm:text-base sm:leading-[1.6]">
+            <p className="mx-auto mt-5 max-w-[330px] text-pretty text-sm font-normal leading-[1.5] text-white/60 sm:max-w-[32rem] sm:text-base sm:leading-[1.6]">
               {copy.body}
             </p>
           ) : copy.bodyLine1 ? (

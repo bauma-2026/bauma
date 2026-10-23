@@ -188,12 +188,13 @@ export default function ArtBiteCasePage() {
               aria-label="Dokaz: uvodni razdelek strani Prekrivanje starih tetovaž na artbite-tattoo.com"
               className="pt-0"
             >
-              {/* Nothing inside is interactive, so it is exposed as a single labelled image. */}
-              <div className="px-5 sm:px-0">
+              {/* Nothing inside is interactive, so it is exposed as a single labelled image.
+                  Edge to edge below sm (no gutters, no radius): the photographic slices need the full width. */}
+              <div>
                 <div
                   role="img"
                   aria-label="ArtBite: uvodni razdelek strani „Prekrivanje starih tetovaž“ z naslovom, povabilom k pošiljanju fotografije in fotografijo v ozkih navpičnih odsekih"
-                  className="msw-proof"
+                  className="msw-proof msw-proof--bleed"
                 >
                   <div className="msw-clip">
                     <div aria-hidden="true">

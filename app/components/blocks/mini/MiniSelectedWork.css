@@ -65,6 +65,13 @@
   }
 }
 
+/* Full bleed below sm (the page drops its 20px gutters around this proof), so no radius. */
+@media (max-width: 639.98px) {
+  .msw-proof--bleed .msw-clip {
+    border-radius: 0;
+  }
+}
+
 /* ---- Clip ---------------------------------------------------------------- */
 .msw-clip {
   isolation: isolate;

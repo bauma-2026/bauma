@@ -91,6 +91,10 @@ const PROOF_FRAME =
 const CAPTION =
   "mx-auto max-w-[760px] text-center text-sm leading-relaxed text-white/40";
 
+/** Trims the Areas proof's own 64/80/96px vertical padding to an even ~36px inside the frame (which clips) below lg and
+ *  ~48px from lg, the same as the Ulterior and Dema Plus proofs. Viewport widths, as in the proof. */
+const AREAS_TRIM = "[&>div]:-my-7 sm:[&>div]:-my-11 lg:[&>div]:-my-12";
+
 export default function FlexidoCasePage() {
   return (
     <MiniPalette>
@@ -179,7 +183,7 @@ export default function FlexidoCasePage() {
               <div
                 role="group"
                 aria-label="Flexido: razdelek „Področja“ na strani Rešitve (rekonstrukcija)"
-                className={PROOF_FRAME}
+                className={`${PROOF_FRAME} ${AREAS_TRIM}`}
               >
                 <FlexidoAreasProof />
               </div>
