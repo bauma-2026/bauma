@@ -1,66 +1,63 @@
 /*
- * O nas (/o-nas), promoted from /lab/about-v2 V2.7. Everything is under `.onas`, plus one opt-in for the shared closing
- * via `data-o-nas`. Hero (large serif) > Origin (quiet: eyebrow, small heading, one reading column, Work link) >
- * Ljubljana (text only, heading left / copy right from 768px, signature) > the shared Natural Midnight closing.
- * Tonal steps: hero #080a0f, Origin #0d1119 (the Services tone), Ljubljana #080a0f.
+ * O nas (/o-nas), approved from /lab/o-nas-direction. Everything is under `.onas`, plus `[data-o-nas]` for the shared
+ * contact. Hero: IBM Plex Mono eyebrow, serif H1 and lead on the /pristop scale. Below it, on the same surface, one
+ * reading column that starts after a column-wide rule: body-size paragraphs, then the closing thought and the signature
+ * as one group (a smaller gap inside the group than above it). Height comes from content and padding only. The margin
+ * reset is limited to this page's own sections with `:where`, so the shared Selected Work block keeps its own margins.
  */
 
 .onas {
-  --onas-gap: 2rem;
-  --onas-surface-base: var(--mini-surface-flexido, #080a0f);
-  --onas-surface-raised: #0d1119;
+  --onas-line: #202938;
+  --onas-surface-base: #080a0f;
+  --onas-text: 15px;
+  --onas-measure: 36rem;
   color: #fff;
 }
-@media (min-width: 1024px) {
+@media (min-width: 640px) {
   .onas {
-    --onas-gap: 4rem;
+    --onas-text: 16px;
   }
 }
 
-.onas p,
-.onas h1,
-.onas h2,
-.onas h3 {
+.onas :where(.onas-hero, .onas-text) :where(p, h1) {
   margin: 0;
   min-width: 0;
 }
-.onas .onas-h1 {
-  font-family: var(--font-serif), ui-serif, Georgia, serif;
-  font-weight: 400;
-}
 
-/* ---------- hero: typographic; eyebrow, H1 and intro share one edge ---------- */
+/* ---------- hero: eyebrow, H1, lead (same values as /pristop) ---------- */
 .onas .onas-hero {
   background: var(--onas-surface-base);
-  padding: 6.5rem 0 3.5rem;
+  padding: 6.5rem 0 3rem;
 }
 @media (min-width: 640px) {
   .onas .onas-hero {
-    padding: 8rem 0 5rem;
+    padding: 8rem 0 3.5rem;
   }
 }
 @media (min-width: 1024px) {
   .onas .onas-hero {
-    padding: 10rem 0 6rem;
+    padding: 9rem 0 4rem;
   }
 }
 .onas .onas-h1 {
   margin-top: 1.25rem;
   max-width: 14ch;
-  font-size: clamp(2.5rem, 1rem + 6.4vw, 5.75rem);
-  line-height: 0.98;
-  letter-spacing: -0.028em;
+  font-family: var(--font-serif), ui-serif, Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(2.25rem, 1.2rem + 4.6vw, 4.5rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
   text-wrap: balance;
   color: #fff;
 }
 @media (min-width: 640px) {
   .onas .onas-h1 {
-    max-width: 13ch;
+    max-width: 22ch;
   }
 }
 .onas .onas-lead {
-  margin-top: 1.75rem;
-  max-width: 31rem;
+  margin-top: 1.5rem;
+  max-width: var(--onas-measure);
   font-size: 1.0625rem;
   line-height: 1.55;
   color: rgb(255 255 255 / 0.74);
@@ -68,163 +65,70 @@
 }
 @media (min-width: 1024px) {
   .onas .onas-lead {
-    margin-top: 2.25rem;
+    margin-top: 2rem;
     font-size: 1.25rem;
   }
 }
 
-.onas .onas-body {
-  max-width: 34rem;
-  font-size: 1.0625rem;
-  line-height: 1.65;
-  color: rgb(255 255 255 / 0.72);
-  text-wrap: pretty;
-}
-
-/* ---------- origin: quiet background block; eyebrow, small heading and body in one reading column ---------- */
-.onas .onas-origin {
-  background: var(--onas-surface-raised);
-  padding: 3.5rem 0 3.75rem;
-}
-@media (min-width: 768px) {
-  .onas .onas-origin {
-    padding: 4rem 0 4.25rem;
-  }
-}
-@media (min-width: 1024px) {
-  .onas .onas-origin {
-    padding: 4.5rem 0 4.75rem;
-  }
-}
-.onas .onas-origin-h {
-  margin-top: 1rem;
-  font-size: clamp(1.375rem, 1.15rem + 0.9vw, 1.75rem);
-  font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: -0.022em;
-  text-wrap: balance;
-  color: #fff;
-}
-.onas .onas-origin .onas-body {
-  max-width: 36rem;
-  font-size: 1rem;
-}
-.onas .onas-origin-h + .onas-body {
-  margin-top: 1rem;
-}
-.onas .onas-origin .onas-body + .onas-body {
-  margin-top: 0.875rem;
-}
-@media (min-width: 1024px) {
-  .onas .onas-origin .onas-body {
-    font-size: 1.0625rem;
-  }
-}
-
-
-/* ---------- Work link (end of Origin) ---------- */
-.onas .onas-link {
-  display: inline-block;
-  margin-top: 1.5rem;
-  padding-bottom: 0.125rem;
-  font-size: 1rem;
-  font-weight: 500;
-  line-height: 1.4;
-  color: #fff;
-  text-decoration: underline;
-  text-decoration-color: rgb(255 255 255 / 0.32);
-  text-underline-offset: 0.35em;
-  transition: text-decoration-color 200ms ease;
-}
-.onas .onas-link:hover,
-.onas .onas-link:focus-visible {
-  text-decoration-color: var(--mini-accent-line, #7c97f0);
-}
-.onas .onas-link:focus-visible {
-  outline: 2px solid var(--mini-accent-line, #7c97f0);
-  outline-offset: 4px;
-  border-radius: 2px;
-}
-@media (prefers-reduced-motion: reduce) {
-  .onas .onas-link {
-    transition: none;
-  }
-}
-
-/* ---------- Ljubljana: small heading, one short paragraph, signature ---------- */
-.onas .onas-city {
-  background: var(--onas-surface-raised);
-  padding: 4rem 0 4.5rem;
-}
-.onas .onas-h3 {
-  max-width: 18ch;
-  font-size: clamp(1.625rem, 1.2rem + 1.8vw, 2.375rem);
-  font-weight: 600;
-  line-height: 1.1;
-  letter-spacing: -0.028em;
-  text-wrap: balance;
-  color: #fff;
-}
-.onas .onas-nb {
-  display: inline-block; /* keeps each sentence whole; the heading wraps only between them */
-}
-.onas .onas-city .onas-body {
-  margin-top: 1.25rem;
-  max-width: 30rem;
-}
-.onas .onas-city .onas-body + .onas-body {
-  margin-top: 1rem;
+/* ---------- reading section: same surface and left edge; a column-wide rule marks the step down from the lead ---------- */
+.onas .onas-text {
+  background: var(--onas-surface-base);
+  padding: 0 0 4rem;
 }
 @media (min-width: 640px) {
-  .onas .onas-city {
-    padding: 5rem 0 5.5rem;
+  .onas .onas-text {
+    padding-bottom: 4.5rem;
   }
 }
 @media (min-width: 1024px) {
-  .onas .onas-city {
-    padding: 6rem 0 6.5rem;
+  .onas .onas-text {
+    padding-bottom: 5rem;
   }
-  .onas .onas-city .onas-body {
-    font-size: 1.0625rem;
+}
+.onas .onas-col {
+  max-width: var(--onas-measure);
+  padding-top: 2.25rem;
+  border-top: 1px solid var(--onas-line);
+}
+@media (min-width: 1024px) {
+  .onas .onas-col {
+    padding-top: 2.75rem;
   }
+}
+.onas .onas-body {
+  font-size: var(--onas-text);
+  line-height: 1.7;
+  color: rgb(255 255 255 / 0.68);
+  text-wrap: pretty;
+}
+.onas .onas-body + .onas-body {
+  margin-top: 1.125rem;
 }
 
-/* ---------- Ljubljana layout: base surface after the raised Origin; heading left, copy right from 768px ---------- */
-.onas .onas-city--text {
-  background: var(--onas-surface-base);
+/* Closing thought + signature: one group, set apart from the paragraphs by space, held together by a small gap. */
+.onas .onas-closing {
+  margin-top: 2.25rem;
 }
-@media (min-width: 768px) {
-  .onas .onas-city-flow {
-    display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    column-gap: var(--onas-gap);
-    align-items: start;
-  }
-  /* The copy's first line sits level with the heading's first line instead of below it. */
-  .onas .onas-city-copy > .onas-body:first-child {
-    margin-top: 0.5rem;
+@media (min-width: 1024px) {
+  .onas .onas-closing {
+    margin-top: 2.75rem;
   }
 }
-
-/* Signature: the name under the Ljubljana copy, on the same text edge. One step brighter and heavier than the body,
-   far below the heading. A flex row so a later secondary link can follow the name. */
-.onas .onas-signature {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  column-gap: 1.25rem;
-  row-gap: 0.25rem;
-  margin-top: 1.5rem;
-}
-.onas .onas-signature-name {
-  font-size: 0.9375rem;
+.onas .onas-thought {
+  font-size: var(--onas-text);
   font-weight: 500;
-  line-height: 1.4;
-  letter-spacing: -0.005em;
-  color: rgb(255 255 255 / 0.9);
+  line-height: 1.6;
+  color: rgb(255 255 255 / 0.92);
+  text-wrap: pretty;
+}
+.onas .onas-signature {
+  margin-top: 0.75rem;
+  font-size: var(--onas-text);
+  line-height: 1.5;
+  color: rgb(255 255 255 / 0.6);
 }
 
-/* Closing: heading and button only; the shared component always renders the eyebrow paragraph, so the empty one is hidden. */
+/* ---------- shared contact (unchanged component): heading and button only, as on /pristop ---------- */
 [data-o-nas] [data-closing-bookend] section p.uppercase:empty {
   display: none;
 }

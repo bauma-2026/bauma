@@ -9,7 +9,7 @@ import {
 } from "./MiniSelectedWorkSurfaces";
 
 /**
- * Homepage "Izbrano delo" (SL), used only by `app/page.tsx`.
+ * Homepage "Izbrano delo" (SL), used by `app/page.tsx` and, with its own heading and no eyebrow, `app/o-nas/page.tsx`.
  *
  * Visually led: per project a typographic surface, the project name, a quiet
  * descriptor and a directional arrow. No cards, borders or captions around the
@@ -88,6 +88,8 @@ function TextLink({ href, className = "", children }: { href: string; className?
 
 export default function MiniSelectedWorkHome({
   topRule = true,
+  heading = "Različni projekti. Različni izzivi.",
+  eyebrow = true,
 }: {
   /**
    * The 1px rule on the section's top edge (default `true`). `false` keeps the 1px but
@@ -95,6 +97,13 @@ export default function MiniSelectedWorkHome({
    * (`/`: Services).
    */
   topRule?: boolean;
+  /** The H2 (default: the homepage line). `/o-nas` uses "Izbrano delo.". */
+  heading?: string;
+  /**
+   * The "Izbrano delo" eyebrow (default `true`). `false` drops it where the heading already says it (`/o-nas`); the
+   * heading then starts at the section's top padding (inline, so it also beats the homepage-scoped heading margin).
+   */
+  eyebrow?: boolean;
 }) {
   return (
     <section
@@ -106,9 +115,15 @@ export default function MiniSelectedWorkHome({
       <div className="mini-page-rail">
         <div className="flex items-end justify-between gap-10">
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/60">Izbrano delo</p>
-            <h2 id="msw-home-heading" className="home-bridge-heading mt-5 max-w-[18ch] text-balance text-xl sm:mt-6 sm:max-w-[22ch] sm:text-3xl">
-              Različni projekti. Različni izzivi.
+            {eyebrow ? (
+              <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/60">Izbrano delo</p>
+            ) : null}
+            <h2
+              id="msw-home-heading"
+              className="home-bridge-heading mt-5 max-w-[18ch] text-balance text-xl sm:mt-6 sm:max-w-[22ch] sm:text-3xl"
+              style={eyebrow ? undefined : { marginTop: 0 }}
+            >
+              {heading}
             </h2>
           </div>
         </div>
