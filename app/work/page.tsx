@@ -6,6 +6,7 @@ import type { CSSProperties, ReactNode } from "react";
 
 /** Homepage typography foundation (scoped to `[data-home-typography]`, set below). */
 import "../homeTypography.css";
+import "./ArtBiteSurface.css";
 import { homeMono } from "../homeMono";
 import MiniClosingBookend from "../components/blocks/mini/MiniClosingBookend";
 import MiniHeader, {
@@ -29,11 +30,16 @@ import {
  * modified: their fixed heights, Flexido's line width and size are overridden from the link, here only.
  */
 
-const artbiteAccent = Fraunces({
+/**
+ * The ArtBite logo face for the ArtBite surface, as on artbite-tattoo.com (artbite-next `src/app/layout.tsx` and
+ * `src/components/layout/Header.tsx`): Fraunces, upright, variable (weight 560 and the WONK / opsz axes are set in
+ * ArtBiteSurface.css). Scoped to this route.
+ */
+const artbiteLogo = Fraunces({
   subsets: ["latin"],
-  style: "italic",
+  style: "normal",
   axes: ["opsz", "WONK"],
-  variable: "--font-artbite-accent",
+  variable: "--font-artbite-logo",
   display: "swap",
 });
 
@@ -201,113 +207,45 @@ function UlteriorDesktop() {
 }
 
 /**
- * ArtBite below 898px: a one-line headline over the pair of photographs, the composition of ArtBite's own mobile hero
- * (artbite-tattoo.com): large "Osebni pristop." top left in Fraunces italic and medium sans, the original photographs
- * (`hero-2/3.webp`, unedited) low on the surface, the horses dominant, the watch smaller and dropped 4.4cqw. The headline is
- * pulled left by the italic O's side-bearing so its ink lines up with the horses. From `md` the pair is centred, because
- * at these ratios the photographs are limited by height and would leave the right third empty.
+ * ArtBite: a poster from ArtBite's own hero, on the near-black warm ground of its top edge (#0e0a08): the two hero
+ * photographs (horses dominant, the watch beside them on one bottom axis; unedited, their portrait crops and soft
+ * radii) and the name "ArtBite" once, in the studio's logo face. The card is a size container and the composition
+ * follows its own proportions (ArtBiteSurface.css): narrower than 6:5 (phones, the narrow 19rem cards of the two-column
+ * grid) the name runs horizontally above the pair; from 6:5 (4:3 and the wider 19rem cards) it stands vertically,
+ * reading upwards, beside the watch. The group is centred in the card. Approved from /lab/work-artbite (D6).
  */
 function ArtBiteSurface() {
   return (
     <div
-      className={`${artbiteAccent.variable} relative aspect-square overflow-hidden rounded-[3px] sm:max-[898px]:aspect-auto sm:max-[898px]:h-[19rem] min-[898px]:aspect-[4/3] text-[#f5f0e8] [container-type:size]`}
-      style={{ backgroundColor: "#291917", fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
+      className={`${artbiteLogo.variable} wab relative aspect-square overflow-hidden rounded-[3px] sm:max-[898px]:aspect-auto sm:max-[898px]:h-[19rem] min-[898px]:aspect-[4/3] bg-[#0e0a08] [container-type:size]`}
     >
-      <div className="flex h-full flex-col p-[7cqw] pb-[calc(7cqw+12px)]">
-        <p
-          className="-ml-[0.06em] mb-[4cqw] whitespace-nowrap font-medium leading-[0.96] tracking-[-0.035em]"
-          style={{ fontSize: "12.2cqw" }}
-        >
-          <span
-            className="mr-[0.07em] font-normal italic tracking-[-0.02em] text-[#c9624a]"
-            style={{ fontFamily: "var(--font-artbite-accent), Georgia, serif" }}
-          >
-            Osebni
-          </span>{" "}
-          pristop.
+      <div className="wab-group">
+        {/* Part of the artwork: the caption below already names the project for the link. */}
+        <p className="wab-name" aria-hidden="true">
+          ArtBite
         </p>
-        <div className="flex min-h-0 flex-1 items-end gap-[6cqw] md:justify-center">
-          <div className="relative aspect-[0.74/1] h-full max-w-[46cqw] overflow-hidden rounded-[18px] shadow-[0_14px_40px_rgba(0,0,0,0.28)]">
+        <div className="wab-pair">
+          <div className="wab-horses">
             <Image
               src="/work/artbite/hero-2.webp"
               alt="Tetovaža dveh konj z lovilcem sanj"
               fill
-              sizes="160px"
-              quality={85}
+              sizes="(min-width: 640px) 260px, 45vw"
+              quality={90}
               className="object-cover object-[50%_24%]"
             />
           </div>
-          <div className="relative aspect-[0.74/1] h-[67%] max-w-[30cqw] translate-y-[4.4cqw] overflow-hidden rounded-[16px]">
+          <div className="wab-watch">
             <Image
               src="/work/artbite/hero-3.webp"
-              alt=""
+              alt="Tetovaža žepne ure s peresom"
               fill
-              sizes="110px"
-              quality={85}
+              sizes="(min-width: 640px) 160px, 32vw"
+              quality={90}
               className="object-cover object-[44%_center]"
             />
           </div>
         </div>
-      </div>
-    </div>
-  );
-}
-
-/**
- * ArtBite, composed for the 4:3 surface (from 898px; below it the approved surface above is shown). The approved
- * arrangement is a one-line headline over a small pair of photographs, which at 4:3 reads as a big headline and a
- * disconnected little group. Same wording, Fraunces italic and photographs, three decisions:
- *  - the headline breaks after "Osebni" (two lines, same size), a compact block top left;
- *  - the horses photograph (31cqw wide: 181px at 1440, within its 326px source as before) takes the headline's top line
- *    at the right margin, so the two heaviest things share a line and balance each other across the card;
- *  - the watch photograph (24cqw) steps down and left of it, as the approved watch is dropped, on the bottom margin, 4cqw
- *    from the horses and 31px under the headline's last line, so the pair reads as one stepped group tied to the headline.
- * Everything is in cqw / cqh, so it holds from 898px up (the 4:3 ratio is constant). Margins are the approved 7cqw
- * (9.4cqh vertically, the same 41px at 1440).
- */
-function ArtBiteComposed() {
-  return (
-    <div
-      className={`${artbiteAccent.variable} relative aspect-[4/3] overflow-hidden rounded-[3px] text-[#f5f0e8] [container-type:size]`}
-      style={{ backgroundColor: "#291917", fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
-    >
-      <p
-        className="absolute -ml-[0.06em] font-medium leading-[0.96] tracking-[-0.035em]"
-        style={{ left: "7cqw", top: "9.4cqh", fontSize: "12.2cqw" }}
-      >
-        <span
-          className="block font-normal italic tracking-[-0.02em] text-[#c9624a]"
-          style={{ fontFamily: "var(--font-artbite-accent), Georgia, serif" }}
-        >
-          Osebni
-        </span>
-        <span className="block">pristop.</span>
-      </p>
-      <div
-        className="absolute overflow-hidden rounded-[18px] shadow-[0_14px_40px_rgba(0,0,0,0.28)]"
-        style={{ width: "31cqw", aspectRatio: "0.74 / 1", top: "9.4cqh", right: "7cqw" }}
-      >
-        <Image
-          src="/work/artbite/hero-2.webp"
-          alt="Tetovaža dveh konj z lovilcem sanj"
-          fill
-          sizes="190px"
-          quality={85}
-          className="object-cover object-[50%_24%]"
-        />
-      </div>
-      <div
-        className="absolute overflow-hidden rounded-[16px]"
-        style={{ width: "24cqw", aspectRatio: "0.74 / 1", bottom: "9.4cqh", right: "calc(7cqw + 31cqw + 4cqw)" }}
-      >
-        <Image
-          src="/work/artbite/hero-3.webp"
-          alt=""
-          fill
-          sizes="150px"
-          quality={85}
-          className="object-cover object-[44%_center]"
-        />
       </div>
     </div>
   );
@@ -368,7 +306,7 @@ const PROJECTS: readonly Project[] = [
   { slug: "ulterior", name: "Ulterior", descriptor: "Produktna predstavitev in nakupni sistem", Art: UlteriorApproved },
   { slug: "odstrani-tattoo", motion: "odstrani", name: "Odstrani Tattoo", descriptor: "Zaupanje in konverzija", shared: true, Art: OdstraniSurface },
   { slug: "dema-plus", motion: "dema", name: "Dema Plus", descriptor: "Reference in jasnost", shared: true, Art: DemaSurface },
-  { slug: "artbite", name: "ArtBite", descriptor: "Spletna stran tattoo studia", Art: ArtBiteSurface, Wide: ArtBiteComposed },
+  { slug: "artbite", name: "ArtBite", descriptor: "Spletna stran tattoo studia", Art: ArtBiteSurface },
   { slug: "hardshelljacket", name: "Hardshelljacket", descriptor: "Izdelek na eni strani", Art: HardshelljacketSurface },
 ];
 
