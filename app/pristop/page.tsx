@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { CSSProperties } from "react";
 
 import MiniClosingBookend from "@/app/components/blocks/mini/MiniClosingBookend";
 import {
@@ -9,8 +10,10 @@ import MiniHeader, {
   type MiniHeaderNavItem,
 } from "@/app/components/blocks/mini/MiniHeader";
 import MiniPalette from "@/app/components/blocks/mini/MiniPalette";
+import MiniSelectedWorkHome from "@/app/components/blocks/mini/MiniSelectedWorkHome";
 import { homeMono } from "@/app/homeMono";
 import "@/app/homeTypography.css";
+import "@/app/homeTypographyV11.css";
 
 import "./PristopPage.css";
 
@@ -26,43 +29,58 @@ const NAV: MiniHeaderNavItem[] = [
   { href: "/o-nas", label: "O nas", id: "o-nas" },
 ];
 
-const STEPS = [
+type Role = "vi" | "bauma";
+
+const ROLE_LABEL: Record<Role, string> = { vi: "Vi", bauma: "Bauma" };
+
+/** Each phase lists its roles in the real order of actions. */
+const PHASES: { n: string; name: string; roles: { role: Role; text: string }[] }[] = [
   {
     n: "01",
-    title: "Opišite projekt",
-    body: "Pošljite nam e-pošto z nekaj stavki o projektu: za kaj gre, kaj potrebujete in kaj želite doseči. Dovolj je izhodišče, podrobnosti razjasnimo kasneje. Če imate obstoječo stran ali primere, ki vam ustrezajo, jih priložite.",
+    name: "Začetek",
+    roles: [
+      {
+        role: "vi",
+        text: "Po e-pošti opišete, kaj želite urediti in komu je stran namenjena. Pošljete, kar že imate: obstoječo stran, besedila, slike ali primere, ki so vam všeč.",
+      },
+      { role: "bauma", text: "Pregledamo opis in po e-pošti razjasnimo odprta vprašanja." },
+    ],
   },
   {
     n: "02",
-    title: "Pregled in predlog",
-    body: "Povpraševanje pregledamo in razjasnimo vprašanja, ki so za projekt pomembna. Nato pripravimo predlog obsega dela in ponudbo. Usklajujemo se po e-pošti.",
+    name: "Dogovor",
+    roles: [
+      { role: "bauma", text: "Pripravimo predlog obsega in ponudbo." },
+      { role: "vi", text: "Pregledate in potrdite obseg ter ponudbo." },
+    ],
   },
   {
     n: "03",
-    title: "Zasnova in izvedba",
-    body: "Ko sta obseg in ponudba dogovorjena, začnemo z delom. Najprej preverimo vsebino in strukturo strani, nato nadaljujemo z oblikovanjem in tehnično izvedbo. Obseg prilagodimo projektu; ni nujno, da vključuje vse naštete dele.",
+    name: "Izvedba",
+    roles: [
+      {
+        role: "bauma",
+        text: "Zasnujemo in izdelamo dogovorjeno rešitev. Kadar potrebujemo vaše gradivo ali mnenje, vam pišemo.",
+      },
+      { role: "vi", text: "Posredujete dogovorjene materiale in povratne informacije." },
+    ],
   },
   {
     n: "04",
-    title: "Preverjanje in objava",
-    body: "Delo pregledamo skupaj z vami, uskladimo potrebne popravke in stran pripravimo za objavo. Kjer je objava del dogovorjenega obsega, jo tudi izvedemo.",
+    name: "Pregled in zaključek",
+    roles: [
+      { role: "vi", text: "Pripravljeno delo pregledate in nam pošljete pripombe." },
+      { role: "bauma", text: "Uredimo dogovorjene popravke. Če je objava vključena, stran tudi objavimo." },
+    ],
   },
-] as const;
+];
 
-const SCOPE = [
-  {
-    term: "Zasnova in načrtovanje",
-    body: "Pripravimo strukturo, vsebinski načrt in smer razvoja.",
-  },
-  {
-    term: "Oblikovanje in razvoj",
-    body: "Oblikujemo in razvijamo spletne strani ter namenske digitalne rešitve.",
-  },
-  {
-    term: "Popravki in izboljšave",
-    body: "Odpravljamo napake in nadgrajujemo obstoječe digitalne rešitve.",
-  },
-] as const;
+/**
+ * Selected Work exactly as on the homepage: the homepage's Work surface tone and its V1.1 type and spacing, which
+ * `homeTypographyV11.css` keys to `[data-home-typography][data-home-v11]`. Both attributes sit on this wrapper only, so
+ * the rest of /pristop (and its contact heading) keeps its own scale.
+ */
+const SELECTED_WORK_SCOPE = { "--mini-surface-work": "#0f141c" } as CSSProperties;
 
 const CLOSING: MiniFinalCtaCopy = {
   eyebrow: "", // required by the shared type; the empty paragraph is hidden in PristopPage.css
@@ -73,14 +91,14 @@ const CLOSING: MiniFinalCtaCopy = {
 };
 
 /**
- * Pristop (Slovenian), composition V2. One left-anchored reading column.
- * Hero: H1 and lead are one group. Process: serif number and title share a baseline, the description sits directly
- * under the title. Written-first: a large serif statement on the Raised surface, on the process text edge.
- * Scope: three ruled text columns. Layout and type live in PristopPage.css (everything under `.apw`).
+ * Pristop (Slovenian), promoted from /lab/pristop-directions/a. One linear reading column: hero (the only serif heading)
+ * with a short note on written coordination, four phases with the client's and Bauma's part in the order they happen,
+ * then one closing note on scope, followed by the homepage's three selected projects. Inside a phase there are two axes: a secondary number gutter from 640px, and one
+ * content axis for the title, the role labels and the paragraphs. Layout and type live in PristopPage.css (under `.apw`).
  */
 export default function PristopPage() {
   return (
-    <div data-home-typography data-pristop-v2 className={homeMono.variable}>
+    <div data-home-typography data-pristop-page className={homeMono.variable}>
       <MiniPalette>
         <MiniHeader hideApproachNav refined primaryNav={NAV} contactHref="#contact" />
 
@@ -92,67 +110,63 @@ export default function PristopPage() {
                 Vsak projekt se začne s&nbsp;kratkim opisom.
               </h1>
               <p className="apw-lead">
-                Pošljite nam kratek opis projekta. Pregledamo vaše potrebe in predlagamo smiseln naslednji korak. Za
-                začetek ne potrebujemo sestanka.
+                Za začetek zadostuje nekaj stavkov o tem, kaj želite urediti. Ni treba, da imate vse pripravljeno:
+                vprašanja razjasnimo skupaj, nato predlagamo obseg in ponudbo.
+              </p>
+              <p className="apw-written">
+                <span className="apw-role">Usklajevanje</span>
+                Večino usklajevanja opravimo po e-pošti. Pogovor ali sestanek dogovorimo, kadar je potreben.
               </p>
             </div>
           </section>
 
           <section className="apw-process" aria-labelledby="apw-process-h">
             <div className="mini-page-rail">
-              <h2 id="apw-process-h" className="apw-label">
-                Potek sodelovanja
-              </h2>
-              <ol className="apw-steps">
-                {STEPS.map((s) => (
-                  <li key={s.n} className="apw-step">
-                    <p className="apw-num" aria-hidden="true">
-                      {s.n}
-                    </p>
-                    <h3 className="apw-step-title">{s.title}</h3>
-                    <p className="apw-desc">{s.body}</p>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </section>
-
-          <section className="apw-note" aria-labelledby="apw-note-h">
-            <div className="mini-page-rail">
-              <div className="apw-note-text">
-                <span className="apw-note-rule" aria-hidden="true" />
-                <h2 id="apw-note-h" className="apw-note-h">
-                  Dogovori ostanejo zapisani.
+              <div className="apw-col">
+                <p className="uppercase">POTEK SODELOVANJA</p>
+                <h2 id="apw-process-h" className="apw-h2">
+                  Od prvega opisa do zaključka.
                 </h2>
-                <p className="apw-note-body">
-                  Večino komunikacije in usklajevanj uredimo po e-pošti. Tako je lažje preveriti, kaj je bilo
-                  dogovorjeno, delo pa ostane urejeno. Kadar je pogovor koristen, ga dogovorimo.
-                </p>
+                <ol className="apw-steps">
+                  {PHASES.map((p) => (
+                    <li key={p.n} className="apw-step">
+                      <p className="apw-num" aria-hidden="true">
+                        {p.n}
+                      </p>
+                      <h3 className="apw-step-title">{p.name}</h3>
+                      <dl className="apw-roles">
+                        {p.roles.map((r) => (
+                          <div key={r.role} data-role={r.role}>
+                            <dt className="apw-role">{ROLE_LABEL[r.role]}</dt>
+                            <dd>{r.text}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                    </li>
+                  ))}
+                </ol>
               </div>
             </div>
           </section>
 
           <section className="apw-scope" aria-labelledby="apw-scope-h">
             <div className="mini-page-rail">
-              <div className="apw-scope-in">
-                <h2 id="apw-scope-h" className="apw-scope-h">
-                  Obseg sodelovanja prilagodimo projektu.
+              <div className="apw-col">
+                <p className="uppercase">OBSEG</p>
+                <h2 id="apw-scope-h" className="apw-h2">
+                  Dogovorimo se, kaj projekt vključuje.
                 </h2>
-                <p className="apw-scope-intro">
-                  Vsak projekt ima drugačne potrebe. Lahko&nbsp;gre za celovito izvedbo, nadgradnjo obstoječe rešitve ali
-                  posamezen tehnični poseg.
+                <p className="apw-body">
+                  Nekateri projekti zajemajo vse od strukture do objave, drugi le en del. Če že imate vsebino, oblikovanje
+                  ali delujočo stran, izhajamo iz tega. Kaj je vključeno, je zapisano v predlogu.
                 </p>
-                <dl className="apw-scope-list">
-                  {SCOPE.map((s) => (
-                    <div key={s.term}>
-                      <dt>{s.term}</dt>
-                      <dd>{s.body}</dd>
-                    </div>
-                  ))}
-                </dl>
               </div>
             </div>
           </section>
+
+          <div data-home-typography data-home-v11 style={SELECTED_WORK_SCOPE}>
+            <MiniSelectedWorkHome topRule={false} heading="Izbrano delo." eyebrow={false} />
+          </div>
         </main>
 
         <MiniClosingBookend

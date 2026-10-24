@@ -9,7 +9,8 @@ import {
 } from "./MiniSelectedWorkSurfaces";
 
 /**
- * Homepage "Izbrano delo" (SL), used by `app/page.tsx` and, with its own heading and no eyebrow, `app/o-nas/page.tsx`.
+ * Homepage "Izbrano delo" (SL), used by `app/page.tsx` and, with its own heading and no eyebrow, `app/o-nas/page.tsx` and
+ * `app/pristop/page.tsx`.
  *
  * Visually led: per project a typographic surface, the project name, a quiet
  * descriptor and a directional arrow. No cards, borders or captions around the
@@ -97,11 +98,12 @@ export default function MiniSelectedWorkHome({
    * (`/`: Services).
    */
   topRule?: boolean;
-  /** The H2 (default: the homepage line). `/o-nas` uses "Izbrano delo.". */
+  /** The H2 (default: the homepage line). `/o-nas` and `/pristop` use "Izbrano delo.". */
   heading?: string;
   /**
-   * The "Izbrano delo" eyebrow (default `true`). `false` drops it where the heading already says it (`/o-nas`); the
-   * heading then starts at the section's top padding (inline, so it also beats the homepage-scoped heading margin).
+   * The "Izbrano delo" eyebrow (default `true`). `false` drops it where the heading already says it (`/o-nas`,
+   * `/pristop`); the heading then starts at the section's top padding (inline, so it also beats the homepage-scoped
+   * heading margin).
    */
   eyebrow?: boolean;
 }) {
