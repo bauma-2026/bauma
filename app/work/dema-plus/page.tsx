@@ -8,10 +8,9 @@ import MiniHeader, {
 } from "../../components/blocks/mini/MiniHeader";
 import MiniClosingBookend from "../../components/blocks/mini/MiniClosingBookend";
 import CaseStudyNav from "../../components/work/CaseStudyNav";
-import {
-  MINI_CONTACT_MAILTO,
-  type MiniFinalCtaCopy,
-} from "../../components/blocks/mini/MiniFinalCTA";
+import { homeMono } from "../../homeMono";
+/** Scoped to the closing below only (`[data-home-typography]`), as on /work. */
+import "../../homeTypography.css";
 import DemaPlusHeroProof from "../../components/blocks/mini/DemaPlusHeroProof";
 import DemaPlusReferencesProof from "../../components/blocks/mini/DemaPlusReferencesProof";
 
@@ -74,20 +73,14 @@ const SURFACE_WORK = {
   "--mini-surface-work": "#0f141c",
 } as CSSProperties;
 
-const closingCopy: MiniFinalCtaCopy = {
-  eyebrow: "NASLEDNJI KORAK",
-  line1: "Najprej delo,",
-  line2: "nato razlaga.",
-  body: "Pri Dema Plus stran začnejo projekti, področja dela pa sledijo. Če imate izvedene projekte, ki jih je treba pokazati, jih lahko skupaj postavimo na začetek.",
-  cta: "Pogovorimo se o projektu",
-  mailto: MINI_CONTACT_MAILTO,
-};
-
 const EYEBROW =
   "text-[11px] font-medium uppercase tracking-[0.22em] text-white/60";
 
 const CAPTION =
   "mx-auto max-w-[760px] text-balance text-center text-sm leading-relaxed text-white/40";
+
+/** Bauma's short explanation above a proof (the /work/flexido lead). */
+const LEAD = "max-w-[40ch] text-xl font-medium leading-[1.4] tracking-[-0.01em] text-white/85 sm:text-2xl";
 
 /** Trims the References proof's own 48/40, 64/56 and 80/64px section padding (`.msw-clip > div`) to an even
  *  ~36px around the content below 1024 and ~48px from 1024, the same as the Ulterior proofs. Container widths, as in the proof. */
@@ -167,7 +160,8 @@ export default function DemaPlusCasePage() {
                 </div>
               </div>
 
-              <div className="mini-page-rail pb-10 pt-6 sm:pb-12 lg:pb-14">
+              {/* 60/72/88px to the next lead, as on /work/flexido. */}
+              <div className="mini-page-rail pb-15 pt-6 sm:pb-18 lg:pb-22">
                 <p className={CAPTION}>
                   Rekonstrukcija uvodnega razdelka domače strani demaplus.si.
                 </p>
@@ -176,6 +170,15 @@ export default function DemaPlusCasePage() {
 
             {/* 03 — REFERENCES: the Reference section (real content, static) */}
             <section aria-label="Dokaz: razdelek Reference na domači strani demaplus.si">
+              {/* The order is the demaplus-next homepage's: hero → FeaturedProjects → HomeServices. */}
+              <div className="mini-page-rail pb-10 sm:pb-12">
+                <p className={LEAD}>
+                  Za uvodnim razdelkom sledijo izbrani projekti, šele nato
+                  področja dela. Obiskovalec tako najprej vidi konkretne
+                  izvedbe.
+                </p>
+              </div>
+
               {/* Holds a focusable, swipeable slider on mobile, so it is not hidden. */}
               <div className="px-5 sm:px-0">
                 <div className="msw-proof">
@@ -185,7 +188,7 @@ export default function DemaPlusCasePage() {
                     className={`msw-clip ${REFERENCES_TRIM}`}
                   >
                     <div>
-                      <DemaPlusReferencesProof showHeader={false} headingLevel={2} />
+                      <DemaPlusReferencesProof showHeader={false} headingLevel={2} allowVerticalPan />
                     </div>
                   </div>
                 </div>
@@ -203,13 +206,16 @@ export default function DemaPlusCasePage() {
           <CaseStudyNav current="dema-plus" />
         </main>
 
-        <MiniClosingBookend
-          variant="graphite"
-          photoBackground
-          topRule={false}
-          tone="natural-midnight"
-          ctaCopy={closingCopy}
-        />
+        {/* The closing shared with /work: same copy, spacing and the /work type scope (Contact eyebrow, H2 tracking). */}
+        <div data-home-typography className={homeMono.variable}>
+          <MiniClosingBookend
+            variant="graphite"
+            photoBackground
+            topRule={false}
+            tone="natural-midnight"
+            spacing="roomy"
+          />
+        </div>
       </div>
     </MiniPalette>
   );

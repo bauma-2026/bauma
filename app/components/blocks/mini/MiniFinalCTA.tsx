@@ -18,7 +18,7 @@ export type MiniFinalCtaCopy = {
 
 /** Homepage contact method, reused by case-study CTAs. */
 export const MINI_CONTACT_MAILTO =
-  "mailto:gregor@bauma.si?subject=Povpra%C5%A1evanje%20za%20projekt";
+  "mailto:info@bauma.si?subject=Povpra%C5%A1evanje%20za%20projekt";
 
 const DEFAULT_COPY: MiniFinalCtaCopy = {
   eyebrow: "Kontakt",

@@ -19,6 +19,8 @@ import "./homeTypography.css";
 /** Typography V1.1 + vertical rhythm, scoped to `[data-home-v11]` (set below). */
 import "./homeTypographyV11.css";
 import { homeMono } from "./homeMono";
+/** Portrait-phone hero and "Kaj delamo" start, scoped to this page by `data-home-hero-mobile`. */
+import "./homeHeroMobile.css";
 import { isStaging } from "@/lib/siteEnv";
 
 const isProduction = process.env.VERCEL_ENV === "production" && !isStaging;
@@ -108,15 +110,15 @@ export const metadata: Metadata = {
  */
 export default function Home() {
   return (
-    <div data-home-typography data-home-v11 className={homeMono.variable}>
+    <div data-home-typography data-home-v11 data-home-hero-mobile className={homeMono.variable}>
       <MiniPalette>
         <MiniHeader treatAsHomepage darkHero hideApproachNav refined primaryNav={HOME_NAV} />
 
         <main>
           <MiniHero
             copy={MINI_HERO}
-            secondaryHref="#system"
-            secondaryLabel="Poglejte sistem"
+            secondaryHref="#kaj-delamo"
+            secondaryLabel="Kaj delamo ↓"
             photoBackground
           />
           {/* One chapter on the Services surface: the services, then "Celota" (#system) as its closing thought. */}

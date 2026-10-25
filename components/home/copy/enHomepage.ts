@@ -88,11 +88,11 @@ export const EN_CONTACT = {
   line1: "Every project starts",
   line2: "with a short description.",
   cta: "Send a description",
-  mailto: "mailto:gregor@bauma.si?subject=Project%20inquiry",
+  mailto: "mailto:info@bauma.si?subject=Project%20inquiry",
 } as const;
 
 export const EN_FOOTER = {
-  email: "gregor@bauma.si",
+  email: "info@bauma.si",
   legalAria: "Legal links",
   legal: [
     { href: "/en/terms", label: "Terms" },

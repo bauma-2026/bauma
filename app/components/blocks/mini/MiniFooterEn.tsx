@@ -35,10 +35,10 @@ export default function MiniFooterEn() {
           </p>
 
           <Link
-            href="mailto:hello@bauma.si?subject=Inquiry%20%E2%80%94%20Bauma"
+            href="mailto:info@bauma.si?subject=Inquiry%20%E2%80%94%20Bauma"
             className="mt-5 inline-flex text-sm font-medium text-white transition hover:text-white/70 sm:mt-6"
           >
-            hello@bauma.si
+            info@bauma.si
           </Link>
         </div>
       </div>

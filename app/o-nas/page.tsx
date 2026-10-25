@@ -42,7 +42,7 @@ const CLOSING: MiniFinalCtaCopy = {
 /**
  * O nas (Slovenian), approved from /lab/o-nas-direction. Bauma speaks as the studio ("mi"); Gregor Baumgartner signs
  * the closing thought. Hero (eyebrow, serif H1, lead), then one reading section on the same surface (two paragraphs,
- * closing thought + signature), then the shared Selected Work (three projects, "Vsi projekti") and the contact.
+ * closing thought + signature with Gregor's e-mail), then the shared Selected Work (three projects, "Vsi projekti") and the contact.
  * Layout and type live in ONas.css (`.onas`).
  */
 export default function ONasPage() {
@@ -83,6 +83,10 @@ export default function ONasPage() {
                     Z naročniki gradimo sodelovanja, v katerih delo poznamo in ga lahko razvijamo naprej.
                   </p>
                   <p className="onas-signature">Gregor Baumgartner</p>
+                  {/* Gregor's personal address; the studio's general contact (info@) stays in the contact section below. */}
+                  <p className="onas-signature-mail">
+                    <a href="mailto:gregor@bauma.si">gregor@bauma.si</a>
+                  </p>
                 </div>
               </div>
             </div>

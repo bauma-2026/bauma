@@ -17,7 +17,7 @@ const LINK_FOCUS =
 const DEFAULT_COPY: MiniFooterCopy = {
   homeHref: "/",
   homeAria: "Bauma — domov",
-  email: "gregor@bauma.si",
+  email: "info@bauma.si",
   legalAria: "Pravne povezave",
   legal: [
     { href: "/pogoji-uporabe", label: "Pogoji uporabe" },

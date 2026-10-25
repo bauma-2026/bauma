@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties, type MouseEvent } from "react";
 
 import "./MiniHeaderRefined.css";
 
@@ -47,6 +47,46 @@ function pageCurrent(href: string, pathname: string): "page" | "true" | undefine
   if (path === href) return "page";
   if (href !== "/" && path.startsWith(`${href}/`)) return "true";
   return undefined;
+}
+
+/**
+ * Visible current-page marker for primary navigation links (`aria-current` "page" or "true"): full ink and a fixed 1px
+ * underline. Hover on the other links only brightens them, so the two states stay distinct. The underline is a text
+ * decoration, so weight, position and the header's dimensions do not change; the focus ring is drawn outside it.
+ */
+const CURRENT_PAGE_MARK = "underline decoration-1 underline-offset-[5px] [text-decoration-skip-ink:none]";
+const CURRENT_PAGE_MARK_MENU = "underline decoration-1 underline-offset-[6px] [text-decoration-skip-ink:none]";
+
+/** The target id when `href` points at a fragment of the page being shown (`#contact`, or `/#contact` on `/`). */
+function sameDocumentFragment(href: string, pathname: string): string | null {
+  const hashAt = href.indexOf("#");
+  if (hashAt < 0 || hashAt === href.length - 1) return null;
+  const path = href.slice(0, hashAt);
+  if (path !== "" && (path.replace(/\/$/, "") || "/") !== (pathname.replace(/\/$/, "") || "/")) return null;
+  return href.slice(hashAt + 1);
+}
+
+/**
+ * Click handler for a same-page fragment link: a smooth scroll to the target (instant with reduced motion) instead of
+ * the router's jump, and the fragment written to the URL. Modified clicks, a missing target and no-JS visits keep the
+ * link's normal behaviour. `before` runs first (the mobile menu closes itself); the scroll then waits two frames, so the
+ * menu's scroll lock has been released.
+ */
+function scrollToFragment(event: MouseEvent<HTMLAnchorElement>, id: string, before?: () => void) {
+  if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+    return;
+  }
+  const target = document.getElementById(id);
+  if (!target) return;
+  event.preventDefault();
+  before?.();
+  const go = () => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    target.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+    if (window.location.hash !== `#${id}`) window.history.pushState(null, "", `#${id}`);
+  };
+  if (before) window.requestAnimationFrame(() => window.requestAnimationFrame(go));
+  else go();
 }
 
 /** Must match nav targets (Approach / System / Contact). */
@@ -271,6 +311,7 @@ function HeaderInner({
       { href: `${base}/#system`, label: copy.navSystem, id: "system" },
     ].filter((item) => !(hideApproachNav && item.id === "approach"));
   const contactHref = contactHrefOverride ?? `${base}/#contact`;
+  const contactFragment = sameDocumentFragment(contactHref, pathname);
 
   return (
     <div className="mini-page-rail flex h-[52px] items-center justify-between">
@@ -303,22 +344,27 @@ function HeaderInner({
         >
           {navItems.map((item) => {
             const isActive = activeId === item.id;
+            const current = isActive ? undefined : pageCurrent(item.href, pathname);
 
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                aria-current={isActive ? "location" : pageCurrent(item.href, pathname)}
+                aria-current={isActive ? "location" : current}
                 data-header-focus
                 data-header-label={refined ? "" : undefined}
                 className={`${HIT_AREA} text-[12px] font-medium transition-colors duration-300 ${
                   overPhotoHero
                     ? isActive
                       ? "text-black/85"
-                      : "text-black/55 hover:text-black/85"
+                      : current
+                        ? `text-black/85 ${CURRENT_PAGE_MARK}`
+                        : "text-black/55 hover:text-black/85"
                     : isActive
                       ? "text-white"
-                      : "text-white/55 hover:text-white"
+                      : current
+                        ? `text-white ${CURRENT_PAGE_MARK}`
+                        : "text-white/55 hover:text-white"
                 }`}
               >
                 {item.label}
@@ -345,9 +391,11 @@ function HeaderInner({
         <Link
           href={contactHref}
           aria-current={activeId === "contact" ? "location" : undefined}
+          onClick={contactFragment ? (event) => scrollToFragment(event, contactFragment) : undefined}
           data-header-focus
           data-cta="primary"
           data-cta-size="compact"
+          data-cta-arrow={contactFragment ? "down" : undefined}
           className="hidden rounded-full bg-[var(--mini-accent,#FCAC33)] px-3.5 py-1.5 text-[12px] font-medium text-[var(--mini-accent-fg,#000)] transition hover:bg-[var(--mini-accent,#FCAC33)]/90 sm:px-4 sm:py-1.5 sm:text-xs md:inline-flex"
         >
           {copy.headerCta}
@@ -391,6 +439,7 @@ function MobileMenu({
       { href: `${base}/#system`, label: copy.navSystem, id: "system" },
     ].filter((item) => !(hideApproachNav && item.id === "approach"));
   const contactHref = contactHrefOverride ?? `${base}/#contact`;
+  const contactFragment = sameDocumentFragment(contactHref, pathname);
 
   return (
     <div
@@ -406,18 +455,22 @@ function MobileMenu({
           aria-label={copy.homeHref === "/en" ? "Mobile navigation" : "Navigacija"}
           className="flex flex-col"
         >
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              aria-current={pageCurrent(item.href, pathname)}
-              onClick={onClose}
-              data-header-focus
-              className="flex min-h-[52px] w-full items-center border-b border-white/10 text-[20px] font-normal tracking-[-0.02em] text-white transition-colors duration-200 hover:text-white/70"
-            >
-              {item.label}
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            const current = pageCurrent(item.href, pathname);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={current}
+                onClick={onClose}
+                data-header-focus
+                className="flex min-h-[52px] w-full items-center border-b border-white/10 text-[20px] font-normal tracking-[-0.02em] text-white transition-colors duration-200 hover:text-white/70"
+              >
+                {/* The marker sits under the label itself, apart from the row's divider. */}
+                <span className={current ? CURRENT_PAGE_MARK_MENU : undefined}>{item.label}</span>
+              </Link>
+            );
+          })}
 
           <Link
             href={langSwitchHref}
@@ -433,10 +486,11 @@ function MobileMenu({
         <div className="mt-auto border-t border-white/10 pt-6">
           <Link
             href={contactHref}
-            onClick={onClose}
+            onClick={(event) => (contactFragment ? scrollToFragment(event, contactFragment, onClose) : onClose())}
             data-header-focus
             data-cta="primary"
             data-cta-size="menu"
+            data-cta-arrow={contactFragment ? "down" : undefined}
             className="flex h-14 w-full items-center justify-center rounded-full bg-[var(--mini-accent,#FCAC33)] text-sm font-medium text-[var(--mini-accent-fg,#000)] transition-colors duration-200 hover:bg-[var(--mini-accent,#FCAC33)]/90"
           >
             {copy.headerCta}

@@ -127,6 +127,41 @@
   line-height: 1.5;
   color: rgb(255 255 255 / 0.6);
 }
+/* The personal e-mail on the line under the name: the name's size and tone, marked as a link by the text-link language
+   of the legal pages (underline at 30% white, 4px offset); hover brightens text and underline, focus-visible takes the
+   header ring. Immediate under reduced motion. */
+.onas .onas-signature-mail {
+  margin-top: 0.125rem;
+  font-size: var(--onas-text);
+  line-height: 1.5;
+}
+.onas .onas-signature-mail a {
+  color: rgb(255 255 255 / 0.6);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgb(255 255 255 / 0.3);
+  text-underline-offset: 4px;
+  border-radius: 2px;
+  transition:
+    color 180ms ease,
+    text-decoration-color 180ms ease;
+}
+@media (hover: hover) {
+  .onas .onas-signature-mail a:hover {
+    color: rgb(255 255 255 / 0.92);
+    text-decoration-color: rgb(255 255 255 / 0.7);
+  }
+}
+.onas .onas-signature-mail a:focus-visible {
+  outline: 2px solid var(--mini-accent-text, #fff);
+  outline-offset: 3px;
+  color: rgb(255 255 255 / 0.92);
+}
+@media (prefers-reduced-motion: reduce) {
+  .onas .onas-signature-mail a {
+    transition: none;
+  }
+}
 
 /* ---------- shared contact (unchanged component): heading and button only, as on /pristop ---------- */
 [data-o-nas] [data-closing-bookend] section p.uppercase:empty {

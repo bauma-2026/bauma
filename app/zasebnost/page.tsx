@@ -52,10 +52,10 @@ export default function PrivacyPage() {
                 <p>
                   Za vprašanja glede zasebnosti lahko pišete na{" "}
                   <a
-                    href="mailto:gregor@bauma.si?subject=Povpra%C5%A1evanje%20za%20projekt"
+                    href="mailto:info@bauma.si?subject=Povpra%C5%A1evanje%20za%20projekt"
                     className="text-white underline decoration-white/30 underline-offset-4 transition hover:text-white/70"
                   >
-                    gregor@bauma.si
+                    info@bauma.si
                   </a>
                   .
                 </p>
@@ -132,10 +132,10 @@ export default function PrivacyPage() {
                 izbris, omejitev obdelave ali druge informacije glede obdelave
                 podatkov. Za zahteve pišite na{" "}
                 <a
-                  href="mailto:gregor@bauma.si?subject=Povpra%C5%A1evanje%20za%20projekt"
+                  href="mailto:info@bauma.si?subject=Povpra%C5%A1evanje%20za%20projekt"
                   className="text-white underline decoration-white/30 underline-offset-4 transition hover:text-white/70"
                 >
-                  gregor@bauma.si
+                  info@bauma.si
                 </a>
                 .
               </p>

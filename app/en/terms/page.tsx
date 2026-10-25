@@ -133,10 +133,10 @@ export default function TermsPage() {
                 For questions regarding these terms of use, you can contact us
                 at{" "}
                 <a
-                  href="mailto:hello@bauma.si?subject=Povpra%C5%A1evanje%20%E2%80%94%20Bauma"
+                  href="mailto:info@bauma.si?subject=Povpra%C5%A1evanje%20%E2%80%94%20Bauma"
                   className="text-white underline decoration-white/30 underline-offset-4 transition hover:text-white/70"
                 >
-                  hello@bauma.si
+                  info@bauma.si
                 </a>
                 .
               </p>

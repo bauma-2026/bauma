@@ -10,11 +10,11 @@ import Image from "next/image";
  * - src/components/shop/ProductHeroClient.tsx (layout, eyebrow, name, price,
  *   description) and src/components/shop/ProductPurchasePanel.tsx (colour and
  *   size chips, quantity stepper, availability line, support message).
- * - src/components/shop/ProductPurchaseCTA.tsx for the CTA, shown in its
- *   disabled form, which is the state the panel renders when checkout is not
- *   enabled (`commerceEnabled` false: disabled button plus the support message
- *   "Purchasing is temporarily unavailable."). Nothing here is wired to a
- *   payment: no link, no button, no request.
+ * - src/components/shop/ProductPurchaseCTA.tsx + purchase-cta.css for the CTA,
+ *   shown as the enabled button looks on ulterior.es (`.btn-primary
+ *   .purchase-cta`: #33333e fill, white 14px/500, min 184 x 40px, 10 x 18.4px
+ *   padding), without its hover. It is a static label: no link, no button, no
+ *   request. The page caption under the frame says payment is not enabled here.
  * - src/app/shop/lib/products.ts for the product data: Deep Olive (default)
  *   and Off White, sizes S (not available) M L XL, Deep Olive profile image
  *   `hardshell-green-side-01.webp` (unedited, 680 x 680). The L variant and the
@@ -27,9 +27,8 @@ import Image from "next/image";
  * name is a paragraph, not a heading: the embedding page owns the only H1.
  * The block is a little more compact than the original (narrower content
  * column, smaller vertical padding, a 460px photograph (the width of the Technical Proof photograph, so the two proofs share one grid), the product name at its
- * 1.7rem size) so it reads as one proof. The heading and description at the top
- * ("Namenski nakupni sistem.") are Bauma's own copy, set in Ulterior's heading
- * and body styles on the same surface; they are not part of ulterior.es.
+ * 1.7rem size) so it reads as one proof. Bauma's explanation of the purchase
+ * system sits above the frame, on the case-study page, not in here.
  */
 
 const FONT_STACK = "Arial, Helvetica, sans-serif";
@@ -49,19 +48,9 @@ export default function UlteriorPurchaseProof() {
       style={{ fontFamily: FONT_STACK }}
     >
       <div className="mx-auto w-full max-w-[1240px] px-5 py-9 @min-[640px]:px-6 @min-[768px]:py-10 @min-[1024px]:px-8 @min-[1024px]:py-12">
-        <div className="mb-7 max-w-[36rem] @min-[768px]:mb-8">
-          <h2 className="text-[1.75rem] font-semibold leading-[1.1] tracking-[-0.03em] text-[#33333e] @min-[1024px]:text-[2.25rem]">
-            Namenski nakupni sistem.
-          </h2>
-          <p className="mt-3 text-base leading-[1.6] text-[rgb(64,64,64)]">
-            Razvili smo lasten nakupni proces s PayPal integracijo,
-            upravljanjem naročil in rezervacijami zaloge.
-          </p>
-        </div>
-
         <div
           role="img"
-          aria-label="Ulterior: nakupni del strani izdelka z izbiro barve in velikosti, količino ter gumbom „Purchase with PayPal“ v onemogočenem stanju"
+          aria-label="Ulterior: demonstracija nakupnega dela strani izdelka z izbrano barvo Deep Olive, velikostjo L, količino 1 in gumbom „Purchase with PayPal“, ki v tem prikazu ni povezan s plačilom"
           className="grid gap-6 @min-[640px]:grid-cols-2 @min-[640px]:items-start @min-[640px]:gap-8 @min-[1024px]:grid-cols-[minmax(0,460px)_minmax(0,1fr)] @min-[1024px]:gap-14"
         >
           <div className="max-w-[420px] overflow-hidden bg-[#f5f4f1] @min-[640px]:relative @min-[640px]:max-w-none @min-[640px]:self-stretch">
@@ -154,15 +143,9 @@ export default function UlteriorPurchaseProof() {
                 </div>
 
                 <div className="mt-3">
-                  <span className="inline-flex min-w-[11.5rem] items-center justify-center border border-[#e6e6e6] bg-[#f7f7f6] px-5 py-3 text-sm font-medium text-[#33333e]/45">
+                  <span className="inline-flex min-h-10 min-w-[11.5rem] items-center justify-center border border-[#33333e] bg-[#33333e] px-[1.15rem] py-2.5 text-sm font-medium text-white">
                     Purchase with PayPal
                   </span>
-
-                  <div className="mt-2">
-                    <p className="max-w-[36ch] text-xs leading-5 text-[#33333e]/65">
-                      Purchasing is temporarily unavailable.
-                    </p>
-                  </div>
                 </div>
               </div>
             </div>

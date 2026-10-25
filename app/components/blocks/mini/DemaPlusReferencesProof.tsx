@@ -195,11 +195,17 @@ function HeaderStrip() {
 export default function DemaPlusReferencesProof({
   showHeader = true,
   headingLevel = 3,
+  allowVerticalPan = false,
 }: {
   /** Strip of the real site header above the section. */
   showHeader?: boolean;
   /** Level of the section heading; project titles sit one level below. */
   headingLevel?: 2 | 3 | 4;
+  /**
+   * Mobile slider: `pan-x pan-y` instead of the source's `pan-x`, so a vertical swipe that starts on the cards
+   * still scrolls the page. Opt-in; other callers keep the source behaviour.
+   */
+  allowVerticalPan?: boolean;
 }) {
   const headingId = useId();
   const Heading = `h${headingLevel}` as "h2" | "h3" | "h4";
@@ -244,7 +250,7 @@ export default function DemaPlusReferencesProof({
                 role="region"
                 aria-labelledby={headingId}
                 tabIndex={0}
-                className="snap-x snap-mandatory touch-pan-x overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-pl-5 px-5 [-ms-overflow-style:none] [scrollbar-width:none] focus-visible:rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[#6f8895] [&::-webkit-scrollbar]:hidden"
+                className={`snap-x snap-mandatory ${allowVerticalPan ? "[touch-action:pan-x_pan-y]" : "touch-pan-x"} overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-pl-5 px-5 [-ms-overflow-style:none] [scrollbar-width:none] focus-visible:rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[#6f8895] [&::-webkit-scrollbar]:hidden`}
               >
                 <div className="flex gap-4 pr-5">
                   {PROJECTS.map((project) => (

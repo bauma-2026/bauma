@@ -77,6 +77,12 @@
   --cta-arrow-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 11.5 11.5 4.5'/%3E%3Cpath d='M5.5 4.5h6v6'/%3E%3C/svg%3E");
 }
 
+/* A primary that scrolls to a section of the same page (the header Kontakt where it targets this page's own
+   #contact, `data-cta-arrow="down"` from MiniHeader) points down instead of up-right: it does not leave the page. */
+[data-mini-palette] [data-cta="primary"][data-cta-arrow="down"] {
+  --cta-arrow-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 3.5v9'/%3E%3Cpath d='M4.5 9 8 12.5 11.5 9'/%3E%3C/svg%3E");
+}
+
 /* The mid-page CTA already renders a "→" glyph; the mask arrow replaces it. */
 [data-mini-palette] [data-cta="primary"] [data-cta-glyph] {
   display: none;
@@ -88,6 +94,9 @@
   }
   [data-mini-palette] [data-cta="primary"]:hover::after {
     translate: 2px -2px;
+  }
+  [data-mini-palette] [data-cta="primary"][data-cta-arrow="down"]:hover::after {
+    translate: 0 2px;
   }
 }
 
@@ -129,7 +138,8 @@
   [data-mini-palette] [data-cta]::after {
     transition: none;
   }
-  [data-mini-palette] [data-cta="primary"]:hover::after {
+  [data-mini-palette] [data-cta="primary"]:hover::after,
+  [data-mini-palette] [data-cta="primary"][data-cta-arrow="down"]:hover::after {
     translate: none;
   }
 }

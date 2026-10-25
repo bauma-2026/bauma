@@ -19,7 +19,7 @@ export default function MiniFinalCTAEn() {
 
           <div className="mt-8">
             <a
-              href="mailto:hello@bauma.si"
+              href="mailto:info@bauma.si"
               className="group inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition duration-300 hover:-translate-y-[1px] hover:bg-white/90 active:translate-y-0"
             >
               <span className="inline-flex items-center gap-2">

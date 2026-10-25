@@ -8,10 +8,9 @@ import MiniHeader, {
 } from "../../components/blocks/mini/MiniHeader";
 import MiniClosingBookend from "../../components/blocks/mini/MiniClosingBookend";
 import CaseStudyNav from "../../components/work/CaseStudyNav";
-import {
-  MINI_CONTACT_MAILTO,
-  type MiniFinalCtaCopy,
-} from "../../components/blocks/mini/MiniFinalCTA";
+import { homeMono } from "../../homeMono";
+/** Scoped to the closing below only (`[data-home-typography]`), as on /work. */
+import "../../homeTypography.css";
 import HardshelljacketHeroProof from "../../components/blocks/mini/HardshelljacketHeroProof";
 import HardshelljacketConstructionProof from "../../components/blocks/mini/HardshelljacketConstructionProof";
 import HardshelljacketEverydayProof from "../../components/blocks/mini/HardshelljacketEverydayProof";
@@ -76,15 +75,6 @@ const SURFACE_WORK = {
   "--mini-surface-work": "#16181c",
 } as CSSProperties;
 
-const closingCopy: MiniFinalCtaCopy = {
-  eyebrow: "NASLEDNJI KORAK",
-  line1: "En izdelek.",
-  line2: "Jasna pot naprej.",
-  body: "Pri Hardshelljacket stran izdelek predstavi na enem mestu in vodi do jasnega naslednjega koraka. Če imate izdelek, ki potrebuje tak fokus, ga lahko skupaj postavimo.",
-  cta: "Pogovorimo se o projektu",
-  mailto: MINI_CONTACT_MAILTO,
-};
-
 const EYEBROW =
   "text-[11px] font-medium uppercase tracking-[0.22em] text-white/60";
 
@@ -117,9 +107,11 @@ export default function HardshelljacketCasePage() {
               </h1>
 
               <p className="mt-6 max-w-[44ch] text-base leading-[1.65] text-white/70 sm:text-lg sm:leading-[1.7]">
-                Za Hardshelljacket smo razvili enostransko spletno stran, ki
-                izdelek predstavi s fotografijo, tehničnimi podatki in jasno
-                potjo do nakupa pri Ulterior.
+                Za Hardshelljacket smo razvili enostransko spletno stran za
+                predstavitev Ulteriorjeve jakne. Fotografije in tehnični
+                podatki predstavijo izdelek, povezava za nakup vodi na
+                Ulterior, poslovna povpraševanja pa na ločen e-poštni kontakt
+                znamke.
               </p>
 
               <p className="mt-6 flex flex-wrap items-baseline gap-x-6 gap-y-2 text-sm leading-6 text-white/72 sm:text-[15px]">
@@ -229,13 +221,16 @@ export default function HardshelljacketCasePage() {
           <CaseStudyNav current="hardshelljacket" />
         </main>
 
-        <MiniClosingBookend
-          variant="graphite"
-          photoBackground
-          topRule={false}
-          tone="natural-midnight"
-          ctaCopy={closingCopy}
-        />
+        {/* The closing shared with /work: same copy, spacing and the /work type scope (Contact eyebrow, H2 tracking). */}
+        <div data-home-typography className={homeMono.variable}>
+          <MiniClosingBookend
+            variant="graphite"
+            photoBackground
+            topRule={false}
+            tone="natural-midnight"
+            spacing="roomy"
+          />
+        </div>
       </div>
     </MiniPalette>
   );

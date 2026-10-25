@@ -7,11 +7,11 @@ import MiniHeader, {
 } from "../../components/blocks/mini/MiniHeader";
 import MiniClosingBookend from "../../components/blocks/mini/MiniClosingBookend";
 import CaseStudyNav from "../../components/work/CaseStudyNav";
-import {
-  MINI_CONTACT_MAILTO,
-  type MiniFinalCtaCopy,
-} from "../../components/blocks/mini/MiniFinalCTA";
+import { homeMono } from "../../homeMono";
+/** Scoped to the closing below only (`[data-home-typography]`), as on /work. */
+import "../../homeTypography.css";
 import OdstraniTattooProcessProof from "../../components/blocks/mini/OdstraniTattooProcessProof";
+import OdstraniTattooResultsProof from "../../components/blocks/mini/OdstraniTattooResultsProof";
 
 // Proof width and clip (`.msw-proof` / `.msw-clip`): same rail logic as the homepage.
 import "../../components/blocks/mini/MiniSelectedWork.css";
@@ -41,22 +41,23 @@ const HOME_NAV: MiniHeaderNavItem[] = [
   { href: "/o-nas", label: "O nas", id: "o-nas" },
 ];
 
-/** The proof sits on an elevated neutral graphite surface; the introduction stays on Base. */
+/** The proofs sit on an elevated neutral graphite surface; the introduction stays on Base. */
 const SURFACE_WORK = {
   "--mini-surface-work": "#161a21",
 } as CSSProperties;
 
-const closingCopy: MiniFinalCtaCopy = {
-  eyebrow: "NASLEDNJI KORAK",
-  line1: "Obiskovalec ima vprašanje.",
-  line2: "Stran naj začne z njim.",
-  body: "Pri Odstrani Tattoo se stran začne z vprašanjem in konča s posvetom. Če ima vaša storitev podobno pot do odločitve, jo lahko skupaj uredimo.",
-  cta: "Pogovorimo se o projektu",
-  mailto: MINI_CONTACT_MAILTO,
-};
-
 const EYEBROW =
   "text-[11px] font-medium uppercase tracking-[0.22em] text-white/60";
+
+const CAPTION =
+  "mx-auto max-w-[760px] text-balance text-center text-sm leading-relaxed text-white/40";
+
+/** Bauma's short explanation, as on /work/flexido and /work/dema-plus. */
+const LEAD = "max-w-[40ch] text-xl font-medium leading-[1.4] tracking-[-0.01em] text-white/85 sm:text-2xl";
+
+/** The one rule: it closes "Kako deluje" before the results (as on /work/flexido). */
+const DIVIDER = "border-b border-white/10 pb-7 sm:pb-8 lg:pb-10";
+const AFTER_DIVIDER = "pb-8 sm:pb-10 lg:pb-12";
 
 export default function OdstraniTattooCasePage() {
   return (
@@ -112,16 +113,13 @@ export default function OdstraniTattooCasePage() {
             style={SURFACE_WORK}
             className="bg-[var(--mini-surface-work,#080a0f)]"
           >
-            {/* 02 — PROOF: the real section, reconstructed */}
+            {/* 02 — PROOF: "Kako deluje", the real section, reconstructed */}
             <section
               aria-label="Dokaz: razdelek „Kako deluje“ na domači strani odstranitattoo.si"
               className="pt-8 sm:pt-10"
             >
-              <div className="mini-page-rail pb-6 sm:pb-8">
-                <p className="max-w-[48ch] text-base leading-7 text-white/60">
-                  Postopek je razložen brez obljube rezultata, vsi pozivi pa
-                  vodijo na posvet.
-                </p>
+              <div className="mini-page-rail pb-10 sm:pb-12">
+                <p className={LEAD}>Postopek je razložen brez obljube rezultata.</p>
               </div>
 
               <div className="px-5 sm:px-0">
@@ -132,10 +130,54 @@ export default function OdstraniTattooCasePage() {
                 </div>
               </div>
 
-              <div className="mini-page-rail pb-16 pt-6 sm:pb-20 lg:pb-24">
-                <p className="mx-auto max-w-[760px] text-balance text-center text-sm leading-relaxed text-white/40">
-                  Rekonstrukcija razdelka „Kako deluje“ z domače strani
-                  odstranitattoo.si.
+              {/* The one rule: it closes "Kako deluje" before the results (as on /work/flexido). */}
+              <div className={`mini-page-rail ${AFTER_DIVIDER}`}>
+                <div className={`${DIVIDER} pt-6`}>
+                  <p className={CAPTION}>
+                    Rekonstrukcija razdelka „Kako deluje“ z domače strani
+                    odstranitattoo.si.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            {/* 03 — PROOF: "Realni primeri odstranjevanja", excerpt (static) */}
+            <section aria-label="Dokaz: razdelek „Realni primeri odstranjevanja“ na domači strani odstranitattoo.si">
+              <div className="mini-page-rail pb-10 sm:pb-12">
+                <p className={LEAD}>
+                  Primeri pokažejo spremembo po določenem številu tretmajev. Ob
+                  njih je pojasnjeno, da rezultat ni enak pri vseh tetovažah.
+                </p>
+              </div>
+
+              {/* Nothing inside is interactive, so it is exposed as a single labelled image. */}
+              <div className="px-5 sm:px-0">
+                <div
+                  role="img"
+                  aria-label="Odstrani Tattoo: razdelek „Realni primeri odstranjevanja“ z enim parom fotografij pred in po: postopno bledenje tattooja po 3 tretmajih, ter opombo, da primeri niso obljuba enakega rezultata za vsak tattoo"
+                  className="msw-proof"
+                >
+                  <div className="msw-clip">
+                    <div aria-hidden="true">
+                      <OdstraniTattooResultsProof />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 60/72/88px from the caption to the note on the way to a consultation, as between leads on /work/flexido. */}
+              <div className="mini-page-rail pb-15 pt-6 sm:pb-18 lg:pb-22">
+                <p className={CAPTION}>
+                  Izsek razdelka „Realni primeri odstranjevanja“ z domače strani
+                  odstranitattoo.si. Statičen prikaz.
+                </p>
+              </div>
+
+              {/* 04 — The way to a consultation: Bauma's note only, no contact details or buttons. */}
+              <div className="mini-page-rail pb-16 sm:pb-20 lg:pb-24">
+                <p className={LEAD}>
+                  Za posvet lahko obiskovalec pokliče ali po e-pošti pošlje
+                  vprašanje in fotografijo tetovaže.
                 </p>
               </div>
             </section>
@@ -145,13 +187,16 @@ export default function OdstraniTattooCasePage() {
           <CaseStudyNav current="odstrani-tattoo" />
         </main>
 
-        <MiniClosingBookend
-          variant="graphite"
-          photoBackground
-          topRule={false}
-          tone="natural-midnight"
-          ctaCopy={closingCopy}
-        />
+        {/* The closing shared with /work: same copy, spacing and the /work type scope (Contact eyebrow, H2 tracking). */}
+        <div data-home-typography className={homeMono.variable}>
+          <MiniClosingBookend
+            variant="graphite"
+            photoBackground
+            topRule={false}
+            tone="natural-midnight"
+            spacing="roomy"
+          />
+        </div>
       </div>
     </MiniPalette>
   );

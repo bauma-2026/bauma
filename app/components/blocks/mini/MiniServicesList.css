@@ -13,6 +13,7 @@
   --msl-title: 1.5rem;
   --msl-desc: 15px;
   --msl-desc-lh: 24px;
+  position: relative; /* holds the #kaj-delamo anchor marker */
   padding: 80px 0;
   background-color: var(--mini-surface-work, #080a0f);
   color: #fff;

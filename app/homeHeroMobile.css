@@ -1,0 +1,54 @@
+/*
+ * Homepage (`/`) only, portrait phones only: the hero and the start of "Kaj delamo".
+ * Scoped to `[data-home-hero-mobile]`, which only app/page.tsx sets, because MiniHero, its rail and the H1 rules in
+ * globals.css / MiniHeroSentence.css are shared with /en, /mini, /en/mini and several labs. Desktop and the
+ * 768px+ hero state are untouched.
+ *
+ * - Hero: the fixed `91svh` height becomes a 96svh minimum with `height: auto`, so the hero is a little taller and
+ *   can still grow with its content instead of clipping it. The section becomes a flex column so the rail fills that
+ *   height and keeps its copy bottom-aligned; the photograph is `inset: 0` and so still covers the hero to its edge.
+ * - Copy block: 28px more bottom padding on the rail, so H1, text and buttons sit higher in the same hero height.
+ * - H1: a slightly smaller size, an open line height and softer tracking than the 48px / 0.93 / -0.025em base.
+ * - "Kaj delamo": 56px instead of 80px above its eyebrow, so the hero hands over to the section without a dark band.
+ */
+
+@media (max-width: 767px) and (orientation: portrait) {
+  [data-home-hero-mobile] [data-hero-edge-hero] {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 96svh;
+  }
+
+  /* The copy block sits 28px higher than the shared rail places it: the extra space goes under the buttons, the hero
+     keeps its 96svh minimum, and on short screens it grows instead of pushing the copy towards the header. */
+  [data-home-hero-mobile] [data-hero-edge-hero] .bauma-hero-rail {
+    flex: 1 0 auto;
+    height: auto;
+    padding-bottom: calc(clamp(3.25rem, 10svh, 5.5rem) + 28px);
+  }
+
+  [data-home-hero-mobile] [data-hero-copy] .bauma-hero-h1-mobile.bauma-hero-h1-sentence {
+    font-size: 44px;
+    line-height: 1;
+    letter-spacing: -0.015em;
+  }
+
+  [data-home-hero-mobile] .msl {
+    padding-top: 56px;
+  }
+}
+
+/* 414-447px: globals.css takes 24px off the rail's bottom padding here; the 28px lift is added on top of that. */
+@media (min-width: 414px) and (max-width: 447px) and (orientation: portrait) {
+  [data-home-hero-mobile] [data-hero-edge-hero] .bauma-hero-rail {
+    padding-bottom: calc(clamp(3.25rem, 10svh, 5.5rem) - 24px + 28px);
+  }
+}
+
+/* Narrow phones: MiniHeroSentence.css keeps the sentence to four lines at 40px; the open line height needs 38px. */
+@media (max-width: 359px) and (orientation: portrait) {
+  [data-home-hero-mobile] [data-hero-copy] .bauma-hero-h1-mobile.bauma-hero-h1-sentence {
+    font-size: 38px;
+  }
+}

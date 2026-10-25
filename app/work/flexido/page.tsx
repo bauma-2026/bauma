@@ -8,12 +8,12 @@ import MiniHeader, {
 } from "../../components/blocks/mini/MiniHeader";
 import MiniClosingBookend from "../../components/blocks/mini/MiniClosingBookend";
 import CaseStudyNav from "../../components/work/CaseStudyNav";
-import {
-  MINI_CONTACT_MAILTO,
-  type MiniFinalCtaCopy,
-} from "../../components/blocks/mini/MiniFinalCTA";
+import { homeMono } from "../../homeMono";
+/** Scoped to the closing below only (`[data-home-typography]`), as on /work. */
+import "../../homeTypography.css";
 import FlexidoAreasProof from "../../components/blocks/mini/FlexidoAreasProof";
 import FlexidoHomeProof from "../../components/blocks/mini/FlexidoHomeProof";
+import FlexidoCatalogProof from "../../components/blocks/mini/FlexidoCatalogProof";
 
 const TITLE = "Flexido: dve poti v industrijsko ponudbo — Bauma";
 const DESCRIPTION =
@@ -59,15 +59,6 @@ const SITE_URL = "https://flexido.eu/";
 const FOCUS =
   "focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-white/50";
 
-const closingCopy: MiniFinalCtaCopy = {
-  eyebrow: "NASLEDNJI KORAK",
-  line1: "Nekdo išče rešitev za problem,",
-  line2: "drugi že pozna izdelek.",
-  body: "Pri Flexidu stran podpira oba vstopa in ju poveže. Če ima vaša ponudba več vstopov, jih lahko skupaj uredimo.",
-  cta: "Pogovorimo se o projektu",
-  mailto: MINI_CONTACT_MAILTO,
-};
-
 /* --------------------------------- tokens -------------------------------- */
 
 /** Same primary navigation as `/` and `/work`. */
@@ -77,7 +68,7 @@ const HOME_NAV: MiniHeaderNavItem[] = [
   { href: "/o-nas", label: "O nas", id: "o-nas" },
 ];
 
-/** The two proofs share the Work surface of `/work` and the homepage Selected Work; the introduction stays on Base. */
+/** The proofs share the Work surface of `/work` and the homepage Selected Work; the introduction stays on Base. */
 const SURFACE_WORK = {
   "--mini-surface-work": "#161a21",
 } as CSSProperties;
@@ -95,6 +86,13 @@ const CAPTION =
 /** Trims the Areas proof's own 64/80/96px vertical padding to an even ~36px inside the frame (which clips) below lg and
  *  ~48px from lg, the same as the Ulterior and Dema Plus proofs. Viewport widths, as in the proof. */
 const AREAS_TRIM = "[&>div]:-my-7 sm:[&>div]:-my-11 lg:[&>div]:-my-12";
+
+/** Bauma's short explanation above a proof (the existing Flexido lead). */
+const LEAD = "max-w-[40ch] text-xl font-medium leading-[1.4] tracking-[-0.01em] text-white/85 sm:text-2xl";
+
+/** Closes the first path under its caption: a 1px rule on the content column, as on /work/ulterior. */
+const DIVIDER = "border-b border-white/10 pb-7 sm:pb-8 lg:pb-10";
+const AFTER_DIVIDER = "pb-8 sm:pb-10 lg:pb-12";
 
 export default function FlexidoCasePage() {
   return (
@@ -117,21 +115,25 @@ export default function FlexidoCasePage() {
               <p className={EYEBROW}>Case / Flexido</p>
 
               <h1 id="fx-hero" className="home-primary-heading mt-5 sm:mt-6">
-                <span className="block">Kompleksna ponudba.</span>
-                <span className="block">Jasna struktura.</span>
+                <span className="block">Dve poti skozi</span>
+                <span className="block">industrijsko ponudbo.</span>
               </h1>
 
-              <p className="mt-6 max-w-[30rem] text-base leading-[1.65] text-white/70 sm:text-lg sm:leading-[1.7]">
-                Spletno stran smo zasnovali tako, da je industrijska ponudba
-                pregledna po proizvodnih procesih in izdelkih.
+              <p className="mt-6 max-w-[44ch] text-pretty text-base leading-[1.65] text-white/70 sm:text-lg sm:leading-[1.7]">
+                Za Flexido smo zasnovali in razvili spletno stran z dvema
+                vstopoma v ponudbo: po proizvodnih procesih in po izdelkih.
               </p>
 
-              <p className="mt-6 text-sm leading-6 sm:text-[15px]">
+              <p className="mt-6 flex flex-wrap items-baseline gap-x-6 gap-y-2 text-sm leading-6 text-white/72 sm:text-[15px]">
+                <span>
+                  Struktura, oblikovanje in razvoj spletne strani v
+                  slovenščini, angleščini in nemščini
+                </span>
                 <a
                   href={SITE_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`text-white/80 underline decoration-white/25 underline-offset-4 transition-colors duration-300 hover:text-white hover:decoration-white/50 ${FOCUS}`}
+                  className={`text-white/85 underline decoration-white/25 underline-offset-4 transition-colors duration-300 hover:text-white hover:decoration-white/50 ${FOCUS}`}
                 >
                   flexido.eu
                   <span aria-hidden="true"> ↗</span>
@@ -162,22 +164,20 @@ export default function FlexidoCasePage() {
                 </div>
               </div>
 
-              <div className="mini-page-rail pb-14 pt-6 sm:pb-16 lg:pb-20">
+              {/* 60/72/88px to the next lead, the same rhythm as the caption → rule → lead before the e-katalog. */}
+              <div className="mini-page-rail pb-15 pt-6 sm:pb-18 lg:pb-22">
                 <p className={CAPTION}>
                   Rekonstrukcija uvodnega razdelka domače strani flexido.eu.
                 </p>
               </div>
             </section>
 
-            {/* 03 — SECONDARY PROOF: the /resitve hub (real content, static) */}
-            <section
-              aria-label="Dokaz: razdelek Področja na strani Rešitve"
-              className="pt-14 sm:pt-16 lg:pt-20"
-            >
+            {/* 03 — FIRST PATH, by process: the /resitve hub (real content, static) */}
+            <section aria-label="Dokaz: razdelek Področja na strani Rešitve">
               <div className="mini-page-rail pb-10 sm:pb-12">
-                <p className="max-w-[40ch] text-xl font-medium leading-[1.4] tracking-[-0.01em] text-white/85 sm:text-2xl">
-                  Sedem področij je prvi vstop: obiskovalec začne pri procesu,
-                  ne pri izdelku. Kdor izdelek že pozna, gre prek e-kataloga.
+                <p className={LEAD}>
+                  Obiskovalec lahko začne pri delu proizvodnje, ki ga želi
+                  urediti. Področja ga usmerijo do ustreznih rešitev.
                 </p>
               </div>
 
@@ -189,9 +189,41 @@ export default function FlexidoCasePage() {
                 <FlexidoAreasProof />
               </div>
 
+              {/* The one rule on the page: it separates the two paths. */}
+              <div className={`mini-page-rail ${AFTER_DIVIDER}`}>
+                <div className={`${DIVIDER} pt-6`}>
+                  <p className={CAPTION}>
+                    Rekonstrukcija razdelka „Področja“ na strani Rešitve.
+                    Statičen prikaz: puščice v tem prikazu niso povezave.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            {/* 04 — SECOND PATH, by product: the e-katalog hub /standardne-celice (excerpt, static) */}
+            <section aria-label="Dokaz: razdelek Vrste sistemov v e-katalogu flexido.eu">
+              <div className="mini-page-rail pb-10 sm:pb-12">
+                <p className={LEAD}>
+                  Kdor že išče določen sistem, lahko začne v e-katalogu in od
+                  tam odpre podrobnosti izdelka.
+                </p>
+              </div>
+
+              {/* Nothing inside is interactive, so it is exposed as a single labelled image. */}
+              <div
+                role="img"
+                aria-label="Flexido: razdelek „Vrste sistemov“ v e-katalogu z naslovom „Izberite sistem glede na nalogo.“ in karticami sistemov FLEX 7 CNC Slim, FLEX 7 IMM Slim in FLEX 25 / 50, vsaka s fotografijo, opisom in napisom „Poglej sistem“"
+                className={`${PROOF_FRAME} ${AREAS_TRIM}`}
+              >
+                <div aria-hidden="true">
+                  <FlexidoCatalogProof />
+                </div>
+              </div>
+
               <div className="mini-page-rail pb-16 pt-6 sm:pb-20 lg:pb-24">
                 <p className={CAPTION}>
-                  Rekonstrukcija razdelka „Področja“ na strani Rešitve.
+                  Izsek razdelka „Vrste sistemov“ v e-katalogu flexido.eu.
+                  Statičen prikaz: kartice v tem prikazu niso povezave.
                 </p>
               </div>
             </section>
@@ -201,13 +233,16 @@ export default function FlexidoCasePage() {
           <CaseStudyNav current="flexido" />
         </main>
 
-        <MiniClosingBookend
-          variant="graphite"
-          photoBackground
-          topRule={false}
-          tone="natural-midnight"
-          ctaCopy={closingCopy}
-        />
+        {/* The closing shared with /work: same copy, spacing and the /work type scope (Contact eyebrow, H2 tracking). */}
+        <div data-home-typography className={homeMono.variable}>
+          <MiniClosingBookend
+            variant="graphite"
+            photoBackground
+            topRule={false}
+            tone="natural-midnight"
+            spacing="roomy"
+          />
+        </div>
       </div>
     </MiniPalette>
   );

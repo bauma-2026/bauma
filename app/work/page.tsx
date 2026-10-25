@@ -7,6 +7,7 @@ import type { CSSProperties, ReactNode } from "react";
 /** Homepage typography foundation (scoped to `[data-home-typography]`, set below). */
 import "../homeTypography.css";
 import "./ArtBiteSurface.css";
+import "./WorkPosters.css";
 import { homeMono } from "../homeMono";
 import MiniClosingBookend from "../components/blocks/mini/MiniClosingBookend";
 import MiniHeader, {
@@ -90,116 +91,50 @@ const FLEXIDO_LINE = "[&_[data-surface=flexido]>div>div>p:first-child]:max-w-[6.
 const LINK_FOCUS =
   "focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[color:var(--mini-accent-text,#fff)]";
 
-const ARROW =
-  "inline-block transition-transform duration-300 group-hover:translate-x-[3px]";
-
-const ARIAL = "Arial, Helvetica, sans-serif";
+/**
+ * The one response every card link shares: its caption arrow brightens from 48% to 92% and moves 3px right, on hover
+ * (devices that hover; Tailwind's `hover` variants are `@media (hover: hover)`) and on keyboard focus alike. In 200ms,
+ * out 300ms, cubic-bezier(.25,.8,.25,1). With reduced motion the brightening is immediate and the arrow does not move.
+ * Surfaces, photographs, names and descriptors do not respond.
+ */
+const ARROW_EASE = "ease-[cubic-bezier(.25,.8,.25,1)]";
+const ARROW_TINT = `text-white/48 transition-colors duration-300 ${ARROW_EASE} group-hover:text-white/92 group-hover:duration-200 group-focus-visible:text-white/92 group-focus-visible:duration-200 motion-reduce:transition-none`;
+const ARROW = `inline-block transition-transform duration-300 ${ARROW_EASE} group-hover:translate-x-[3px] group-hover:duration-200 group-focus-visible:translate-x-[3px] group-focus-visible:duration-200 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 motion-reduce:group-focus-visible:translate-x-0`;
 
 /* --------------------------------------------- local surfaces --------------------------------------------- */
 
 /**
- * Ulterior below 898px (and the base of the surface above it): the photograph's `left` puts the jacket's right edge at 92cqw
- * (the 7cqw margin the other surfaces use) and its left edge fades in over 14%. Scale, crop and the headline's size formula
- * are the originals. From 640 to 719px the jacket moves further right by up to 0.35 x (324px - card width), 14px at 640, so
- * "Normal" keeps about 18px from the sleeve cuff (6px without it); the shift is zero from 720px. Below 640px the card is a
- * square, where the headline is a fixed 9.8cqw.
+ * Ulterior: the white hardshell hanging from its strap (ulterior-next `lifestyle/hardshell-white-hanging-01.jpg`,
+ * unedited), cut just below the truss so the strap comes in from the card's top edge, and Ulterior's original logo with
+ * its brand line as one block, the line starting on the wordmark's "u". Beside the jacket on wider cards (the line's last
+ * baseline on the hem line), under it on narrower ones. Layout in WorkPosters.css (`.wul`); approved from
+ * /lab/work-posters (v3).
  */
 function UlteriorSurface() {
   return (
-    <div
-      className="relative aspect-square overflow-hidden rounded-[3px] sm:max-[898px]:aspect-auto sm:max-[898px]:h-[19rem] bg-[#eef2f5] text-[#33333e] [container-type:size]"
-      style={{ fontFamily: ARIAL }}
-    >
+    <div className="wul relative aspect-square overflow-hidden rounded-[3px] sm:max-[898px]:aspect-auto sm:max-[898px]:h-[19rem] min-[898px]:aspect-[4/3] [container-type:size]">
       <Image
         src="/work/ulterior/hardshell-white-hanging.webp"
         alt="Bela hardshell jakna na obešalniku"
         width={1706}
         height={1924}
-        sizes="520px"
+        sizes="(min-width: 640px) 560px, 92vw"
         quality={85}
-        className="absolute max-w-none sm:max-[720px]:left-[calc(92cqw_-_101.8cqh_+_max(0px,(324px_-_100cqw)_*_0.35))]!"
-        style={{
-          height: "172.7cqh",
-          width: "auto",
-          top: "-66.9cqh",
-          left: "calc(92cqw - 101.8cqh)",
-          maskImage: "linear-gradient(to right, transparent, #000 14%)",
-          WebkitMaskImage: "linear-gradient(to right, transparent, #000 14%)",
-        }}
+        className="wul-photo"
       />
-      <div className="absolute left-[7cqw]" style={{ bottom: "11cqh" }}>
-        <p
-          className="text-balance font-normal leading-[1.25] text-[#505058]"
-          style={{ fontSize: "clamp(0.75rem, 3.6cqw, 0.9375rem)", maxWidth: "8em" }}
-        >
-          Technical protection for
-        </p>
-        <p className="mt-[0.5em] font-bold leading-[0.95] tracking-[-0.055em] [font-size:min(10.8cqw,calc((min(0px,92cqw-101.8cqh)+53.8cqh-10cqw)/3.1))] max-sm:[font-size:9.8cqw]">
-          <span className="block">Normal</span>
-          <span className="block">life.</span>
-        </p>
-      </div>
-    </div>
-  );
-}
-
-/** Below 898px the surface above, from 898px the selected composition below (the hidden one does not load its image). */
-function UlteriorApproved() {
-  return (
-    <>
-      <div className="min-[898px]:hidden">
-        <UlteriorSurface />
-      </div>
-      <div className="hidden min-[898px]:block">
-        <UlteriorDesktop />
-      </div>
-    </>
-  );
-}
-
-/**
- * Ulterior from 898px: the selected "B refined" composition, text group lowered by 6% of the card height. The headline is
- * pinned (12.2cqw, two lines): its top is `69cqh - 10.736cqw + 0.6 * eyebrow`, i.e. 63cqh as first set plus the 6cqh lowering,
- * so it sits against the jacket's lower mass (hem at 88.5cqh). The eyebrow hangs above the pinned headline instead of taking
- * part in that calculation: 2.65cqw (13px floor), graphite, 1.2cqw above the headline's box. Jacket centre 73cqw, photograph
- * unchanged, left edge faded over 14%.
- */
-function UlteriorDesktop() {
-  return (
-    <div
-      className="relative aspect-[4/3] overflow-hidden rounded-[3px] bg-[#eef2f5] text-[#33333e] [container-type:size]"
-      style={{ fontFamily: ARIAL }}
-    >
-      <Image
-        src="/work/ulterior/hardshell-white-hanging.webp"
-        alt="Bela hardshell jakna na obešalniku"
-        width={1706}
-        height={1924}
-        sizes="520px"
-        quality={85}
-        className="absolute max-w-none"
-        style={{
-          height: "172.7cqh",
-          width: "auto",
-          top: "-66.9cqh",
-          left: "calc(73cqw - 78.1cqh)",
-          maskImage: "linear-gradient(to right, transparent, #000 14%)",
-          WebkitMaskImage: "linear-gradient(to right, transparent, #000 14%)",
-        }}
-      />
-      <div
-        className="absolute"
-        style={{ left: "8cqw", top: `calc(69cqh - 10.736cqw + 0.6 * clamp(0.8125rem, 3.1cqw, 1.125rem))` }}
-      >
-        <p
-          className="absolute bottom-full left-0 whitespace-nowrap font-normal tracking-[-0.005em] text-[#35363c]"
-          style={{ fontSize: "clamp(0.8125rem, 2.65cqw, 0.97rem)", lineHeight: 1.2, marginBottom: "1.2cqw" }}
-        >
-          Technical protection for
-        </p>
-        <p className="-ml-[0.04em] font-bold tracking-[-0.055em]" style={{ fontSize: "12.2cqw", lineHeight: 0.94 }}>
-          <span className="block">Normal</span>
-          <span className="block">life.</span>
+      {/* Part of the artwork: the caption below already names the project for the link. */}
+      <div className="wul-group" aria-hidden="true">
+        <Image
+          src="/work/ulterior/ulterior-logo.svg"
+          alt=""
+          width={966}
+          height={135}
+          unoptimized
+          className="wul-logo"
+        />
+        <p className="wul-line">
+          <span>Technical protection</span>
+          <span>for normal life.</span>
         </p>
       </div>
     </div>
@@ -207,18 +142,21 @@ function UlteriorDesktop() {
 }
 
 /**
- * ArtBite: a poster from ArtBite's own hero, on the near-black warm ground of its top edge (#0e0a08): the two hero
- * photographs (horses dominant, the watch beside them on one bottom axis; unedited, their portrait crops and soft
- * radii) and the name "ArtBite" once, in the studio's logo face. The card is a size container and the composition
- * follows its own proportions (ArtBiteSurface.css): narrower than 6:5 (phones, the narrow 19rem cards of the two-column
- * grid) the name runs horizontally above the pair; from 6:5 (4:3 and the wider 19rem cards) it stands vertically,
- * reading upwards, beside the watch. The group is centred in the card. Approved from /lab/work-artbite (D6).
+ * ArtBite: a poster from ArtBite's own hero, on a solid terracotta ground (#cd664e): the two hero photographs (horses
+ * dominant, the watch beside them on one bottom axis; their portrait crops and soft radii) in black and white, and the
+ * name "ArtBite" once, in the studio's logo face, in cream. On hover and keyboard focus of the card link both photographs
+ * turn to their original colour (ArtBiteSurface.css). The card is a size container and the composition follows its own
+ * proportions (ArtBiteSurface.css): narrower than 6:5 (phones, the narrow 19rem cards of the two-column grid) the name
+ * runs horizontally above the pair; from 6:5 (4:3 and the wider 19rem cards) it stands vertically, reading upwards,
+ * beside the watch. The group is centred in the card. Composition approved from /lab/work-artbite (D6), treatment from
+ * /lab/work-artbite-terra (B2), colour response from /lab/work-artbite-color.
  */
 function ArtBiteSurface() {
   return (
     <div
-      className={`${artbiteLogo.variable} wab relative aspect-square overflow-hidden rounded-[3px] sm:max-[898px]:aspect-auto sm:max-[898px]:h-[19rem] min-[898px]:aspect-[4/3] bg-[#0e0a08] [container-type:size]`}
+      className={`${artbiteLogo.variable} wab wab-terra relative aspect-square overflow-hidden rounded-[3px] sm:max-[898px]:aspect-auto sm:max-[898px]:h-[19rem] min-[898px]:aspect-[4/3] bg-[#cd664e] [container-type:size]`}
     >
+      <ArtBiteFilters />
       <div className="wab-group">
         {/* Part of the artwork: the caption below already names the project for the link. */}
         <p className="wab-name" aria-hidden="true">
@@ -226,23 +164,19 @@ function ArtBiteSurface() {
         </p>
         <div className="wab-pair">
           <div className="wab-horses">
-            <Image
+            <ArtBitePhoto
               src="/work/artbite/hero-2.webp"
               alt="Tetovaža dveh konj z lovilcem sanj"
-              fill
               sizes="(min-width: 640px) 260px, 45vw"
-              quality={90}
-              className="object-cover object-[50%_24%]"
+              position="object-[50%_24%]"
             />
           </div>
           <div className="wab-watch">
-            <Image
+            <ArtBitePhoto
               src="/work/artbite/hero-3.webp"
               alt="Tetovaža žepne ure s peresom"
-              fill
               sizes="(min-width: 640px) 160px, 32vw"
-              quality={90}
-              className="object-cover object-[44%_center]"
+              position="object-[44%_center]"
             />
           </div>
         </div>
@@ -252,35 +186,85 @@ function ArtBiteSurface() {
 }
 
 /**
- * Hardshelljacket: the original photograph (`hardshell-atmosphere-02.webp`, unedited) covers the surface, `object-position`
- * putting the hood in the right three quarters. The line is the site's own: two lines from 898px ("Made for the way" /
- * "the day moves."), three below ("Made for / the way / the day moves."), where the long line would reach the hood. Arial
- * bold, white, bottom left; 7cqw capped at 2.25rem (36px at 1440; cards narrower than 514px are limited by 7cqw). A flat
- * `rgba(8, 10, 15, 0.12)` layer takes the city background down without a visible tint.
+ * One ArtBite photograph as two exactly aligned layers from the same source, sizes and crop (one download, identical
+ * object-fit and position): the original in colour underneath, which carries the description, and a decorative copy on
+ * top that the B2 filter turns black and white (`alt=""`, so the photograph is described once).
+ */
+function ArtBitePhoto({ src, alt, sizes, position }: { src: string; alt: string; sizes: string; position: string }) {
+  return (
+    <>
+      <Image src={src} alt={alt} fill sizes={sizes} quality={90} className={`wab-colour object-cover ${position}`} />
+      <Image src={src} alt="" aria-hidden="true" fill sizes={sizes} quality={90} className={`wab-bw object-cover ${position}`} />
+    </>
+  );
+}
+
+/**
+ * The ArtBite photographs' black-and-white filters, in sRGB so the values act on the files as stored. Both: a channel mix of
+ * R 0.36 / G 0.50 / B 0.14 (more red than luminance: skin a little lighter, ink stays dark), then a gamma. Horses (the
+ * darker photograph): gamma 0.86 to open the mid-tones. Watch: gamma 0.92, then a highlight roll-off (identity up to
+ * 0.5, then 0.60 / 0.68 / 0.75 / 0.81 at 0.625 / 0.75 / 0.875 / 1), so its bright dial does not draw the eye from the
+ * larger horses while the ink and mid-tones keep their separation.
+ */
+const BW_MIX = "0.36 0.50 0.14 0 0  0.36 0.50 0.14 0 0  0.36 0.50 0.14 0 0  0 0 0 1 0";
+const WATCH_ROLLOFF = "0 0.125 0.25 0.375 0.5 0.6 0.68 0.75 0.81";
+
+function ArtBiteFilters() {
+  return (
+    <svg aria-hidden="true" width="0" height="0" className="wab-filters">
+      <defs>
+        <filter id="work-artbite-horses-bw" colorInterpolationFilters="sRGB">
+          <feColorMatrix type="matrix" values={BW_MIX} />
+          <feComponentTransfer>
+            <feFuncR type="gamma" amplitude="1" exponent="0.86" offset="0" />
+            <feFuncG type="gamma" amplitude="1" exponent="0.86" offset="0" />
+            <feFuncB type="gamma" amplitude="1" exponent="0.86" offset="0" />
+          </feComponentTransfer>
+        </filter>
+        <filter id="work-artbite-watch-bw" colorInterpolationFilters="sRGB">
+          <feColorMatrix type="matrix" values={BW_MIX} />
+          <feComponentTransfer>
+            <feFuncR type="gamma" amplitude="1" exponent="0.92" offset="0" />
+            <feFuncG type="gamma" amplitude="1" exponent="0.92" offset="0" />
+            <feFuncB type="gamma" amplitude="1" exponent="0.92" offset="0" />
+          </feComponentTransfer>
+          <feComponentTransfer>
+            <feFuncR type="table" tableValues={WATCH_ROLLOFF} />
+            <feFuncG type="table" tableValues={WATCH_ROLLOFF} />
+            <feFuncB type="table" tableValues={WATCH_ROLLOFF} />
+          </feComponentTransfer>
+        </filter>
+      </defs>
+    </svg>
+  );
+}
+
+/**
+ * Hardshelljacket: the deep olive jacket on concrete from the site's technical details section (hardshelljacket-next
+ * `hardshell/proof/hardshell-green-front-02.webp`, unedited), the whole jacket in frame, the photograph starting at the
+ * card's top edge; the page's own H1, "Waterproof Hardshell Jacket", set like the site, with its eyebrow "Ulterior
+ * product". Layout in WorkPosters.css (`.whj`); approved from /lab/work-posters (B).
  */
 function HardshelljacketSurface() {
   return (
-    <div
-      className="relative aspect-square overflow-hidden rounded-[3px] sm:max-[898px]:aspect-auto sm:max-[898px]:h-[19rem] min-[898px]:aspect-[4/3] bg-[#0b0d10] text-white [container-type:size]"
-      style={{ fontFamily: ARIAL }}
-    >
+    <div className="whj relative aspect-square overflow-hidden rounded-[3px] sm:max-[898px]:aspect-auto sm:max-[898px]:h-[19rem] min-[898px]:aspect-[4/3] [container-type:size]">
       <Image
-        src="/work/hardshelljacket/hardshell-atmosphere-02.webp"
-        alt="Moški v zeleni kapuci hardshell jakne na deževni mestni ulici"
-        fill
-        sizes="640px"
+        src="/work/hardshelljacket/hardshell-green-front-02.webp"
+        alt="Moški v temno olivni hardshell jakni pred betonsko steno"
+        width={1254}
+        height={1254}
+        sizes="(min-width: 640px) 620px, 92vw"
         quality={85}
-        className="object-cover object-[46%_50%]"
+        className="whj-photo"
       />
-      <div aria-hidden="true" className="absolute inset-0 bg-[rgba(8,10,15,0.12)]" />
-      <p
-        className="absolute bottom-[9cqh] left-[7cqw] font-bold leading-[1.04] tracking-[-0.035em]"
-        style={{ fontSize: "clamp(1.25rem, 7cqw, 2.25rem)" }}
-      >
-        <span className="block whitespace-nowrap">
-          Made for<span className="max-[898px]:block"> the way</span>
-        </span>
-        <span className="block whitespace-nowrap">the day moves.</span>
+      {/* Part of the artwork: the caption below already names the project for the link. */}
+      <p className="whj-name" aria-hidden="true">
+        <span>Waterproof</span>
+        <span>Hardshell</span>
+        <span>Jacket</span>
+      </p>
+      <p className="whj-eyebrow" aria-hidden="true">
+        Ulterior product
       </p>
     </div>
   );
@@ -303,7 +287,7 @@ type Project = {
 /** DOM order is the reading order: rows of two. Names, descriptors and destinations as on the homepage's Selected Work. */
 const PROJECTS: readonly Project[] = [
   { slug: "flexido", motion: "flexido", name: "Flexido", descriptor: "Industrijski B2B", shared: true, Art: FlexidoSurface },
-  { slug: "ulterior", name: "Ulterior", descriptor: "Produktna predstavitev in nakupni sistem", Art: UlteriorApproved },
+  { slug: "ulterior", name: "Ulterior", descriptor: "Produktna predstavitev in nakupni sistem", Art: UlteriorSurface },
   { slug: "odstrani-tattoo", motion: "odstrani", name: "Odstrani Tattoo", descriptor: "Zaupanje in konverzija", shared: true, Art: OdstraniSurface },
   { slug: "dema-plus", motion: "dema", name: "Dema Plus", descriptor: "Reference in jasnost", shared: true, Art: DemaSurface },
   { slug: "artbite", name: "ArtBite", descriptor: "Spletna stran tattoo studia", Art: ArtBiteSurface },
@@ -331,7 +315,7 @@ function Caption({ id, name, descriptor }: { id: string; name: string; descripto
         </h2>
         <span
           aria-hidden="true"
-          className="text-sm font-medium text-white/48 transition-colors duration-300 group-hover:text-white/92"
+          className={`text-sm font-medium ${ARROW_TINT}`}
         >
           <span className={ARROW}>→</span>
         </span>

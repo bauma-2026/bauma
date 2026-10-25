@@ -50,6 +50,8 @@ export default function MiniServicesList({
 }) {
   return (
     <section id="storitve" aria-labelledby="msl-heading" className={joined ? "msl msl--joined" : "msl"}>
+      {/* Target of the hero's "Kaj delamo ↓": same marker as #system, so the section starts under the fixed header. */}
+      <span id="kaj-delamo" data-anchor-marker aria-hidden="true" />
       <div className="mini-page-rail">
         <div className="msl-col">
           <p className="uppercase">KAJ DELAMO</p>

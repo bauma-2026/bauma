@@ -8,10 +8,9 @@ import MiniHeader, {
 } from "../../components/blocks/mini/MiniHeader";
 import MiniClosingBookend from "../../components/blocks/mini/MiniClosingBookend";
 import CaseStudyNav from "../../components/work/CaseStudyNav";
-import {
-  MINI_CONTACT_MAILTO,
-  type MiniFinalCtaCopy,
-} from "../../components/blocks/mini/MiniFinalCTA";
+import { homeMono } from "../../homeMono";
+/** Scoped to the closing below only (`[data-home-typography]`), as on /work. */
+import "../../homeTypography.css";
 import UlteriorHeroProof from "../../components/blocks/mini/UlteriorHeroProof";
 import UlteriorTechnicalProof from "../../components/blocks/mini/UlteriorTechnicalProof";
 import UlteriorVisualProof from "../../components/blocks/mini/UlteriorVisualProof";
@@ -58,7 +57,7 @@ export const metadata: Metadata = {
 
 /* Facts checked against the live ulterior.es and the ulterior-next source.
  * No metrics, dates or results are claimed; the payment flow is described as
- * built and sandbox-tested, not as processing live payments. */
+ * built (verified in the source), not as processing live payments. */
 
 const SITE_URL = "https://ulterior.es/";
 
@@ -77,20 +76,19 @@ const SURFACE_WORK = {
   "--mini-surface-work": "#121316",
 } as CSSProperties;
 
-const closingCopy: MiniFinalCtaCopy = {
-  eyebrow: "NASLEDNJI KORAK",
-  line1: "Izdelek naj vodi,",
-  line2: "nakup naj sledi.",
-  body: "Pri Ulterior stran najprej pokaže izdelek, nato njegove podrobnosti, nakupni sistem pa deluje za njima. Če imate izdelek, ki ga je treba predstaviti in prodati, ga lahko skupaj postavimo.",
-  cta: "Pogovorimo se o projektu",
-  mailto: MINI_CONTACT_MAILTO,
-};
-
 const EYEBROW =
   "text-[11px] font-medium uppercase tracking-[0.22em] text-white/60";
 
 const CAPTION =
   "mx-auto max-w-[760px] text-balance text-center text-sm leading-relaxed text-white/40";
+
+/** Closes a proof block under its caption: a 1px rule on the content column, in the case-nav rule tone. The caption sits
+ *  nearer its proof (20-24px) than the rule (28-40px), and the next block starts 32-48px below the rule. */
+const DIVIDER = "border-b border-white/10 pb-7 sm:pb-8 lg:pb-10";
+const AFTER_DIVIDER = "pb-8 sm:pb-10 lg:pb-12";
+
+/** Bauma's own short note above a proof (the Odstrani Tattoo lead, wide enough for one line on desktop). */
+const LEAD = "max-w-[62ch] text-base leading-7 text-white/60";
 
 export default function UlteriorCasePage() {
   return (
@@ -123,12 +121,16 @@ export default function UlteriorCasePage() {
                 namenskim nakupnim sistemom.
               </p>
 
-              <p className="mt-6 text-sm leading-6 sm:text-[15px]">
+              <p className="mt-6 flex flex-wrap items-baseline gap-x-6 gap-y-2 text-sm leading-6 text-white/72 sm:text-[15px]">
+                <span>
+                  Struktura, oblikovanje in razvoj spletne strani ter
+                  nakupnega sistema
+                </span>
                 <a
                   href={SITE_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`text-white/80 underline decoration-white/25 underline-offset-4 transition-colors duration-300 hover:text-white hover:decoration-white/50 ${FOCUS}`}
+                  className={`text-white/85 underline decoration-white/25 underline-offset-4 transition-colors duration-300 hover:text-white hover:decoration-white/50 ${FOCUS}`}
                 >
                   ulterior.es
                   <span aria-hidden="true"> ↗</span>
@@ -162,15 +164,24 @@ export default function UlteriorCasePage() {
                 </div>
               </div>
 
-              <div className="mini-page-rail pb-10 pt-5 sm:pb-12 lg:pb-14">
-                <p className={CAPTION}>
-                  Rekonstrukcija uvodnega razdelka domače strani ulterior.es.
-                </p>
+              <div className={`mini-page-rail ${AFTER_DIVIDER}`}>
+                <div className={`${DIVIDER} pt-5`}>
+                  <p className={CAPTION}>
+                    Rekonstrukcija uvodnega razdelka domače strani ulterior.es.
+                  </p>
+                </div>
               </div>
             </section>
 
             {/* 03 — TECHNICAL PROOF: interactive */}
             <section aria-label="Dokaz: razdelek Technical Proof na strani izdelka ulterior.es">
+              <div className="mini-page-rail pb-6 sm:pb-8">
+                <p className={LEAD}>
+                  Podrobnosti izdelka lahko izberete s klikom ali dotikom
+                  označenih točk.
+                </p>
+              </div>
+
               <div className="px-5 sm:px-0">
                 <div
                   role="group"
@@ -186,7 +197,7 @@ export default function UlteriorCasePage() {
               <div className="mini-page-rail pb-10 pt-5 sm:pb-12 lg:pb-14">
                 <p className={CAPTION}>
                   Rekonstrukcija razdelka „Technical Proof“ na strani izdelka
-                  ulterior.es. Podrobnosti se izbirajo s klikom ali dotikom.
+                  ulterior.es.
                 </p>
               </div>
             </section>
@@ -198,19 +209,39 @@ export default function UlteriorCasePage() {
             >
               <UlteriorVisualProof />
 
-              <div className="mini-page-rail pb-12 pt-6 sm:pb-14 lg:pb-16">
-                <p className={CAPTION}>
-                  Razdelek „Visual Proof“ na strani Hardshell na ulterior.es.
-                </p>
+              <div className={`mini-page-rail ${AFTER_DIVIDER}`}>
+                <div className={`${DIVIDER} pt-6`}>
+                  <p className={CAPTION}>
+                    Razdelek „Visual Proof“ na strani Hardshell na ulterior.es.
+                  </p>
+                </div>
               </div>
             </section>
 
             {/* 05 — PURCHASE: the product page's purchase area, as built (static) */}
             <section
-              aria-label="Dokaz: nakupni del strani izdelka ulterior.es"
+              aria-labelledby="ul-purchase"
               className="pt-0"
             >
-              {/* The heading and description belong to the proof; the product UI inside it is exposed as one labelled image. */}
+              {/* Bauma's explanation, on the case-study surface; only the reconstructed product UI sits in the frame.
+                  Every step below is in ulterior-next (reservations, checkout, PayPal capture webhook); no live sales are claimed. */}
+              <div className="mini-page-rail pb-8 sm:pb-10">
+                <h2 id="ul-purchase" className="home-bridge-heading">
+                  Namenski nakupni sistem.
+                </h2>
+                <div className="mt-5 max-w-[48ch] space-y-4 text-base leading-7 text-white/70 sm:text-lg sm:leading-[1.7]">
+                  <p>
+                    Kupec izbere barvo in velikost, sistem pa izbrano količino
+                    za čas nakupa rezervira. Plačilo poteka prek PayPala.
+                  </p>
+                  <p>
+                    Ko PayPal potrdi plačilo, se naročilo označi kot plačano,
+                    rezervirani kosi pa se odštejejo od zaloge. Če kupec nakup
+                    prekliče, se rezervacija sprosti.
+                  </p>
+                </div>
+              </div>
+
               <div className="px-5 sm:px-0">
                 <div
                   role="group"
@@ -225,9 +256,9 @@ export default function UlteriorCasePage() {
 
               <div className="mini-page-rail pb-14 pt-5 sm:pb-16 lg:pb-20">
                 <p className={CAPTION}>
-                  Rekonstrukcija nakupnega dela strani izdelka na ulterior.es,
-                  v stanju z onemogočenim nakupom. Potek odobritve in zajema
-                  plačila je bil uspešno preizkušen v PayPal sandboxu.
+                  Rekonstrukcija nakupnega dela strani izdelka na ulterior.es.
+                  Prikaz nakupnega vmesnika. Plačilo v tem prikazu ni
+                  omogočeno.
                 </p>
               </div>
             </section>
@@ -237,13 +268,16 @@ export default function UlteriorCasePage() {
           <CaseStudyNav current="ulterior" />
         </main>
 
-        <MiniClosingBookend
-          variant="graphite"
-          photoBackground
-          topRule={false}
-          tone="natural-midnight"
-          ctaCopy={closingCopy}
-        />
+        {/* The closing shared with /work: same copy, spacing and the /work type scope (Contact eyebrow, H2 tracking). */}
+        <div data-home-typography className={homeMono.variable}>
+          <MiniClosingBookend
+            variant="graphite"
+            photoBackground
+            topRule={false}
+            tone="natural-midnight"
+            spacing="roomy"
+          />
+        </div>
       </div>
     </MiniPalette>
   );

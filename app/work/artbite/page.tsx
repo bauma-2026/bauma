@@ -8,10 +8,9 @@ import MiniHeader, {
 } from "../../components/blocks/mini/MiniHeader";
 import MiniClosingBookend from "../../components/blocks/mini/MiniClosingBookend";
 import CaseStudyNav from "../../components/work/CaseStudyNav";
-import {
-  MINI_CONTACT_MAILTO,
-  type MiniFinalCtaCopy,
-} from "../../components/blocks/mini/MiniFinalCTA";
+import { homeMono } from "../../homeMono";
+/** Scoped to the closing below only (`[data-home-typography]`), as on /work. */
+import "../../homeTypography.css";
 import ArtBiteHeroProof from "../../components/blocks/mini/ArtBiteHeroProof";
 import ArtBiteGalleryProof from "../../components/blocks/mini/ArtBiteGalleryProof";
 import ArtBiteCoverupProof from "../../components/blocks/mini/ArtBiteCoverupProof";
@@ -76,20 +75,18 @@ const SURFACE_WORK = {
   "--mini-surface-work": "#1f1712",
 } as CSSProperties;
 
-const closingCopy: MiniFinalCtaCopy = {
-  eyebrow: "NASLEDNJI KORAK",
-  line1: "Delo naj govori samo,",
-  line2: "pristop naj vodi.",
-  body: "Pri ArtBite stran najprej pokaže fotografije del in osebni pristop studia. Če imate delo, ki ga želite predstaviti, ga lahko skupaj postavimo v ospredje.",
-  cta: "Pogovorimo se o projektu",
-  mailto: MINI_CONTACT_MAILTO,
-};
-
 const EYEBROW =
   "text-[11px] font-medium uppercase tracking-[0.22em] text-white/60";
 
 const CAPTION =
   "mx-auto max-w-[760px] text-balance text-center text-sm leading-relaxed text-white/40";
+
+/** Bauma's short explanation above a proof, as on /work/flexido and /work/dema-plus. */
+const LEAD = "max-w-[40ch] text-xl font-medium leading-[1.4] tracking-[-0.01em] text-white/85 sm:text-2xl";
+
+/** Closes the gallery under its caption: a 1px rule on the content column, as on /work/ulterior and /work/flexido. */
+const DIVIDER = "border-b border-white/10 pb-7 sm:pb-8 lg:pb-10";
+const AFTER_DIVIDER = "pb-8 sm:pb-10 lg:pb-12";
 
 export default function ArtBiteCasePage() {
   return (
@@ -161,7 +158,8 @@ export default function ArtBiteCasePage() {
                 </div>
               </div>
 
-              <div className="mini-page-rail pb-10 pt-5 sm:pb-12 lg:pb-14">
+              {/* 60/72/88px to the next lead, as on /work/flexido and /work/dema-plus. */}
+              <div className="mini-page-rail pb-15 pt-5 sm:pb-18 lg:pb-22">
                 <p className={CAPTION}>
                   Rekonstrukcija uvodnega razdelka domače strani
                   artbite-tattoo.com.
@@ -170,17 +168,24 @@ export default function ArtBiteCasePage() {
             </section>
 
             {/* 03 — GALLERY: a selection from /tatuji, directly on the surface */}
-            <section
-              aria-label="Dokaz: izbor iz galerije Tatuji na artbite-tattoo.com"
-              className="pt-4 lg:pt-2"
-            >
+            <section aria-label="Dokaz: izbor iz galerije Tatuji na artbite-tattoo.com">
+              <div className="mini-page-rail pb-10 sm:pb-12">
+                <p className={LEAD}>
+                  Galerija postavi fotografije del v ospredje, da obiskovalec
+                  lahko presodi slog studia.
+                </p>
+              </div>
+
               <ArtBiteGalleryProof />
 
-              <div className="mini-page-rail pb-10 pt-8 sm:pb-12 lg:pb-14">
-                <p className={CAPTION}>
-                  Rekonstrukcija izbora iz galerije Tatuji na
-                  artbite-tattoo.com.
-                </p>
+              {/* The one rule on the page: it closes the gallery before the cover-up page. */}
+              <div className={`mini-page-rail ${AFTER_DIVIDER}`}>
+                <div className={`${DIVIDER} pt-8`}>
+                  <p className={CAPTION}>
+                    Rekonstrukcija izbora iz galerije Tatuji na
+                    artbite-tattoo.com.
+                  </p>
+                </div>
               </div>
             </section>
 
@@ -189,6 +194,14 @@ export default function ArtBiteCasePage() {
               aria-label="Dokaz: uvodni razdelek strani Prekrivanje starih tetovaž na artbite-tattoo.com"
               className="pt-0"
             >
+              <div className="mini-page-rail pb-10 sm:pb-12">
+                <p className={LEAD}>
+                  Prekrivanje starih tetovaž ima svojo predstavitev, ki pojasni
+                  omejitve in obiskovalca usmeri k pošiljanju fotografije za
+                  oceno.
+                </p>
+              </div>
+
               {/* Nothing inside is interactive, so it is exposed as a single labelled image.
                   Edge to edge below sm (no gutters, no radius): the photographic slices need the full width. */}
               <div>
@@ -218,13 +231,16 @@ export default function ArtBiteCasePage() {
           <CaseStudyNav current="artbite" />
         </main>
 
-        <MiniClosingBookend
-          variant="graphite"
-          photoBackground
-          topRule={false}
-          tone="natural-midnight"
-          ctaCopy={closingCopy}
-        />
+        {/* The closing shared with /work: same copy, spacing and the /work type scope (Contact eyebrow, H2 tracking). */}
+        <div data-home-typography className={homeMono.variable}>
+          <MiniClosingBookend
+            variant="graphite"
+            photoBackground
+            topRule={false}
+            tone="natural-midnight"
+            spacing="roomy"
+          />
+        </div>
       </div>
     </MiniPalette>
   );

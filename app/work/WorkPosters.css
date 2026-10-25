@@ -1,0 +1,185 @@
+/*
+ * /work Ulterior (`.wul`) and Hardshelljacket (`.whj`) surfaces, approved from /lab/work-posters (Ulterior v3,
+ * Hardshelljacket B; reference /lab/work-posters/final-v3). Everything is under those two classes, set on the card box in
+ * app/work/page.tsx, which is a size container: the layouts switch on the card's own proportions (as the ArtBite card
+ * does): from 6:5 (4:3 and the wider 19rem cards) the type stands beside the product; narrower (phones, the narrow 19rem
+ * cards) the layouts below apply.
+ *
+ * Container queries only reach descendants, so the layout variables are set on the box's children. `--s` is the
+ * photograph's scale (card px per source px); every position is a measured point of the source image.
+ */
+
+/* ------------------------------------------------ Ulterior ------------------------------------------------ */
+
+/*
+ * hardshell-white-hanging (1706 x 1924): truss ends at y 719, the cut is y 760, so the strap comes in from the card's top
+ * edge; strap centre x 867; jacket x 593-1138, hanger 960, hem 1745. Ground matched to the photograph's mid field
+ * (#ecf0f3); the image's left edge and bottom fade into it.
+ *
+ * The logo is Ulterior's original SVG at its own proportions (965.7 x 134.5 viewBox; the ink fills it: no inner margin),
+ * with the brand line "Technical protection / for normal life." (the break of Ulterior's OG image) in Arial at half the
+ * logo's height. The line starts on the left edge of the wordmark's "u", a straight vertical stem at x 303.7 of the SVG,
+ * so no optical overshoot is needed; Arial's "T" starts 0.023em into its box. The symbol's bottom bar (y 134.6) is the
+ * logo's lowest ink, so the gap is measured from it: G from the bar to the line's cap top (Arial's cap top sits 0.289em
+ * into a 1.2 line box).
+ *
+ * --lw logo width, --lh its height, --sf the line's size (13-18px), --G that gap (half the logo's height).
+ */
+.wul {
+  background: #ebeff2;
+  color: #33333e;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.wul .wul-photo {
+  position: absolute;
+  max-width: none;
+  width: auto;
+  height: calc(1924 * var(--s));
+  top: calc(-760 * var(--s));
+  left: calc(var(--x) - 867 * var(--s));
+  mask-image: linear-gradient(to right, transparent, #000 14%), linear-gradient(to bottom, #000 92%, transparent);
+  mask-composite: intersect;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 14%), linear-gradient(to bottom, #000 92%, transparent);
+  -webkit-mask-composite: source-in;
+}
+.wul .wul-group {
+  position: absolute;
+  left: 7cqw;
+  width: var(--lw);
+  font-size: var(--sf);
+}
+.wul .wul-logo {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.wul .wul-line {
+  margin: calc(var(--G) - 0.289em) 0 0 calc(var(--lw) * 303.7 / 965.7 - 0.023em);
+  font-size: 1em;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  color: #33333e;
+}
+.wul .wul-line > span {
+  display: block;
+  white-space: nowrap;
+}
+
+/* Beside: strap at 74%, jacket from the top edge to 78% of the card height; logo from the margin to 7cqw short of the
+   sleeve; the line's last baseline on the hem line, so the block stands against the jacket's lower half. */
+@container (min-aspect-ratio: 6 / 5) {
+  .wul > * {
+    --s: calc(100cqh * 0.78 / 985);
+    --x: 74cqw;
+    --hem: 78cqh;
+    --lw: calc(var(--x) - 274 * var(--s) - 14cqw);
+    --lh: calc(var(--lw) * 0.1393);
+    --sf: clamp(0.8125rem, calc(var(--lh) * 0.5), 1.125rem);
+    --G: calc(var(--lh) * 0.5);
+  }
+  .wul .wul-group {
+    bottom: calc(100cqh - var(--hem) - 0.312em);
+  }
+}
+
+/* Stacked: the block sits at the bottom (last baseline 8cqw above the edge) and the jacket hangs from the top edge down to
+   6cqw above the logo, its scale derived from that: the block's height is lh + G + 2.111em, from the logo's top to the
+   last line's box bottom (0.312em under its baseline). Strap at 60%, logo 62cqw wide, under the jacket. */
+@container (max-aspect-ratio: 6 / 5) {
+  .wul > * {
+    --x: 60cqw;
+    --lw: 62cqw;
+    --lh: calc(var(--lw) * 0.1393);
+    --sf: clamp(0.8125rem, calc(var(--lh) * 0.5), 1.125rem);
+    --G: calc(var(--lh) * 0.5);
+    --top: calc(100cqh - 8cqw - 2.111 * var(--sf) + 0.312 * var(--sf) - var(--lh) - var(--G));
+    --hem: calc(var(--top) - 6cqw);
+    --s: calc(var(--hem) / 985);
+  }
+  .wul .wul-group {
+    top: var(--top);
+  }
+}
+
+/* --------------------------------------------- Hardshelljacket --------------------------------------------- */
+
+/*
+ * hardshell-green-front-02 (1254 x 1254, hardshelljacket-next's technical details photograph): hood top y 60, shoulders
+ * 400, hem 1060; jacket x 356-896, centre 626; concrete on the left about #c5c5c5. The image's top edge is the card's top
+ * edge (the hood 60 source px under it) and it covers the card's height; only its left edge fades into the ground. The
+ * name is the page's H1, set as on the site: Arial 600, line-height 1.01, -0.045em, #33333e; "Waterproof", the longest
+ * line, advances about 4.9em. Its eyebrow "Ulterior product" is the site's too.
+ */
+.whj {
+  background: #c5c5c5;
+  color: #33333e;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.whj .whj-photo {
+  position: absolute;
+  max-width: none;
+  width: calc(1254 * var(--s));
+  height: calc(1254 * var(--s));
+  top: 0;
+  left: calc(var(--x) - 626 * var(--s));
+  mask-image: linear-gradient(to right, transparent, #000 30%);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 30%);
+}
+.whj .whj-name {
+  position: absolute;
+  left: 7cqw;
+  margin: 0 0 0 -0.04em;
+  font-size: var(--f);
+  font-weight: 600;
+  line-height: 1.01;
+  letter-spacing: -0.045em;
+  /* Arial's cap top sits 0.19em into a 1.01 line box: this puts the "W" cap on the --tt line */
+  top: calc(var(--tt) - 0.19em);
+}
+.whj .whj-name > span {
+  display: block;
+  white-space: nowrap;
+}
+.whj .whj-eyebrow {
+  position: absolute;
+  left: 7cqw;
+  margin: 0;
+  bottom: calc(100cqh - var(--hood) - 1000 * var(--s));
+  font-size: var(--ef);
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgb(51 51 62 / 0.8);
+}
+
+/* Beside: jacket 84% of the card height, centred at 76%; the name's cap line on the 7cqw margin and as wide as the space
+   to 8cqw short of the sleeve; the eyebrow on the hem line. The pillar (from x 1096) stays outside the card. */
+@container (min-aspect-ratio: 6 / 5) {
+  .whj > * {
+    --s: calc(100cqh * 0.84 / 1000);
+    --x: 76cqw;
+    --hood: calc(60 * var(--s));
+    --tt: 7cqw;
+    --f: calc((var(--x) - 270 * var(--s) - 15cqw) / 4.9);
+    --ef: clamp(0.6875rem, 2cqw, 0.8125rem);
+  }
+}
+
+/* Narrow: the image at 1.05 x the card height (hem at 0.89, legs cut by the bottom edge), centred at 78% so the right
+   sleeve just stays in; the name beside the jacket, sized to 5cqw short of the sleeve, the eyebrow above it as on the site
+   (on the hem line it would run into the sleeve at 320). */
+@container (max-aspect-ratio: 6 / 5) {
+  .whj > * {
+    --s: calc(100cqh * 1.05 / 1254);
+    --x: 78cqw;
+    --hood: calc(60 * var(--s));
+    --ef: clamp(0.6875rem, 2.4cqw, 0.8125rem);
+    --tt: calc(7cqw + var(--ef) + 3.5cqw);
+    --f: calc((var(--x) - 270 * var(--s) - 12cqw) / 4.9);
+  }
+  .whj .whj-eyebrow {
+    top: 7cqw;
+    bottom: auto;
+  }
+}
