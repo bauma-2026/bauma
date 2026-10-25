@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import MiniHeaderEn from "../../components/blocks/mini/MiniHeaderEn";
-import MiniFooterEn from "../../components/blocks/mini/MiniFooterEn";
+import MiniLegalShell from "../../components/blocks/mini/MiniLegalShell";
 
 export const metadata: Metadata = {
   title: "Terms of Use — Bauma",
@@ -10,30 +9,27 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <>
-      <MiniHeaderEn />
-
-      <main className="bg-[#080808] text-white">
-        <section className="mx-auto max-w-[860px] px-6 pt-16 pb-12 sm:pt-20 sm:pb-16 lg:px-8 lg:pt-24 lg:pb-20">
+    <MiniLegalShell lang="en">
+        <section className="mini-page-rail pb-16 pt-28 sm:pb-20 sm:pt-32 lg:pb-24 lg:pt-36 [&>*]:max-w-[38rem]">
           <div>
-            <p className="text-xs font-medium uppercase tracking-[0.18em] text-white/40">
+            <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/60">
               Legal
             </p>
 
-            <h1 className="mt-4 max-w-[12ch] text-4xl font-semibold tracking-[-0.04em] text-white sm:text-5xl">
+            <h1 className="home-primary-heading mt-5 sm:mt-6">
               Terms of Use
             </h1>
 
-            <p className="mt-6 max-w-[62ch] text-base leading-7 text-white/60">
+            <p className="mt-6 text-base leading-[1.65] text-white/70 sm:text-lg sm:leading-[1.7]">
               These terms describe the basic rules for using the Bauma website.
               By using this website, you agree to use it in a way that is
               consistent with its purpose, content and applicable law.
             </p>
           </div>
 
-          <div className="mt-14 space-y-10 text-sm leading-7 text-white/60">
-            <section>
-              <h2 className="text-lg font-semibold tracking-[-0.02em] text-white">
+          <div className="mt-12 space-y-10 text-base leading-[1.7] text-white/70 [overflow-wrap:anywhere] sm:mt-14">
+            <section id="company-details" className="scroll-mt-20">
+              <h2 className="text-lg font-semibold leading-snug tracking-[-0.015em] text-white sm:text-xl">
                 1. Website operator
               </h2>
 
@@ -41,7 +37,6 @@ export default function TermsPage() {
                 <p>The website is operated by Bauma, Gregor Baumgartner s.p.</p>
 
                 <div className="space-y-1">
-                  <p>Bauma, Gregor Baumgartner s.p.</p>
                   <p>
                     Registered office: Račica 16A, 1434 Loka pri Zidanem Mostu,
                     Slovenia
@@ -63,7 +58,7 @@ export default function TermsPage() {
             </section>
 
             <section>
-              <h2 className="text-lg font-semibold tracking-[-0.02em] text-white">
+              <h2 className="text-lg font-semibold leading-snug tracking-[-0.015em] text-white sm:text-xl">
                 2. Use of content
               </h2>
 
@@ -76,7 +71,7 @@ export default function TermsPage() {
             </section>
 
             <section>
-              <h2 className="text-lg font-semibold tracking-[-0.02em] text-white">
+              <h2 className="text-lg font-semibold leading-snug tracking-[-0.015em] text-white sm:text-xl">
                 3. Accuracy of information
               </h2>
 
@@ -89,7 +84,7 @@ export default function TermsPage() {
             </section>
 
             <section>
-              <h2 className="text-lg font-semibold tracking-[-0.02em] text-white">
+              <h2 className="text-lg font-semibold leading-snug tracking-[-0.015em] text-white sm:text-xl">
                 4. External links
               </h2>
 
@@ -101,7 +96,7 @@ export default function TermsPage() {
             </section>
 
             <section>
-              <h2 className="text-lg font-semibold tracking-[-0.02em] text-white">
+              <h2 className="text-lg font-semibold leading-snug tracking-[-0.015em] text-white sm:text-xl">
                 5. Limitation of liability
               </h2>
 
@@ -114,7 +109,7 @@ export default function TermsPage() {
             </section>
 
             <section>
-              <h2 className="text-lg font-semibold tracking-[-0.02em] text-white">
+              <h2 className="text-lg font-semibold leading-snug tracking-[-0.015em] text-white sm:text-xl">
                 6. Changes to the terms
               </h2>
 
@@ -125,7 +120,7 @@ export default function TermsPage() {
             </section>
 
             <section>
-              <h2 className="text-lg font-semibold tracking-[-0.02em] text-white">
+              <h2 className="text-lg font-semibold leading-snug tracking-[-0.015em] text-white sm:text-xl">
                 7. Contact
               </h2>
 
@@ -133,8 +128,8 @@ export default function TermsPage() {
                 For questions regarding these terms of use, you can contact us
                 at{" "}
                 <a
-                  href="mailto:info@bauma.si?subject=Povpra%C5%A1evanje%20%E2%80%94%20Bauma"
-                  className="text-white underline decoration-white/30 underline-offset-4 transition hover:text-white/70"
+                  href="mailto:info@bauma.si?subject=Question%20about%20terms%20of%20use"
+                  className="rounded-[2px] text-white/90 underline decoration-white/30 underline-offset-4 transition-colors duration-300 hover:text-white hover:decoration-white/60 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[color:var(--mini-accent-text,#fff)]"
                 >
                   info@bauma.si
                 </a>
@@ -143,13 +138,10 @@ export default function TermsPage() {
             </section>
           </div>
 
-          <p className="mt-14 border-t border-white/10 pt-6 text-xs leading-6 text-white/35">
+          <p className="mt-14 border-t border-white/10 pt-6 text-sm leading-6 text-white/50">
             Last updated: May 2026
           </p>
         </section>
-      </main>
-
-      <MiniFooterEn />
-    </>
+      </MiniLegalShell>
   );
 }

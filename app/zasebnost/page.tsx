@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import MiniHeader from "../components/blocks/mini/MiniHeader";
-import MiniFooter from "../components/blocks/mini/MiniFooter";
+import MiniLegalShell from "../components/blocks/mini/MiniLegalShell";
 
 export const metadata: Metadata = {
   title: "Zasebnost — Bauma",
@@ -11,29 +10,26 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <>
-<MiniHeader />
-
-  <main className="bg-[#080808] text-white">
-<section className="mx-auto max-w-[860px] px-6 pt-16 pb-12 sm:pt-20 sm:pb-16 lg:px-8 lg:pt-24 lg:pb-20">
+    <MiniLegalShell lang="sl">
+<section className="mini-page-rail pb-16 pt-28 sm:pb-20 sm:pt-32 lg:pb-24 lg:pt-36 [&>*]:max-w-[38rem]">
           <div>
-            <p className="text-xs font-medium uppercase tracking-[0.18em] text-white/40">
+            <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/60">
               Pravno
             </p>
 
-            <h1 className="mt-4 max-w-[12ch] text-4xl font-semibold tracking-[-0.04em] text-white sm:text-5xl">
+            <h1 className="home-primary-heading mt-5 sm:mt-6">
               Zasebnost
             </h1>
 
-            <p className="mt-6 max-w-[62ch] text-base leading-7 text-white/60">
+            <p className="mt-6 text-base leading-[1.65] text-white/70 sm:text-lg sm:leading-[1.7]">
               Ta stran opisuje, katere podatke lahko obdelujemo ob uporabi
               spletnega mesta Bauma in kako z njimi ravnamo.
             </p>
           </div>
 
-          <div className="mt-14 space-y-10 text-sm leading-7 text-white/60">
+          <div className="mt-12 space-y-10 text-base leading-[1.7] text-white/70 [overflow-wrap:anywhere] sm:mt-14">
             <section>
-              <h2 className="text-lg font-semibold tracking-[-0.02em] text-white">
+              <h2 className="text-lg font-semibold leading-snug tracking-[-0.015em] text-white sm:text-xl">
                 1. Upravljavec podatkov
               </h2>
 
@@ -43,7 +39,6 @@ export default function PrivacyPage() {
                 </p>
 
                 <div className="space-y-1">
-                  <p>Bauma, Gregor Baumgartner s.p.</p>
                   <p>
                     Sedež: Račica 16A, 1434 Loka pri Zidanem Mostu, Slovenija
                   </p>
@@ -52,8 +47,8 @@ export default function PrivacyPage() {
                 <p>
                   Za vprašanja glede zasebnosti lahko pišete na{" "}
                   <a
-                    href="mailto:info@bauma.si?subject=Povpra%C5%A1evanje%20za%20projekt"
-                    className="text-white underline decoration-white/30 underline-offset-4 transition hover:text-white/70"
+                    href="mailto:info@bauma.si?subject=Vpra%C5%A1anje%20glede%20zasebnosti"
+                    className="rounded-[2px] text-white/90 underline decoration-white/30 underline-offset-4 transition-colors duration-300 hover:text-white hover:decoration-white/60 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[color:var(--mini-accent-text,#fff)]"
                   >
                     info@bauma.si
                   </a>
@@ -63,7 +58,7 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="text-lg font-semibold tracking-[-0.02em] text-white">
+              <h2 className="text-lg font-semibold leading-snug tracking-[-0.015em] text-white sm:text-xl">
                 2. Katere podatke lahko obdelujemo
               </h2>
 
@@ -80,7 +75,7 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="text-lg font-semibold tracking-[-0.02em] text-white">
+              <h2 className="text-lg font-semibold leading-snug tracking-[-0.015em] text-white sm:text-xl">
                 3. Namen obdelave
               </h2>
               <p className="mt-3">
@@ -91,7 +86,7 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="text-lg font-semibold tracking-[-0.02em] text-white">
+              <h2 className="text-lg font-semibold leading-snug tracking-[-0.015em] text-white sm:text-xl">
                 4. Analitika
               </h2>
               <p className="mt-3">
@@ -102,7 +97,7 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="text-lg font-semibold tracking-[-0.02em] text-white">
+              <h2 className="text-lg font-semibold leading-snug tracking-[-0.015em] text-white sm:text-xl">
                 5. Hramba podatkov
               </h2>
               <p className="mt-3">
@@ -113,7 +108,7 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="text-lg font-semibold tracking-[-0.02em] text-white">
+              <h2 className="text-lg font-semibold leading-snug tracking-[-0.015em] text-white sm:text-xl">
                 6. Posredovanje podatkov
               </h2>
               <p className="mt-3">
@@ -124,7 +119,7 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="text-lg font-semibold tracking-[-0.02em] text-white">
+              <h2 className="text-lg font-semibold leading-snug tracking-[-0.015em] text-white sm:text-xl">
                 7. Vaše pravice
               </h2>
               <p className="mt-3">
@@ -132,8 +127,8 @@ export default function PrivacyPage() {
                 izbris, omejitev obdelave ali druge informacije glede obdelave
                 podatkov. Za zahteve pišite na{" "}
                 <a
-                  href="mailto:info@bauma.si?subject=Povpra%C5%A1evanje%20za%20projekt"
-                  className="text-white underline decoration-white/30 underline-offset-4 transition hover:text-white/70"
+                  href="mailto:info@bauma.si?subject=Vpra%C5%A1anje%20glede%20zasebnosti"
+                  className="rounded-[2px] text-white/90 underline decoration-white/30 underline-offset-4 transition-colors duration-300 hover:text-white hover:decoration-white/60 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[color:var(--mini-accent-text,#fff)]"
                 >
                   info@bauma.si
                 </a>
@@ -142,7 +137,7 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="text-lg font-semibold tracking-[-0.02em] text-white">
+              <h2 className="text-lg font-semibold leading-snug tracking-[-0.015em] text-white sm:text-xl">
                 8. Spremembe politike zasebnosti
               </h2>
               <p className="mt-3">
@@ -152,13 +147,10 @@ export default function PrivacyPage() {
             </section>
           </div>
 
-          <p className="mt-14 border-t border-white/10 pt-6 text-xs leading-6 text-white/35">
+          <p className="mt-14 border-t border-white/10 pt-6 text-sm leading-6 text-white/50">
             Zadnja posodobitev: maj 2026
           </p>
         </section>
-      </main>
-
-      <MiniFooter />
-    </>
+      </MiniLegalShell>
   );
 }

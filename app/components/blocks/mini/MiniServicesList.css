@@ -9,7 +9,7 @@
 .msl {
   --msl-line: #212a3a;
   --msl-h2: 1.75rem;
-  --msl-row-pad: 28px;
+  --msl-row-pad: 1.5rem; /* 24px (was 28px) */
   --msl-title: 1.5rem;
   --msl-desc: 15px;
   --msl-desc-lh: 24px;
@@ -21,7 +21,7 @@
 @media (min-width: 640px) {
   .msl {
     --msl-h2: 2rem;
-    --msl-row-pad: 32px;
+    --msl-row-pad: 1.7rem; /* 27.2px (was 32px), 640px and up */
     --msl-title: 1.625rem;
     --msl-desc: 16px;
     --msl-desc-lh: 26px;
