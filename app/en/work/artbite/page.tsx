@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { enPageMetadata } from "@/lib/indexing";
 import type { CSSProperties } from "react";
 
 import MiniPalette from "@/app/components/blocks/mini/MiniPalette";
@@ -19,12 +20,14 @@ import ArtBiteCoverupProof from "@/app/components/blocks/mini/ArtBiteCoverupProo
 import "@/app/components/blocks/mini/MiniSelectedWork.css";
 
 /**
- * Title only. Indexing stays the EN layout default (noindex, no canonical or hreflang) and the page is not in the
- * sitemap; description and social metadata follow in the SEO pass.
+ * Title, description and social metadata (`enPageMetadata`, lib/indexing.ts). In an explicit production build: index,
+ * self-canonical and hreflang to the Slovenian page; everywhere else noindex.
  */
-export const metadata: Metadata = {
+export const metadata: Metadata = enPageMetadata("/en/work/artbite", {
   title: "ArtBite: a tattoo studio website that starts with the work — Bauma",
-};
+  description:
+    "For ArtBite we designed and developed a website for a tattoo studio in Domžale, led by photographs of the work. A separate page explains cover-ups of old tattoos.",
+});
 
 /* The English counterpart of /work/artbite (`app/(sl)/work/artbite/page.tsx`): same structure, classes and proofs, with
  * Bauma's text in English. The reconstructions show the client's Slovenian site and carry `lang="sl"`; section and page

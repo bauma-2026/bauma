@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { enPageMetadata } from "@/lib/indexing";
 import type { CSSProperties } from "react";
 
 import MiniPalette from "@/app/components/blocks/mini/MiniPalette";
@@ -19,12 +20,14 @@ import HardshelljacketEverydayProof from "@/app/components/blocks/mini/Hardshell
 import "@/app/components/blocks/mini/MiniSelectedWork.css";
 
 /**
- * Title only. Indexing stays the EN layout default (noindex, no canonical or hreflang) and the page is not in the
- * sitemap; description and social metadata follow in the SEO pass.
+ * Title, description and social metadata (`enPageMetadata`, lib/indexing.ts). In an explicit production build: index,
+ * self-canonical and hreflang to the Slovenian page; everywhere else noindex.
  */
-export const metadata: Metadata = {
+export const metadata: Metadata = enPageMetadata("/en/work/hardshelljacket", {
   title: "Hardshelljacket: a website for a single product — Bauma",
-};
+  description:
+    "For Hardshelljacket we designed and developed a single-product website for Ulterior’s jacket. The purchase link leads to Ulterior; business inquiries are kept separate.",
+});
 
 /* The English counterpart of /work/hardshelljacket (`app/(sl)/work/hardshelljacket/page.tsx`): same structure, classes
  * and proofs, with Bauma's text in English. The client's site is in English, so the reconstructions need no language

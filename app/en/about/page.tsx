@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { enPageMetadata } from "@/lib/indexing";
 import type { CSSProperties } from "react";
 
 import MiniClosingBookend from "@/app/components/blocks/mini/MiniClosingBookend";
@@ -19,12 +20,14 @@ import "@/app/homeTypographyV11.css";
 import "@/app/(sl)/o-nas/ONas.css";
 
 /**
- * Title only. Indexing stays the EN layout default (noindex, no canonical or hreflang) and the page is not in the
- * sitemap; description and social metadata follow in the SEO pass.
+ * Title, description and social metadata (`enPageMetadata`, lib/indexing.ts). In an explicit production build: index,
+ * self-canonical and hreflang to the Slovenian page; everywhere else noindex.
  */
-export const metadata: Metadata = {
+export const metadata: Metadata = enPageMetadata("/en/about", {
   title: "About: a digital studio — Bauma",
-};
+  description:
+    "Bauma is a digital studio run by Gregor Baumgartner, bringing planning, design and development of websites and digital solutions together — from the first brief to delivery.",
+});
 
 /** Selected Work as on /o-nas: the Work surface tone plus the V1.1 type scope, on this wrapper only. */
 const SELECTED_WORK_SCOPE = { "--mini-surface-work": "#0f141c" } as CSSProperties;

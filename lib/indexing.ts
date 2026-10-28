@@ -150,3 +150,19 @@ export function pageMetadata(
 export function slPageMetadata(path: IndexablePath, copy: { title: string; description: string }): Metadata {
   return pageMetadata(path, copy, { image: SL_SOCIAL_IMAGE, locale: "sl_SI" });
 }
+
+/**
+ * English social image (Open Graph and Twitter) of the ten English main pages. Interim: the existing English image (the
+ * EN layout's default); an English counterpart of `SL_SOCIAL_IMAGE` follows in a separate pass.
+ */
+export const EN_SOCIAL_IMAGE: SocialImage = {
+  url: "/og/bauma-og-en-v3.png",
+  width: 1200,
+  height: 630,
+  alt: "Bauma — Clear structure. Better decisions.",
+};
+
+/** One of the English main pages: `pageMetadata` with the English social image. */
+export function enPageMetadata(path: IndexablePath, copy: { title: string; description: string }): Metadata {
+  return pageMetadata(path, copy, { image: EN_SOCIAL_IMAGE, locale: "en_US" });
+}

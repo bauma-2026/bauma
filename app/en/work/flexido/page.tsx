@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { enPageMetadata } from "@/lib/indexing";
 import type { CSSProperties } from "react";
 
 import MiniPalette from "@/app/components/blocks/mini/MiniPalette";
@@ -16,12 +17,14 @@ import FlexidoHomeProof from "@/app/components/blocks/mini/FlexidoHomeProof";
 import FlexidoCatalogProof from "@/app/components/blocks/mini/FlexidoCatalogProof";
 
 /**
- * Title only. Indexing stays the EN layout default (noindex, no canonical or hreflang) and the page is not in the
- * sitemap; description and social metadata follow in the SEO pass.
+ * Title, description and social metadata (`enPageMetadata`, lib/indexing.ts). In an explicit production build: index,
+ * self-canonical and hreflang to the Slovenian page; everywhere else noindex.
  */
-export const metadata: Metadata = {
+export const metadata: Metadata = enPageMetadata("/en/work/flexido", {
   title: "Flexido: a website with two ways into the offering — Bauma",
-};
+  description:
+    "For Flexido we redesigned the website: alongside the e-catalog we added a Solutions path for visitors who start from a production process or task.",
+});
 
 /* The English counterpart of /work/flexido (`app/(sl)/work/flexido/page.tsx`): same structure, classes and proofs, with
  * Bauma's text in English. The reconstructions show Flexido's own English site (`locale="en"` on each proof: the copy of

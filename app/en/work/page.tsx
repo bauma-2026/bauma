@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { enPageMetadata } from "@/lib/indexing";
 
 import WorkIndex, { type WorkIndexCopy } from "@/app/components/work/WorkIndex";
 import { EN_FOOTER_COPY, EN_HEADER_COPY } from "@/app/components/blocks/mini/enChromeCopy";
@@ -6,12 +7,14 @@ import { EN_HOME_CONTACT } from "@/app/components/blocks/mini/enHomeCopy";
 import { EN_PRIMARY_NAV } from "@/lib/i18n/routes";
 
 /**
- * Title only. Indexing stays the EN layout default (noindex, no canonical or hreflang) and the page is not in the
- * sitemap; description and social metadata follow in the SEO pass.
+ * Title, description and social metadata (`enPageMetadata`, lib/indexing.ts). In an explicit production build: index,
+ * self-canonical and hreflang to the Slovenian page; everywhere else noindex.
  */
-export const metadata: Metadata = {
+export const metadata: Metadata = enPageMetadata("/en/work", {
   title: "Selected web projects — Bauma",
-};
+  description:
+    "A selection of websites and digital solutions — from the starting point and key decisions to design and a working build.",
+});
 
 /** Approved English copy of the Work index. Project names and the clients' artwork are not translated. */
 const WORK_INDEX_EN: WorkIndexCopy = {

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { enPageMetadata } from "@/lib/indexing";
 import type { CSSProperties } from "react";
 
 import MiniPalette from "@/app/components/blocks/mini/MiniPalette";
@@ -20,12 +21,14 @@ import UlteriorPurchaseProof from "@/app/components/blocks/mini/UlteriorPurchase
 import "@/app/components/blocks/mini/MiniSelectedWork.css";
 
 /**
- * Title only. Indexing stays the EN layout default (noindex, no canonical or hreflang) and the page is not in the
- * sitemap; description and social metadata follow in the SEO pass.
+ * Title, description and social metadata (`enPageMetadata`, lib/indexing.ts). In an explicit production build: index,
+ * self-canonical and hreflang to the Slovenian page; everywhere else noindex.
  */
-export const metadata: Metadata = {
+export const metadata: Metadata = enPageMetadata("/en/work/ulterior", {
   title: "Ulterior: a product page and a dedicated purchase system — Bauma",
-};
+  description:
+    "For Ulterior we designed and developed a website with a hardshell jacket presentation, interactive technical details and a dedicated purchase system with PayPal.",
+});
 
 /* The English counterpart of /work/ulterior (`app/(sl)/work/ulterior/page.tsx`): same structure, classes and proofs,
  * with Bauma's text in English. The client's site is in English and the proofs already mark it `lang="en"`, so no

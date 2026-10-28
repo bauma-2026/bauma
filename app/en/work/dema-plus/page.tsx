@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { enPageMetadata } from "@/lib/indexing";
 import type { CSSProperties } from "react";
 
 import MiniPalette from "@/app/components/blocks/mini/MiniPalette";
@@ -19,12 +20,14 @@ import DemaPlusProjectProof from "@/app/components/blocks/mini/DemaPlusProjectPr
 import "@/app/components/blocks/mini/MiniSelectedWork.css";
 
 /**
- * Title only. Indexing stays the EN layout default (noindex, no canonical or hreflang) and the page is not in the
- * sitemap; description and social metadata follow in the SEO pass.
+ * Title, description and social metadata (`enPageMetadata`, lib/indexing.ts). In an explicit production build: index,
+ * self-canonical and hreflang to the Slovenian page; everywhere else noindex.
  */
-export const metadata: Metadata = {
+export const metadata: Metadata = enPageMetadata("/en/work/dema-plus", {
   title: "Dema Plus: a website that presents projects and services — Bauma",
-};
+  description:
+    "For Dema Plus we redesigned the website with projects first and edited the individual project pages with descriptions, key facts and related projects.",
+});
 
 /* The English counterpart of /work/dema-plus (`app/(sl)/work/dema-plus/page.tsx`): same structure, classes and proofs,
  * with Bauma's text in English. The reconstructions show the client's Slovenian site and carry `lang="sl"` inside
