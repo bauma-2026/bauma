@@ -1,24 +1,36 @@
 import type { Metadata } from "next";
+import type { CSSProperties } from "react";
 
-import MiniHeader from "../components/blocks/mini/MiniHeader";
-import MiniHero from "../components/blocks/mini/MiniHero";
-import MiniDecisionFlow from "../components/blocks/mini/MiniDecisionFlow";
-import ApproachSection from "@/components/home/approach/ApproachSection";
-import SystemGraphic from "../components/blocks/mini/SystemGraphic";
-import MiniPerceptionLayer from "../components/blocks/mini/MiniPerceptionLayer";
-import MiniClosingBookend from "../components/blocks/mini/MiniClosingBookend";
-import RightObjectAxisDebugGate from "@/components/home/debug/RightObjectAxisDebugGate";
-import { indexing, ogUrl } from "@/lib/indexing";
+import MiniPalette from "@/app/components/blocks/mini/MiniPalette";
+import MiniHeader from "@/app/components/blocks/mini/MiniHeader";
+import MiniHero from "@/app/components/blocks/mini/MiniHero";
+import MiniServicesList from "@/app/components/blocks/mini/MiniServicesList";
+import MiniSystemPocket from "@/app/components/blocks/mini/MiniSystemPocket";
+import MiniProjectPocket from "@/app/components/blocks/mini/MiniProjectPocket";
+import MiniSelectedWorkHome from "@/app/components/blocks/mini/MiniSelectedWorkHome";
+import MiniClosingBookend from "@/app/components/blocks/mini/MiniClosingBookend";
+import { EN_FOOTER_COPY, EN_HEADER_COPY } from "@/app/components/blocks/mini/enChromeCopy";
 import {
-  EN_APPROACH,
-  EN_CONTACT,
-  EN_DECISION_FLOW,
-  EN_FOOTER,
-  EN_HEADER,
-  EN_HERO,
-  EN_SYSTEM,
-  EN_VISUAL,
-} from "@/components/home/copy/enHomepage";
+  EN_HOME_CONTACT,
+  EN_HOME_HERO,
+  EN_HOME_HERO_SECONDARY,
+  EN_HOME_SERVICES,
+  EN_HOME_START,
+  EN_HOME_SYSTEM,
+  EN_HOME_WORK,
+  EN_HOME_WORK_HEADING,
+} from "@/app/components/blocks/mini/enHomeCopy";
+import RightObjectAxisDebugGate from "@/components/home/debug/RightObjectAxisDebugGate";
+
+/** Homepage-only typography foundation (scoped to `[data-home-typography]`, set below). */
+import "@/app/homeTypography.css";
+/** Typography V1.1 + vertical rhythm, scoped to `[data-home-v11]` (set below). */
+import "@/app/homeTypographyV11.css";
+import { homeMono } from "@/app/homeMono";
+/** Portrait-phone hero and "What we do" start, scoped to this page by `data-home-hero-mobile`. */
+import "@/app/homeHeroMobile.css";
+import { indexing, ogUrl } from "@/lib/indexing";
+import { EN_PRIMARY_NAV } from "@/lib/i18n/routes";
 
 /**
  * EN homepage — structural parity with locked `/`.
@@ -51,43 +63,72 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * Homepage surface tones, the same as `/` (Surface Tone D): see `app/(sl)/page.tsx`. Keep the two pages in step.
+ */
+const surface = (token: "--mini-surface-system" | "--mini-surface-work", value: string) =>
+  ({ [token]: value }) as CSSProperties;
+const SURFACE_SERVICES = surface("--mini-surface-work", "#0d1119");
+const SURFACE_WORK = surface("--mini-surface-work", "#0f141c");
+const SURFACE_PROJECT = surface("--mini-surface-system", "#0b0e15");
+
+/**
+ * The V3 home page in English: the composition, wrappers, surfaces and CSS of `/` (`app/(sl)/page.tsx`), with the
+ * approved English copy (`enHomeCopy.ts`). Keep both files in step; only the copy and the language props differ.
+ * The header lists live English pages only (none yet), so it shows the language switch and Contact. Selected Work and
+ * "How we work together" link to the Slovenian pages with `hrefLang="sl"` until their English pages are live
+ * (`localizedPath`); the clients' card artwork keeps its Slovenian headlines and says so (`artLang="sl"`).
+ */
 export default function EnglishHome() {
   return (
-    <>
-      <MiniHeader
-        copy={{
-          homeHref: "/en",
-          langHref: "/",
-          langLabel: EN_HEADER.langSwitch,
-          langAria: EN_HEADER.langSwitchAria,
-          langMobileLabel: EN_HEADER.langSwitchMobile,
-          navApproach: EN_HEADER.navApproach,
-          navSystem: EN_HEADER.navSystem,
-          navContact: EN_HEADER.navContact,
-          headerCta: EN_HEADER.headerCta,
-          menuOpen: EN_HEADER.menuOpen,
-          menuClose: EN_HEADER.menuClose,
-        }}
-      />
+    <div data-home-typography data-home-v11 data-home-hero-mobile className={homeMono.variable}>
+      <MiniPalette>
+        <MiniHeader
+          treatAsHomepage
+          darkHero
+          hideApproachNav
+          refined
+          locale="en"
+          copy={EN_HEADER_COPY}
+          primaryNav={EN_PRIMARY_NAV}
+        />
 
-      <main>
-        <MiniHero copy={EN_HERO} />
-        <MiniDecisionFlow copy={EN_DECISION_FLOW} />
-        <ApproachSection copy={EN_APPROACH} />
-        <SystemGraphic copy={EN_SYSTEM} />
-        <MiniPerceptionLayer copy={EN_VISUAL} />
-      </main>
-
-      <MiniClosingBookend
-        ctaCopy={EN_CONTACT}
-        footerCopy={{
-          homeHref: "/en",
-          email: EN_FOOTER.email,
-          legalAria: EN_FOOTER.legalAria,
-          legal: [...EN_FOOTER.legal],
-        }}
-      />
-      <RightObjectAxisDebugGate />
-    </>
+        <main>
+          <MiniHero
+            copy={EN_HOME_HERO}
+            secondaryHref={EN_HOME_HERO_SECONDARY.href}
+            secondaryLabel={EN_HOME_HERO_SECONDARY.label}
+            photoBackground
+          />
+          {/* One chapter on the Services surface: the services, then "The bigger picture" (#system) as its closing thought. */}
+          <div style={SURFACE_SERVICES}>
+            <MiniServicesList joined copy={EN_HOME_SERVICES} />
+            <MiniSystemPocket copy={EN_HOME_SYSTEM} />
+          </div>
+          <div style={SURFACE_WORK}>
+            <MiniSelectedWorkHome
+              topRule={false}
+              lift
+              heading={EN_HOME_WORK_HEADING}
+              copy={EN_HOME_WORK}
+              locale="en"
+              artLang="sl"
+            />
+          </div>
+          <div style={SURFACE_PROJECT}>
+            <MiniProjectPocket copy={EN_HOME_START} locale="en" />
+          </div>
+        </main>
+        <MiniClosingBookend
+          variant="graphite"
+          photoBackground
+          topRule={false}
+          ctaCopy={EN_HOME_CONTACT}
+          footerCopy={EN_FOOTER_COPY}
+        />
+        {/* ?axis=1 only — module loads only when that query is present */}
+        <RightObjectAxisDebugGate />
+      </MiniPalette>
+    </div>
   );
 }
