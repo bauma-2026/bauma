@@ -1,5 +1,6 @@
 import type { MiniHeaderCopy } from "./MiniHeader";
 import type { MiniFooterCopy } from "./MiniFooter";
+import type { MiniFinalCtaCopy } from "./MiniFinalCTA";
 import { EN_FOOTER, EN_HEADER } from "@/components/home/copy/enHomepage";
 
 /**
@@ -28,4 +29,16 @@ export const EN_FOOTER_COPY: MiniFooterCopy = {
   legal: EN_FOOTER.legal.map((item) =>
     item.href === "/en/terms" ? { href: item.href, label: "Terms of use" } : { ...item },
   ),
+};
+
+/**
+ * Closing section of the English content pages (`/en/approach`, later `/en/about`), the counterpart of the Slovenian
+ * "Imate projekt? / Pišite nam." closing on /pristop and /o-nas. The eyebrow stays empty, as there: the page CSS hides it.
+ */
+export const EN_PAGE_CLOSING: MiniFinalCtaCopy = {
+  eyebrow: "",
+  line1: "Have a project?",
+  line2: "Write to us.",
+  cta: "Tell us about your project",
+  mailto: "mailto:info@bauma.si?subject=Project%20inquiry",
 };
