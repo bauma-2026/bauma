@@ -24,5 +24,8 @@ export const EN_FOOTER_COPY: MiniFooterCopy = {
   homeHref: "/en",
   email: EN_FOOTER.email,
   legalAria: EN_FOOTER.legalAria,
-  legal: [...EN_FOOTER.legal],
+  // "Terms of use" (the page's own title is "Terms of Use"); the legacy EN_FOOTER keeps "Terms" for the old /en/mini.
+  legal: EN_FOOTER.legal.map((item) =>
+    item.href === "/en/terms" ? { href: item.href, label: "Terms of use" } : { ...item },
+  ),
 };

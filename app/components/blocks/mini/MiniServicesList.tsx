@@ -5,7 +5,16 @@ import "./MiniServicesList.css";
  * services (promoted from `/lab/art-direction/register-pocket`, Services part only). `MiniServicesGrid` stays as it was.
  * Layout and type live in `MiniServicesList.css` (everything under `.msl`). `id="storitve"` is the anchor other pages link
  * to. No `data-section` attribute, so the `[data-section="services*"]` rules in `homeTypography*.css` do not apply here.
+ * The copy is Slovenian by default; another language passes its own `copy` (the layout and ids stay the same).
  */
+export type MiniServicesListCopy = {
+  eyebrow: string;
+  heading: string;
+  services: readonly { n: string; title: string; body: string }[];
+  /** Phrase inside a body kept on one line (`.msl-nb`). */
+  noBreak?: string;
+};
+
 const SERVICES = [
   {
     n: "01",
@@ -29,14 +38,22 @@ const SERVICES = [
   },
 ] as const;
 
-/** Keeps "HTML e-novice" together so the hyphen never leaves "e-" at a line end (copy unchanged). */
-function withNoBreak(body: string) {
-  const [before, after] = body.split("HTML e-novice");
+const SL_COPY: MiniServicesListCopy = {
+  eyebrow: "KAJ DELAMO",
+  heading: "Kaj lahko uredimo za vas.",
+  services: SERVICES,
+  noBreak: "HTML e-novice",
+};
+
+/** Keeps the `noBreak` phrase together ("HTML e-novice": the hyphen never leaves "e-" at a line end; copy unchanged). */
+function withNoBreak(body: string, phrase?: string) {
+  if (!phrase) return body;
+  const [before, after] = body.split(phrase);
   if (after === undefined) return body;
   return (
     <>
       {before}
-      <span className="msl-nb">HTML e-novice</span>
+      <span className="msl-nb">{phrase}</span>
       {after}
     </>
   );
@@ -44,9 +61,11 @@ function withNoBreak(body: string) {
 
 export default function MiniServicesList({
   joined = false,
+  copy = SL_COPY,
 }: {
   /** `true` when a closing block follows on the same surface (`MiniSystemPocket` on `/`): drops the bottom padding. */
   joined?: boolean;
+  copy?: MiniServicesListCopy;
 }) {
   return (
     <section id="storitve" aria-labelledby="msl-heading" className={joined ? "msl msl--joined" : "msl"}>
@@ -54,18 +73,18 @@ export default function MiniServicesList({
       <span id="kaj-delamo" data-anchor-marker aria-hidden="true" />
       <div className="mini-page-rail">
         <div className="msl-col">
-          <p className="uppercase">KAJ DELAMO</p>
+          <p className="uppercase">{copy.eyebrow}</p>
           <h2 id="msl-heading" className="msl-h2">
-            Kaj lahko uredimo za vas.
+            {copy.heading}
           </h2>
           <ol className="msl-list">
-            {SERVICES.map((s) => (
+            {copy.services.map((s) => (
               <li key={s.n} className="msl-row">
                 <p className="msl-num" aria-hidden="true">
                   {s.n}
                 </p>
                 <h3>{s.title}</h3>
-                <p className="msl-desc">{withNoBreak(s.body)}</p>
+                <p className="msl-desc">{withNoBreak(s.body, copy.noBreak)}</p>
               </li>
             ))}
           </ol>

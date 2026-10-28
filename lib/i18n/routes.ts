@@ -39,12 +39,13 @@ export const ROUTE_PAIRS: readonly RoutePair[] = [
 ];
 
 /**
- * Home-page fragments kept when switching between `/` and `/en`. Each target exists on both home pages under the same
- * id. The Slovenian `#kaj-delamo` has no English section yet; it is paired when the English home page is rebuilt.
+ * Home-page fragments kept when switching between `/` and `/en`. Each target uses the same id on both home pages;
+ * `#kaj-delamo` (the services, target of the hero's secondary button) keeps its Slovenian id in English too.
  */
 const HOME_HASH_PAIRS: readonly { sl: string; en: string }[] = [
   { sl: "#approach", en: "#approach" },
   { sl: "#system", en: "#system" },
+  { sl: "#kaj-delamo", en: "#kaj-delamo" },
   { sl: "#contact", en: "#contact" },
 ];
 
@@ -75,6 +76,17 @@ export function counterpartPath(pathname: string): string | null {
  */
 export function languageSwitchPath(pathname: string, fallback: string): string {
   return counterpartPath(pathname) ?? fallback;
+}
+
+/**
+ * Link target for the Slovenian page `slPath` on a page in `locale`. Slovenian pages link to it unchanged. English pages
+ * link to its English counterpart once that page is live; until then they link to the Slovenian page and mark it with
+ * `hrefLang: "sl"`, so the link never points at an English page that does not exist yet.
+ */
+export function localizedPath(slPath: string, locale: Locale): { href: string; hrefLang?: Locale } {
+  if (locale === "sl") return { href: slPath };
+  const pair = ROUTE_PAIRS.find((p) => p.sl === normalize(slPath));
+  return pair?.live ? { href: pair.en } : { href: slPath, hrefLang: "sl" };
 }
 
 /** Fragment to carry over when switching from `pathname` with `hash`; empty when none applies. */

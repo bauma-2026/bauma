@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import MiniProjectCube from "./MiniProjectCube";
+import { localizedPath, type Locale } from "@/lib/i18n/routes";
 
 import "./MiniProjectPocket.css";
 
@@ -18,7 +19,16 @@ import "./MiniProjectPocket.css";
  * blur. Nothing here prevents or delays the link's own navigation: click, Enter, modifier and middle clicks are native.
  */
 
-const COPY = {
+export type MiniProjectPocketCopy = {
+  eyebrow: string;
+  heading: string;
+  body: string;
+  /** Label of the link to the approach page. */
+  link: string;
+};
+
+/** Approved Slovenian copy, the default; another language passes its own `copy` and `locale`. */
+const COPY: MiniProjectPocketCopy = {
   eyebrow: "ZA ZAČETEK",
   heading: "Ni treba, da imate že vse razdelano.",
   body: "Opišite, kaj želite urediti ali kaj na obstoječi strani ne deluje. Na podlagi tega razjasnimo potrebe ter predlagamo obseg in ponudbo.",
@@ -30,7 +40,18 @@ const LINK_FOCUS =
   "focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[color:var(--mini-accent-text,#fff)]";
 const ARROW = "inline-block transition-transform duration-300 group-hover:translate-x-[3px]";
 
-export default function MiniProjectPocket() {
+export default function MiniProjectPocket({
+  copy = COPY,
+  locale = "sl",
+}: {
+  copy?: MiniProjectPocketCopy;
+  /**
+   * Page language, for the link target (`localizedPath`): Slovenian links to `/pristop`; English links to its English
+   * page once that is live, until then to `/pristop` with `hrefLang="sl"`.
+   */
+  locale?: Locale;
+}) {
+  const approach = localizedPath("/pristop", locale);
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const [pressed, setPressed] = useState(false);
@@ -39,14 +60,15 @@ export default function MiniProjectPocket() {
     <section aria-labelledby="mpp-heading" className="mpp">
       <div className="mini-page-rail mpp-rail">
         <div className="mpp-text">
-          <p className="uppercase">{COPY.eyebrow}</p>
+          <p className="uppercase">{copy.eyebrow}</p>
           <h2 id="mpp-heading" className="mpp-h">
-            {COPY.heading}
+            {copy.heading}
           </h2>
-          <p className="mpp-body">{COPY.body}</p>
+          <p className="mpp-body">{copy.body}</p>
           <div className="mpp-action">
             <Link
-              href="/pristop"
+              href={approach.href}
+              hrefLang={approach.hrefLang}
               onPointerEnter={() => setHovered(true)}
               onPointerLeave={() => {
                 setHovered(false);
@@ -68,7 +90,7 @@ export default function MiniProjectPocket() {
               }}
               className={`group inline-flex min-h-[44px] items-center gap-1.5 text-sm font-medium text-white/65 transition-colors duration-300 hover:text-white/92 ${LINK_FOCUS}`}
             >
-              {COPY.link}
+              {copy.link}
               <span aria-hidden="true" className={ARROW}>
                 →
               </span>

@@ -7,6 +7,7 @@ import {
   FlexidoSurface,
   OdstraniSurface,
 } from "./MiniSelectedWorkSurfaces";
+import { localizedPath, type Locale } from "@/lib/i18n/routes";
 
 /**
  * Homepage "Izbrano delo" (SL), used by `app/(sl)/page.tsx` and, with its own heading and no eyebrow, `app/(sl)/o-nas/page.tsx` and
@@ -78,10 +79,36 @@ const PROJECTS: readonly Project[] = [
   { slug: "flexido", motion: "flexido", name: "Flexido", descriptor: "Industrijski B2B", Art: FlexidoSurface },
 ];
 
-function TextLink({ href, className = "", children }: { href: string; className?: string; children: ReactNode }) {
+/** Section copy around the cards. The project names and the card artwork are the clients' own and are not translated. */
+export type MiniSelectedWorkHomeCopy = {
+  eyebrow: string;
+  /** Descriptor under each project name, by slug. */
+  descriptors: Record<string, string>;
+  allProjects: string;
+};
+
+/** Approved Slovenian copy, the default; another language passes its own `copy`, `locale` and `heading`. */
+const SL_COPY: MiniSelectedWorkHomeCopy = {
+  eyebrow: "Izbrano delo",
+  descriptors: Object.fromEntries(PROJECTS.map((p) => [p.slug, p.descriptor])),
+  allProjects: "Vsi projekti",
+};
+
+function TextLink({
+  href,
+  hrefLang,
+  className = "",
+  children,
+}: {
+  href: string;
+  hrefLang?: string;
+  className?: string;
+  children: ReactNode;
+}) {
   return (
     <Link
       href={href}
+      hrefLang={hrefLang}
       className={`group inline-flex min-h-[44px] items-center gap-1.5 text-sm font-medium text-white/65 transition-colors duration-300 hover:text-white/92 ${LINK_FOCUS} ${className}`}
     >
       {children}
@@ -97,6 +124,9 @@ export default function MiniSelectedWorkHome({
   heading = "Različni projekti. Različni izzivi.",
   eyebrow = true,
   lift = false,
+  copy = SL_COPY,
+  locale = "sl",
+  artLang,
 }: {
   /**
    * The 1px rule on the section's top edge (default `true`). `false` keeps the 1px but
@@ -114,7 +144,19 @@ export default function MiniSelectedWorkHome({
   eyebrow?: boolean;
   /** Card hover / focus response (3px lift of the surface, `/work` arrow); only the homepage turns it on. */
   lift?: boolean;
+  copy?: MiniSelectedWorkHomeCopy;
+  /**
+   * Page language, for the link targets (`localizedPath`): Slovenian links to `/work/*`; English links to the English
+   * pages once they are live, until then to the Slovenian ones with `hrefLang="sl"`.
+   */
+  locale?: Locale;
+  /**
+   * `lang` for the card artwork, which reproduces the clients' own (Slovenian) headlines. Set it on a page in another
+   * language (`"sl"` on `/en`); omitted, the artwork inherits the page language.
+   */
+  artLang?: Locale;
 }) {
+  const all = localizedPath("/work", locale);
   return (
     <section
       id="selected-work"
@@ -126,7 +168,7 @@ export default function MiniSelectedWorkHome({
         <div className="flex items-end justify-between gap-10">
           <div>
             {eyebrow ? (
-              <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/60">Izbrano delo</p>
+              <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/60">{copy.eyebrow}</p>
             ) : null}
             <h2
               id="msw-home-heading"
@@ -142,16 +184,18 @@ export default function MiniSelectedWorkHome({
           {PROJECTS.map((p, i) => {
             const id = `msw-home-${p.slug}`;
             const { Art } = p;
+            const target = localizedPath(`/work/${p.slug}`, locale);
             return (
               <li key={p.slug}>
                 <article>
                   <Link
-                    href={`/work/${p.slug}`}
+                    href={target.href}
+                    hrefLang={target.hrefLang}
                     aria-labelledby={id}
                     aria-describedby={`${id}-desc`}
                     className={`group block ${FLEXIDO_SINGLE_COLUMN} ${DEMA_SINGLE_COLUMN} ${LINK_FOCUS}`}
                   >
-                    <div className={lift ? "work-lift work-lift-home" : undefined}>
+                    <div className={lift ? "work-lift work-lift-home" : undefined} lang={artLang}>
                       <SelectedWorkMotion id={p.motion} col={(i + 1) as 1 | 2 | 3}>
                         <Art />
                       </SelectedWorkMotion>
@@ -170,7 +214,7 @@ export default function MiniSelectedWorkHome({
                         <span className={lift ? CARD_ARROW : ARROW}>→</span>
                       </span>
                       <p id={`${id}-desc`} className="col-span-2 row-start-2 -mt-1 text-[13px] leading-5 text-white/60">
-                        {p.descriptor}
+                        {copy.descriptors[p.slug]}
                       </p>
                     </div>
                   </Link>
@@ -181,7 +225,9 @@ export default function MiniSelectedWorkHome({
         </ol>
 
         <div className="mt-2 flex justify-end lg:mt-6">
-          <TextLink href="/work">Vsi projekti</TextLink>
+          <TextLink href={all.href} hrefLang={all.hrefLang}>
+            {copy.allProjects}
+          </TextLink>
         </div>
       </div>
     </section>
