@@ -29,9 +29,9 @@ const CASE_STUDY_SLUGS = [
 
 export const ROUTE_PAIRS: readonly RoutePair[] = [
   { sl: "/", en: "/en", live: true },
-  { sl: "/pristop", en: "/en/approach", live: false, nav: { id: "pristop", sl: "Pristop", en: "Approach" } },
-  { sl: "/work", en: "/en/work", live: false, nav: { id: "work", sl: "Work", en: "Work" } },
-  { sl: "/o-nas", en: "/en/about", live: false, nav: { id: "o-nas", sl: "O nas", en: "About" } },
+  { sl: "/pristop", en: "/en/approach", live: true, nav: { id: "pristop", sl: "Pristop", en: "Approach" } },
+  { sl: "/work", en: "/en/work", live: true, nav: { id: "work", sl: "Work", en: "Work" } },
+  { sl: "/o-nas", en: "/en/about", live: true, nav: { id: "o-nas", sl: "O nas", en: "About" } },
   ...CASE_STUDY_SLUGS.map((slug) => ({ sl: `/work/${slug}`, en: `/en/work/${slug}`, live: false })),
   { sl: "/pogoji-uporabe", en: "/en/terms", live: true },
   { sl: "/zasebnost", en: "/en/privacy", live: true },
