@@ -28,7 +28,7 @@ const CASE_STUDY_SLUGS = [
 ] as const;
 
 /** Case studies whose English page is live; add a slug in the same change that verifies its English page. */
-const LIVE_CASE_STUDIES: ReadonlySet<(typeof CASE_STUDY_SLUGS)[number]> = new Set(["odstrani-tattoo", "hardshelljacket"]);
+const LIVE_CASE_STUDIES: ReadonlySet<(typeof CASE_STUDY_SLUGS)[number]> = new Set(["odstrani-tattoo", "hardshelljacket", "artbite"]);
 
 export const ROUTE_PAIRS: readonly RoutePair[] = [
   { sl: "/", en: "/en", live: true },
