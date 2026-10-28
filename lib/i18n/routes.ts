@@ -27,12 +27,15 @@ const CASE_STUDY_SLUGS = [
   "hardshelljacket",
 ] as const;
 
+/** Case studies whose English page is live; add a slug in the same change that verifies its English page. */
+const LIVE_CASE_STUDIES: ReadonlySet<(typeof CASE_STUDY_SLUGS)[number]> = new Set(["odstrani-tattoo"]);
+
 export const ROUTE_PAIRS: readonly RoutePair[] = [
   { sl: "/", en: "/en", live: true },
   { sl: "/pristop", en: "/en/approach", live: true, nav: { id: "pristop", sl: "Pristop", en: "Approach" } },
   { sl: "/work", en: "/en/work", live: true, nav: { id: "work", sl: "Work", en: "Work" } },
   { sl: "/o-nas", en: "/en/about", live: true, nav: { id: "o-nas", sl: "O nas", en: "About" } },
-  ...CASE_STUDY_SLUGS.map((slug) => ({ sl: `/work/${slug}`, en: `/en/work/${slug}`, live: false })),
+  ...CASE_STUDY_SLUGS.map((slug) => ({ sl: `/work/${slug}`, en: `/en/work/${slug}`, live: LIVE_CASE_STUDIES.has(slug) })),
   { sl: "/pogoji-uporabe", en: "/en/terms", live: true },
   { sl: "/zasebnost", en: "/en/privacy", live: true },
   { sl: "/piskotki", en: "/en/cookies", live: true },
