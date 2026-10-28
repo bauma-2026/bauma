@@ -47,15 +47,51 @@
 const SYSTEM_FONT_STACK =
   'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
 
-const AREAS = [
-  "CNC stroji",
-  "Brizganje plastike",
-  "Manipulacija materiala",
-  "Paletizacija in interna logistika",
-  "Avtomatizacija proizvodnje",
-  "Namenski sistemi",
-  "Kolaborativni roboti",
-];
+/**
+ * The hero copy per language, verbatim from flexido-next `src/content/home/{sl,en}.ts` (hero: eyebrow, titleLines,
+ * subhead, ctaPrimary, ctaSecondary, slogan) and the offer rail (`solutionFamiliesLabel` and the solutions hub
+ * `gridItems` titles, `src/content/solutions/`). Slovenian is the default; the English case study passes `locale="en"`.
+ */
+const COPY = {
+  sl: {
+    eyebrow: "Avtomatizacija proizvodnje",
+    heading: "Povežemo tok med stroji. Ne samo robot ob stroju.",
+    subhead:
+      "Izdelujemo standardne robotske celice in celice po naročilu — ter jih povežemo v stabilen tok med stroji, z manj čakanja med posameznimi fazami.",
+    ctaPrimary: "Poglejmo vaš proces",
+    ctaSecondary: "Kako poteka projekt",
+    slogan: "Od pregleda procesa do zagona sistem načrtuje, integrira in zažene ena ekipa.",
+    railLabel: "Področja",
+    areas: [
+      "CNC stroji",
+      "Brizganje plastike",
+      "Manipulacija materiala",
+      "Paletizacija in interna logistika",
+      "Avtomatizacija proizvodnje",
+      "Namenski sistemi",
+      "Kolaborativni roboti",
+    ],
+  },
+  en: {
+    eyebrow: "Production automation",
+    heading: "We connect the flow between machines. Not just a robot next to a machine.",
+    subhead:
+      "We build standard robotic cells and custom-built cells — and connect them into a stable flow between machines, with less waiting between stages.",
+    ctaPrimary: "Let's look at your process",
+    ctaSecondary: "How a project works",
+    slogan: "One team reviews the process, designs and integrates the system, and commissions it.",
+    railLabel: "Areas",
+    areas: [
+      "CNC machines",
+      "Injection molding",
+      "Material handling",
+      "Palletizing and internal logistics",
+      "Production automation",
+      "Custom-built systems",
+      "Collaborative robots",
+    ],
+  },
+} as const;
 
 export default function FlexidoHomeProof({
   /** Case study keeps the real white header strip; /mini's own intro block
@@ -64,10 +100,14 @@ export default function FlexidoHomeProof({
   /** `/mini` sits the proof on the System surface and frames it itself, so it
    * drops the closing hairline. Default keeps it for `/work/flexido` and `/en/mini`. */
   closingSeparator = true,
+  /** Language of the reconstructed copy: the Slovenian site by default, the English site on `/en/work/flexido`. */
+  locale = "sl",
 }: {
   showLogoStrip?: boolean;
   closingSeparator?: boolean;
+  locale?: "sl" | "en";
 }) {
+  const t = COPY[locale];
   return (
     <div style={{ fontFamily: SYSTEM_FONT_STACK }}>
       {/* LOGO STRIP — white, logo only, no nav, no language switcher, no Kontakt */}
@@ -130,17 +170,17 @@ export default function FlexidoHomeProof({
                 className="text-[11px] uppercase tracking-[0.16em] text-white/80"
                 style={{ textShadow: "0 1px 3px rgba(0,0,0,0.55)" }}
               >
-                Avtomatizacija proizvodnje
+                {t.eyebrow}
               </p>
 
               {/* h2, not h1: every page that embeds this proof owns its own h1.
                   Classes are unchanged, so the rendering is identical. */}
               <h2 className="mt-3 max-w-[20ch] text-balance text-[40px] font-semibold leading-[0.95] tracking-[-0.04em] text-white sm:mt-4 sm:text-[56px] lg:text-[68px]">
-                Povežemo tok med stroji. Ne samo robot ob stroju.
+                {t.heading}
               </h2>
 
               <p className="mt-4 max-w-[46ch] text-[16px] leading-6 text-white/75 sm:mt-5 sm:text-lg sm:leading-8 sm:text-white/80">
-                Izdelujemo standardne robotske celice in celice po naročilu — ter jih povežemo v stabilen tok med stroji, z manj čakanja med posameznimi fazami.
+                {t.subhead}
               </p>
 
               {/* CTA pills — static, subordinate to the heading. Mobile shows
@@ -149,22 +189,22 @@ export default function FlexidoHomeProof({
               <div className="mt-6 sm:mt-7">
                 <div className="sm:hidden">
                   <span className="flex h-12 w-full max-w-[300px] items-center justify-center rounded-full bg-white px-6 text-[14px] font-medium text-neutral-950">
-                    Poglejmo vaš proces <span className="ml-2">→</span>
+                    {`${t.ctaPrimary} `}<span className="ml-2">→</span>
                   </span>
                 </div>
 
                 <div className="hidden sm:flex sm:gap-3">
                   <span className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-[14px] font-medium text-neutral-950">
-                    Poglejmo vaš proces <span className="ml-2">→</span>
+                    {`${t.ctaPrimary} `}<span className="ml-2">→</span>
                   </span>
                   <span className="inline-flex items-center justify-center rounded-full border border-white/15 px-6 py-3 text-[14px] font-medium text-white/75">
-                    Kako poteka projekt <span className="ml-2">→</span>
+                    {`${t.ctaSecondary} `}<span className="ml-2">→</span>
                   </span>
                 </div>
               </div>
 
               <p className="mt-6 max-w-[46ch] text-[13px] text-white/45">
-                Od pregleda procesa do zagona sistem načrtuje, integrira in zažene ena ekipa.
+                {t.slogan}
               </p>
             </div>
           </div>
@@ -184,9 +224,9 @@ export default function FlexidoHomeProof({
                 right and wrap independently, so a wrapped second line
                 starts under "01", not under "Področja". */}
             <div className="flex items-start gap-x-4 gap-y-2 text-[11.5px] font-medium leading-[1.4] tracking-[0.01em]">
-              <span className="shrink-0 text-white/40">Področja</span>
+              <span className="shrink-0 text-white/40">{t.railLabel}</span>
               <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-4 gap-y-2">
-                {AREAS.map((area, index) => (
+                {t.areas.map((area, index) => (
                   <span key={area} className="shrink-0 text-white/[0.72]">
                     <span className="mr-1.5 tabular-nums text-white/[0.52]">
                       {String(index + 1).padStart(2, "0")}

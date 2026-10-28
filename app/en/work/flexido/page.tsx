@@ -24,13 +24,13 @@ export const metadata: Metadata = {
 };
 
 /* The English counterpart of /work/flexido (`app/(sl)/work/flexido/page.tsx`): same structure, classes and proofs, with
- * Bauma's text in English. The reconstructions show the client's Slovenian site and carry `lang="sl"` inside Bauma's
- * English labels; section names quoted from it keep their Slovenian name with an English gloss. The English terms are
- * Flexido's own (flexido-next `messages/en.json` and the solutions / systems hubs): Solutions, E-catalog, Areas, System
- * types. No metrics, before/after or results are claimed. Keep the two pages in step. Not linked until `flexido` is
- * added to `LIVE_CASE_STUDIES` in `lib/i18n/routes.ts`. */
+ * Bauma's text in English. The reconstructions show Flexido's own English site (`locale="en"` on each proof: the copy of
+ * www.flexido.eu/en, /en/solutions and /en/standard-cells, verbatim from flexido-next), so the page needs no language
+ * marks. The terms are Flexido's own: Solutions, e-catalog, Areas, System types. No metrics, before/after or results
+ * are claimed. Keep the two pages in step. */
 
-const SITE_URL = "https://flexido.eu/";
+/** Flexido's English home page (its canonical URL; the SL case study links the Slovenian site). */
+const SITE_URL = "https://www.flexido.eu/en";
 
 const FOCUS =
   "focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[color:var(--mini-accent-text,#7c97f0)]";
@@ -132,11 +132,11 @@ export default function FlexidoCasePageEn() {
                   tech as a single labelled image. */}
               <div
                 role="img"
-                aria-label="Flexido: home page hero section with the heading “Povežemo tok med stroji. Ne samo robot ob stroju.” and a row of seven areas"
+                aria-label="Flexido: home page hero section with the heading “We connect the flow between machines. Not just a robot next to a machine.” and a row of seven areas"
                 className={PROOF_FRAME}
               >
-                <div aria-hidden="true" lang="sl">
-                  <FlexidoHomeProof closingSeparator={false} />
+                <div aria-hidden="true">
+                  <FlexidoHomeProof closingSeparator={false} locale="en" />
                 </div>
               </div>
 
@@ -149,7 +149,7 @@ export default function FlexidoCasePageEn() {
             </section>
 
             {/* 03 — FIRST PATH, by process: the /resitve hub (real content, static) */}
-            <section aria-label="Example: the “Področja” (Areas) section on the Solutions page">
+            <section aria-label="Example: the Areas section on the Solutions page">
               <div className="mini-page-rail pb-10 sm:pb-12">
                 <p className={LEAD}>
                   Visitors can start from the part of production they want to improve. The areas then point them to
@@ -157,31 +157,27 @@ export default function FlexidoCasePageEn() {
                 </p>
               </div>
 
-              {/* The client's Slovenian content sits in its own `lang="sl"` wrapper inside Bauma's English label. The wrapper
-                  is the trimmed child (`[&>div]`) and the frame is its own formatting context, so the trim is unchanged. */}
               <div
                 role="group"
-                aria-label="Flexido: the “Področja” section on the Solutions page (reconstruction)"
+                aria-label="Flexido: the “Areas” section on the Solutions page (reconstruction)"
                 className={`${PROOF_FRAME} ${AREAS_TRIM}`}
               >
-                <div lang="sl">
-                  <FlexidoAreasProof />
-                </div>
+                <FlexidoAreasProof locale="en" />
               </div>
 
               {/* The one rule on the page: it separates the two paths. */}
               <div className={`mini-page-rail ${AFTER_DIVIDER}`}>
                 <div className={`${DIVIDER} pt-6`}>
                   <p className={CAPTION}>
-                    Reconstruction of the “<span lang="sl">Področja</span>” (Areas) section on the Solutions page.
-                    Static view: the arrows in this view are not links.
+                    Reconstruction of the “Areas” section on the Solutions page. Static view: the arrows in this view
+                    are not links.
                   </p>
                 </div>
               </div>
             </section>
 
             {/* 04 — SECOND PATH, by product: the e-catalog hub /standardne-celice (excerpt, static) */}
-            <section aria-label="Example: the “Vrste sistemov” (System types) section of the flexido.eu e-catalog">
+            <section aria-label="Example: the System types section of the flexido.eu e-catalog">
               <div className="mini-page-rail pb-10 sm:pb-12">
                 <p className={LEAD}>
                   Visitors already looking for a specific system can start in the e-catalog and open the product
@@ -192,18 +188,18 @@ export default function FlexidoCasePageEn() {
               {/* Nothing inside is interactive, so it is exposed as a single labelled image. */}
               <div
                 role="img"
-                aria-label="Flexido: the “Vrste sistemov” section of the e-catalog with the heading “Izberite sistem glede na nalogo.” and cards for the FLEX 7 CNC Slim, FLEX 7 IMM Slim and FLEX 25 / 50 systems, each with a photo, a description and the label “Poglej sistem”"
+                aria-label="Flexido: the “System types” section of the e-catalog with the heading “Choose a system based on the task.” and cards for the FLEX 7 CNC Slim, FLEX 7 IMM Slim and FLEX 25 / 50 systems, each with a photo, a description and the label “View system”"
                 className={`${PROOF_FRAME} ${AREAS_TRIM}`}
               >
-                <div aria-hidden="true" lang="sl">
-                  <FlexidoCatalogProof />
+                <div aria-hidden="true">
+                  <FlexidoCatalogProof locale="en" />
                 </div>
               </div>
 
               <div className="mini-page-rail pb-15 pt-6 sm:pb-18 lg:pb-22">
                 <p className={CAPTION}>
-                  Excerpt from the “<span lang="sl">Vrste sistemov</span>” (System types) section of the flexido.eu
-                  e-catalog. Static view: the cards in this view are not links.
+                  Excerpt from the “System types” section of the flexido.eu e-catalog. Static view: the cards in this
+                  view are not links.
                 </p>
               </div>
             </section>

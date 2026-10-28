@@ -32,28 +32,71 @@ type SystemCard = {
   image: string;
 };
 
-const CARDS: SystemCard[] = [
-  {
-    title: "FLEX 7 CNC Slim",
-    eyebrow: "CNC stroji",
-    desc: "Kompaktna robotska celica za strego CNC strojev, nalaganje, odvzem in stabilnejši tok kosov.",
-    image: "/work/flexido/proof/flexido-cnc-machine-studio.webp",
-  },
-  {
-    title: "FLEX 7 IMM Slim",
-    eyebrow: "Brizganje plastike",
-    desc: "Robotska celica za strego strojev za brizganje plastike, odvzem kosov, insert moulding in kontrolo.",
-    image: "/work/flexido/proof/flexido-imm-machine-studio.webp",
-  },
-  {
-    title: "FLEX 25 / 50",
-    eyebrow: "25 / 50 kg nosilnosti",
-    desc: "Konfigurabilna robotska celica z robotom nosilnosti 25 ali 50 kg, kadar FLEX 7 ne pokrije potrebne nosilnosti, dosega ali opcij.",
-    image: "/work/flexido/proof/flex-25-50-studio-wide-v3.webp",
-  },
-];
+/** The card photographs are the same in every language (the hub's HUB_CARD_IMAGE_OVERRIDES). */
+const IMAGES = [
+  "/work/flexido/proof/flexido-cnc-machine-studio.webp",
+  "/work/flexido/proof/flexido-imm-machine-studio.webp",
+  "/work/flexido/proof/flex-25-50-studio-wide-v3.webp",
+] as const;
 
-export default function FlexidoCatalogProof() {
+/** Per language, verbatim from flexido-next `src/content/systems/hub/{sl,en}.ts` (cardsHeading, cardLinkLabel,
+ *  cards[0..2]). Slovenian is the default; the English case study passes `locale="en"`. */
+const COPY: Record<"sl" | "en", { eyebrow: string; heading: string; linkLabel: string; cards: SystemCard[] }> = {
+  sl: {
+    eyebrow: "Vrste sistemov",
+    heading: "Izberite sistem glede na nalogo.",
+    linkLabel: "Poglej sistem",
+    cards: [
+      {
+        title: "FLEX 7 CNC Slim",
+        eyebrow: "CNC stroji",
+        desc: "Kompaktna robotska celica za strego CNC strojev, nalaganje, odvzem in stabilnejši tok kosov.",
+        image: IMAGES[0],
+      },
+      {
+        title: "FLEX 7 IMM Slim",
+        eyebrow: "Brizganje plastike",
+        desc: "Robotska celica za strego strojev za brizganje plastike, odvzem kosov, insert moulding in kontrolo.",
+        image: IMAGES[1],
+      },
+      {
+        title: "FLEX 25 / 50",
+        eyebrow: "25 / 50 kg nosilnosti",
+        desc: "Konfigurabilna robotska celica z robotom nosilnosti 25 ali 50 kg, kadar FLEX 7 ne pokrije potrebne nosilnosti, dosega ali opcij.",
+        image: IMAGES[2],
+      },
+    ],
+  },
+  en: {
+    eyebrow: "System types",
+    heading: "Choose a system based on the task.",
+    linkLabel: "View system",
+    cards: [
+      {
+        title: "FLEX 7 CNC Slim",
+        eyebrow: "CNC machines",
+        desc: "A compact robot cell for tending CNC machines — loading, unloading, and a more stable part flow.",
+        image: IMAGES[0],
+      },
+      {
+        title: "FLEX 7 IMM Slim",
+        eyebrow: "Injection molding",
+        desc: "A robot cell for tending injection molding machines — part removal, insert moulding, and inspection.",
+        image: IMAGES[1],
+      },
+      {
+        title: "FLEX 25 / 50",
+        eyebrow: "25 / 50 kg payload",
+        desc: "A configurable robot cell with a 25 or 50 kg payload robot when FLEX 7 does not cover the required payload, reach, or options.",
+        image: IMAGES[2],
+      },
+    ],
+  },
+};
+
+/** `locale`: language of the reconstructed copy (the Slovenian site by default, the English one on `/en/work/flexido`). */
+export default function FlexidoCatalogProof({ locale = "sl" }: { locale?: "sl" | "en" }) {
+  const t = COPY[locale];
   return (
     <div
       className="bg-[#f2f2f2] text-neutral-950"
@@ -62,15 +105,15 @@ export default function FlexidoCatalogProof() {
       <div className="mx-auto w-full max-w-[1280px] px-5 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
         <div className="mb-6 max-w-[620px] lg:mb-7">
           <p className="text-[11px] uppercase tracking-[0.16em] text-neutral-600">
-            Vrste sistemov
+            {t.eyebrow}
           </p>
           <p className="mt-3 text-balance text-[30px] font-semibold leading-[1.06] tracking-[-0.04em] text-neutral-950 sm:text-[36px] lg:text-[44px]">
-            Izberite sistem glede na nalogo.
+            {t.heading}
           </p>
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {CARDS.map((card, index) => (
+          {t.cards.map((card, index) => (
             <div
               key={card.title}
               className={`flex h-full flex-col overflow-hidden rounded-[16px] border border-neutral-200 bg-white ${
@@ -97,7 +140,7 @@ export default function FlexidoCatalogProof() {
                   {card.desc}
                 </p>
                 <p className="mt-auto inline-flex items-center pt-4 text-[14px] font-medium text-neutral-500">
-                  Poglej sistem
+                  {t.linkLabel}
                   <span aria-hidden="true" className="ml-2 inline-block">
                     →
                   </span>

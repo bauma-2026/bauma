@@ -24,17 +24,42 @@ type Area = {
   desc: string;
 };
 
-const AREAS: Area[] = [
-  { title: "CNC stroji", desc: "Nalaganje, odvzem in boljši izkoristek stroja." },
-  { title: "Brizganje plastike", desc: "Stabilen cikel, odvzem kosov in manj ročnega dela." },
-  { title: "Manipulacija materiala", desc: "Premikanje, obračanje in prenos kosov med fazami." },
-  { title: "Paletizacija in interna logistika", desc: "Ko material ne teče gladko skozi proizvodnjo." },
-  { title: "Avtomatizacija proizvodnje", desc: "Ko želite povezati več korakov procesa v stabilen tok." },
-  { title: "Namenski sistemi", desc: "Ko standardna rešitev ne pokrije prostora, kosov in realnega poteka dela." },
-  { title: "Kolaborativni roboti", desc: "Pomoč pri ponavljajočih se nalogah in delu z operaterjem." },
-];
+/** Per language, verbatim from flexido-next `src/content/solutions/hub/{sl,en}.ts` (gridEyebrow, gridHeading, gridBody,
+ *  gridItems). Slovenian is the default; the English case study passes `locale="en"`. */
+const COPY: Record<"sl" | "en", { eyebrow: string; heading: string; body: string; areas: Area[] }> = {
+  sl: {
+    eyebrow: "Področja",
+    heading: "Kje se vaš proces ustavlja?",
+    body: "Začnite pri delu proizvodnje, kjer nastajajo zastoji, ročni koraki ali čakanje med fazami.",
+    areas: [
+      { title: "CNC stroji", desc: "Nalaganje, odvzem in boljši izkoristek stroja." },
+      { title: "Brizganje plastike", desc: "Stabilen cikel, odvzem kosov in manj ročnega dela." },
+      { title: "Manipulacija materiala", desc: "Premikanje, obračanje in prenos kosov med fazami." },
+      { title: "Paletizacija in interna logistika", desc: "Ko material ne teče gladko skozi proizvodnjo." },
+      { title: "Avtomatizacija proizvodnje", desc: "Ko želite povezati več korakov procesa v stabilen tok." },
+      { title: "Namenski sistemi", desc: "Ko standardna rešitev ne pokrije prostora, kosov in realnega poteka dela." },
+      { title: "Kolaborativni roboti", desc: "Pomoč pri ponavljajočih se nalogah in delu z operaterjem." },
+    ],
+  },
+  en: {
+    eyebrow: "Areas",
+    heading: "Where does your process stall?",
+    body: "Start with the part of production where bottlenecks, manual steps, or waiting between stages occur.",
+    areas: [
+      { title: "CNC machines", desc: "Loading, unloading, and better machine utilization." },
+      { title: "Injection molding", desc: "A stable cycle, part removal, and less manual work." },
+      { title: "Material handling", desc: "Moving, turning, and transferring parts between stages." },
+      { title: "Palletizing and internal logistics", desc: "When material doesn't flow smoothly through production." },
+      { title: "Production automation", desc: "When you want to connect several process steps into a stable flow." },
+      { title: "Custom-built systems", desc: "When a standard solution doesn't cover the space, the parts, and the real workflow." },
+      { title: "Collaborative robots", desc: "Help with repetitive tasks alongside an operator." },
+    ],
+  },
+};
 
-export default function FlexidoAreasProof() {
+/** `locale`: language of the reconstructed copy (the Slovenian site by default, the English one on `/en/work/flexido`). */
+export default function FlexidoAreasProof({ locale = "sl" }: { locale?: "sl" | "en" }) {
+  const t = COPY[locale];
   return (
     <div
       className="bg-[#f2f2f2] text-neutral-950"
@@ -43,18 +68,18 @@ export default function FlexidoAreasProof() {
       <div className="mx-auto w-full max-w-[1280px] px-5 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
         <div className="max-w-[760px]">
           <p className="text-[11px] uppercase tracking-[0.16em] text-neutral-600">
-            Področja
+            {t.eyebrow}
           </p>
           <h2 className="mt-3 text-balance text-[30px] font-semibold leading-[1.06] tracking-[-0.04em] text-neutral-950 sm:text-[36px] lg:text-[44px]">
-            Kje se vaš proces ustavlja?
+            {t.heading}
           </h2>
           <p className="mt-5 max-w-[58ch] text-balance text-[15px] leading-6 text-neutral-600 sm:text-base sm:leading-[26px]">
-            Začnite pri delu proizvodnje, kjer nastajajo zastoji, ročni koraki ali čakanje med fazami.
+            {t.body}
           </p>
         </div>
 
         <ol className="mt-8 list-none border-b border-neutral-200 lg:mt-10">
-          {AREAS.map((area, index) => (
+          {t.areas.map((area, index) => (
             <li key={area.title} className="border-t border-neutral-200 py-5">
               <div className="grid max-w-[42rem] grid-cols-[2rem_minmax(0,1fr)] items-baseline gap-x-3 sm:gap-x-4">
                 <span className="text-[12px] font-medium tabular-nums tracking-[0.14em] text-neutral-600">
