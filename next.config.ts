@@ -23,11 +23,13 @@ const labImagesClosed = process.env.NODE_ENV === "production";
 const CLOSED = "/_not-found";
 
 /**
- * The old English previews (/en/mini, /en/about-preview) are closed in every built artifact, staging included, so the
- * English release never exposes them. The global 404 follows the requested URL, so they answer with the English 404.
- * `next dev` keeps both previews (NODE_ENV=development).
+ * Previews closed in every built artifact, staging included, so no release exposes them: the old English previews
+ * (/en/mini, /en/about-preview) and the legacy About preview (/about-preview). The global 404 follows the requested
+ * URL, so each answers with the 404 of its language. `/mini` stays open on staging (closed in production below).
+ * `next dev` keeps all previews (NODE_ENV=development).
  */
-const EN_PREVIEW_RULES = [
+const PREVIEW_RULES = [
+  { source: "/about-preview", destination: CLOSED },
   { source: "/en/mini", destination: CLOSED },
   { source: "/en/about-preview", destination: CLOSED },
 ];
@@ -56,9 +58,9 @@ const nextConfig: NextConfig = {
       : [];
   },
   async rewrites() {
-    // Staging closes only the optimizer path and the English previews; its /lab/* pages and files keep the redirect above.
+    // Staging closes only the optimizer path and the previews above; its /lab/* pages and files keep the redirect above.
     if (!developmentRoutesClosed) {
-      return labImagesClosed ? { beforeFiles: [...EN_PREVIEW_RULES, ...LAB_IMAGE_RULES] } : [];
+      return labImagesClosed ? { beforeFiles: [...PREVIEW_RULES, ...LAB_IMAGE_RULES] } : [];
     }
     return {
       // beforeFiles runs before public/ and app routes, so one rule covers
@@ -66,8 +68,7 @@ const nextConfig: NextConfig = {
       beforeFiles: [
         { source: "/lab/:path*", destination: CLOSED },
         { source: "/mini", destination: CLOSED },
-        { source: "/about-preview", destination: CLOSED },
-        ...EN_PREVIEW_RULES,
+        ...PREVIEW_RULES,
         ...LAB_IMAGE_RULES,
       ],
     };
