@@ -27,7 +27,10 @@ import Image from "next/image";
 
 const FONT_STACK = "Arial, Helvetica, sans-serif";
 
-export default function HardshelljacketEverydayProof() {
+/** Bauma's description of the photograph (Slovenian by default; the English case study passes its own). */
+const DEFAULT_ALT = "Moški v zeleni kapuci hardshell jakne na deževnem križišču evropskega mesta";
+
+export default function HardshelljacketEverydayProof({ alt = DEFAULT_ALT }: { alt?: string }) {
   return (
     <div
       className="@container relative isolate min-h-[480px] overflow-hidden bg-black text-white antialiased [text-rendering:auto] @min-[700px]:min-h-[540px] @min-[1000px]:min-h-[600px]"
@@ -35,7 +38,7 @@ export default function HardshelljacketEverydayProof() {
     >
       <Image
         src="/work/hardshelljacket/proof/hardshell-atmosphere-02.webp"
-        alt="Moški v zeleni kapuci hardshell jakne na deževnem križišču evropskega mesta"
+        alt={alt}
         fill
         sizes="(min-width: 1280px) 1216px, 100vw"
         quality={85}

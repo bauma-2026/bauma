@@ -26,7 +26,10 @@ import Image from "next/image";
 
 const FONT_STACK = "Arial, Helvetica, sans-serif";
 
-export default function HardshelljacketConstructionProof() {
+/** Bauma's description of the photograph (Slovenian by default; the English case study passes its own). */
+const DEFAULT_ALT = "Zadnja stran off-white hardshell jakne z irizirajočo aplikacijo na sredini hrbta";
+
+export default function HardshelljacketConstructionProof({ alt = DEFAULT_ALT }: { alt?: string }) {
   return (
     <div
       className="@container bg-white text-[#33333e] antialiased [text-rendering:auto]"
@@ -37,7 +40,7 @@ export default function HardshelljacketConstructionProof() {
           <div className="relative order-2 aspect-square w-full overflow-hidden @min-[700px]:order-1">
             <Image
               src="/work/hardshelljacket/proof/hardshell-beige-back.webp"
-              alt="Zadnja stran off-white hardshell jakne z irizirajočo aplikacijo na sredini hrbta"
+              alt={alt}
               fill
               sizes="(min-width: 748px) 384px, 100vw"
               quality={85}
