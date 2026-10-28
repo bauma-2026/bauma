@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState, type CSSProperties, type MouseEvent } from "react";
 
 import "./MiniHeaderRefined.css";
+import { languageSwitchHash, languageSwitchPath, type Locale } from "@/lib/i18n/routes";
 
 export type MiniHeaderCopy = {
   homeHref: string;
@@ -108,41 +109,40 @@ function scrollToFragment(event: MouseEvent<HTMLAnchorElement>, id: string, befo
 
 /** Must match nav targets (Approach / System / Contact). */
 const sectionIds = ["approach", "system", "contact"] as const;
-const PRESERVED_HOME_HASHES = new Set(["#approach", "#system", "#contact"]);
-const LANGUAGE_ROUTE_MAP: Record<string, string> = {
-  "/pogoji-uporabe": "/en/terms",
-  "/zasebnost": "/en/privacy",
-  "/piskotki": "/en/cookies",
-  "/en/terms": "/pogoji-uporabe",
-  "/en/privacy": "/zasebnost",
-  "/en/cookies": "/piskotki",
+
+/** Header accessibility labels per language. */
+const LABELS: Record<
+  Locale,
+  { home: string; menu: string; mobileNav: string; primaryNav: string; sectionNav: string }
+> = {
+  sl: {
+    home: "Bauma — domov",
+    menu: "Meni",
+    mobileNav: "Navigacija",
+    primaryNav: "Glavna navigacija",
+    sectionNav: "Razdelki strani",
+  },
+  en: {
+    home: "Bauma home",
+    menu: "Menu",
+    mobileNav: "Mobile navigation",
+    primaryNav: "Main navigation",
+    sectionNav: "Page sections",
+  },
 };
 
 /**
- * Legal routes use explicit equivalents. Homepage switching keeps
- * #approach|#system|#contact; all other routes keep langHref unchanged.
+ * Language-switch link. The page part comes from the route pairs in `lib/i18n/routes.ts` and is computed from the
+ * pathname, so the server HTML already links each legal page to its counterpart; pages without a live counterpart use
+ * `langHref` (the other home page). On the home pages the client adds the current #approach | #system | #contact.
  */
-function languageSwitchHref(langHref: string): string {
-  if (typeof window === "undefined") return langHref;
-
-  const path = window.location.pathname.replace(/\/$/, "") || "/";
-  const mappedRoute = LANGUAGE_ROUTE_MAP[path];
-  if (mappedRoute) return mappedRoute;
-
-  if (path !== "/" && path !== "/en") return langHref;
-
-  const hash = window.location.hash;
-  if (!PRESERVED_HOME_HASHES.has(hash)) return langHref;
-
-  if (langHref === "/" || langHref === "") return `/${hash}`;
-  return `${langHref.replace(/\/$/, "")}${hash}`;
-}
-
 export function useLanguageSwitchHref(langHref: string) {
-  const [href, setHref] = useState(langHref);
+  const pathname = usePathname() ?? "/";
+  const path = languageSwitchPath(pathname, langHref);
+  const [hash, setHash] = useState("");
 
   useEffect(() => {
-    const sync = () => setHref(languageSwitchHref(langHref));
+    const sync = () => setHash(languageSwitchHash(window.location.pathname, window.location.hash));
     sync();
 
     // Native hash jumps.
@@ -169,9 +169,10 @@ export function useLanguageSwitchHref(langHref: string) {
       history.pushState = pushState;
       history.replaceState = replaceState;
     };
-  }, [langHref]);
+  }, [pathname]);
 
-  return href;
+  if (!hash) return path;
+  return path === "/" ? `/${hash}` : `${path.replace(/\/$/, "")}${hash}`;
 }
 
 const MOBILE_MENU_ID = "bauma-mobile-menu";
@@ -296,6 +297,7 @@ export function MobileMenuTrigger({
 
 function HeaderInner({
   copy,
+  labels,
   langSwitchHref,
   activeId,
   pathname,
@@ -306,8 +308,10 @@ function HeaderInner({
   refined,
   primaryNav,
   contactHref: contactHrefOverride,
+  markCurrentPage,
 }: {
   copy: MiniHeaderCopy;
+  labels: (typeof LABELS)[Locale];
   langSwitchHref: string;
   activeId: string;
   pathname: string;
@@ -319,6 +323,7 @@ function HeaderInner({
   refined: boolean;
   primaryNav?: MiniHeaderNavItem[];
   contactHref?: string;
+  markCurrentPage: boolean;
 }) {
   const base = copy.homeHref === "/" ? "" : copy.homeHref.replace(/\/$/, "");
   const navItems =
@@ -334,7 +339,7 @@ function HeaderInner({
     <div className="mini-page-rail flex h-[52px] items-center justify-between">
       <Link
         href={copy.homeHref}
-        aria-label={copy.homeHref === "/en" ? "Bauma home" : "Bauma — domov"}
+        aria-label={labels.home}
         data-header-focus
         className={`${HIT_AREA_LOGO} inline-flex items-center transition-opacity duration-200 hover:opacity-80`}
         onClick={() => setIsMenuOpen(false)}
@@ -349,54 +354,51 @@ function HeaderInner({
       </Link>
 
       <div className="flex items-center gap-6">
-        <nav
-          aria-label={
-            primaryNav
-              ? "Glavna navigacija"
-              : copy.homeHref === "/en"
-                ? "Page sections"
-                : "Razdelki strani"
-          }
-          className="hidden items-center gap-6 md:flex"
-        >
-          {navItems.map((item) => {
-            const isActive = activeId === item.id;
-            const current = isActive ? undefined : pageCurrent(item.href, pathname);
+        {/* No empty landmark when a language has no live pages to link yet (the English pages). */}
+        {navItems.length > 0 ? (
+          <nav
+            aria-label={primaryNav ? labels.primaryNav : labels.sectionNav}
+            className="hidden items-center gap-6 md:flex"
+          >
+            {navItems.map((item) => {
+              const isActive = activeId === item.id;
+              const current = isActive || !markCurrentPage ? undefined : pageCurrent(item.href, pathname);
 
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                aria-current={isActive ? "location" : current}
-                data-header-focus
-                data-header-label={refined ? "" : undefined}
-                className={`${HIT_AREA} text-[12px] font-medium transition-colors duration-300 ${
-                  overPhotoHero
-                    ? isActive
-                      ? "text-black/85"
-                      : current
-                        ? `text-black/85 ${CURRENT_PAGE_MARK}`
-                        : "text-black/55 hover:text-black/85"
-                    : isActive
-                      ? "text-white"
-                      : current
-                        ? `text-white ${CURRENT_PAGE_MARK}`
-                        : "text-white/55 hover:text-white"
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={isActive ? "location" : current}
+                  data-header-focus
+                  data-header-label={refined ? "" : undefined}
+                  className={`${HIT_AREA} text-[12px] font-medium transition-colors duration-300 ${
+                    overPhotoHero
+                      ? isActive
+                        ? "text-black/85"
+                        : current
+                          ? `text-black/85 ${CURRENT_PAGE_MARK}`
+                          : "text-black/55 hover:text-black/85"
+                      : isActive
+                        ? "text-white"
+                        : current
+                          ? `text-white ${CURRENT_PAGE_MARK}`
+                          : "text-white/55 hover:text-white"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+        ) : null}
 
         <Link
           href={langSwitchHref}
           aria-label={copy.langAria}
           data-header-focus
           data-header-label={refined ? "" : undefined}
-          data-header-divider={refined ? "" : undefined}
-          className={`${HIT_AREA} hidden border-l pl-5 text-[12px] font-medium transition-colors duration-300 md:inline-flex ${
+          data-header-divider={refined && navItems.length > 0 ? "" : undefined}
+          className={`${HIT_AREA} hidden ${navItems.length > 0 ? "border-l pl-5" : ""} text-[12px] font-medium transition-colors duration-300 md:inline-flex ${
             overPhotoHero
               ? "border-black/15 text-black/50 hover:text-black/85"
               : "border-[color:var(--mini-border-header,color-mix(in_oklab,#fff_10%,transparent))] text-white/[0.48] hover:text-white"
@@ -431,6 +433,7 @@ function HeaderInner({
 
 function MobileMenu({
   copy,
+  labels,
   langSwitchHref,
   pathname,
   onClose,
@@ -438,8 +441,10 @@ function MobileMenu({
   refined,
   primaryNav,
   contactHref: contactHrefOverride,
+  markCurrentPage,
 }: {
   copy: MiniHeaderCopy;
+  labels: (typeof LABELS)[Locale];
   langSwitchHref: string;
   pathname: string;
   onClose: () => void;
@@ -447,6 +452,7 @@ function MobileMenu({
   refined: boolean;
   primaryNav?: MiniHeaderNavItem[];
   contactHref?: string;
+  markCurrentPage: boolean;
 }) {
   const base = copy.homeHref === "/" ? "" : copy.homeHref.replace(/\/$/, "");
   const navItems =
@@ -464,16 +470,16 @@ function MobileMenu({
       data-header-refined={refined ? "" : undefined}
       role="dialog"
       aria-modal="true"
-      aria-label={copy.homeHref === "/en" ? "Menu" : "Meni"}
+      aria-label={labels.menu}
       className="fixed inset-0 z-[998] overflow-y-auto bg-[var(--mini-surface-header,#080808)] text-white md:hidden"
     >
       <div className="mini-page-rail flex min-h-full flex-col pt-[78px] pb-[max(24px,env(safe-area-inset-bottom))]">
         <nav
-          aria-label={copy.homeHref === "/en" ? "Mobile navigation" : "Navigacija"}
+          aria-label={labels.mobileNav}
           className="flex flex-col"
         >
           {navItems.map((item) => {
-            const current = pageCurrent(item.href, pathname);
+            const current = markCurrentPage ? pageCurrent(item.href, pathname) : undefined;
             return (
               <Link
                 key={item.href}
@@ -529,6 +535,8 @@ export default function MiniHeader({
   transparentAtTop = false,
   borderColor,
   trackSections = true,
+  markCurrentPage = true,
+  locale,
 }: {
   copy?: MiniHeaderCopy;
   /**
@@ -575,8 +583,19 @@ export default function MiniHeader({
    * Contact would otherwise be marked as the current location.
    */
   trackSections?: boolean;
+  /**
+   * Current-page marker on the primary navigation (`aria-current` and underline). Default `true` keeps every route
+   * unchanged. The 404 passes `false`: a missing `/work/<x>` is not a page of the Work section.
+   */
+  markCurrentPage?: boolean;
+  /**
+   * Language of the header's accessibility labels. Omit to derive it from `copy.homeHref` (`/en` is English), which
+   * keeps every existing caller unchanged; the English shells pass `"en"` explicitly.
+   */
+  locale?: Locale;
 }) {
   const pathname = usePathname();
+  const labels = LABELS[locale ?? (copy.homeHref === "/en" ? "en" : "sl")];
   const [activeId, setActiveId] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isHomepage =
@@ -697,6 +716,7 @@ export default function MiniHeader({
         <div className={`relative z-10 ${darkText ? "text-black" : "text-white"}`}>
           <HeaderInner
             copy={copy}
+            labels={labels}
             langSwitchHref={langSwitchHref}
             activeId={trackSections ? activeId : ""}
             pathname={pathname}
@@ -707,6 +727,7 @@ export default function MiniHeader({
             refined={refined}
             primaryNav={primaryNav}
             contactHref={contactHref}
+            markCurrentPage={markCurrentPage}
           />
         </div>
       </header>
@@ -714,6 +735,7 @@ export default function MiniHeader({
       {isMenuOpen ? (
         <MobileMenu
           copy={copy}
+          labels={labels}
           langSwitchHref={langSwitchHref}
           pathname={pathname}
           onClose={() => setIsMenuOpen(false)}
@@ -721,6 +743,7 @@ export default function MiniHeader({
           refined={refined}
           primaryNav={primaryNav}
           contactHref={contactHref}
+          markCurrentPage={markCurrentPage}
         />
       ) : null}
     </>

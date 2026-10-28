@@ -2,6 +2,7 @@ import "@/app/globals.css";
 import { Inter, DM_Serif_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { HASH_LANDING_SCRIPT } from "@/lib/hashLandingScript";
+import PathLangHtml from "./PathLangHtml";
 
 /**
  * The one <html> document for every root layout: `app/(sl)/layout.tsx` (lang "sl"), `app/en/layout.tsx` (lang "en"),
@@ -39,12 +40,13 @@ export default function RootDocument({
   lang,
   children,
 }: {
-  lang: "sl" | "en";
+  /** `"path"`: `lang` follows the requested URL (only the shared global 404, see `PathLangHtml`). */
+  lang: "sl" | "en" | "path";
   children: React.ReactNode;
 }) {
-  // For those who look beyond the surface. — GB
-  return (
-    <html lang={lang} className={`${inter.variable} ${dmSerif.variable}`}>
+  const className = `${inter.variable} ${dmSerif.variable}`;
+  const content = (
+    <>
       <head>
         <script dangerouslySetInnerHTML={{ __html: HASH_LANDING_SCRIPT }} />
       </head>
@@ -58,6 +60,14 @@ export default function RootDocument({
 
         <Analytics />
       </body>
+    </>
+  );
+
+  // For those who look beyond the surface. — GB
+  if (lang === "path") return <PathLangHtml className={className}>{content}</PathLangHtml>;
+  return (
+    <html lang={lang} className={className}>
+      {content}
     </html>
   );
 }
