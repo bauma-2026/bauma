@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { ROUTE_PAIRS } from "./i18n/routes";
 import { isIndexable } from "./siteEnv";
 
 export const SITE_ORIGIN = "https://bauma.si";
 
 /**
- * The only URLs that are indexable in production, in sitemap order.
+ * The URLs that are indexable in production and listed in the sitemap, in sitemap order (`app/sitemap.ts`).
  * Legal pages, /approach, /contact, /novice and every lab/preview route stay noindex.
  */
 export const INDEXABLE_PATHS = [
@@ -21,21 +22,50 @@ export const INDEXABLE_PATHS = [
   "/en",
 ] as const;
 
-export type IndexablePath = (typeof INDEXABLE_PATHS)[number];
+/**
+ * The English counterparts of the Slovenian main pages (besides `/en`), indexable in production. They opt in only when
+ * their page uses `indexing()` / `pageMetadata()` (EN-006b); until then the EN layout keeps them noindex. They join the
+ * sitemap in EN-006c.
+ */
+export const EN_INDEXABLE_PATHS = [
+  "/en/approach",
+  "/en/work",
+  "/en/about",
+  "/en/work/odstrani-tattoo",
+  "/en/work/hardshelljacket",
+  "/en/work/artbite",
+  "/en/work/dema-plus",
+  "/en/work/flexido",
+  "/en/work/ulterior",
+] as const;
+
+export type IndexablePath = (typeof INDEXABLE_PATHS)[number] | (typeof EN_INDEXABLE_PATHS)[number];
+
+const INDEXABLE: ReadonlySet<string> = new Set<string>([...INDEXABLE_PATHS, ...EN_INDEXABLE_PATHS]);
 
 export function canonicalUrl(path: IndexablePath): string {
   return path === "/" ? SITE_ORIGIN : `${SITE_ORIGIN}${path}`;
 }
 
 /**
- * robots + canonical (+ hreflang) for an indexable page.
+ * hreflang for `path`, from the live route pairs in `lib/i18n/routes.ts` (the same pairs as the language switch): the
+ * Slovenian and English URL and `x-default` (the Slovenian one). Only when both pages of the pair are indexable, so a
+ * noindex page (legal, legacy, preview) never gets or receives an alternate. Insertion order sl, en, x-default.
+ */
+export function hreflangAlternates(path: IndexablePath): Record<string, string> | undefined {
+  const pair = ROUTE_PAIRS.find((p) => p.live && (p.sl === path || p.en === path));
+  if (!pair || !INDEXABLE.has(pair.sl) || !INDEXABLE.has(pair.en)) return undefined;
+  const sl = canonicalUrl(pair.sl as IndexablePath);
+  return { sl, en: canonicalUrl(pair.en as IndexablePath), "x-default": sl };
+}
+
+/**
+ * robots + canonical + hreflang for an indexable page.
  * Outside an explicit production build: noindex and nothing that advertises production.
  */
-export function indexing(
-  path: IndexablePath,
-  languages?: Record<string, string>,
-): Pick<Metadata, "robots" | "alternates"> {
+export function indexing(path: IndexablePath): Pick<Metadata, "robots" | "alternates"> {
   if (!isIndexable) return { robots: { index: false, follow: false } };
+  const languages = hreflangAlternates(path);
   return {
     robots: { index: true, follow: true },
     alternates: {
@@ -80,35 +110,43 @@ export const SL_SOCIAL_IMAGE = {
   alt: "Bauma — Spletne strani, ki pomagajo pridobivati stranke.",
 };
 
+/** The social image and `og:locale` of a page's language; each language passes its own (`slPageMetadata` below). */
+export type SocialImage = { url: string; width: number; height: number; alt: string };
+
 /**
- * Complete metadata of one of the main Slovenian pages: title, description, robots, canonical (+ hreflang),
- * and the same title and description for Open Graph and Twitter (`summary_large_image`).
- * `title` is the final string (no template); `og:url` follows `ogUrl()`.
+ * Complete metadata of an indexable page in either language: title, description, robots, canonical + hreflang
+ * (`indexing()`), and the same title and description for Open Graph and Twitter (`summary_large_image`) with the given
+ * social image and `og:locale`. `title` is the final string (no template); `og:url` follows `ogUrl()`.
  */
-export function slPageMetadata(
+export function pageMetadata(
   path: IndexablePath,
   copy: { title: string; description: string },
-  languages?: Record<string, string>,
+  social: { image: SocialImage; locale: "sl_SI" | "en_US" },
 ): Metadata {
   const { title, description } = copy;
   return {
     title,
     description,
-    ...indexing(path, languages),
+    ...indexing(path),
     openGraph: {
       title,
       description,
       ...ogUrl(path),
       siteName: "Bauma",
-      images: [SL_SOCIAL_IMAGE],
-      locale: "sl_SI",
+      images: [social.image],
+      locale: social.locale,
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [{ url: SL_SOCIAL_IMAGE.url, alt: SL_SOCIAL_IMAGE.alt }],
+      images: [{ url: social.image.url, alt: social.image.alt }],
     },
   };
+}
+
+/** One of the main Slovenian pages: `pageMetadata` with the Slovenian social image. */
+export function slPageMetadata(path: IndexablePath, copy: { title: string; description: string }): Metadata {
+  return pageMetadata(path, copy, { image: SL_SOCIAL_IMAGE, locale: "sl_SI" });
 }

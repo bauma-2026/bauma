@@ -34,19 +34,11 @@ import { EN_PRIMARY_NAV } from "@/lib/i18n/routes";
 
 /**
  * EN homepage — structural parity with locked `/`.
- * Route-owned indexing: overrides EN layout default noindex.
- * Only `/` and `/en` are indexable in production.
+ * Route-owned indexing: overrides EN layout default noindex. hreflang (sl, en, x-default) comes from the route pairs.
  */
-/** The one hreflang pair: the home pages. SL subpages have no EN counterpart and are not linked to /en. */
-const HREFLANG = {
-  sl: "https://bauma.si",
-  en: "https://bauma.si/en",
-  "x-default": "https://bauma.si",
-};
-
 export const metadata: Metadata = {
   // Canonical and hreflang only in an explicit production build (`lib/indexing.ts`).
-  ...indexing("/en", HREFLANG),
+  ...indexing("/en"),
   openGraph: {
     ...ogUrl("/en"),
     siteName: "Bauma",

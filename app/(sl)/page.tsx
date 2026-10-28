@@ -51,17 +51,9 @@ const DESCRIPTION =
  * Metadata comes from `slPageMetadata` (lib/indexing.ts): indexing, canonical and hreflang follow `isIndexable`;
  * Open Graph and Twitter reuse this title and description and the Slovenian social image.
  */
-/** The one hreflang pair: the home pages. SL subpages have no EN counterpart and are not linked to /en. */
-const HREFLANG = {
-  sl: "https://bauma.si",
-  en: "https://bauma.si/en",
-  "x-default": "https://bauma.si",
-};
-
 export const metadata: Metadata = slPageMetadata(
   "/",
   { title: TITLE, description: DESCRIPTION },
-  HREFLANG,
 );
 
 /**
