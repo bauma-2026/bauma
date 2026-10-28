@@ -23,15 +23,19 @@ const labImagesClosed = process.env.NODE_ENV === "production";
 const CLOSED = "/_not-found";
 
 /**
- * Previews closed in every built artifact, staging included, so no release exposes them: the old English previews
- * (/en/mini, /en/about-preview) and the legacy About preview (/about-preview). The global 404 follows the requested
- * URL, so each answers with the 404 of its language. `/mini` stays open on staging (closed in production below).
- * `next dev` keeps all previews (NODE_ENV=development).
+ * Previews closed in every built artifact, staging included. `next dev` keeps them: these rules are added only when
+ * `NODE_ENV=production`. `/mini` stays open on staging (closed in production below).
+ *
+ * The two About previews rewrite to an unmatched path. A rewrite to `/_not-found` is a real 404 under `next start`,
+ * because that server treats the internal not-found route as a 404. On Vercel the same destination is a matched route
+ * (`X-Matched-Path: /_not-found`) and the platform returns it as HTTP 200. An unmatched destination is handled like
+ * any unknown URL: HTTP 404 and `app/global-not-found.tsx`. The stand-in stays under `/en` for the English preview, so
+ * the 404 language follows the path either as requested or as rewritten. `/en/mini` is unchanged.
  */
 const PREVIEW_RULES = [
-  { source: "/about-preview", destination: CLOSED },
+  { source: "/about-preview", destination: "/closed/about-preview" },
   { source: "/en/mini", destination: CLOSED },
-  { source: "/en/about-preview", destination: CLOSED },
+  { source: "/en/about-preview", destination: "/en/closed/about-preview" },
 ];
 
 const LAB_IMAGE_RULES = [
