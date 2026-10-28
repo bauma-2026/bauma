@@ -8,7 +8,7 @@ import SystemGraphic from "../components/blocks/mini/SystemGraphic";
 import MiniPerceptionLayer from "../components/blocks/mini/MiniPerceptionLayer";
 import MiniClosingBookend from "../components/blocks/mini/MiniClosingBookend";
 import RightObjectAxisDebugGate from "@/components/home/debug/RightObjectAxisDebugGate";
-import { isStaging } from "@/lib/siteEnv";
+import { indexing, ogUrl } from "@/lib/indexing";
 import {
   EN_APPROACH,
   EN_CONTACT,
@@ -20,29 +20,23 @@ import {
   EN_VISUAL,
 } from "@/components/home/copy/enHomepage";
 
-const isProduction = process.env.VERCEL_ENV === "production" && !isStaging;
-
 /**
  * EN homepage — structural parity with locked `/`.
  * Route-owned indexing: overrides EN layout default noindex.
  * Only `/` and `/en` are indexable in production.
  */
+/** The one hreflang pair: the home pages. SL subpages have no EN counterpart and are not linked to /en. */
+const HREFLANG = {
+  sl: "https://bauma.si",
+  en: "https://bauma.si/en",
+  "x-default": "https://bauma.si",
+};
+
 export const metadata: Metadata = {
-  // Staging omits canonical/hreflang so it never advertises production URLs.
-  ...(isStaging
-    ? {}
-    : {
-        alternates: {
-          canonical: "https://bauma.si/en",
-          languages: {
-            sl: "https://bauma.si",
-            en: "https://bauma.si/en",
-            "x-default": "https://bauma.si",
-          },
-        },
-      }),
+  // Canonical and hreflang only in an explicit production build (`lib/indexing.ts`).
+  ...indexing("/en", HREFLANG),
   openGraph: {
-    ...(isStaging ? {} : { url: "https://bauma.si/en" }),
+    ...ogUrl("/en"),
     siteName: "Bauma",
     images: [
       {
@@ -55,9 +49,6 @@ export const metadata: Metadata = {
     locale: "en_US",
     type: "website",
   },
-  robots: isProduction
-    ? { index: true, follow: true }
-    : { index: false, follow: false },
 };
 
 export default function EnglishHome() {

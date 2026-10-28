@@ -21,9 +21,7 @@ import "./homeTypographyV11.css";
 import { homeMono } from "./homeMono";
 /** Portrait-phone hero and "Kaj delamo" start, scoped to this page by `data-home-hero-mobile`. */
 import "./homeHeroMobile.css";
-import { isStaging } from "@/lib/siteEnv";
-
-const isProduction = process.env.VERCEL_ENV === "production" && !isStaging;
+import { slPageMetadata } from "@/lib/indexing";
 
 /** Primary navigation: standalone pages, not homepage sections. Contact stays the header CTA. */
 const HOME_NAV: MiniHeaderNavItem[] = [
@@ -45,59 +43,26 @@ const SURFACE_SERVICES = surface("--mini-surface-work", "#0d1119");
 const SURFACE_WORK = surface("--mini-surface-work", "#0f141c");
 const SURFACE_PROJECT = surface("--mini-surface-system", "#0b0e15");
 
-const TITLE = "Bauma — Spletne strani, ki pomagajo pridobivati stranke.";
+const TITLE = "Bauma — načrtovanje, oblikovanje in razvoj spletnih strani";
 const DESCRIPTION =
-  "Od jasne strukture in vsebine do oblikovanja, razvoja in objave.";
+  "Načrtovanje, oblikovanje in razvoj spletnih strani za podjetja. Od strukture in vsebine do izvedbe in objave — z jasnim namenom vsakega dela.";
 
 /**
- * Launch indexing: `/` and `/en` only, and only on Vercel production.
- * Env gate: VERCEL_ENV === "production"
- *
- * `openGraph` and `twitter` replace the root layout's objects entirely, so the
- * unchanged fields (image, locale, site name) are repeated here.
+ * Metadata comes from `slPageMetadata` (lib/indexing.ts): indexing, canonical and hreflang follow `isIndexable`;
+ * Open Graph and Twitter reuse this title and description and the Slovenian social image.
  */
-export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
-  // Staging omits canonical/hreflang so it never advertises production URLs.
-  ...(isStaging
-    ? {}
-    : {
-        alternates: {
-          canonical: "https://bauma.si",
-          languages: {
-            sl: "https://bauma.si",
-            en: "https://bauma.si/en",
-            "x-default": "https://bauma.si",
-          },
-        },
-      }),
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    ...(isStaging ? {} : { url: "https://bauma.si" }),
-    siteName: "Bauma",
-    images: [
-      {
-        url: "/og/bauma-og-v3.png",
-        width: 1200,
-        height: 630,
-        alt: TITLE,
-      },
-    ],
-    locale: "sl_SI",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: TITLE,
-    description: DESCRIPTION,
-    images: ["/og/bauma-og-v3.png"],
-  },
-  robots: isProduction
-    ? { index: true, follow: true }
-    : { index: false, follow: false },
+/** The one hreflang pair: the home pages. SL subpages have no EN counterpart and are not linked to /en. */
+const HREFLANG = {
+  sl: "https://bauma.si",
+  en: "https://bauma.si/en",
+  "x-default": "https://bauma.si",
 };
+
+export const metadata: Metadata = slPageMetadata(
+  "/",
+  { title: TITLE, description: DESCRIPTION },
+  HREFLANG,
+);
 
 /**
  * Royal Blue homepage: the approved `/mini` composition, SL only.
@@ -127,7 +92,7 @@ export default function Home() {
             <MiniSystemPocket />
           </div>
           <div style={SURFACE_WORK}>
-            <MiniSelectedWorkHome topRule={false} />
+            <MiniSelectedWorkHome topRule={false} lift />
           </div>
           <div style={SURFACE_PROJECT}>
             <MiniProjectPocket />

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { slPageMetadata } from "@/lib/indexing";
 import type { CSSProperties } from "react";
 
 import MiniClosingBookend from "@/app/components/blocks/mini/MiniClosingBookend";
@@ -17,10 +18,14 @@ import "@/app/homeTypographyV11.css";
 
 import "./PristopPage.css";
 
-export const metadata: Metadata = {
-  title: "Pristop — Bauma",
-  robots: { index: false, follow: false },
-};
+const TITLE = "Pristop: od kratkega opisa do zaključka — Bauma";
+const DESCRIPTION =
+  "Začnete s kratkim opisom po e-pošti, tudi brez pripravljenega gradiva. Sledijo predlog obsega, ponudba, izvedba in pregled; večino usklajevanja opravimo po e-pošti.";
+
+export const metadata: Metadata = slPageMetadata(
+  "/pristop",
+  { title: TITLE, description: DESCRIPTION },
+);
 
 /** Primary nav: Pristop is this page, Work is /work. */
 const NAV: MiniHeaderNavItem[] = [
@@ -41,7 +46,7 @@ const PHASES: { n: string; name: string; roles: { role: Role; text: string }[] }
     roles: [
       {
         role: "vi",
-        text: "Po e-pošti opišete, kaj želite urediti in komu je stran namenjena. Pošljete, kar že imate: obstoječo stran, besedila, slike ali primere, ki so vam všeč.",
+        text: "Po e-pošti opišete, kaj želite urediti in komu je stran namenjena. Če že imate obstoječo stran, besedila, slike ali primere, ki so vam všeč, jih priložite.",
       },
       { role: "bauma", text: "Pregledamo opis in po e-pošti razjasnimo odprta vprašanja." },
     ],
@@ -115,7 +120,8 @@ export default function PristopPage() {
               </p>
               <p className="apw-written">
                 <span className="apw-role">Usklajevanje</span>
-                Večino usklajevanja opravimo po e-pošti. Pogovor ali sestanek dogovorimo, kadar je potreben.
+                Večino usklajevanja opravimo po e-pošti. Pogovor ali sestanek dogovorimo, kadar je potreben. Projekt od
+                začetka do objave vodi Gregor Baumgartner.
               </p>
             </div>
           </section>
@@ -165,7 +171,7 @@ export default function PristopPage() {
           </section>
 
           <div data-home-typography data-home-v11 style={SELECTED_WORK_SCOPE}>
-            <MiniSelectedWorkHome topRule={false} heading="Izbrano delo." eyebrow={false} />
+            <MiniSelectedWorkHome topRule={false} heading="Izbrano delo." eyebrow={false} lift />
           </div>
         </main>
 

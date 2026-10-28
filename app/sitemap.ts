@@ -1,40 +1,21 @@
 import type { MetadataRoute } from "next";
-import { isStaging } from "@/lib/siteEnv";
+import { isIndexable } from "@/lib/siteEnv";
+import { INDEXABLE_PATHS, canonicalUrl, SITE_ORIGIN } from "@/lib/indexing";
 
 /**
- * Public indexable homepage URLs only.
- * Do not add About, Work, legal, lab, or preview routes.
+ * Production only: the indexable URLs from `lib/indexing.ts` (11). Legal pages, /approach,
+ * /contact, /novice and lab/preview routes are not listed.
+ * No `lastmod`: there is no reliable content-change date, and the build time is not one.
+ * The / and /en pair carries its hreflang alternates.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  // Staging must not expose production URLs.
-  if (isStaging) return [];
+  // Every non-production environment publishes an empty sitemap.
+  if (!isIndexable) return [];
 
-  const lastModified = new Date();
+  const languages = { sl: SITE_ORIGIN, en: `${SITE_ORIGIN}/en` };
 
-  return [
-    {
-      url: "https://bauma.si",
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 1,
-      alternates: {
-        languages: {
-          sl: "https://bauma.si",
-          en: "https://bauma.si/en",
-        },
-      },
-    },
-    {
-      url: "https://bauma.si/en",
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 1,
-      alternates: {
-        languages: {
-          sl: "https://bauma.si",
-          en: "https://bauma.si/en",
-        },
-      },
-    },
-  ];
+  return INDEXABLE_PATHS.map((path) => ({
+    url: canonicalUrl(path),
+    ...(path === "/" || path === "/en" ? { alternates: { languages } } : {}),
+  }));
 }

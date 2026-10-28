@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { isStaging } from "@/lib/siteEnv";
+import { slPageMetadata } from "@/lib/indexing";
 import type { CSSProperties } from "react";
 
 import MiniPalette from "../../components/blocks/mini/MiniPalette";
@@ -15,41 +15,14 @@ import FlexidoAreasProof from "../../components/blocks/mini/FlexidoAreasProof";
 import FlexidoHomeProof from "../../components/blocks/mini/FlexidoHomeProof";
 import FlexidoCatalogProof from "../../components/blocks/mini/FlexidoCatalogProof";
 
-const TITLE = "Flexido: dve poti v industrijsko ponudbo — Bauma";
+const TITLE = "Flexido: spletna stran z dvema vstopoma v ponudbo — Bauma";
 const DESCRIPTION =
-  "Flexido: ponudba industrijske avtomatizacije ima dva vstopa, po proizvodnem problemu in po standardnem sistemu. Primer iz prakse.";
+  "Za Flexido smo prenovili spletno predstavitev: e-katalog smo dopolnili s potjo Rešitve, kjer obiskovalec izhaja iz proizvodnega procesa ali naloge.";
 
-/** `noindex` stays until the case studies launch. */
-export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    ...(isStaging ? {} : { url: "https://bauma.si/work/flexido" }),
-    siteName: "Bauma",
-    images: [
-      {
-        url: "/og/bauma-og-v3.png",
-        width: 1200,
-        height: 630,
-        alt: TITLE,
-      },
-    ],
-    locale: "sl_SI",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: TITLE,
-    description: DESCRIPTION,
-    images: ["/og/bauma-og-v3.png"],
-  },
-  robots: {
-    index: false,
-    follow: false,
-  },
-};
+export const metadata: Metadata = slPageMetadata(
+  "/work/flexido",
+  { title: TITLE, description: DESCRIPTION },
+);
 
 /* Facts checked against the live flexido.eu and the flexido-next source.
  * No metrics, before/after or results are claimed. */
@@ -57,7 +30,7 @@ export const metadata: Metadata = {
 const SITE_URL = "https://flexido.eu/";
 
 const FOCUS =
-  "focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-white/50";
+  "focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[color:var(--mini-accent-text,#7c97f0)]";
 
 /* --------------------------------- tokens -------------------------------- */
 
@@ -81,7 +54,7 @@ const PROOF_FRAME =
   "mx-auto w-full isolate overflow-hidden rounded-none max-sm:w-[calc(100%-2.5rem)] max-sm:rounded-[6px] sm:w-[calc(100%-3rem)] sm:max-w-[1216px] sm:rounded-[8px] md:w-[calc(100%-4rem)]";
 
 const CAPTION =
-  "mx-auto max-w-[760px] text-center text-sm leading-relaxed text-white/40";
+  "mx-auto max-w-[760px] text-center text-sm leading-relaxed text-white/50";
 
 /** Trims the Areas proof's own 64/80/96px vertical padding to an even ~36px inside the frame (which clips) below lg and
  *  ~48px from lg, the same as the Ulterior and Dema Plus proofs. Viewport widths, as in the proof. */
@@ -109,7 +82,7 @@ export default function FlexidoCasePage() {
           {/* 01 — INTRODUCTION: type only, on Base; the proofs below share one elevated graphite surface */}
           <section
             aria-labelledby="fx-hero"
-            className="pb-10 pt-28 sm:pb-12 sm:pt-32 lg:pt-32"
+            className="pb-10 pt-28 sm:pb-12 sm:pt-32 lg:pt-36"
           >
             <div className="mini-page-rail">
               <p className={EYEBROW}>Case / Flexido</p>
@@ -120,8 +93,12 @@ export default function FlexidoCasePage() {
               </h1>
 
               <p className="mt-6 max-w-[44ch] text-pretty text-base leading-[1.65] text-white/70 sm:text-lg sm:leading-[1.7]">
-                Za Flexido smo zasnovali in razvili spletno stran z dvema
-                vstopoma v ponudbo: po proizvodnih procesih in po izdelkih.
+                Prejšnja spletna predstavitev je bila osredotočena na{" "}
+                <span className="whitespace-nowrap">e-katalog</span>. Ob prenovi
+                smo dodali Rešitve — novo vsebinsko pot za obiskovalca, ki
+                izhaja iz proizvodnega procesa ali naloge, ne iz določenega
+                izdelka. <span className="whitespace-nowrap">E-katalog</span>{" "}
+                smo ohranili kot neposreden vstop do konkretnih sistemov.
               </p>
 
               <p className="mt-6 flex flex-wrap items-baseline gap-x-6 gap-y-2 text-sm leading-6 text-white/72 sm:text-[15px]">
@@ -139,6 +116,11 @@ export default function FlexidoCasePage() {
                   <span aria-hidden="true"> ↗</span>
                   <span className="sr-only"> (odpre se v novem zavihku)</span>
                 </a>
+              </p>
+
+              <p className="mt-2 text-sm leading-6 text-white/72 sm:text-[15px]">
+                Iz obstoječih fotografij robotskih celic v proizvodnem okolju
+                smo pripravili prenovljene produktne prikaze za spletno stran.
               </p>
             </div>
           </section>
@@ -220,13 +202,22 @@ export default function FlexidoCasePage() {
                 </div>
               </div>
 
-              <div className="mini-page-rail pb-16 pt-6 sm:pb-20 lg:pb-24">
+              <div className="mini-page-rail pb-15 pt-6 sm:pb-18 lg:pb-22">
                 <p className={CAPTION}>
                   Izsek razdelka „Vrste sistemov“ v e-katalogu flexido.eu.
                   Statičen prikaz: kartice v tem prikazu niso povezave.
                 </p>
               </div>
             </section>
+
+            {/* Closing line of the study, in the explanatory-paragraph style; same 60/72/88px lead-in as the other leads. */}
+            <div className="mini-page-rail pb-16 sm:pb-20 lg:pb-24">
+              <p className={LEAD}>
+                Tako lahko obiskovalec išče rešitev glede na svojo proizvodno
+                nalogo ali neposredno med sistemi v{" "}
+                <span className="whitespace-nowrap">e-katalogu</span>.
+              </p>
+            </div>
           </div>
 
           {/* Previous / next case study and the way back to /work, on the page's base surface. */}

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { isStaging } from "@/lib/siteEnv";
+import { slPageMetadata } from "@/lib/indexing";
 import type { CSSProperties } from "react";
 
 import MiniPalette from "../../components/blocks/mini/MiniPalette";
@@ -18,41 +18,14 @@ import HardshelljacketEverydayProof from "../../components/blocks/mini/Hardshell
 // Proof width and clip (`.msw-proof` / `.msw-clip`): same rail logic as the homepage and the other case studies.
 import "../../components/blocks/mini/MiniSelectedWork.css";
 
-const TITLE = "Hardshelljacket: en izdelek, ena stran — Bauma";
+const TITLE = "Hardshelljacket: spletna stran za en izdelek — Bauma";
 const DESCRIPTION =
-  "Hardshelljacket: enostranska spletna stran, ki izdelek predstavi s fotografijo, tehničnimi podatki in jasno potjo do nakupa pri Ulterior. Primer iz prakse.";
+  "Za Hardshelljacket smo zasnovali, oblikovali in razvili stran za jakno Ulterior. Nakup vodi na Ulterior, poslovna povpraševanja so ločena.";
 
-/** `noindex` stays until the case studies launch. */
-export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    ...(isStaging ? {} : { url: "https://bauma.si/work/hardshelljacket" }),
-    siteName: "Bauma",
-    images: [
-      {
-        url: "/og/bauma-og-v3.png",
-        width: 1200,
-        height: 630,
-        alt: TITLE,
-      },
-    ],
-    locale: "sl_SI",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: TITLE,
-    description: DESCRIPTION,
-    images: ["/og/bauma-og-v3.png"],
-  },
-  robots: {
-    index: false,
-    follow: false,
-  },
-};
+export const metadata: Metadata = slPageMetadata(
+  "/work/hardshelljacket",
+  { title: TITLE, description: DESCRIPTION },
+);
 
 /* Facts checked against the live hardshelljacket.com and the hardshelljacket-next source
  * (footer credit: "Structure & development: Bauma"). The purchase flow belongs to Ulterior
@@ -61,7 +34,7 @@ export const metadata: Metadata = {
 const SITE_URL = "https://hardshelljacket.com/";
 
 const FOCUS =
-  "focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-white/50";
+  "focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[color:var(--mini-accent-text,#7c97f0)]";
 
 /** Same primary navigation as `/` and `/work`. */
 const HOME_NAV: MiniHeaderNavItem[] = [
@@ -79,7 +52,7 @@ const EYEBROW =
   "text-[11px] font-medium uppercase tracking-[0.22em] text-white/60";
 
 const CAPTION =
-  "mx-auto max-w-[760px] text-balance text-center text-sm leading-relaxed text-white/40";
+  "mx-auto max-w-[760px] text-balance text-center text-sm leading-relaxed text-white/50";
 
 export default function HardshelljacketCasePage() {
   return (
@@ -115,7 +88,7 @@ export default function HardshelljacketCasePage() {
               </p>
 
               <p className="mt-6 flex flex-wrap items-baseline gap-x-6 gap-y-2 text-sm leading-6 text-white/72 sm:text-[15px]">
-                <span>Struktura in razvoj spletne strani</span>
+                <span>Zasnova, oblikovanje in razvoj spletne strani v angleščini in španščini</span>
                 <a
                   href={SITE_URL}
                   target="_blank"
@@ -157,7 +130,7 @@ export default function HardshelljacketCasePage() {
               <div className="mini-page-rail pb-10 pt-5 sm:pb-12 lg:pb-14">
                 <p className={CAPTION}>
                   Rekonstrukcija uvodnega razdelka spletne strani
-                  hardshelljacket.com.
+                  hardshelljacket.com. Gumbi v tem prikazu niso aktivni.
                 </p>
               </div>
             </section>

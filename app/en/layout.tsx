@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { isStaging } from "@/lib/siteEnv";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bauma.si"),
@@ -10,7 +9,7 @@ export const metadata: Metadata = {
 
   /**
    * Default for the EN subtree: noindex.
-   * `/en` homepage opts into index,follow via route-owned metadata.
+   * `/en` homepage opts into index,follow via route-owned metadata (production only).
    * Do not remove this default — it protects about/legal/internal EN routes.
    */
   robots: { index: false, follow: false },
@@ -19,7 +18,6 @@ export const metadata: Metadata = {
     title: "Bauma — Clear structure. Better decisions.",
     description:
       "Websites for companies with a strong offer that their current site doesn’t communicate clearly.",
-    ...(isStaging ? {} : { url: "https://bauma.si/en" }),
     siteName: "Bauma",
     images: [
       {

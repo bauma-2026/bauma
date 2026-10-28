@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Inter, DM_Serif_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { HASH_LANDING_SCRIPT } from "@/lib/hashLandingScript";
-import { isStaging } from "@/lib/siteEnv";
+import { ROOT_OPEN_GRAPH } from "@/lib/indexing";
 
 /**
  * latin-ext covers Slovenian č/š/ž in the same next/font preload path as latin.
@@ -51,23 +51,8 @@ export const metadata: Metadata = {
 
   manifest: "/site.webmanifest?v=4",
 
-  openGraph: {
-    title: "Bauma — Jasna struktura. Več odločitev.",
-    description:
-      "Spletne strani za podjetja, ki imajo dobro ponudbo, a se to na njihovi strani ne vidi.",
-    ...(isStaging ? {} : { url: "https://bauma.si" }),
-    siteName: "Bauma",
-    images: [
-      {
-        url: "/og/bauma-og-v3.png",
-        width: 1200,
-        height: 630,
-        alt: "Bauma — Jasna struktura. Več odločitev.",
-      },
-    ],
-    locale: "sl_SI",
-    type: "website",
-  },
+  // No `url` here: a page-level og:url must match that page's own canonical (see `lib/indexing.ts`).
+  openGraph: { ...ROOT_OPEN_GRAPH },
 
   twitter: {
     card: "summary_large_image",
@@ -77,7 +62,7 @@ export const metadata: Metadata = {
     images: ["/og/bauma-og-v3.png"],
   },
 
-  // Default: non-indexable. Only `/` and `/en` opt into index,follow in production.
+  // Default: non-indexable. Only the 11 paths in `lib/indexing.ts` opt into index,follow, and only in an explicit production build.
   robots: { index: false, follow: false },
 };
 export default function RootLayout({

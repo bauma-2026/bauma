@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { slPageMetadata } from "@/lib/indexing";
 import type { CSSProperties } from "react";
 
 import MiniPalette from "../../components/blocks/mini/MiniPalette";
@@ -16,15 +17,14 @@ import OdstraniTattooResultsProof from "../../components/blocks/mini/OdstraniTat
 // Proof width and clip (`.msw-proof` / `.msw-clip`): same rail logic as the homepage.
 import "../../components/blocks/mini/MiniSelectedWork.css";
 
-export const metadata: Metadata = {
-  title: "Odstrani Tattoo — Bauma case study",
-  description:
-    "Odstrani Tattoo: stran za odstranjevanje tetovaž, ki se začne z vprašanjem in konča s posvetom.",
-  robots: {
-    index: false,
-    follow: false,
-  },
-};
+const TITLE = "Odstrani Tattoo: stran, ki najprej razloži postopek — Bauma";
+const DESCRIPTION =
+  "Za Odstrani Tattoo smo zasnovali in razvili spletno stran za odstranjevanje tetovaž. Obiskovalca vodi od razlage postopka prek primerov do posveta.";
+
+export const metadata: Metadata = slPageMetadata(
+  "/work/odstrani-tattoo",
+  { title: TITLE, description: DESCRIPTION },
+);
 
 /* Facts checked against the live odstranitattoo.si and the odstranitattoo-next source.
  * No metrics, research or brief are claimed. */
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 const SITE_URL = "https://odstranitattoo.si";
 
 const FOCUS =
-  "focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-white/50";
+  "focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[color:var(--mini-accent-text,#7c97f0)]";
 
 /** Same primary navigation as `/` and `/work`. */
 const HOME_NAV: MiniHeaderNavItem[] = [
@@ -50,7 +50,7 @@ const EYEBROW =
   "text-[11px] font-medium uppercase tracking-[0.22em] text-white/60";
 
 const CAPTION =
-  "mx-auto max-w-[760px] text-balance text-center text-sm leading-relaxed text-white/40";
+  "mx-auto max-w-[760px] text-balance text-center text-sm leading-relaxed text-white/50";
 
 /** Bauma's short explanation, as on /work/flexido and /work/dema-plus. */
 const LEAD = "max-w-[40ch] text-xl font-medium leading-[1.4] tracking-[-0.01em] text-white/85 sm:text-2xl";
@@ -89,8 +89,8 @@ export default function OdstraniTattooCasePage() {
 
               <p className="mt-6 max-w-[44ch] text-base leading-[1.65] text-white/70 sm:text-lg sm:leading-[1.7]">
                 Za Odstrani Tattoo smo zasnovali in razvili spletno stran za
-                odstranjevanje tetovaž, ki obiskovalcu najprej razloži
-                postopek.
+                odstranjevanje tetovaž. Obiskovalec, ki se sprašuje, ali je
+                tetovažo mogoče odstraniti, najprej dobi razlago postopka.
               </p>
 
               <p className="mt-6 flex flex-wrap items-baseline gap-x-6 gap-y-2 text-sm leading-6 text-white/72 sm:text-[15px]">

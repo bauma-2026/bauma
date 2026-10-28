@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { slPageMetadata } from "@/lib/indexing";
 import Image from "next/image";
 import { Fraunces } from "next/font/google";
 import Link from "next/link";
@@ -44,14 +45,14 @@ const artbiteLogo = Fraunces({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Work — Bauma",
-  description: "Work preview for Bauma.",
-  robots: {
-    index: false,
-    follow: false,
-  },
-};
+const TITLE = "Izbrani spletni projekti — Bauma";
+const DESCRIPTION =
+  "Izbor spletnih strani in digitalnih rešitev. Izhodišča projektov, odločitve pri zasnovi ter povezava med vsebino, oblikovanjem in razvojem.";
+
+export const metadata: Metadata = slPageMetadata(
+  "/work",
+  { title: TITLE, description: DESCRIPTION },
+);
 
 const HOME_NAV: MiniHeaderNavItem[] = [
   { href: "/pristop", label: "Pristop", id: "pristop" },
@@ -64,7 +65,7 @@ const SURFACE_WORK = {
 } as CSSProperties;
 
 /** Square below `sm`. The shared surfaces carry fixed heights, so they are overridden from the link. */
-const MOBILE_SQUARE = "max-sm:[&_.swm>div]:aspect-square max-sm:[&_.swm>div]:h-auto";
+const MOBILE_SQUARE = "max-sm:[&_.swm>div]:aspect-square max-sm:[&_.swm>div]:h-auto max-sm:[&_.swm>div]:min-h-auto";
 
 /**
  * 4:3 from a 898px viewport (a card width of 405px); from `sm` (640px) to there the surfaces keep the approved 19rem
@@ -73,7 +74,7 @@ const MOBILE_SQUARE = "max-sm:[&_.swm>div]:aspect-square max-sm:[&_.swm>div]:h-a
  * it. (A `min-height` of 19rem does not work: with an aspect ratio it widens the card instead.) The shared surfaces
  * (Flexido, Odstrani, Dema Plus) take the ratio from the link, overriding their fixed heights.
  */
-const SHARED_43 = "min-[898px]:[&_.swm>div]:h-auto min-[898px]:[&_.swm>div]:aspect-[4/3]";
+const SHARED_43 = "min-[898px]:[&_.swm>div]:h-auto min-[898px]:[&_.swm>div]:min-h-auto min-[898px]:[&_.swm>div]:aspect-[4/3]";
 
 /**
  * Responsive size caps for Flexido's two statements (the `!` beats the surface's inline font-size): they keep about 1.4em
@@ -337,18 +338,30 @@ export default function WorkPage() {
           <section
             data-section="selected-work"
             aria-labelledby="work-heading"
-            className="bg-[var(--mini-surface-work,#080a0f)] pb-9 pt-28 text-white sm:pb-12 sm:pt-32 lg:pb-[3.25rem] lg:pt-36"
+            className="bg-[var(--mini-surface-work,#080a0f)] pb-9 pt-24 text-white sm:pb-12 sm:pt-28 lg:pb-[3.25rem] lg:pt-32"
           >
             <div className="mini-page-rail">
-              <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/60">Work</p>
-              <h1
-                id="work-heading"
-                className="home-bridge-heading mt-5 text-balance text-[1.625rem] font-medium [font-optical-sizing:auto] sm:mt-6 sm:text-3xl"
-              >
-                Izbrani projekti
-              </h1>
+              {/*
+               * Intro: the serif H1 on the /o-nas and /pristop scale, then the lead. From `lg` two columns on the grid's own
+               * columns and gaps, the lead in the second, its last line level with the foot of the H1.
+               */}
+              <div data-work-intro className="lg:grid lg:grid-cols-2 lg:items-end lg:gap-x-10 xl:gap-x-12">
+                <h1
+                  id="work-heading"
+                  className="font-serif text-[clamp(2.25rem,1.2rem+4.6vw,4.5rem)] lg:text-[min(5rem,6.4vw)] font-normal leading-none tracking-[-0.025em] text-balance break-words"
+                >
+                  Izbrani projekti.
+                </h1>
+                <p
+                  data-work-lead
+                  className="mt-4 max-w-[34rem] text-pretty text-[1.0625rem] leading-[1.55] text-white/74 sm:mt-5 lg:mt-0 lg:max-w-[31rem] lg:pb-1 lg:text-[1.125rem]"
+                >
+                  Spletne strani in digitalne rešitve. Od izhodišča in ključnih odločitev do oblikovanja in delujoče
+                  izvedbe.
+                </p>
+              </div>
 
-              <ol className="mt-10 grid list-none grid-cols-1 gap-x-6 gap-y-10 sm:mt-12 sm:grid-cols-2 sm:gap-y-12 lg:mt-14 lg:gap-x-10 lg:gap-y-[60px] xl:gap-x-12">
+              <ol className="mt-10 grid list-none grid-cols-1 gap-x-6 gap-y-10 sm:mt-12 sm:grid-cols-2 sm:gap-y-12 lg:mt-16 lg:gap-x-10 lg:gap-y-[60px] xl:gap-x-12">
                 {PROJECTS.map((p, i) => {
                   const id = `work-${p.slug}`;
                   const { Art } = p;
@@ -362,24 +375,26 @@ export default function WorkPage() {
                           aria-describedby={`${id}-desc`}
                           className={`group block ${MOBILE_SQUARE} ${p.shared ? SHARED_43 : ""} ${FLEXIDO_LINE} ${FLEXIDO_SIZE} ${LINK_FOCUS}`}
                         >
-                          {p.Wide ? (
-                            <>
-                              <div className="min-[898px]:hidden">
-                                <Motion p={p} col={col}>
-                                  <Art />
-                                </Motion>
-                              </div>
-                              <div className="hidden min-[898px]:block">
-                                <Motion p={p} col={col}>
-                                  <p.Wide />
-                                </Motion>
-                              </div>
-                            </>
-                          ) : (
-                            <Motion p={p} col={col}>
-                              <Art />
-                            </Motion>
-                          )}
+                          <div className="work-lift">
+                            {p.Wide ? (
+                              <>
+                                <div className="min-[898px]:hidden">
+                                  <Motion p={p} col={col}>
+                                    <Art />
+                                  </Motion>
+                                </div>
+                                <div className="hidden min-[898px]:block">
+                                  <Motion p={p} col={col}>
+                                    <p.Wide />
+                                  </Motion>
+                                </div>
+                              </>
+                            ) : (
+                              <Motion p={p} col={col}>
+                                <Art />
+                              </Motion>
+                            )}
+                          </div>
                           <Caption id={id} name={p.name} descriptor={p.descriptor} />
                         </Link>
                       </article>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { isStaging } from "@/lib/siteEnv";
+import { slPageMetadata } from "@/lib/indexing";
 import type { CSSProperties } from "react";
 
 import MiniPalette from "../../components/blocks/mini/MiniPalette";
@@ -18,41 +18,14 @@ import ArtBiteCoverupProof from "../../components/blocks/mini/ArtBiteCoverupProo
 // Proof width and clip (`.msw-proof` / `.msw-clip`): same rail logic as the homepage and the other case studies.
 import "../../components/blocks/mini/MiniSelectedWork.css";
 
-const TITLE = "ArtBite: osebni pristop, jasna predstavitev — Bauma";
+const TITLE = "ArtBite: stran tattoo studia, ki začne pri delih — Bauma";
 const DESCRIPTION =
-  "ArtBite: spletna stran tattoo studia, na kateri imajo glavno vlogo fotografije del in osebni pristop. Primer iz prakse.";
+  "Za ArtBite smo zasnovali in razvili spletno stran tattoo studia v Domžalah, kjer imajo glavno vlogo fotografije del. Ločena stran pojasni prekrivanje starih tetovaž.";
 
-/** `noindex` stays until the case studies launch. */
-export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    ...(isStaging ? {} : { url: "https://bauma.si/work/artbite" }),
-    siteName: "Bauma",
-    images: [
-      {
-        url: "/og/bauma-og-v3.png",
-        width: 1200,
-        height: 630,
-        alt: TITLE,
-      },
-    ],
-    locale: "sl_SI",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: TITLE,
-    description: DESCRIPTION,
-    images: ["/og/bauma-og-v3.png"],
-  },
-  robots: {
-    index: false,
-    follow: false,
-  },
-};
+export const metadata: Metadata = slPageMetadata(
+  "/work/artbite",
+  { title: TITLE, description: DESCRIPTION },
+);
 
 /* Facts checked against the live artbite-tattoo.com and the artbite-next source
  * (footer credit: "Struktura in izvedba: Bauma"). No metrics, dates or results
@@ -61,7 +34,7 @@ export const metadata: Metadata = {
 const SITE_URL = "https://artbite-tattoo.com/";
 
 const FOCUS =
-  "focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-white/50";
+  "focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[color:var(--mini-accent-text,#7c97f0)]";
 
 /** Same primary navigation as `/` and `/work`. */
 const HOME_NAV: MiniHeaderNavItem[] = [
@@ -79,7 +52,7 @@ const EYEBROW =
   "text-[11px] font-medium uppercase tracking-[0.22em] text-white/60";
 
 const CAPTION =
-  "mx-auto max-w-[760px] text-balance text-center text-sm leading-relaxed text-white/40";
+  "mx-auto max-w-[760px] text-balance text-center text-sm leading-relaxed text-white/50";
 
 /** Bauma's short explanation above a proof, as on /work/flexido and /work/dema-plus. */
 const LEAD = "max-w-[40ch] text-xl font-medium leading-[1.4] tracking-[-0.01em] text-white/85 sm:text-2xl";
@@ -162,7 +135,7 @@ export default function ArtBiteCasePage() {
               <div className="mini-page-rail pb-15 pt-5 sm:pb-18 lg:pb-22">
                 <p className={CAPTION}>
                   Rekonstrukcija uvodnega razdelka domače strani
-                  artbite-tattoo.com.
+                  artbite-tattoo.com. Gumbi v tem prikazu niso aktivni.
                 </p>
               </div>
             </section>
@@ -221,7 +194,8 @@ export default function ArtBiteCasePage() {
               <div className="mini-page-rail pb-16 pt-5 sm:pb-20 lg:pb-24">
                 <p className={CAPTION}>
                   Rekonstrukcija uvodnega razdelka strani „Prekrivanje starih
-                  tetovaž“ na artbite-tattoo.com.
+                  tetovaž“ na artbite-tattoo.com. Gumbi v tem prikazu niso
+                  aktivni.
                 </p>
               </div>
             </section>

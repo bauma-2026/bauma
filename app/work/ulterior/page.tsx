@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { isStaging } from "@/lib/siteEnv";
+import { slPageMetadata } from "@/lib/indexing";
 import type { CSSProperties } from "react";
 
 import MiniPalette from "../../components/blocks/mini/MiniPalette";
@@ -19,41 +19,14 @@ import UlteriorPurchaseProof from "../../components/blocks/mini/UlteriorPurchase
 // Proof width and clip (`.msw-proof` / `.msw-clip`): same rail logic as the homepage and Dema Plus.
 import "../../components/blocks/mini/MiniSelectedWork.css";
 
-const TITLE = "Ulterior: produktna predstavitev, namenska izvedba — Bauma";
+const TITLE = "Ulterior: produktna stran in namenski nakupni sistem — Bauma";
 const DESCRIPTION =
-  "Ulterior: spletna stran s produktno predstavitvijo, interaktivnimi tehničnimi podrobnostmi in namenskim nakupnim sistemom s PayPalom. Primer iz prakse.";
+  "Za Ulterior smo zasnovali in razvili spletno stran s predstavitvijo hardshell jakne, interaktivnimi tehničnimi podrobnostmi in namenskim nakupnim sistemom s PayPalom.";
 
-/** `noindex` stays until the case studies launch. */
-export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    ...(isStaging ? {} : { url: "https://bauma.si/work/ulterior" }),
-    siteName: "Bauma",
-    images: [
-      {
-        url: "/og/bauma-og-v3.png",
-        width: 1200,
-        height: 630,
-        alt: TITLE,
-      },
-    ],
-    locale: "sl_SI",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: TITLE,
-    description: DESCRIPTION,
-    images: ["/og/bauma-og-v3.png"],
-  },
-  robots: {
-    index: false,
-    follow: false,
-  },
-};
+export const metadata: Metadata = slPageMetadata(
+  "/work/ulterior",
+  { title: TITLE, description: DESCRIPTION },
+);
 
 /* Facts checked against the live ulterior.es and the ulterior-next source.
  * No metrics, dates or results are claimed; the payment flow is described as
@@ -62,7 +35,7 @@ export const metadata: Metadata = {
 const SITE_URL = "https://ulterior.es/";
 
 const FOCUS =
-  "focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-white/50";
+  "focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[color:var(--mini-accent-text,#7c97f0)]";
 
 /** Same primary navigation as `/` and `/work`. */
 const HOME_NAV: MiniHeaderNavItem[] = [
@@ -80,7 +53,7 @@ const EYEBROW =
   "text-[11px] font-medium uppercase tracking-[0.22em] text-white/60";
 
 const CAPTION =
-  "mx-auto max-w-[760px] text-balance text-center text-sm leading-relaxed text-white/40";
+  "mx-auto max-w-[760px] text-balance text-center text-sm leading-relaxed text-white/50";
 
 /** Closes a proof block under its caption: a 1px rule on the content column, in the case-nav rule tone. The caption sits
  *  nearer its proof (20-24px) than the rule (28-40px), and the next block starts 32-48px below the rule. */
@@ -116,15 +89,15 @@ export default function UlteriorCasePage() {
               </h1>
 
               <p className="mt-6 max-w-[44ch] text-base leading-[1.65] text-white/70 sm:text-lg sm:leading-[1.7]">
-                Za Ulterior smo zasnovali in razvili spletno stran s produktno
-                predstavitvijo, interaktivnimi tehničnimi podrobnostmi in
-                namenskim nakupnim sistemom.
+                Za Ulterior smo zasnovali in razvili spletno stran, ki povezuje
+                predstavitev izdelka, interaktivno raziskovanje tehničnih
+                podrobnosti in namenski nakupni sistem.
               </p>
 
               <p className="mt-6 flex flex-wrap items-baseline gap-x-6 gap-y-2 text-sm leading-6 text-white/72 sm:text-[15px]">
                 <span>
-                  Struktura, oblikovanje in razvoj spletne strani ter
-                  nakupnega sistema
+                  Zasnova, oblikovanje in razvoj spletne strani ter
+                  namenskega nakupnega sistema
                 </span>
                 <a
                   href={SITE_URL}
@@ -231,13 +204,20 @@ export default function UlteriorCasePage() {
                 </h2>
                 <div className="mt-5 max-w-[48ch] space-y-4 text-base leading-7 text-white/70 sm:text-lg sm:leading-[1.7]">
                   <p>
-                    Kupec izbere barvo in velikost, sistem pa izbrano količino
-                    za čas nakupa rezervira. Plačilo poteka prek PayPala.
+                    Za Ulterior smo razvili namenski nakupni sistem z izbiro
+                    barve, velikosti in količine ter plačilom prek PayPala.
+                    Sistem med nakupom rezervira izbrano količino in vodi
+                    naročilo.
                   </p>
                   <p>
-                    Ko PayPal potrdi plačilo, se naročilo označi kot plačano,
-                    rezervirani kosi pa se odštejejo od zaloge. Če kupec nakup
-                    prekliče, se rezervacija sprosti.
+                    Po potrditvi plačila se naročilo označi kot plačano,
+                    rezervirana količina pa se odpiše iz zaloge. Ponovljena
+                    obvestila o istem plačilu ne povzročijo dodatnega odpisa.
+                    Ob preklicu ali poteku rezervacije se količina sprosti.
+                  </p>
+                  <p>
+                    Nakupni postopek smo preverili v PayPalovem testnem okolju
+                    in v produkciji.
                   </p>
                 </div>
               </div>
@@ -257,8 +237,7 @@ export default function UlteriorCasePage() {
               <div className="mini-page-rail pb-14 pt-5 sm:pb-16 lg:pb-20">
                 <p className={CAPTION}>
                   Rekonstrukcija nakupnega dela strani izdelka na ulterior.es.
-                  Prikaz nakupnega vmesnika. Plačilo v tem prikazu ni
-                  omogočeno.
+                  Izbira različic in plačilo v tem prikazu nista omogočena.
                 </p>
               </div>
             </section>

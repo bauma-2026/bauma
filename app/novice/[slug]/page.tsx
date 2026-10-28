@@ -19,6 +19,13 @@ type Props = {
   }>;
 };
 
+/**
+ * Only the slugs below exist. A slug outside `generateStaticParams` is an unmatched route and gets the app's 404
+ * inside the root layout; left dynamic, `notFound()` below answered with Next's bare `__next_error__` document
+ * (no `lang`, no layout).
+ */
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   return news.map((item) => ({
     slug: item.slug,

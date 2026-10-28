@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { isStaging } from "@/lib/siteEnv";
+import { slPageMetadata } from "@/lib/indexing";
 import type { CSSProperties } from "react";
 
 import MiniPalette from "../../components/blocks/mini/MiniPalette";
@@ -13,45 +13,19 @@ import { homeMono } from "../../homeMono";
 import "../../homeTypography.css";
 import DemaPlusHeroProof from "../../components/blocks/mini/DemaPlusHeroProof";
 import DemaPlusReferencesProof from "../../components/blocks/mini/DemaPlusReferencesProof";
+import DemaPlusProjectProof from "../../components/blocks/mini/DemaPlusProjectProof";
 
 // Proof width and clip (`.msw-proof` / `.msw-clip`): same rail logic as the homepage.
 import "../../components/blocks/mini/MiniSelectedWork.css";
 
-const TITLE = "Dema Plus: najprej projekti, nato področja dela — Bauma";
+const TITLE = "Dema Plus: spletna predstavitev projektov in storitev — Bauma";
 const DESCRIPTION =
-  "Dema Plus: domača stran se začne z arhitekturnim projektom, reference so pred področji dela. Primer iz prakse.";
+  "Za Dema Plus smo prenovili spletno predstavitev s projekti v ospredju ter uredili posamezne reference z opisi, osnovnimi podatki in sorodnimi projekti.";
 
-/** `noindex` stays until the case studies launch. */
-export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    ...(isStaging ? {} : { url: "https://bauma.si/work/dema-plus" }),
-    siteName: "Bauma",
-    images: [
-      {
-        url: "/og/bauma-og-v3.png",
-        width: 1200,
-        height: 630,
-        alt: TITLE,
-      },
-    ],
-    locale: "sl_SI",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: TITLE,
-    description: DESCRIPTION,
-    images: ["/og/bauma-og-v3.png"],
-  },
-  robots: {
-    index: false,
-    follow: false,
-  },
-};
+export const metadata: Metadata = slPageMetadata(
+  "/work/dema-plus",
+  { title: TITLE, description: DESCRIPTION },
+);
 
 /* Facts checked against the live demaplus.si and the demaplus-next source.
  * No metrics, dates or results are claimed. */
@@ -59,7 +33,7 @@ export const metadata: Metadata = {
 const SITE_URL = "https://demaplus.si/";
 
 const FOCUS =
-  "focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-white/50";
+  "focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[color:var(--mini-accent-text,#7c97f0)]";
 
 /** Same primary navigation as `/` and `/work`. */
 const HOME_NAV: MiniHeaderNavItem[] = [
@@ -77,7 +51,7 @@ const EYEBROW =
   "text-[11px] font-medium uppercase tracking-[0.22em] text-white/60";
 
 const CAPTION =
-  "mx-auto max-w-[760px] text-balance text-center text-sm leading-relaxed text-white/40";
+  "mx-auto max-w-[760px] text-balance text-center text-sm leading-relaxed text-white/50";
 
 /** Bauma's short explanation above a proof (the /work/flexido lead). */
 const LEAD = "max-w-[40ch] text-xl font-medium leading-[1.4] tracking-[-0.01em] text-white/85 sm:text-2xl";
@@ -115,8 +89,10 @@ export default function DemaPlusCasePage() {
               </h1>
 
               <p className="mt-6 max-w-[44ch] text-base leading-[1.65] text-white/70 sm:text-lg sm:leading-[1.7]">
-                Za Dema Plus smo zasnovali in razvili spletno stran, na kateri
-                imajo prednost projekti in reference.
+                Pri prenovi spletne predstavitve Dema Plus smo v ospredje
+                postavili izvedene projekte. Ti pokažejo obseg in raznolikost
+                dela podjetja ter predstavljajo izhodišče za pregled njegovih
+                storitev in načina izvedbe.
               </p>
 
               <p className="mt-6 flex flex-wrap items-baseline gap-x-6 gap-y-2 text-sm leading-6 text-white/72 sm:text-[15px]">
@@ -194,9 +170,43 @@ export default function DemaPlusCasePage() {
                 </div>
               </div>
 
-              <div className="mini-page-rail pb-16 pt-6 sm:pb-20 lg:pb-24">
+              <div className="mini-page-rail pb-15 pt-6 sm:pb-18 lg:pb-22">
                 <p className={CAPTION}>
                   Rekonstrukcija razdelka „Reference“ domače strani demaplus.si.
+                </p>
+              </div>
+            </section>
+
+            {/* 04 — PROJECT PAGE: one reference as edited text, facts and related projects (static) */}
+            <section aria-label="Dokaz: projektna podstran Vila Rožna dolina na demaplus.si">
+              <div className="mini-page-rail pb-10 sm:pb-12">
+                <p className={LEAD}>
+                  Prenova je zajela tudi posamezne reference. Obstoječa projektna
+                  besedila smo uredili v kratke povzetke, pregledne opise in
+                  ločene osnovne podatke. Predstavitve smo povezali z navigacijo
+                  med projekti ter izborom sorodnih referenc.
+                </p>
+              </div>
+
+              <div className="px-5 sm:px-0">
+                <div className="msw-proof">
+                  <div
+                    role="group"
+                    aria-label="Dema Plus: projektna podstran Vila Rožna dolina (rekonstrukcija)"
+                    className="msw-clip"
+                  >
+                    <div>
+                      <DemaPlusProjectProof headingLevel={2} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mini-page-rail pb-16 pt-6 sm:pb-20 lg:pb-24">
+                <p className={CAPTION}>
+                  Rekonstrukcija projektne podstrani Vila Rožna dolina na
+                  demaplus.si. Statičen prikaz: navigacijske oznake, povezave
+                  in kartice sorodnih referenc v tem prikazu niso interaktivne.
                 </p>
               </div>
             </section>
