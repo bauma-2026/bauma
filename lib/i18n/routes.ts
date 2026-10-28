@@ -33,6 +33,7 @@ const LIVE_CASE_STUDIES: ReadonlySet<(typeof CASE_STUDY_SLUGS)[number]> = new Se
   "hardshelljacket",
   "artbite",
   "dema-plus",
+  "flexido",
 ]);
 
 export const ROUTE_PAIRS: readonly RoutePair[] = [
