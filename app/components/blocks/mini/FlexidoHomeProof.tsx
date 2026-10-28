@@ -1,3 +1,5 @@
+import FlexidoHeroVideo from "./FlexidoHeroVideo";
+
 /**
  * Faithful, non-interactive reconstruction of the essential Flexido
  * homepage hero (flexido.eu) — logo strip, hero (background, eyebrow,
@@ -135,18 +137,11 @@ export default function FlexidoHomeProof({
           className="absolute inset-0 h-full w-full origin-bottom scale-[1.08] object-cover object-[52%_50%] sm:hidden"
         />
 
-        {/* Tablet/desktop — real hero-production.mp4 */}
-        <video
-          aria-hidden="true"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
+        {/* Tablet/desktop — real hero-production.mp4 (paused under reduced motion, see FlexidoHeroVideo) */}
+        <FlexidoHeroVideo
+          src="/work/flexido/proof/hero-production.mp4"
           className="absolute inset-0 hidden h-full w-full object-cover object-[30%_center] opacity-80 sm:block"
-        >
-          <source src="/work/flexido/proof/hero-production.mp4" type="video/mp4" />
-        </video>
+        />
 
         {/* Mobile scrim — bottom-weighted, matches the bottom-anchored text */}
         <div

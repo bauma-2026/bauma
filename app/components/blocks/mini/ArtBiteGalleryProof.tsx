@@ -112,7 +112,7 @@ export default function ArtBiteGalleryProof({
         aria-label={label}
         lang={labelLang}
         tabIndex={0}
-        className="-mx-6 mt-8 snap-x snap-mandatory overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-pl-6 px-6 [-ms-overflow-style:none] [scrollbar-width:none] [touch-action:pan-x_pan-y] focus-visible:outline focus-visible:outline-1 focus-visible:-outline-offset-2 focus-visible:outline-[#f5f0e8]/50 lg:hidden [&::-webkit-scrollbar]:hidden"
+        className="-mx-6 mt-8 snap-x snap-mandatory overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-pl-6 px-6 [-ms-overflow-style:none] [scrollbar-width:none] [touch-action:pan-x_pan-y] focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[#f5f0e8] lg:hidden [&::-webkit-scrollbar]:hidden"
       >
         <ul className="flex list-none gap-3" lang={contentLang}>
           {FEATURED.map((id, i) => (

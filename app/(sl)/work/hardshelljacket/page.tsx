@@ -120,7 +120,7 @@ export default function HardshelljacketCasePage() {
                   className="msw-proof"
                 >
                   <div className="msw-clip">
-                    <div aria-hidden="true">
+                    <div aria-hidden="true" lang="en">
                       <HardshelljacketHeroProof />
                     </div>
                   </div>
@@ -147,7 +147,7 @@ export default function HardshelljacketCasePage() {
                   className="msw-proof"
                 >
                   <div className="msw-clip">
-                    <div aria-hidden="true">
+                    <div aria-hidden="true" lang="en">
                       <HardshelljacketConstructionProof />
                     </div>
                   </div>
@@ -174,7 +174,7 @@ export default function HardshelljacketCasePage() {
                   className="msw-proof"
                 >
                   <div className="msw-clip">
-                    <div aria-hidden="true">
+                    <div aria-hidden="true" lang="en">
                       <HardshelljacketEverydayProof />
                     </div>
                   </div>
