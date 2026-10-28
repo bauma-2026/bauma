@@ -8,7 +8,7 @@ import MiniProjectCube from "./MiniProjectCube";
 import "./MiniProjectPocket.css";
 
 /**
- * Homepage "Za začetek" (SL), used only by `app/page.tsx` between Selected Work and the contact, in the pocket pattern of
+ * Homepage "Za začetek" (SL), used only by `app/(sl)/page.tsx` between Selected Work and the contact, in the pocket pattern of
  * `MiniSystemPocket` (text left, small cube right). `MiniMidPageCta` stays as it was for `/mini` and `/en/mini`.
  * The way in is a quiet text link to `/pristop` (the "Vsi projekti" link pattern from `MiniSelectedWorkHome`); the
  * contact below keeps the closing action. Layout lives in `MiniProjectPocket.css` (everything under `.mpp`).

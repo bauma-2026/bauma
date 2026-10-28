@@ -1,7 +1,7 @@
 /*
  * Homepage typography foundation (promoted from /lab/typography-foundation, variant B).
  *
- * Scope: everything below is keyed to `[data-home-typography]`, which only `app/page.tsx` sets. The heading
+ * Scope: everything below is keyed to `[data-home-typography]`, which only `app/(sl)/page.tsx` sets. The heading
  * utilities and several components are shared with /mini, /en, /en/mini and /work/*, so nothing here may apply
  * outside the homepage. Layouts, copy, colours, animation and the project cards are not touched.
  *
@@ -13,7 +13,7 @@
  *   h-work     Selected Work H2: same size, weight 500 (project titles and thumbnails stay dominant)
  *   eyebrow    one shared eyebrow treatment: IBM Plex Mono 500, one size, tracking and Royal Blue (#7c97f0); Contact is white
  *   wrap       text-wrap: pretty on running copy
- * The genuine DM Serif Display italic needs no rule: it comes from the font loading in app/layout.tsx.
+ * The genuine DM Serif Display italic needs no rule: it comes from the font loading in app/_root/RootDocument.tsx.
  *
  * Weight rule: the dominant level in a section is 600, the supporting heading is 500.
  * Selectors are attribute + class so they outrank the Tailwind utilities they refine, including responsive variants.

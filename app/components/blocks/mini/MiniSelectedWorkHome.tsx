@@ -9,8 +9,8 @@ import {
 } from "./MiniSelectedWorkSurfaces";
 
 /**
- * Homepage "Izbrano delo" (SL), used by `app/page.tsx` and, with its own heading and no eyebrow, `app/o-nas/page.tsx` and
- * `app/pristop/page.tsx`.
+ * Homepage "Izbrano delo" (SL), used by `app/(sl)/page.tsx` and, with its own heading and no eyebrow, `app/(sl)/o-nas/page.tsx` and
+ * `app/(sl)/pristop/page.tsx`.
  *
  * Visually led: per project a typographic surface, the project name, a quiet
  * descriptor and a directional arrow. No cards, borders or captions around the
@@ -40,7 +40,7 @@ const LINK_FOCUS =
 const ARROW =
   "inline-block transition-transform duration-300 group-hover:translate-x-[3px]";
 
-/** The `/work` card arrow response, used by the cards when `lift` is on (same classes as app/work/page.tsx). */
+/** The `/work` card arrow response, used by the cards when `lift` is on (same classes as app/(sl)/work/page.tsx). */
 const ARROW_EASE = "ease-[cubic-bezier(.25,.8,.25,1)]";
 const CARD_ARROW_TINT = `text-white/48 transition-colors duration-300 ${ARROW_EASE} group-hover:text-white/92 group-hover:duration-200 group-focus-visible:text-white/92 group-focus-visible:duration-200 motion-reduce:transition-none`;
 const CARD_ARROW = `inline-block transition-transform duration-300 ${ARROW_EASE} group-hover:translate-x-[3px] group-hover:duration-200 group-focus-visible:translate-x-[3px] group-focus-visible:duration-200 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 motion-reduce:group-focus-visible:translate-x-0`;

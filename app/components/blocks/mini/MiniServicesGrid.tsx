@@ -1,7 +1,7 @@
 import "./MiniServicesGrid.css";
 
 /**
- * Homepage "Storitve" (SL), used only by `app/page.tsx`, between System and Selected Work: Editorial Grid B V1.2
+ * Homepage "Storitve" (SL), used only by `app/(sl)/page.tsx`, between System and Selected Work: Editorial Grid B V1.2
  * (promoted from `/lab/services-grid`). Heading above one unified 2x2 frame of four equal cells; one column below md.
  * Layout and the service scale live in `MiniServicesGrid.css` (everything under `.msg`). `id="storitve"` is the anchor
  * other pages link to. The section deliberately carries `data-section="services-grid"`, not `"services"`, so the

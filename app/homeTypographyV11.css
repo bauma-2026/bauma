@@ -1,7 +1,7 @@
 /*
  * Homepage Typography V1.1 + vertical rhythm (promoted from /lab/home-typography-v1/v1-1).
  *
- * Scope: every selector is keyed to `[data-home-typography][data-home-v11]`, both set on the wrapper in `app/page.tsx`
+ * Scope: every selector is keyed to `[data-home-typography][data-home-v11]`, both set on the wrapper in `app/(sl)/page.tsx`
  * only. The two attributes outrank the `[data-home-typography] ...` rules in `homeTypography.css` and the Tailwind
  * utilities they refine, so no other route changes: `home-primary-heading`, `home-bridge-heading` and the shared
  * components (MiniSystemHome, MiniSelectedWorkHome, MiniMidPageCta, MiniClosingBookend) are untouched and still render

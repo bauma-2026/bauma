@@ -1,6 +1,6 @@
 /*
  * Homepage (`/`) only, portrait phones only: the hero and the start of "Kaj delamo".
- * Scoped to `[data-home-hero-mobile]`, which only app/page.tsx sets, because MiniHero, its rail and the H1 rules in
+ * Scoped to `[data-home-hero-mobile]`, which only app/(sl)/page.tsx sets, because MiniHero, its rail and the H1 rules in
  * globals.css / MiniHeroSentence.css are shared with /en, /mini, /en/mini and several labs. Desktop and the
  * 768px+ hero state are untouched.
  *

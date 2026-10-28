@@ -1,7 +1,7 @@
 import "./MiniServicesBoxes.css";
 
 /**
- * Homepage "Storitve" (SL), used only by `app/page.tsx`, between System and Selected Work.
+ * Homepage "Storitve" (SL), used only by `app/(sl)/page.tsx`, between System and Selected Work.
  *
  * Four equal, quietly framed blocks (the approved Boxes direction, `/lab/services-editorial/spread/boxes`, with the
  * Typography V1.1 scale, `/lab/home-typography-v1/v1-1`). The heading sits in column 1 of the Selected Work grid and the

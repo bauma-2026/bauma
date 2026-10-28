@@ -36,6 +36,9 @@ const LAB_IMAGE_RULES = [
 ];
 
 const nextConfig: NextConfig = {
+  // `app/global-not-found.tsx`: with separate root layouts ((sl), en, lab) it renders every unmatched URL and the
+  // CLOSED rewrites below; without it those get Next's bare 404 document with no `lang`.
+  experimental: { globalNotFound: true },
   // Route access, not indexing: staging only (SITE_ENV=staging) keeps unfinished lab routes out of reach.
   async redirects() {
     return isStaging

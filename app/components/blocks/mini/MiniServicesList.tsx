@@ -1,7 +1,7 @@
 import "./MiniServicesList.css";
 
 /**
- * Homepage "Kaj delamo" (SL), used only by `app/page.tsx`, between System and Selected Work: a vertical index of the four
+ * Homepage "Kaj delamo" (SL), used only by `app/(sl)/page.tsx`, between System and Selected Work: a vertical index of the four
  * services (promoted from `/lab/art-direction/register-pocket`, Services part only). `MiniServicesGrid` stays as it was.
  * Layout and type live in `MiniServicesList.css` (everything under `.msl`). `id="storitve"` is the anchor other pages link
  * to. No `data-section` attribute, so the `[data-section="services*"]` rules in `homeTypography*.css` do not apply here.

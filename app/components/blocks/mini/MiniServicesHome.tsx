@@ -1,7 +1,7 @@
 import "./MiniServicesHome.css";
 
 /**
- * Homepage "Storitve" (SL), used only by `app/page.tsx`, between System and
+ * Homepage "Storitve" (SL), used only by `app/(sl)/page.tsx`, between System and
  * Selected Work.
  *
  * Four equal horizontal rows on the page grid that Selected Work uses below (from the lab's C2

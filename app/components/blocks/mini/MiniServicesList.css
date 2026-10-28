@@ -2,7 +2,7 @@
  * Homepage "Kaj delamo" as a vertical index (promoted from /lab/art-direction/register-pocket, Services part only).
  * Used only by `MiniServicesList`; every selector is under `.msl`. A left-anchored column capped at 820px: eyebrow, H2, then
  * four ruled rows (number on a narrow axis from 640px, the title with its description under it). No frame, no vertical rules.
- * The surface is the homepage's Services tone (`--mini-surface-work`, set by the wrapper in app/page.tsx). The eyebrow takes the homepage's shared
+ * The surface is the homepage's Services tone (`--mini-surface-work`, set by the wrapper in app/(sl)/page.tsx). The eyebrow takes the homepage's shared
  * `p.uppercase` treatment from homeTypography.css; nothing in homeTypographyV11.css targets this section.
  */
 

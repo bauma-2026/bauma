@@ -3,7 +3,7 @@ import SystemCubeB51 from "./SystemCubeB51";
 import "./MiniSystemPocket.css";
 
 /**
- * Homepage "Celota" (SL), used only by `app/page.tsx`, directly under `MiniServicesList` as the closing thought of the
+ * Homepage "Celota" (SL), used only by `app/(sl)/page.tsx`, directly under `MiniServicesList` as the closing thought of the
  * Services chapter (after `/lab/art-direction/register-pocket`, text left and cube right). It replaces `MiniSystemHome` on
  * the homepage; that component stays for other callers. `#system` is the hero's secondary CTA target. Layout lives in
  * `MiniSystemPocket.css` (everything under `.msp`).

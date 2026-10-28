@@ -2,7 +2,7 @@ import Link from "next/link";
 
 /**
  * Case-study order: the reading order of the `/work` grid (rows of two). This list is the single source for the
- * previous / next navigation; keep it in step with `PROJECTS` in `app/work/page.tsx` when a project is added or moved.
+ * previous / next navigation; keep it in step with `PROJECTS` in `app/(sl)/work/page.tsx` when a project is added or moved.
  */
 export const CASE_STUDIES = [
   { slug: "flexido", name: "Flexido" },
