@@ -69,11 +69,27 @@ function Tile({ id, index }: { id: string; index: number }) {
   );
 }
 
-export default function ArtBiteGalleryProof() {
+/** Bauma's label for the scrollable row (Slovenian by default; the English case study passes its own). */
+const DEFAULT_LABEL = "Izbor tatujev";
+
+/**
+ * `contentLang` / `labelLang` (unset on the Slovenian page, so nothing is rendered there): on a page in another
+ * language they mark the client's Slovenian copy and alt texts, and the row's label in the page's language.
+ */
+export default function ArtBiteGalleryProof({
+  label = DEFAULT_LABEL,
+  contentLang,
+  labelLang,
+}: {
+  label?: string;
+  contentLang?: string;
+  labelLang?: string;
+}) {
   return (
     <div
       className="mini-page-rail text-[#f5f0e8] antialiased [text-rendering:auto]"
       style={{ fontFamily: FONT_STACK }}
+      lang={contentLang}
     >
       <div className="max-w-[52ch]">
         <p className="text-[11px] font-medium uppercase leading-normal tracking-[0.1em] text-[#d4705a]">
@@ -93,11 +109,12 @@ export default function ArtBiteGalleryProof() {
       {/* BELOW 1024: native scroll-snap row of the eight photographs */}
       <div
         role="region"
-        aria-label="Izbor tatujev"
+        aria-label={label}
+        lang={labelLang}
         tabIndex={0}
         className="-mx-6 mt-8 snap-x snap-mandatory overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-pl-6 px-6 [-ms-overflow-style:none] [scrollbar-width:none] [touch-action:pan-x_pan-y] focus-visible:outline focus-visible:outline-1 focus-visible:-outline-offset-2 focus-visible:outline-[#f5f0e8]/50 lg:hidden [&::-webkit-scrollbar]:hidden"
       >
-        <ul className="flex list-none gap-3">
+        <ul className="flex list-none gap-3" lang={contentLang}>
           {FEATURED.map((id, i) => (
             <li
               key={id}
