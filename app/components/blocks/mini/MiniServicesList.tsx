@@ -20,7 +20,7 @@ const SERVICES = [
   {
     n: "03",
     title: "Digitalni materiali",
-    body: "Oblikujemo spletne bannerje, HTML e-novice ter animirane in video različice. Datoteke pripravimo za objavo.",
+    body: "Oblikujemo statične in animirane spletne bannerje ter HTML e-novice. Datoteke pripravimo za objavo.",
   },
   {
     n: "04",

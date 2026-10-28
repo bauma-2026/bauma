@@ -24,8 +24,10 @@ const EYEBROW = "text-[11px] font-medium uppercase tracking-[0.22em] text-white/
 
 const DIRECTION = "text-[13px] font-medium text-white/55 transition-colors duration-300 group-hover:text-white/80";
 
+/** `break-words`: with increased user letter/word spacing the longest name ("Hardshelljacket") can be wider than its half
+ *  of the row; it then breaks inside the cell instead of overflowing the page. No effect when the name fits. */
 const TITLE =
-  "mt-2 text-lg font-medium leading-[1.2] tracking-[-0.02em] text-white transition-colors duration-300 group-hover:text-[var(--mini-accent-text,#fff)] sm:text-2xl";
+  "mt-2 break-words text-lg font-medium leading-[1.2] tracking-[-0.02em] text-white transition-colors duration-300 group-hover:text-[var(--mini-accent-text,#fff)] sm:text-2xl";
 
 /**
  * Previous / next case study and the way back to `/work`, between the last proof and the closing CTA. Bauma's own
@@ -48,7 +50,7 @@ export default function CaseStudyNav({ current }: { current: CaseStudySlug }) {
             href="/work"
             className={`-my-3 inline-flex min-h-11 items-center text-sm font-medium text-white/65 transition-colors duration-300 hover:text-white ${FOCUS}`}
           >
-            Vsi projekti<span aria-hidden="true">&nbsp;↗</span>
+            Vsi projekti<span aria-hidden="true">&nbsp;→</span>
           </Link>
         </div>
 

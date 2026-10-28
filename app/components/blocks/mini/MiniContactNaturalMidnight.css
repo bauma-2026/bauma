@@ -96,3 +96,10 @@
       );
   }
 }
+
+/* Focus ring of the closing's primary CTA ("Pošljite opis") on this graded photograph only. The shared Royal Blue ring
+   (`#7c97f0`, MiniButtons.css) measured 2.78-2.82:1 against the dune at 1280/1440px (PHC-001); white clears 3:1. Width,
+   offset and the :focus-visible trigger are the shared rule's; every other focus ring keeps `--mini-accent-text`. */
+[data-mini-palette] [data-contact-tone="natural-midnight"] [data-cta="primary"]:focus-visible {
+  outline-color: #fff;
+}

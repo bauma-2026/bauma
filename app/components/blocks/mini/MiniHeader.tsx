@@ -67,6 +67,19 @@ function sameDocumentFragment(href: string, pathname: string): string | null {
 }
 
 /**
+ * Fragments whose target section has a programmatic focus receiver (a heading with `tabIndex={-1}`, so it is not a Tab
+ * stop). After the scroll, focus moves there, so the next Tab continues inside the section instead of in the content the
+ * visitor left. Fragments not listed here keep the plain scroll.
+ */
+const FRAGMENT_FOCUS_TARGET: Record<string, string> = { contact: "contact-heading" };
+
+/**
+ * Set while a menu-closing fragment link hands focus to its target: the menu's cleanup then skips returning focus to
+ * the hamburger (Escape and the close button still return it). `go` clears it, so it can never outlive the click.
+ */
+let focusHandoffPending = false;
+
+/**
  * Click handler for a same-page fragment link: a smooth scroll to the target (instant with reduced motion) instead of
  * the router's jump, and the fragment written to the URL. Modified clicks, a missing target and no-JS visits keep the
  * link's normal behaviour. `before` runs first (the mobile menu closes itself); the scroll then waits two frames, so the
@@ -79,11 +92,15 @@ function scrollToFragment(event: MouseEvent<HTMLAnchorElement>, id: string, befo
   const target = document.getElementById(id);
   if (!target) return;
   event.preventDefault();
+  const focusTarget = FRAGMENT_FOCUS_TARGET[id] ? document.getElementById(FRAGMENT_FOCUS_TARGET[id]) : null;
+  if (before && focusTarget) focusHandoffPending = true;
   before?.();
   const go = () => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     target.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
     if (window.location.hash !== `#${id}`) window.history.pushState(null, "", `#${id}`);
+    focusHandoffPending = false;
+    focusTarget?.focus({ preventScroll: true });
   };
   if (before) window.requestAnimationFrame(() => window.requestAnimationFrame(go));
   else go();
@@ -231,7 +248,7 @@ export function useMobileMenuChrome(
     document.addEventListener("keydown", onKeyDown);
     return () => {
       document.removeEventListener("keydown", onKeyDown);
-      document.getElementById(MOBILE_MENU_TRIGGER_ID)?.focus();
+      if (!focusHandoffPending) document.getElementById(MOBILE_MENU_TRIGGER_ID)?.focus();
     };
   }, [isMenuOpen, setIsMenuOpen]);
 }
@@ -511,6 +528,7 @@ export default function MiniHeader({
   contactHref,
   transparentAtTop = false,
   borderColor,
+  trackSections = true,
 }: {
   copy?: MiniHeaderCopy;
   /**
@@ -551,6 +569,12 @@ export default function MiniHeader({
    * `undefined` keeps the shared `--mini-border-header` colour on every other route.
    */
   borderColor?: string;
+  /**
+   * Section scroll-spy for the Contact link's `aria-current`. Default `true` keeps every route unchanged. A page that
+   * has no sections and does not scroll (the 404) passes `false`: on it the "near page end" rule is always true, so
+   * Contact would otherwise be marked as the current location.
+   */
+  trackSections?: boolean;
 }) {
   const pathname = usePathname();
   const [activeId, setActiveId] = useState("");
@@ -674,7 +698,7 @@ export default function MiniHeader({
           <HeaderInner
             copy={copy}
             langSwitchHref={langSwitchHref}
-            activeId={activeId}
+            activeId={trackSections ? activeId : ""}
             pathname={pathname}
             isMenuOpen={isMenuOpen}
             setIsMenuOpen={setIsMenuOpen}

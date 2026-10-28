@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useId, useState } from "react";
 
 /**
  * Reconstruction of the "Technical Proof" section of the Ulterior hardshell
@@ -32,6 +32,12 @@ import { useState } from "react";
  *
  * Every title and the paragraph under it are plain text, and the page that
  * embeds this proof owns the only H1; the headline here is a paragraph.
+ *
+ * Accessibility: `aria-pressed` reflects only the chosen point (`selectedIndex`);
+ * the hover / focus preview is visual only. Each point's two buttons are described
+ * by the same hidden paragraph holding that point's own text, so the explanation is
+ * read with the button (focus is never moved, nothing is announced on hover). The
+ * visible detail block keeps showing the previewed or chosen point.
  */
 
 const FONT_STACK = "Arial, Helvetica, sans-serif";
@@ -73,10 +79,13 @@ const FOCUS_RING =
   "focus:outline-none focus-visible:ring-2 focus-visible:ring-[#355cad] focus-visible:ring-offset-2";
 
 export default function UlteriorTechnicalProof() {
+  const uid = useId();
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const visibleIndex = hoveredIndex ?? selectedIndex;
   const visiblePoint = visibleIndex === null ? null : POINTS[visibleIndex];
+  /** One hidden description per point, shared by that point's two buttons (photograph marker and list row). */
+  const descriptionId = (number: string) => `${uid}-detail-${number}`;
 
   function selectPoint(index: number) {
     setSelectedIndex(index);
@@ -85,10 +94,16 @@ export default function UlteriorTechnicalProof() {
 
   return (
     <div
+      lang="en"
       className="@container bg-[#f3f6fa] text-[#33333e] antialiased [text-rendering:auto]"
       style={{ fontFamily: FONT_STACK }}
     >
       <div className="mx-auto w-full max-w-[1240px] px-5 py-9 @min-[640px]:px-6 @min-[768px]:py-10 @min-[1024px]:px-8 @min-[1024px]:py-12">
+        {POINTS.map((point) => (
+          <p key={point.number} id={descriptionId(point.number)} hidden>
+            {point.body}
+          </p>
+        ))}
         <div className="mb-7 max-w-3xl @min-[768px]:mb-8">
           <p className="mb-4 text-[0.75rem] uppercase leading-4 tracking-[0.14em] text-[#6f6f76]">
             Technical Proof
@@ -125,8 +140,9 @@ export default function UlteriorTechnicalProof() {
                   <button
                     key={point.number}
                     type="button"
-                    aria-label={`Select detail: ${point.title}`}
-                    aria-pressed={isActive}
+                    aria-label={`${point.number} — ${point.title}`}
+                    aria-pressed={index === selectedIndex}
+                    aria-describedby={descriptionId(point.number)}
                     onClick={() => selectPoint(index)}
                     onMouseEnter={() => setHoveredIndex(index)}
                     onMouseLeave={() => setHoveredIndex(null)}
@@ -166,8 +182,9 @@ export default function UlteriorTechnicalProof() {
                   <button
                     key={point.number}
                     type="button"
-                    aria-label={`Select detail: ${point.title}`}
-                    aria-pressed={isActive}
+                    aria-label={`${point.number} — ${point.title}`}
+                    aria-pressed={index === selectedIndex}
+                    aria-describedby={descriptionId(point.number)}
                     onClick={() => selectPoint(index)}
                     onMouseEnter={() => setHoveredIndex(index)}
                     onMouseLeave={() => setHoveredIndex(null)}
@@ -182,7 +199,7 @@ export default function UlteriorTechnicalProof() {
                       className={
                         isActive
                           ? "text-[0.72rem] font-semibold leading-none tracking-[0.08em] text-[#355cad] transition"
-                          : "text-[0.72rem] font-semibold leading-none tracking-[0.08em] text-[#33333e]/60 transition group-hover:text-[#33333e]/75"
+                          : "text-[0.72rem] font-semibold leading-none tracking-[0.08em] text-[#33333e]/75 transition group-hover:text-[#33333e]/90"
                       }
                     >
                       {point.number}

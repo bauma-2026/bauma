@@ -137,6 +137,8 @@
 }
 .apw .apw-written .apw-role {
   margin-bottom: 0.5rem;
+  /* .45 measured 4.498:1 on Base; .5 gives 5.3:1. Only this label; the Vi / Bauma role labels are unchanged. */
+  color: rgb(255 255 255 / 0.5);
 }
 
 /* ---------- process and scope surfaces ---------- */

@@ -130,7 +130,7 @@ export default function ArtBiteHeroProof() {
             <div className="max-w-[620px]">
               <p className={EYEBROW}>Z vami od leta 2016</p>
 
-              <p className="mt-4 max-w-[11ch] text-5xl font-semibold leading-[0.96] tracking-[-0.04em]">
+              <p className="mt-4 max-w-[11ch] break-words text-5xl font-semibold leading-[0.96] tracking-[-0.04em]">
                 Tetovaže z osebnim pristopom.
               </p>
 

@@ -186,3 +186,28 @@
     animation: swm-from-below calc(680ms * var(--swm-t, 1)) var(--swm-ease) calc((180ms + var(--swm-delay)) * var(--swm-t, 1)) backwards;
   }
 }
+
+/*
+ * Project card hover / focus response (`/` and `/work` cards only): the visual surface lifts 3px, no scale, in 220ms.
+ * `.work-lift` is its own wrapper around the entry-motion layer (`.swm`), so the scroll-reveal transforms are untouched.
+ * Triggered by hover over the whole link (devices with hover and a fine pointer only; touch never lifts) or by keyboard
+ * focus (:focus-visible, the link's ring stays). Reduced motion: no movement and no transition. Names, descriptors and
+ * the arrow are not part of the wrapper. ArtBite's photograph colour response (ArtBiteSurface.css) is independent.
+ */
+/* The homepage cards use a shorter 150ms (`.work-lift-home`); `/work` keeps the 220ms default. */
+.work-lift-home {
+  --work-lift-t: 150ms;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .work-lift {
+    transition: transform var(--work-lift-t, 220ms) cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  .group:focus-visible .work-lift {
+    transform: translateY(-3px);
+  }
+}
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+  .group:hover .work-lift {
+    transform: translateY(-3px);
+  }
+}

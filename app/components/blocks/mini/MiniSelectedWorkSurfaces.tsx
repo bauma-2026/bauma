@@ -11,17 +11,23 @@ import type { CSSProperties, ReactNode } from "react";
  *   Flexido   "Povežemo tok med stroji. / Ne samo robot ob stroju."
  * No photographs, logos, gradients or effects. Type scales with the surface
  * (container query units), so one composition holds from 272px to ~400px.
+ *
+ * The footprint is a floor, not a clip: `min-h-min` lets a surface grow when its live text needs more room (user text
+ * spacing, WCAG 1.4.12; the inner box is `min-h-full`, not `h-full`, so it grows with it). `overflow-clip` keeps the
+ * rounded corners but, unlike `overflow-hidden`, is not a scroll container, so the aspect-ratio boxes of `/work` also get
+ * their automatic minimum height and grow with the text. With the approved type the
+ * content fits and the heights are exactly the footprint below.
  */
 
 /** One footprint for all three surfaces. */
 const SURFACE =
-  "@container h-[18rem] overflow-hidden rounded-[3px] antialiased [text-rendering:auto] sm:h-[19rem] lg:h-[21.25rem]";
+  "@container h-[18rem] min-h-min overflow-clip rounded-[3px] antialiased [text-rendering:auto] sm:h-[19rem] lg:h-[21.25rem]";
 
 /** Container-query units resolve against an ancestor, so padding lives on a child. */
 function Surface({ bg, ink, font, className, children }: { bg: string; ink: string; font: string; className: string; children: ReactNode }) {
   return (
     <div className={SURFACE} style={{ backgroundColor: bg, color: ink, fontFamily: font }}>
-      <div className={`h-full ${className}`}>{children}</div>
+      <div className={`min-h-full ${className}`}>{children}</div>
     </div>
   );
 }

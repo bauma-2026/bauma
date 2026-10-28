@@ -40,6 +40,11 @@ const LINK_FOCUS =
 const ARROW =
   "inline-block transition-transform duration-300 group-hover:translate-x-[3px]";
 
+/** The `/work` card arrow response, used by the cards when `lift` is on (same classes as app/work/page.tsx). */
+const ARROW_EASE = "ease-[cubic-bezier(.25,.8,.25,1)]";
+const CARD_ARROW_TINT = `text-white/48 transition-colors duration-300 ${ARROW_EASE} group-hover:text-white/92 group-hover:duration-200 group-focus-visible:text-white/92 group-focus-visible:duration-200 motion-reduce:transition-none`;
+const CARD_ARROW = `inline-block transition-transform duration-300 ${ARROW_EASE} group-hover:translate-x-[3px] group-hover:duration-200 group-focus-visible:translate-x-[3px] group-focus-visible:duration-200 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 motion-reduce:group-focus-visible:translate-x-0`;
+
 /**
  * Flexido in the single column (below md): the surface keeps its fixed 18/19rem height while it widens to ~720px, its
  * type caps at 3.1rem and its 7cqw padding keeps growing, so from 640px "Ne samo robot ob stroju." (3 lines) met the
@@ -91,6 +96,7 @@ export default function MiniSelectedWorkHome({
   topRule = true,
   heading = "Različni projekti. Različni izzivi.",
   eyebrow = true,
+  lift = false,
 }: {
   /**
    * The 1px rule on the section's top edge (default `true`). `false` keeps the 1px but
@@ -106,6 +112,8 @@ export default function MiniSelectedWorkHome({
    * heading margin).
    */
   eyebrow?: boolean;
+  /** Card hover / focus response (3px lift of the surface, `/work` arrow); only the homepage turns it on. */
+  lift?: boolean;
 }) {
   return (
     <section
@@ -143,9 +151,11 @@ export default function MiniSelectedWorkHome({
                     aria-describedby={`${id}-desc`}
                     className={`group block ${FLEXIDO_SINGLE_COLUMN} ${DEMA_SINGLE_COLUMN} ${LINK_FOCUS}`}
                   >
-                    <SelectedWorkMotion id={p.motion} col={(i + 1) as 1 | 2 | 3}>
-                      <Art />
-                    </SelectedWorkMotion>
+                    <div className={lift ? "work-lift work-lift-home" : undefined}>
+                      <SelectedWorkMotion id={p.motion} col={(i + 1) as 1 | 2 | 3}>
+                        <Art />
+                      </SelectedWorkMotion>
+                    </div>
                     <div className="mt-2 grid grid-cols-[minmax(0,1fr)_auto] grid-rows-[minmax(44px,auto)_auto] items-center">
                       <h3
                         id={id}
@@ -155,9 +165,9 @@ export default function MiniSelectedWorkHome({
                       </h3>
                       <span
                         aria-hidden="true"
-                        className="col-start-2 row-start-1 justify-self-end text-sm font-medium text-white/65 transition-colors duration-300 group-hover:text-white/92"
+                        className={`col-start-2 row-start-1 justify-self-end text-sm font-medium ${lift ? CARD_ARROW_TINT : "text-white/65 transition-colors duration-300 group-hover:text-white/92"}`}
                       >
-                        <span className={ARROW}>→</span>
+                        <span className={lift ? CARD_ARROW : ARROW}>→</span>
                       </span>
                       <p id={`${id}-desc`} className="col-span-2 row-start-2 -mt-1 text-[13px] leading-5 text-white/60">
                         {p.descriptor}

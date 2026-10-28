@@ -50,7 +50,7 @@ type View = (typeof VIEWS)[number];
 /** One photograph on its plate with its label; the same markup is used by the slider and the grid, with one `sizes` so both resolve to the same file. */
 function ViewTile({ view }: { view: View }) {
   return (
-    <figure>
+    <figure lang="en">
       <div className="overflow-hidden rounded-[6px] bg-[#f5f4f1] sm:rounded-[8px]">
         <Image
           src={view.src}
@@ -72,7 +72,7 @@ function ViewTile({ view }: { view: View }) {
 export default function UlteriorVisualProof() {
   return (
     <div className="mini-page-rail">
-      <div className="max-w-[40rem]">
+      <div lang="en" className="max-w-[40rem]">
         <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-white/60">
           Visual Proof
         </p>

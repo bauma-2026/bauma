@@ -59,7 +59,11 @@ export default function MiniFinalCTA({
             {copy.eyebrow}
           </p>
 
-          <h2 className="home-bridge-heading mt-4 leading-[1.14] sm:leading-[1.12]">
+          <h2
+            id="contact-heading"
+            tabIndex={-1}
+            className="home-bridge-heading mt-4 leading-[1.14] focus:outline-none sm:leading-[1.12]"
+          >
             {copy.line1}
             <br />
             {copy.line2}

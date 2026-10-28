@@ -3,13 +3,14 @@ import Image from "next/image";
 /**
  * Faithful, non-interactive reconstruction of the purchase area of the Ulterior
  * hardshell product page (ulterior.es/shop/waterproof-hardshell-jacket): the
- * product, its colour and size choice, the quantity with the stock that can
- * still be reserved, and the PayPal call to action.
+ * product, its colour and size choice, the quantity stepper and the PayPal call
+ * to action. The live page's "12 available now." line is deliberately not
+ * reproduced, so no stock figure appears on Bauma's page.
  *
  * Source of truth (local ulterior-next):
  * - src/components/shop/ProductHeroClient.tsx (layout, eyebrow, name, price,
  *   description) and src/components/shop/ProductPurchasePanel.tsx (colour and
- *   size chips, quantity stepper, availability line, support message).
+ *   size chips, quantity stepper, support message).
  * - src/components/shop/ProductPurchaseCTA.tsx + purchase-cta.css for the CTA,
  *   shown as the enabled button looks on ulterior.es (`.btn-primary
  *   .purchase-cta`: #33333e fill, white 14px/500, min 184 x 40px, 10 x 18.4px
@@ -18,7 +19,7 @@ import Image from "next/image";
  * - src/app/shop/lib/products.ts for the product data: Deep Olive (default)
  *   and Off White, sizes S (not available) M L XL, Deep Olive profile image
  *   `hardshell-green-side-01.webp` (unedited, 680 x 680). The L variant and the
- *   quantity line are the ones the live page opens with.
+ *   quantity are the ones the live page opens with.
  *
  * Not shown: the site header, the "Back to collection" link, any order,
  * customer, reservation or operator data. Tokens ported 1:1 from
@@ -124,9 +125,6 @@ export default function UlteriorPurchaseProof() {
                 <div className="flex items-center justify-between gap-4">
                   <div className="min-w-0">
                     <p className={LABEL}>Quantity</p>
-                    <p className="mt-1 text-xs leading-5 text-[#33333e]/65">
-                      12 available now.
-                    </p>
                   </div>
 
                   <div className="flex items-center overflow-hidden rounded-full border border-[#e6e6e6]">

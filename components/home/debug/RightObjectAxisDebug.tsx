@@ -176,16 +176,12 @@ function measureVisual(): ObjectMeasure {
 }
 
 export default function RightObjectAxisDebug() {
-  const [active, setActive] = useState(false);
   const [objects, setObjects] = useState<ObjectMeasure[]>([]);
   const [refX, setRefX] = useState<number | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const on =
-      new URLSearchParams(window.location.search).get("axis") === "1";
-    setActive(on);
-    if (!on) return;
+    if (new URLSearchParams(window.location.search).get("axis") !== "1") return;
 
     const update = () => {
       const next = [measureApproach(), measureSystem(), measureVisual()];
@@ -207,7 +203,7 @@ export default function RightObjectAxisDebug() {
     };
   }, []);
 
-  if (!active || refX == null) return null;
+  if (refX == null) return null;
 
   return (
     <div

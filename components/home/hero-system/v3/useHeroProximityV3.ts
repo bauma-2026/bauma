@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type RefObject } from "react";
+import { useEffect, useLayoutEffect, useRef, type RefObject } from "react";
 
 import {
   createProximityRuntime,
@@ -70,7 +70,9 @@ export function useHeroProximityV3(opts: Options) {
     opts;
 
   const onFrameRef = useRef(onFrame);
-  onFrameRef.current = onFrame;
+  useLayoutEffect(() => {
+    onFrameRef.current = onFrame;
+  }, [onFrame]);
   const metricsRef = useRef(emptyMetrics());
   const runtimeRef = useRef<ProximityRuntime | null>(null);
   const wasEarlyRef = useRef(false);

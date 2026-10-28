@@ -76,7 +76,7 @@ export default function ArtBiteGalleryProof() {
       style={{ fontFamily: FONT_STACK }}
     >
       <div className="max-w-[52ch]">
-        <p className="text-[11px] font-medium uppercase leading-normal tracking-[0.1em] text-[#c9624a]">
+        <p className="text-[11px] font-medium uppercase leading-normal tracking-[0.1em] text-[#d4705a]">
           Galerija
         </p>
 

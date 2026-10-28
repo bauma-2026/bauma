@@ -1,18 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
-/** True when a fine pointer with hover capability is available (desktop). */
+const query = "(hover: hover) and (pointer: fine)";
+
+function subscribe(onChange: () => void) {
+  const media = window.matchMedia(query);
+  media.addEventListener("change", onChange);
+  return () => media.removeEventListener("change", onChange);
+}
+
+function getSnapshot() {
+  return window.matchMedia(query).matches;
+}
+
+function getServerSnapshot() {
+  return false;
+}
+
 export function useFinePointer() {
-  const [fine, setFine] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
-    setFine(mq.matches);
-    const onChange = () => setFine(mq.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
-
-  return fine;
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }
