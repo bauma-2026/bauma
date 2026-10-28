@@ -69,7 +69,10 @@ function ViewTile({ view }: { view: View }) {
   );
 }
 
-export default function UlteriorVisualProof() {
+/** Bauma's label for the scrollable row (Slovenian by default; the English case study passes its own). */
+const DEFAULT_LABEL = "Hardshell: pogledi izdelka";
+
+export default function UlteriorVisualProof({ label = DEFAULT_LABEL }: { label?: string }) {
   return (
     <div className="mini-page-rail">
       <div lang="en" className="max-w-[40rem]">
@@ -91,7 +94,7 @@ export default function UlteriorVisualProof() {
       {/* MOBILE: native scroll-snap slider (below 640), as in the Dema Plus references: focusable, arrow keys and swipe, the next photograph peeks in */}
       <div
         role="region"
-        aria-label="Hardshell: pogledi izdelka"
+        aria-label={label}
         tabIndex={0}
         className="-mx-6 mt-8 snap-x snap-mandatory overflow-x-auto overflow-y-hidden overscroll-x-contain scroll-pl-6 px-6 [-ms-overflow-style:none] [scrollbar-width:none] [touch-action:pan-x_pan-y] focus-visible:outline focus-visible:outline-1 focus-visible:-outline-offset-2 focus-visible:outline-white/50 sm:hidden [&::-webkit-scrollbar]:hidden"
       >

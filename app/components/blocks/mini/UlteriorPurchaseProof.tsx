@@ -42,7 +42,11 @@ const CHIP_SELECTED =
 const CHIP =
   "inline-flex h-8 items-center justify-center rounded-full border border-[#33333e] text-sm text-[#33333e]";
 
-export default function UlteriorPurchaseProof() {
+/** Bauma's description of the demonstration (Slovenian by default; the English case study passes its own). */
+const DEFAULT_LABEL =
+  "Ulterior: demonstracija nakupnega dela strani izdelka z izbrano barvo Deep Olive, velikostjo L, količino 1 in gumbom „Purchase with PayPal“, ki v tem prikazu ni povezan s plačilom";
+
+export default function UlteriorPurchaseProof({ label = DEFAULT_LABEL }: { label?: string }) {
   return (
     <div
       className="@container bg-[#f7f8fa] text-[#33333e] antialiased [text-rendering:auto]"
@@ -51,7 +55,7 @@ export default function UlteriorPurchaseProof() {
       <div className="mx-auto w-full max-w-[1240px] px-5 py-9 @min-[640px]:px-6 @min-[768px]:py-10 @min-[1024px]:px-8 @min-[1024px]:py-12">
         <div
           role="img"
-          aria-label="Ulterior: demonstracija nakupnega dela strani izdelka z izbrano barvo Deep Olive, velikostjo L, količino 1 in gumbom „Purchase with PayPal“, ki v tem prikazu ni povezan s plačilom"
+          aria-label={label}
           className="grid gap-6 @min-[640px]:grid-cols-2 @min-[640px]:items-start @min-[640px]:gap-8 @min-[1024px]:grid-cols-[minmax(0,460px)_minmax(0,1fr)] @min-[1024px]:gap-14"
         >
           <div className="max-w-[420px] overflow-hidden bg-[#f5f4f1] @min-[640px]:relative @min-[640px]:max-w-none @min-[640px]:self-stretch">
