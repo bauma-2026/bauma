@@ -5,8 +5,9 @@ import { isIndexable } from "./siteEnv";
 export const SITE_ORIGIN = "https://bauma.si";
 
 /**
- * The URLs that are indexable in production and listed in the sitemap, in sitemap order (`app/sitemap.ts`).
- * Legal pages, /approach, /contact, /novice and every lab/preview route stay noindex.
+ * The Slovenian main pages and `/en`, indexable in production. Together with `EN_INDEXABLE_PATHS` they are the ten
+ * SL/EN pairs that `app/sitemap.ts` lists (from the route pairs). Legal pages, /approach, /contact, /novice and every
+ * lab/preview route stay noindex.
  */
 export const INDEXABLE_PATHS = [
   "/",
@@ -23,9 +24,8 @@ export const INDEXABLE_PATHS = [
 ] as const;
 
 /**
- * The English counterparts of the Slovenian main pages (besides `/en`), indexable in production. They opt in only when
- * their page uses `indexing()` / `pageMetadata()` (EN-006b); until then the EN layout keeps them noindex. They join the
- * sitemap in EN-006c.
+ * The English counterparts of the Slovenian main pages (besides `/en`), indexable in production through
+ * `enPageMetadata()` on each page; otherwise the EN layout keeps them noindex.
  */
 export const EN_INDEXABLE_PATHS = [
   "/en/approach",
@@ -42,6 +42,11 @@ export const EN_INDEXABLE_PATHS = [
 export type IndexablePath = (typeof INDEXABLE_PATHS)[number] | (typeof EN_INDEXABLE_PATHS)[number];
 
 const INDEXABLE: ReadonlySet<string> = new Set<string>([...INDEXABLE_PATHS, ...EN_INDEXABLE_PATHS]);
+
+/** Whether `path` is one of the indexable pages above (for lists built from the route pairs, such as the sitemap). */
+export function isIndexablePath(path: string): path is IndexablePath {
+  return INDEXABLE.has(path);
+}
 
 export function canonicalUrl(path: IndexablePath): string {
   return path === "/" ? SITE_ORIGIN : `${SITE_ORIGIN}${path}`;

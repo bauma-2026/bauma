@@ -1,21 +1,23 @@
 import type { MetadataRoute } from "next";
 import { isIndexable } from "@/lib/siteEnv";
-import { INDEXABLE_PATHS, canonicalUrl, SITE_ORIGIN } from "@/lib/indexing";
+import { ROUTE_PAIRS } from "@/lib/i18n/routes";
+import { canonicalUrl, hreflangAlternates, isIndexablePath } from "@/lib/indexing";
 
 /**
- * Production only: the indexable URLs from `lib/indexing.ts` (11). Legal pages, /approach,
- * /contact, /novice and lab/preview routes are not listed.
+ * Production only: the ten Slovenian/English pairs, both pages of each, from the live route pairs in
+ * `lib/i18n/routes.ts` (the same source as the language switch and the pages' hreflang). A pair is listed only when both
+ * pages are indexable (`lib/indexing.ts`), so legal pages, /approach, /contact, /novice and lab/preview routes are not.
+ * Each entry carries the same sl, en and x-default alternates as its page (`hreflangAlternates`).
  * No `lastmod`: there is no reliable content-change date, and the build time is not one.
- * The / and /en pair carries its hreflang alternates.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   // Every non-production environment publishes an empty sitemap.
   if (!isIndexable) return [];
 
-  const languages = { sl: SITE_ORIGIN, en: `${SITE_ORIGIN}/en` };
-
-  return INDEXABLE_PATHS.map((path) => ({
-    url: canonicalUrl(path),
-    ...(path === "/" || path === "/en" ? { alternates: { languages } } : {}),
-  }));
+  return ROUTE_PAIRS.flatMap((pair) => {
+    if (!pair.live || !isIndexablePath(pair.sl) || !isIndexablePath(pair.en)) return [];
+    const languages = hreflangAlternates(pair.sl);
+    if (!languages) return [];
+    return [pair.sl, pair.en].map((path) => ({ url: canonicalUrl(path), alternates: { languages } }));
+  });
 }
