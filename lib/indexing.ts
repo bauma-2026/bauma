@@ -157,14 +157,16 @@ export function slPageMetadata(path: IndexablePath, copy: { title: string; descr
 }
 
 /**
- * English social image (Open Graph and Twitter) of the ten English main pages. Interim: the existing English image (the
- * EN layout's default); an English counterpart of `SL_SOCIAL_IMAGE` follows in a separate pass.
+ * English social image (Open Graph and Twitter) of the ten English main pages: the English counterpart of
+ * `SL_SOCIAL_IMAGE`, the same artwork with the English home headline (source and export:
+ * docs/audits/bauma-v3-og-proposal/og-main-en-candidate.html). The EN layout default stays on its previous image, as
+ * `ROOT_OPEN_GRAPH` does for Slovenian.
  */
 export const EN_SOCIAL_IMAGE: SocialImage = {
-  url: "/og/bauma-og-en-v3.png",
+  url: "/og/bauma-og-main-en-v3.png",
   width: 1200,
   height: 630,
-  alt: "Bauma — Clear structure. Better decisions.",
+  alt: "Bauma — Websites that help you win new clients.",
 };
 
 /** One of the English main pages: `pageMetadata` with the English social image. */
